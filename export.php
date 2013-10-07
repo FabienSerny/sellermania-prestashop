@@ -49,7 +49,7 @@ if (file_exists($config_path))
 	{
 		include($module_path);
 		$sellermania = new SellerMania();
-		$sellermania->export((empty($argument_key) ? 'display' : 'file'), Tools::getValue('l'));
+		$sellermania->export((empty($argument_key) ? 'display' : 'file'), Tools::getValue('l'), Tools::getValue('s'), Tools::getValue('e'));
 	}
 	else
 		die('ERROR3');

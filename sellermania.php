@@ -97,18 +97,66 @@ class SellerMania extends Module
 		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
 
 		// Delete all export files or only export file of the selected language
-		if ($iso_lang != '')
+		if (!empty($iso_lang))
 			@unlink(dirname(__FILE__).'/export/export-'.$iso_lang.'-'.$sellermania_key.'.csv');
 		else
 			foreach ($languages_list as $language)
 				@unlink(dirname(__FILE__).'/export/export-'.strtolower($language['iso_code']).'-'.$sellermania_key.'.csv');
 	}
 
-	public function export($output, $iso_lang = '')
+	public function export($output, $iso_lang = '', $start = '', $end = '')
 	{
 		// If output is file, we delete old export files
 		if ($output == 'file')
 			$this->delete_export_files($iso_lang);
+
+		// Init
+		if (!empty($iso_lang))
+			$languages_list = array(array('iso_code' => $iso_lang));
+		else
+			$languages_list = Language::getLanguages();
+
+		// Get products list for each lang
+		foreach ($languages_list as $language)
+		{
+			$iso_lang = strtolower($language['iso_code']);
+			$result = $this->getProductsRequest(Language::getIdByIso($iso_lang), $start, $end);
+		}
+	}
+
+
+	public function getProductsRequest($id_lang, $start = '', $end = '')
+	{
+		// Retrieve context
+		$context = Context::getContext();
+
+		// Init
+		$limit = '';
+		if ((int)$start > 0 && (int)$end > 0)
+			$limit = ' LIMIT '.(int)$start.','.(int)$end;
+
+		// SQL request
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
+					   product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
+					   pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
+					   il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default, product_shop.price AS orderprice
+				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
+				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop).'
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (product_shop.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)
+				'.Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
+				AND product_shop.`active` = 1 AND product_shop.`visibility` IN ("both", "catalog")
+				GROUP BY product_shop.id_product '.$limit;
+
+		// Return query
+		return Db::getInstance()->execute($sql);
 	}
 }
 
