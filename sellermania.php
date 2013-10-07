@@ -28,6 +28,9 @@ if (!defined('_PS_VERSION_'))
 
 class SellerMania extends Module
 {
+	/**
+	 * Module Constructor
+	 */
 	function __construct()
 	{
 		$this->name = 'sellermania';
@@ -42,18 +45,30 @@ class SellerMania extends Module
 		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
 	}
 
+	/**
+	 * Install method
+	 * @return boolean success
+	 */
 	public function install()
 	{
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
 		return parent::install();
 	}
 
+	/**
+	 * Uninstall method
+	 * @return boolean success
+	 */
 	public function uninstall()
 	{
 		Configuration::deleteByName('SELLERMANIA_KEY');
 		return parent::uninstall();
 	}
 
+	/**
+	 * Configuration method
+	 * @return string html
+	 */
 	function getContent()
 	{
 		// Init vars
@@ -90,6 +105,11 @@ class SellerMania extends Module
 		return $this->display(__FILE__, 'displayGetContent.tpl');
 	}
 
+
+	/**
+	 * Delete old exported files
+	 * @param $iso_lang
+	 */
 	public function delete_export_files($iso_lang)
 	{
 		// Init
@@ -104,37 +124,11 @@ class SellerMania extends Module
 				@unlink(dirname(__FILE__).'/export/export-'.strtolower($language['iso_code']).'-'.$sellermania_key.'.csv');
 	}
 
-	public function export($output, $iso_lang = '', $start = '', $end = '')
-	{
-		// If output is file, we delete old export files
-		if ($output == 'file')
-			$this->delete_export_files($iso_lang);
-
-		// Init
-		if (!empty($iso_lang))
-			$languages_list = array(array('iso_code' => $iso_lang));
-		else
-			$languages_list = Language::getLanguages();
-
-		// Get products list for each lang
-		foreach ($languages_list as $language)
-		{
-			$iso_lang = strtolower($language['iso_code']);
-			$id_lang = Language::getIdByIso($iso_lang);
-			$result = $this->getProductsRequest($id_lang, $start, $end);
-			while ($row = Db::getInstance()->nextRow($result))
-			{
-				$row = Product::getProductsProperties($id_lang, array($row));
-				$row = array_pop($row);
-				$this->renderExport($row, $iso_lang, $output);
-			}
-		}
-	}
-
-	public function renderExport($row, $iso_lang, $output)
-	{
-	}
-
+	/**
+	 * Make products MySQL request
+	 * @param $iso_lang
+	 * @return mysql result
+	 */
 	public function getProductsRequest($id_lang, $start = '', $end = '')
 	{
 		// Retrieve context
@@ -167,6 +161,50 @@ class SellerMania extends Module
 
 		// Return query
 		return Db::getInstance()->query($sql);
+	}
+
+	/**
+	 * Export method
+	 * @param string $output (display|file)
+	 * @param string $iso_lang
+	 * @param integer $start
+	 * @param integer $end
+	 */
+	public function export($output, $iso_lang = '', $start = '', $end = '')
+	{
+		// If output is file, we delete old export files
+		if ($output == 'file')
+			$this->delete_export_files($iso_lang);
+
+		// Init
+		if (!empty($iso_lang))
+			$languages_list = array(array('iso_code' => $iso_lang));
+		else
+			$languages_list = Language::getLanguages();
+
+		// Get products list for each lang
+		foreach ($languages_list as $language)
+		{
+			$iso_lang = strtolower($language['iso_code']);
+			$id_lang = Language::getIdByIso($iso_lang);
+			$result = $this->getProductsRequest($id_lang, $start, $end);
+			while ($row = Db::getInstance()->nextRow($result))
+			{
+				$row = Product::getProductsProperties($id_lang, array($row));
+				$row = array_pop($row);
+				$this->renderExport($row, $iso_lang, $output);
+			}
+		}
+	}
+
+	/**
+	 * Render export method
+	 * @param array $row
+	 * @param string $iso_lang
+	 * @param string $output (display|file)
+	 */
+	public function renderExport($row, $iso_lang, $output)
+	{
 	}
 }
 
