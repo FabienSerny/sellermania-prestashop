@@ -108,7 +108,7 @@ class SellerMania extends Module
 
 	/**
 	 * Delete old exported files
-	 * @param $iso_lang
+	 * @param string $iso_lang
 	 */
 	public function delete_export_files($iso_lang)
 	{
@@ -126,7 +126,7 @@ class SellerMania extends Module
 
 	/**
 	 * Make products MySQL request
-	 * @param $iso_lang
+	 * @param string $iso_lang
 	 * @return mysql result
 	 */
 	public function getProductsRequest($id_lang, $start = '', $end = '')
