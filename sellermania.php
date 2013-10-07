@@ -42,6 +42,18 @@ class SellerMania extends Module
 		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
 	}
 
+	public function install()
+	{
+		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
+		return parent::install();
+	}
+
+	public function uninstall()
+	{
+		Configuration::deleteByName('SELLERMANIA_KEY');
+		return parent::uninstall();
+	}
+
 	function getContent()
 	{
 		$this->context->smarty->assign('sellermania_module_path', $this->_path);
