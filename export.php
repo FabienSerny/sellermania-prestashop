@@ -47,6 +47,11 @@ if (file_exists($config_path))
 		die('ERROR2');
 	if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY') || $argument_key == Configuration::get('SELLERMANIA_KEY'))
 	{
+		// Up time and memory limit
+		set_time_limit(600);
+		ini_set('memory_limit', '64M');
+
+		// Run export method
 		include($module_path);
 		$sellermania = new SellerMania();
 		$sellermania->export((empty($argument_key) ? 'display' : 'file'), Tools::getValue('l'), Tools::getValue('s'), Tools::getValue('e'));
