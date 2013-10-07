@@ -120,10 +120,20 @@ class SellerMania extends Module
 		foreach ($languages_list as $language)
 		{
 			$iso_lang = strtolower($language['iso_code']);
-			$result = $this->getProductsRequest(Language::getIdByIso($iso_lang), $start, $end);
+			$id_lang = Language::getIdByIso($iso_lang);
+			$result = $this->getProductsRequest($id_lang, $start, $end);
+			while ($row = Db::getInstance()->nextRow($result))
+			{
+				$row = Product::getProductsProperties($id_lang, array($row));
+				$row = array_pop($row);
+				$this->renderExport($row, $iso_lang, $output);
+			}
 		}
 	}
 
+	public function renderExport($row, $iso_lang, $output)
+	{
+	}
 
 	public function getProductsRequest($id_lang, $start = '', $end = '')
 	{
@@ -156,7 +166,7 @@ class SellerMania extends Module
 				GROUP BY product_shop.id_product '.$limit;
 
 		// Return query
-		return Db::getInstance()->execute($sql);
+		return Db::getInstance()->query($sql);
 	}
 }
 
