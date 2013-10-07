@@ -57,18 +57,33 @@ class SellerMania extends Module
 	function getContent()
 	{
 		// Init vars
+		$languages_list = Language::getLanguages();
 		$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$module_web_path = Tools::getHttpHost(true).$shop->physical_uri.'modules/'.$this->name.'/';
 		$export_directory_writable = 0;
 		if (is_writable(dirname(__FILE__).'/export'))
 			$export_directory_writable = 1;
+		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
+
+		// Check if file exists and retrieve the creation date
+		$files_list = array();
+		foreach ($languages_list as $language)
+		{
+			$iso_code = strtolower($language['iso_code']);
+			$web_path_file = $module_web_path.'export/export-'.$iso_code.'-'.$sellermania_key.'.csv';
+			$real_path_file = dirname(__FILE__).'/export/export-'.$iso_code.'-'.$sellermania_key.'.csv';
+			$files_list[$iso_code]['file'] = $web_path_file;
+			if (file_exists($real_path_file))
+				$files_list[$iso_code]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
+		}
 
 		// Assign to Smarty
 		$this->context->smarty->assign('script_path', dirname(__FILE__));
 		$this->context->smarty->assign('export_directory_writable', $export_directory_writable);
 		$this->context->smarty->assign('module_web_path', $module_web_path);
-		$this->context->smarty->assign('sellermania_key', Configuration::get('SELLERMANIA_KEY'));
-		$this->context->smarty->assign('languages_list', Language::getLanguages());
+		$this->context->smarty->assign('sellermania_key', $sellermania_key);
+		$this->context->smarty->assign('files_list', $files_list);
+		$this->context->smarty->assign('languages_list', $languages_list);
 		$this->context->smarty->assign('sellermania_module_path', $this->_path);
 
 		// Return display
