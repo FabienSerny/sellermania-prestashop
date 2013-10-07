@@ -28,5 +28,18 @@ if (!defined('_PS_VERSION_'))
 
 class SellerMania extends Module
 {
+	function __construct()
+	{
+		$this->name = 'sellermania';
+		$this->tab = 'advertising_marketing';
+		$this->author = '23Prod';
+		$this->version = '1.0';
+		$this->need_instance = 0;
+
+		parent::__construct();
+
+		$this->displayName = $this->l('SellerMania');
+		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
+	}
 }
 
