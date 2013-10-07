@@ -44,8 +44,7 @@ class SellerMania extends Module
 
 	function getContent()
 	{
-		global $smarty;
-		$smarty->assign('sellermania_module_path', $this->_path);
+		$this->context->smarty->assign('sellermania_module_path', $this->_path);
 		return $this->display(__FILE__, 'displayGetContent.tpl');
 	}
 }
