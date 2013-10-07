@@ -41,5 +41,12 @@ class SellerMania extends Module
 		$this->displayName = $this->l('SellerMania');
 		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
 	}
+
+	function getContent()
+	{
+		global $smarty;
+		$smarty->assign('sellermania_module_path', $this->_path);
+		return $this->display(__FILE__, 'displayGetContent.tpl');
+	}
 }
 
