@@ -56,13 +56,22 @@ class SellerMania extends Module
 
 	function getContent()
 	{
+		// Init vars
 		$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$module_web_path = Tools::getHttpHost(true).$shop->physical_uri.'modules/'.$this->name.'/';
+		$export_directory_writable = 0;
+		if (is_writable(dirname(__FILE__).'/export'))
+			$export_directory_writable = 1;
+
+		// Assign to Smarty
 		$this->context->smarty->assign('script_path', dirname(__FILE__));
+		$this->context->smarty->assign('export_directory_writable', $export_directory_writable);
 		$this->context->smarty->assign('module_web_path', $module_web_path);
 		$this->context->smarty->assign('sellermania_key', Configuration::get('SELLERMANIA_KEY'));
 		$this->context->smarty->assign('languages_list', Language::getLanguages());
 		$this->context->smarty->assign('sellermania_module_path', $this->_path);
+
+		// Return display
 		return $this->display(__FILE__, 'displayGetContent.tpl');
 	}
 }

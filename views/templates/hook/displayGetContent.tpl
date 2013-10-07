@@ -13,6 +13,7 @@
                 <strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export/export-{$language.iso_code|strtolower}-{$sellermania_key}.csv <br>
             {/foreach}
             </p>
+            {if $export_directory_writable ne 1}<p class="error"><strong>{l s='Beware, the following directory is not writable:' mod='sellermania'} {$script_path}/export/</strong></p>{/if}
 
             <br><p><b><u>{l s='OR' mod='sellermania'}</u></b></p><br>
 
