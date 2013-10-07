@@ -89,5 +89,26 @@ class SellerMania extends Module
 		// Return display
 		return $this->display(__FILE__, 'displayGetContent.tpl');
 	}
+
+	public function delete_export_files($iso_lang)
+	{
+		// Init
+		$languages_list = Language::getLanguages();
+		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
+
+		// Delete all export files or only export file of the selected language
+		if ($iso_lang != '')
+			@unlink(dirname(__FILE__).'/export/export-'.$iso_lang.'-'.$sellermania_key.'.csv');
+		else
+			foreach ($languages_list as $language)
+				@unlink(dirname(__FILE__).'/export/export-'.strtolower($language['iso_code']).'-'.$sellermania_key.'.csv');
+	}
+
+	public function export($output, $iso_lang = '')
+	{
+		// If output is file, we delete old export files
+		if ($output == 'file')
+			$this->delete_export_files($iso_lang);
+	}
 }
 

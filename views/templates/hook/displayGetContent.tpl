@@ -6,7 +6,7 @@
         <div class="margin-form" style="padding-left:15px">
             <p>{l s='You have two solutions to send your catalog to SellerMania' mod='sellermania'}</p><br>
             <p><b>1) {l s='Set a cron task' mod='sellermania'}</b></p>
-            <p>{l s='Script path:' mod='sellermania'} {$script_path}/export.php -k {$sellermania_key}</p>
+            <p>{l s='Script path:' mod='sellermania'} {$script_path}/export.php {$sellermania_key}</p>
             <p>{l s='Generated files will be available at these urls:' mod='sellermania'}</p>
             <p>
             {foreach from=$files_list item=file key=iso_code}
