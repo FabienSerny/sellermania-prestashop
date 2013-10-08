@@ -36,7 +36,7 @@ class SellerMania extends Module
 	 */
 	private $fields_to_export = array(
 		'id_product', 'ean13', 'upc', 'ecotax', 'quantity', 'price', 'wholesale_price', 'reference',
-		'width', 'height', 'depth', 'weight', 'name', 'image', 'category_default',
+		'width', 'height', 'depth', 'weight', 'name', 'images', 'category_default',
 		'description', 'description_short', 'manufacturer_name'
 	);
 
@@ -220,6 +220,8 @@ class SellerMania extends Module
 				$rowCopy['ecotax'] = $declination['ecotax'];
 				$rowCopy['quantity'] = $declination['quantity'];
 				$rowCopy['reference'] = $declination['reference'];
+				if (count($declination['images']) >= 1)
+					$rowCopy['images'] = $declination['images'];
 				$rows[] = $rowCopy;
 			}
 		}
@@ -233,13 +235,9 @@ class SellerMania extends Module
 		$line = '';
 		foreach ($rows as $row)
 		{
+			$row['images'] = implode('|', $row['images']);
 			foreach ($this->fields_to_export as $field)
-			{
-				if ($field == 'image')
-					$line .= '-;';
-				else
-					$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
-			}
+				$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
 			$line .= "\n";
 		}
 		$this->renderLine($line, $iso_lang, $output);

@@ -79,6 +79,7 @@ class SellerManiaProduct
 	{
 		if (!Combination::isFeatureActive())
 			return false;
+
 		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
 					a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, pa.`id_product_attribute`,
 					IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, pa.`weight`,
@@ -99,23 +100,30 @@ class SellerManiaProduct
 				GROUP BY id_attribute_group, id_product_attribute
 				ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
 		$attributes_groups = Db::getInstance()->executeS($sql);
+
 		$combinations = false;
 		if (is_array($attributes_groups) && $attributes_groups)
 		{
+			// Retrieve context
+			$context = Context::getContext();
+
+			// Retrieve images corresponding to each declination
+			$ids = array();
+			$images = array();
+			foreach ($attributes_groups as $pa)
+				$ids[] = (int)$pa['id_product_attribute'];
+			$result = Db::getInstance()->executeS('
+			SELECT pai.`id_image`, pai.`id_product_attribute`
+			FROM `'._DB_PREFIX_.'product_attribute_image` pai
+			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = pai.`id_image`)
+			WHERE pai.`id_product_attribute` IN ('.implode(', ', $ids).') ORDER by i.`position`');
+			foreach ($result as $row)
+				if ($row['id_image'] > 0)
+					$images[$row['id_product_attribute']][] = $context->link->getImageLink('product', $row['id_image'], 'large_default');
+
+			// Retrieve infos for each declination
 			foreach ($attributes_groups as $k => $row)
 			{
-				if (!isset($groups[$row['id_attribute_group']]))
-					$groups[$row['id_attribute_group']] = array(
-						'name' => $row['public_group_name'],
-						'group_type' => $row['group_type'],
-						'default' => -1,
-					);
-				$groups[$row['id_attribute_group']]['attributes'][$row['id_attribute']] = $row['attribute_name'];
-				if ($row['default_on'] && $groups[$row['id_attribute_group']]['default'] == -1)
-					$groups[$row['id_attribute_group']]['default'] = (int)$row['id_attribute'];
-				if (!isset($groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']]))
-					$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] = 0;
-				$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int)$row['quantity'];
 				$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 				$combinations[$row['id_product_attribute']]['price'] = (float)$row['price'];
 				$combinations[$row['id_product_attribute']]['ecotax'] = (float)$row['ecotax'];
@@ -123,15 +131,8 @@ class SellerManiaProduct
 				$combinations[$row['id_product_attribute']]['quantity'] = (int)$row['quantity'];
 				$combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
-			}
-
-			// Wash attributes list (if some attributes are unavailables and if allowed to wash it)
-			if (Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0)
-			{
-				foreach ($groups as &$group)
-					foreach ($group['attributes_quantity'] as $key => &$quantity)
-						if (!$quantity)
-							unset($group['attributes'][$key]);
+				if (isset($images[$row['id_product_attribute']]))
+					$combinations[$row['id_product_attribute']]['images'] = $images[$row['id_product_attribute']];
 			}
 		}
 		return $combinations;
@@ -139,12 +140,21 @@ class SellerManiaProduct
 
 	public static function getImages($id_product)
 	{
+		// Retrieve context
+		$context = Context::getContext();
+
+		// Retrieves images
+		$images = array();
 		$sql = 'SELECT image_shop.`cover`, i.`id_image`, i.`position`
 				FROM `'._DB_PREFIX_.'image` i
 				'.Shop::addSqlAssociation('image', 'i').'
 				WHERE i.`id_product` = '.(int)$id_product.'
 				ORDER BY `position`';
-		return Db::getInstance()->executeS($sql);
+		$result = Db::getInstance()->executeS($sql);
+		foreach ($result as $row)
+			$images[] = $context->link->getImageLink('product', $row['id_image'], 'large_default');
+
+		return $images;
 	}
 }
 
