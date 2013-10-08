@@ -180,7 +180,7 @@ class SellerMania extends Module
 			while ($row = Db::getInstance()->nextRow($result))
 			{
 				$row['combinations'] = SellerManiaProduct::getProductCombinations($row['id_product'], $id_lang);
-				$row['image'] = '';
+				$row['images'] = SellerManiaProduct::getImages($row['id_product']);
 				$this->renderExport($row, $iso_lang, $output);
 			}
 		}
@@ -210,7 +210,12 @@ class SellerMania extends Module
 	{
 		$line = '';
 		foreach ($this->fields_to_export as $field)
-			$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+		{
+			if ($field == 'image')
+				$line .= '-;';
+			else
+				$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+		}
 		$line .= "\n";
 		$this->renderLine($line, $iso_lang, $output);
 	}

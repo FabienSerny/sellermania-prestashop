@@ -136,5 +136,15 @@ class SellerManiaProduct
 		}
 		return $combinations;
 	}
+
+	public static function getImages($id_product)
+	{
+		$sql = 'SELECT image_shop.`cover`, i.`id_image`, i.`position`
+				FROM `'._DB_PREFIX_.'image` i
+				'.Shop::addSqlAssociation('image', 'i').'
+				WHERE i.`id_product` = '.(int)$id_product.'
+				ORDER BY `position`';
+		return Db::getInstance()->executeS($sql);
+	}
 }
 
