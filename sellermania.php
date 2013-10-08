@@ -212,15 +212,22 @@ class SellerMania extends Module
 		if ($row['declinations'])
 		{
 			$rows = array();
-			foreach ($row['declinations'] as $declination)
+			foreach ($row['declinations'] as $id_product_attribute => $declination)
 			{
 				$rowCopy = $row;
 				$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
+				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
+				$rowCopy['ecotax'] = $declination['ecotax'];
+				$rowCopy['quantity'] = $declination['quantity'];
+				$rowCopy['reference'] = $declination['reference'];
 				$rows[] = $rowCopy;
 			}
 		}
 		else
+		{
+			$row['price'] = Product::getPriceStatic($row['id_product'], true, null, 2);
 			$rows = array($row);
+		}
 
 		// Begin rendering
 		$line = '';
