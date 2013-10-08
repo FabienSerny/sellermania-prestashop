@@ -220,7 +220,7 @@ class SellerMania extends Module
 				$rowCopy['ecotax'] = $declination['ecotax'];
 				$rowCopy['quantity'] = $declination['quantity'];
 				$rowCopy['reference'] = $declination['reference'];
-				if (count($declination['images']) >= 1)
+				if (isset($declination['images']) && count($declination['images']) >= 1)
 					$rowCopy['images'] = $declination['images'];
 				$rows[] = $rowCopy;
 			}
