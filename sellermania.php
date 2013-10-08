@@ -97,12 +97,12 @@ class SellerMania extends Module
 		$files_list = array();
 		foreach ($languages_list as $language)
 		{
-			$iso_code = strtolower($language['iso_code']);
-			$web_path_file = $module_web_path.'export/export-'.$iso_code.'-'.$sellermania_key.'.csv';
-			$real_path_file = dirname(__FILE__).'/export/export-'.$iso_code.'-'.$sellermania_key.'.csv';
-			$files_list[$iso_code]['file'] = $web_path_file;
+			$iso_lang = strtolower($language['iso_code']);
+			$web_path_file = $module_web_path.$this->get_export_filename($iso_lang, true);
+			$real_path_file = $this->get_export_filename($iso_lang);
+			$files_list[$iso_lang]['file'] = $web_path_file;
 			if (file_exists($real_path_file))
-				$files_list[$iso_code]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
+				$files_list[$iso_lang]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
 		}
 
 		// Assign to Smarty
@@ -120,6 +120,20 @@ class SellerMania extends Module
 
 
 	/**
+	 * Get export filename
+	 * @param string $iso_lang
+	 * @return string export file name
+	 */
+	public function get_export_filename($iso_lang, $web_path = false)
+	{
+		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
+		if ($web_path)
+			return 'export/export-'.strtolower($iso_lang).'-'.$sellermania_key.'.csv';
+		return dirname(__FILE__).'/export/export-'.strtolower($iso_lang).'-'.$sellermania_key.'.csv';
+	}
+
+
+	/**
 	 * Delete old exported files
 	 * @param string $iso_lang
 	 */
@@ -131,10 +145,10 @@ class SellerMania extends Module
 
 		// Delete all export files or only export file of the selected language
 		if (!empty($iso_lang))
-			@unlink(dirname(__FILE__).'/export/export-'.$iso_lang.'-'.$sellermania_key.'.csv');
+			@unlink($this->get_export_filename($iso_lang));
 		else
 			foreach ($languages_list as $language)
-				@unlink(dirname(__FILE__).'/export/export-'.strtolower($language['iso_code']).'-'.$sellermania_key.'.csv');
+				@unlink($this->get_export_filename($iso_lang));
 	}
 
 	/**
@@ -211,8 +225,7 @@ class SellerMania extends Module
 	{
 		if ($output == 'file')
 		{
-			$sellermania_key = Configuration::get('SELLERMANIA_KEY');
-			$real_path_file = dirname(__FILE__).'/export/export-'.$iso_lang.'-'.$sellermania_key.'.csv';
+			$real_path_file = $this->get_export_filename($iso_lang);
 			file_put_contents($real_path_file, $line, FILE_APPEND);
 		}
 		else
