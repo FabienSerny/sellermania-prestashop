@@ -29,6 +29,16 @@ if (!defined('_PS_VERSION_'))
 class SellerMania extends Module
 {
 	/**
+	 * @var array fields to export
+	 */
+	private $fields_to_export = array(
+		'id_product', 'ean13', 'upc', 'ecotax', 'quantity', 'price', 'wholesale_price', 'reference',
+		'width', 'height', 'depth', 'weight', 'description', 'description_short', 'name', 'image', 'category_default',
+		'manufacturer_name'
+	);
+
+
+	/**
 	 * Module Constructor
 	 */
 	function __construct()
@@ -257,26 +267,62 @@ class SellerMania extends Module
 		{
 			$iso_lang = strtolower($language['iso_code']);
 			$id_lang = Language::getIdByIso($iso_lang);
+			$this->renderExportHeader($iso_lang, $output);
 			$result = $this->getProductsRequest($id_lang, $start, $limit);
 			while ($row = Db::getInstance()->nextRow($result))
 			{
 				$row['combinations'] = $this->getProductCombinations($row['id_product'], $id_lang);
+				$row['image'] = '';
 				$this->renderExport($row, $iso_lang, $output);
 			}
 		}
 	}
 
 	/**
-	 * Render export method
+	 * Render export header
+	 * @param string $iso_lang
+	 * @param string $output (display|file)
+	 */
+	public function renderExportHeader($iso_lang, $output)
+	{
+		$line = '';
+		foreach ($this->fields_to_export as $field)
+			$line .= $field.';';
+		$line .= "\n";
+		$this->renderLine($line, $iso_lang, $output);
+	}
+
+	/**
+	 * Render export
 	 * @param array $row
 	 * @param string $iso_lang
 	 * @param string $output (display|file)
 	 */
 	public function renderExport($row, $iso_lang, $output)
 	{
-		echo '<pre>';
-		print_r($row);
-		echo '</pre>';
+		$line = '';
+		foreach ($this->fields_to_export as $field)
+			$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+		$line .= "\n";
+		$this->renderLine($line, $iso_lang, $output);
+	}
+
+	/**
+	 * Render line
+	 * @param string $line
+	 * @param string $iso_lang
+	 * @param string $output (display|file)
+	 */
+	public function renderLine($line, $iso_lang, $output)
+	{
+		if ($output == 'file')
+		{
+			$sellermania_key = Configuration::get('SELLERMANIA_KEY');
+			$real_path_file = dirname(__FILE__).'/export/export-'.$iso_lang.'-'.$sellermania_key.'.csv';
+			file_put_contents($real_path_file, $line, FILE_APPEND);
+		}
+		else
+			echo $line;
 	}
 }
 
