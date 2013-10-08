@@ -126,18 +126,20 @@ class SellerMania extends Module
 
 	/**
 	 * Make products MySQL request
-	 * @param string $iso_lang
-	 * @return mysql result
+	 * @param integer $id_lang
+	 * @param integer $start
+	 * @param integer $limit
+	 * @return mysql ressource
 	 */
-	public function getProductsRequest($id_lang, $start = '', $end = '')
+	public function getProductsRequest($id_lang, $start = 0, $limit = 0)
 	{
 		// Retrieve context
 		$context = Context::getContext();
 
 		// Init
-		$limit = '';
-		if ((int)$start > 0 && (int)$end > 0)
-			$limit = ' LIMIT '.(int)$start.','.(int)$end;
+		$limitSQL = '';
+		if ((int)$start > 0 && (int)$limit > 0)
+			$limitSQL = ' LIMIT '.(int)$start.','.(int)$limit;
 
 		// SQL request
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
@@ -157,10 +159,78 @@ class SellerMania extends Module
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 				AND product_shop.`active` = 1 AND product_shop.`visibility` IN ("both", "catalog")
-				GROUP BY product_shop.id_product '.$limit;
+				GROUP BY product_shop.id_product '.$limitSQL;
 
 		// Return query
 		return Db::getInstance()->query($sql);
+	}
+
+	/**
+	 * Get product combinations
+	 * @param integer $id_product
+	 * @param integer $id_lang
+	 * @return boolean|array
+	 */
+	public function getProductCombinations($id_product, $id_lang)
+	{
+		if (!Combination::isFeatureActive())
+			return false;
+		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
+					a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, pa.`id_product_attribute`,
+					IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, pa.`weight`,
+					product_attribute_shop.`default_on`, pa.`reference`, product_attribute_shop.`unit_price_impact`,
+					pa.`minimal_quantity`, pa.`available_date`, ag.`group_type`
+				FROM `'._DB_PREFIX_.'product_attribute` pa
+				'.Shop::addSqlAssociation('product_attribute', 'pa').'
+				'.Product::sqlStock('pa', 'pa').'
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON a.`id_attribute` = al.`id_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON ag.`id_attribute_group` = agl.`id_attribute_group`
+				'.Shop::addSqlAssociation('attribute', 'a').'
+				WHERE pa.`id_product` = '.(int)$id_product.'
+					AND al.`id_lang` = '.(int)$id_lang.'
+					AND agl.`id_lang` = '.(int)$id_lang.'
+				GROUP BY id_attribute_group, id_product_attribute
+				ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
+		$attributes_groups = Db::getInstance()->executeS($sql);
+		$combinations = false;
+		if (is_array($attributes_groups) && $attributes_groups)
+		{
+			foreach ($attributes_groups as $k => $row)
+			{
+				if (!isset($groups[$row['id_attribute_group']]))
+					$groups[$row['id_attribute_group']] = array(
+						'name' => $row['public_group_name'],
+						'group_type' => $row['group_type'],
+						'default' => -1,
+					);
+				$groups[$row['id_attribute_group']]['attributes'][$row['id_attribute']] = $row['attribute_name'];
+				if ($row['default_on'] && $groups[$row['id_attribute_group']]['default'] == -1)
+					$groups[$row['id_attribute_group']]['default'] = (int)$row['id_attribute'];
+				if (!isset($groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']]))
+					$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] = 0;
+				$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int)$row['quantity'];
+				$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
+				$combinations[$row['id_product_attribute']]['price'] = (float)$row['price'];
+				$combinations[$row['id_product_attribute']]['ecotax'] = (float)$row['ecotax'];
+				$combinations[$row['id_product_attribute']]['weight'] = (float)$row['weight'];
+				$combinations[$row['id_product_attribute']]['quantity'] = (int)$row['quantity'];
+				$combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
+				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
+			}
+
+			// Wash attributes list (if some attributes are unavailables and if allowed to wash it)
+			if (Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0)
+			{
+				foreach ($groups as &$group)
+					foreach ($group['attributes_quantity'] as $key => &$quantity)
+						if (!$quantity)
+							unset($group['attributes'][$key]);
+			}
+		}
+		return $combinations;
 	}
 
 	/**
@@ -168,9 +238,9 @@ class SellerMania extends Module
 	 * @param string $output (display|file)
 	 * @param string $iso_lang
 	 * @param integer $start
-	 * @param integer $end
+	 * @param integer $limit
 	 */
-	public function export($output, $iso_lang = '', $start = '', $end = '')
+	public function export($output, $iso_lang = '', $start = 0, $limit = 0)
 	{
 		// If output is file, we delete old export files
 		if ($output == 'file')
@@ -187,11 +257,10 @@ class SellerMania extends Module
 		{
 			$iso_lang = strtolower($language['iso_code']);
 			$id_lang = Language::getIdByIso($iso_lang);
-			$result = $this->getProductsRequest($id_lang, $start, $end);
+			$result = $this->getProductsRequest($id_lang, $start, $limit);
 			while ($row = Db::getInstance()->nextRow($result))
 			{
-				$row = Product::getProductsProperties($id_lang, array($row));
-				$row = array_pop($row);
+				$row['combinations'] = $this->getProductCombinations($row['id_product'], $id_lang);
 				$this->renderExport($row, $iso_lang, $output);
 			}
 		}
@@ -205,6 +274,9 @@ class SellerMania extends Module
 	 */
 	public function renderExport($row, $iso_lang, $output)
 	{
+		echo '<pre>';
+		print_r($row);
+		echo '</pre>';
 	}
 }
 
