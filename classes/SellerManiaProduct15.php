@@ -70,12 +70,12 @@ class SellerManiaProduct
 	}
 
 	/**
-	 * Get product combinations
+	 * Get product declinations
 	 * @param integer $id_product
 	 * @param integer $id_lang
 	 * @return boolean|array
 	 */
-	public static function getProductCombinations($id_product, $id_lang)
+	public static function getProductDeclinations($id_product, $id_lang)
 	{
 		if (!Combination::isFeatureActive())
 			return false;

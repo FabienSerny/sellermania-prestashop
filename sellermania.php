@@ -36,8 +36,8 @@ class SellerMania extends Module
 	 */
 	private $fields_to_export = array(
 		'id_product', 'ean13', 'upc', 'ecotax', 'quantity', 'price', 'wholesale_price', 'reference',
-		'width', 'height', 'depth', 'weight', 'description', 'description_short', 'name', 'image', 'category_default',
-		'manufacturer_name'
+		'width', 'height', 'depth', 'weight', 'name', 'image', 'category_default',
+		'description', 'description_short', 'manufacturer_name'
 	);
 
 
@@ -179,7 +179,7 @@ class SellerMania extends Module
 			$result = SellerManiaProduct::getProductsRequest($id_lang, $start, $limit);
 			while ($row = Db::getInstance()->nextRow($result))
 			{
-				$row['combinations'] = SellerManiaProduct::getProductCombinations($row['id_product'], $id_lang);
+				$row['declinations'] = SellerManiaProduct::getProductDeclinations($row['id_product'], $id_lang);
 				$row['images'] = SellerManiaProduct::getImages($row['id_product']);
 				$this->renderExport($row, $iso_lang, $output);
 			}
@@ -208,15 +208,33 @@ class SellerMania extends Module
 	 */
 	public function renderExport($row, $iso_lang, $output)
 	{
-		$line = '';
-		foreach ($this->fields_to_export as $field)
+		// If declination duplicate row for each declination
+		if ($row['declinations'])
 		{
-			if ($field == 'image')
-				$line .= '-;';
-			else
-				$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+			$rows = array();
+			foreach ($row['declinations'] as $declination)
+			{
+				$rowCopy = $row;
+				$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
+				$rows[] = $rowCopy;
+			}
 		}
-		$line .= "\n";
+		else
+			$rows = array($row);
+
+		// Begin rendering
+		$line = '';
+		foreach ($rows as $row)
+		{
+			foreach ($this->fields_to_export as $field)
+			{
+				if ($field == 'image')
+					$line .= '-;';
+				else
+					$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+			}
+			$line .= "\n";
+		}
 		$this->renderLine($line, $iso_lang, $output);
 	}
 
