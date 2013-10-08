@@ -148,7 +148,7 @@ class SellerMania extends Module
 			@unlink($this->get_export_filename($iso_lang));
 		else
 			foreach ($languages_list as $language)
-				@unlink($this->get_export_filename($iso_lang));
+				@unlink($this->get_export_filename($language['iso_code']));
 	}
 
 	/**
