@@ -128,7 +128,7 @@ class SellerManiaExportController
 	public function renderExport($row, $iso_lang, $output)
 	{
 		// If declination duplicate row for each declination
-		if ($row['declinations'])
+		if ($row['declinations'] && is_array($row['declinations']))
 		{
 			$rows = array();
 			foreach ($row['declinations'] as $id_product_attribute => $declination)
@@ -191,7 +191,7 @@ class SellerManiaExportController
 
 		// Include config file and set default Shop
 		define('_PS_ADMIN_DIR_', getcwd());
-		$this->context->shop->setContext(Shop::CONTEXT_ALL);
+		$this->context->shop->setContext(1);
 
 		// Check if SellerMania key exists
 		if (Configuration::get('SELLERMANIA_KEY') == '')
@@ -206,7 +206,11 @@ class SellerManiaExportController
 
 			// If no cart, we create one
 			if (!is_object($this->context->cart))
-				$this->context->cart = new Cart();
+			{
+				global $cart;
+				$cart = new Cart();
+				$this->context->cart = $cart;
+			}
 
 			// Run export method
 			$this->export((empty($argument_key) ? 'display' : 'file'), Tools::getValue('l'), Tools::getValue('s'), Tools::getValue('e'));

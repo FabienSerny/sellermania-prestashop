@@ -26,9 +26,14 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+
 // Require Db requests class
-require_once(dirname(__FILE__).'/classes/SellerManiaProduct15.php');
+if (version_compare(_PS_VERSION_, '1.5') < 0)
+	require_once(dirname(__FILE__).'/classes/SellerManiaProduct14.php');
+else
+	require_once(dirname(__FILE__).'/classes/SellerManiaProduct15.php');
 require_once(dirname(__FILE__).'/controllers/front/SellerManiaExport.php');
+
 
 class SellerMania extends Module
 {
@@ -54,6 +59,9 @@ class SellerMania extends Module
 		$this->need_instance = 0;
 
 		parent::__construct();
+
+		if (version_compare(_PS_VERSION_, '1.5') < 0)
+			require(dirname(__FILE__).'/backward/backward.php');
 
 		$this->displayName = $this->l('SellerMania');
 		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
@@ -87,8 +95,8 @@ class SellerMania extends Module
 	{
 		// Init vars
 		$languages_list = Language::getLanguages();
-		$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-		$module_web_path = Tools::getHttpHost(true).$shop->physical_uri.'modules/'.$this->name.'/';
+		$this->context->shop->setContext(1);
+		$module_web_path = Tools::getHttpHost(true).$this->context->shop->physical_uri.'modules/'.$this->name.'/';
 		$export_directory_writable = 0;
 		if (is_writable(dirname(__FILE__).'/export'))
 			$export_directory_writable = 1;
@@ -117,7 +125,20 @@ class SellerMania extends Module
 		$this->context->smarty->assign('sellermania_module_path', $this->_path);
 
 		// Return display
-		return $this->display(__FILE__, 'displayGetContent.tpl');
+		return $this->compliantDisplay('displayGetContent.tpl');
+	}
+
+	/**
+	 * Compliant display between 1.4 and 1.5
+	 * @param string $template
+	 * @return string $html
+	 */
+	public function compliantDisplay($template)
+	{
+		if (version_compare(_PS_VERSION_, '1.5') < 0)
+			return $this->display(__FILE__, 'views/templates/hook/'.$template);
+		else
+			return $this->display(__FILE__, $template);
 	}
 
 	/**
