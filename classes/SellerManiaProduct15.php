@@ -107,10 +107,6 @@ class SellerManiaProduct
 			// Retrieve context
 			$context = Context::getContext();
 
-			// Retrieve web path
-			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-			$web_path = $shop->domain.'/'.$shop->physical_uri;
-
 			// Retrieve images corresponding to each declination
 			$ids = array();
 			$images = array();
@@ -123,7 +119,7 @@ class SellerManiaProduct
 			WHERE pai.`id_product_attribute` IN ('.implode(', ', $ids).') ORDER by i.`position`');
 			foreach ($result as $row)
 				if ($row['id_image'] > 0)
-					$images[$row['id_product_attribute']][] = str_replace(__PS_BASE_URI__, $web_path, $context->link->getImageLink('product', $row['id_image'], 'large_default'));
+					$images[$row['id_product_attribute']][] = $context->link->getImageLink('product', $row['id_image'], 'large_default');
 
 			// Retrieve infos for each declination
 			foreach ($attributes_groups as $k => $row)

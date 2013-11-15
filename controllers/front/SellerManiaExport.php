@@ -191,7 +191,7 @@ class SellerManiaExportController
 
 		// Include config file and set default Shop
 		define('_PS_ADMIN_DIR_', getcwd());
-		$this->context->shop->setContext(1);
+		$this->context->shop->setContext(4);
 
 		// Check if SellerMania key exists
 		if (Configuration::get('SELLERMANIA_KEY') == '')
