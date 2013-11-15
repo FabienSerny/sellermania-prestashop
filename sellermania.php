@@ -28,6 +28,7 @@ if (!defined('_PS_VERSION_'))
 
 // Require Db requests class
 require_once(dirname(__FILE__).'/classes/SellerManiaProduct15.php');
+require_once(dirname(__FILE__).'/controllers/front/SellerManiaExport.php');
 
 class SellerMania extends Module
 {
@@ -92,14 +93,15 @@ class SellerMania extends Module
 		if (is_writable(dirname(__FILE__).'/export'))
 			$export_directory_writable = 1;
 		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
+		$smec = new SellerManiaExportController();
 
 		// Check if file exists and retrieve the creation date
 		$files_list = array();
 		foreach ($languages_list as $language)
 		{
 			$iso_lang = strtolower($language['iso_code']);
-			$web_path_file = $module_web_path.$this->get_export_filename($iso_lang, true);
-			$real_path_file = $this->get_export_filename($iso_lang);
+			$web_path_file = $module_web_path.$smec->get_export_filename($iso_lang, true);
+			$real_path_file = $smec->get_export_filename($iso_lang);
 			$files_list[$iso_lang]['file'] = $web_path_file;
 			if (file_exists($real_path_file))
 				$files_list[$iso_lang]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
@@ -118,146 +120,13 @@ class SellerMania extends Module
 		return $this->display(__FILE__, 'displayGetContent.tpl');
 	}
 
-
-	/**
-	 * Get export filename
-	 * @param string $iso_lang
-	 * @return string export file name
-	 */
-	public function get_export_filename($iso_lang, $web_path = false)
-	{
-		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
-		if ($web_path)
-			return 'export/export-'.strtolower($iso_lang).'-'.$sellermania_key.'.csv';
-		return dirname(__FILE__).'/export/export-'.strtolower($iso_lang).'-'.$sellermania_key.'.csv';
-	}
-
-
-	/**
-	 * Delete old exported files
-	 * @param string $iso_lang
-	 */
-	public function delete_export_files($iso_lang)
-	{
-		// Init
-		$languages_list = Language::getLanguages();
-		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
-
-		// Delete all export files or only export file of the selected language
-		if (!empty($iso_lang))
-			@unlink($this->get_export_filename($iso_lang));
-		else
-			foreach ($languages_list as $language)
-				@unlink($this->get_export_filename($language['iso_code']));
-	}
-
 	/**
 	 * Export method
-	 * @param string $output (display|file)
-	 * @param string $iso_lang
-	 * @param integer $start
-	 * @param integer $limit
 	 */
-	public function export($output, $iso_lang = '', $start = 0, $limit = 0)
+	public function export()
 	{
-		// If output is file, we delete old export files
-		if ($output == 'file')
-			$this->delete_export_files($iso_lang);
-
-		// Init
-		if (!empty($iso_lang))
-			$languages_list = array(array('iso_code' => $iso_lang));
-		else
-			$languages_list = Language::getLanguages();
-
-		// Get products list for each lang
-		foreach ($languages_list as $language)
-		{
-			$iso_lang = strtolower($language['iso_code']);
-			$id_lang = Language::getIdByIso($iso_lang);
-			$this->renderExportHeader($iso_lang, $output);
-			$result = SellerManiaProduct::getProductsRequest($id_lang, $start, $limit);
-			while ($row = Db::getInstance()->nextRow($result))
-			{
-				$row['declinations'] = SellerManiaProduct::getProductDeclinations($row['id_product'], $id_lang);
-				$row['images'] = SellerManiaProduct::getImages($row['id_product']);
-				$this->renderExport($row, $iso_lang, $output);
-			}
-		}
-	}
-
-	/**
-	 * Render export header
-	 * @param string $iso_lang
-	 * @param string $output (display|file)
-	 */
-	public function renderExportHeader($iso_lang, $output)
-	{
-		$line = '';
-		foreach ($this->fields_to_export as $field)
-			$line .= $field.';';
-		$line .= "\n";
-		$this->renderLine($line, $iso_lang, $output);
-	}
-
-	/**
-	 * Render export
-	 * @param array $row
-	 * @param string $iso_lang
-	 * @param string $output (display|file)
-	 */
-	public function renderExport($row, $iso_lang, $output)
-	{
-		// If declination duplicate row for each declination
-		if ($row['declinations'])
-		{
-			$rows = array();
-			foreach ($row['declinations'] as $id_product_attribute => $declination)
-			{
-				$rowCopy = $row;
-				$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
-				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
-				$rowCopy['ecotax'] = $declination['ecotax'];
-				$rowCopy['quantity'] = $declination['quantity'];
-				$rowCopy['reference'] = $declination['reference'];
-				if (isset($declination['images']) && count($declination['images']) >= 1)
-					$rowCopy['images'] = $declination['images'];
-				$rows[] = $rowCopy;
-			}
-		}
-		else
-		{
-			$row['price'] = Product::getPriceStatic($row['id_product'], true, null, 2);
-			$rows = array($row);
-		}
-
-		// Begin rendering
-		$line = '';
-		foreach ($rows as $row)
-		{
-			$row['images'] = implode('|', $row['images']);
-			foreach ($this->fields_to_export as $field)
-				$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
-			$line .= "\n";
-		}
-		$this->renderLine($line, $iso_lang, $output);
-	}
-
-	/**
-	 * Render line
-	 * @param string $line
-	 * @param string $iso_lang
-	 * @param string $output (display|file)
-	 */
-	public function renderLine($line, $iso_lang, $output)
-	{
-		if ($output == 'file')
-		{
-			$real_path_file = $this->get_export_filename($iso_lang);
-			file_put_contents($real_path_file, $line, FILE_APPEND);
-		}
-		else
-			echo $line;
+		$controller = new SellerManiaExportController($this->fields_to_export);
+		$controller->run();
 	}
 }
 

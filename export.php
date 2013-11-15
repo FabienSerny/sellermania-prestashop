@@ -30,34 +30,10 @@ $module_path = dirname(__FILE__).'/sellermania.php';
 // Keep going if config script is found
 if (file_exists($config_path))
 {
-	// Init
-	$argument_key = '';
-	if (isset($argv[1]))
-		$argument_key = $argv[1];
-
-	// Include config file and set default Shop
-	define('_PS_ADMIN_DIR_', getcwd());
 	include($config_path);
-	Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
-
-	// Check if SellerMania key exists
-	if (Configuration::get('SELLERMANIA_KEY') == '')
-		die('ERROR1');
-	if (Tools::getValue('k') == '' && $argument_key == '')
-		die('ERROR2');
-	if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY') || $argument_key == Configuration::get('SELLERMANIA_KEY'))
-	{
-		// Up time and memory limit
-		set_time_limit(600);
-		ini_set('memory_limit', '64M');
-
-		// Run export method
-		include($module_path);
-		$sellermania = new SellerMania();
-		$sellermania->export((empty($argument_key) ? 'display' : 'file'), Tools::getValue('l'), Tools::getValue('s'), Tools::getValue('e'));
-	}
-	else
-		die('ERROR3');
+	include($module_path);
+	$sellermania = new SellerMania();
+	$sellermania->export();
 }
 else
 	die('ERROR');
