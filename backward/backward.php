@@ -32,6 +32,15 @@
 // Get out if the context is already defined
 if (!in_array('Context', get_declared_classes()))
 	require_once(dirname(__FILE__).'/Context.php');
+else
+{
+	if (!in_array('ShopBackwardModuleUpdated', get_declared_classes()))
+	{
+		require_once(dirname(__FILE__).'/ContextUpdated.php');
+		$context = Context::getContext();
+		$context->shop = new ShopBackwardModuleUpdated();
+	}
+}
 
 // Get out if the Display (BWDisplay to avoid any conflict)) is already defined
 if (!in_array('BWDisplay', get_declared_classes()))
