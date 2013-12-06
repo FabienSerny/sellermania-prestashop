@@ -41,7 +41,15 @@ class SellerManiaGetContentController
 		$this->context = Context::getContext();
 	}
 
-	function run()
+	public function saveConfiguration()
+	{
+		$params = array('sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint');
+		foreach ($params as $p)
+			if (isset($_POST[$p]))
+				Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
+	}
+
+	public function assignData()
 	{
 		// Init vars
 		$languages_list = Language::getLanguages();
@@ -78,8 +86,12 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('sm_order_email', Configuration::get('SM_ORDER_EMAIL'));
 		$this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
 		$this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
+	}
 
-		// Return display
+	public function run()
+	{
+		$this->saveConfiguration();
+		$this->assignData();
 		return $this->module->compliantDisplay('displayGetContent.tpl');
 	}
 }

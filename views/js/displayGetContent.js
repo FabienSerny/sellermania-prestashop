@@ -2,14 +2,14 @@ $(document).ready(function() {
 
     function displaySellermaniaCredentials()
     {
-        if ($('#import_orders_yes').attr('checked') == 'checked')
-            $('#import_orders_credentials').fadeIn();
+        if ($('#sm_import_orders_yes').attr('checked') == 'checked')
+            $('#sm_import_orders_credentials').fadeIn();
         else
-            $('#import_orders_credentials').fadeOut();
+            $('#sm_import_orders_credentials').fadeOut();
         return true;
     }
 
-    $('#import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
-    $('#import_orders_no').click(function() { return displaySellermaniaCredentials(); });
+    $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
+    $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
     displaySellermaniaCredentials();
 });

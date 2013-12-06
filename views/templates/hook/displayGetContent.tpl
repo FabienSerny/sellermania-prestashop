@@ -5,16 +5,16 @@
         <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='SellerMania configuration' mod='sellermania'}</legend>
         <div class="margin-form" style="padding-left:15px">
             <p><b>{l s='Do you want to import Sellermania orders in PrestaShop?' mod='sellermania'}</b></p><br>
-            <input type="radio" name="import_orders" id="import_orders_yes" value="yes" {if $sm_import_orders eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
-            <input type="radio" name="import_orders" id="import_orders_no" value="no" {if $sm_import_orders eq 'no' || $sm_import_orders eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+            <input type="radio" name="sm_import_orders" id="sm_import_orders_yes" value="yes" {if $sm_import_orders eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+            <input type="radio" name="sm_import_orders" id="sm_import_orders_no" value="no" {if $sm_import_orders eq 'no' || $sm_import_orders eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
         </div>
-        <div class="margin-form" style="padding-left:15px" id="import_orders_credentials">
+        <div class="margin-form" style="padding-left:15px" id="sm_import_orders_credentials">
             <p><b>{l s='Please fill up with the informations Sellermania provide you:' mod='sellermania'}</b></p>
-            <p><label>{l s='Order e-mail' mod='sellermania'}</label> <input type="text" name="order_email" value="{$sm_order_email}" /></p>
-            <p><label>{l s='Order token' mod='sellermania'}</label> <input type="text" name="order_token" value="{$sm_order_token}" /></p>
-            <p><label>{l s='Order endpoint' mod='sellermania'}</label> <input type="text" name="order_endpoint" value="{$sm_order_endpoint}" /></p>
-            <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" /></label></p>
+            <p><label>{l s='Order e-mail' mod='sellermania'}</label> <input type="text" name="sm_order_email" value="{$sm_order_email}" /></p>
+            <p><label>{l s='Order token' mod='sellermania'}</label> <input type="text" name="sm_order_token" value="{$sm_order_token}" /></p>
+            <p><label>{l s='Order endpoint' mod='sellermania'}</label> <input type="text" name="sm_order_endpoint" value="{$sm_order_endpoint}" /></p>
         </div>
+        <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" /></label></p>
     </fieldset>
 </form>
 
