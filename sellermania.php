@@ -32,7 +32,6 @@ if (version_compare(_PS_VERSION_, '1.5') < 0)
 	require_once(dirname(__FILE__).'/classes/SellerManiaProduct14.php');
 else
 	require_once(dirname(__FILE__).'/classes/SellerManiaProduct15.php');
-require_once(dirname(__FILE__).'/controllers/front/SellerManiaExport.php');
 
 
 class SellerMania extends Module
@@ -57,6 +56,7 @@ class SellerMania extends Module
 		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
 	}
 
+
 	/**
 	 * Install method
 	 * @return boolean success
@@ -67,6 +67,7 @@ class SellerMania extends Module
 		return parent::install();
 	}
 
+
 	/**
 	 * Uninstall method
 	 * @return boolean success
@@ -76,6 +77,7 @@ class SellerMania extends Module
 		Configuration::deleteByName('SELLERMANIA_KEY');
 		return parent::uninstall();
 	}
+
 
 	/**
 	 * Compliant display between 1.4 and 1.5
@@ -91,62 +93,37 @@ class SellerMania extends Module
 	}
 
 
+	/**
+	 * @param string $hook_name
+	 * @return mixed $result
+	 */
+	public function runController($controller_type, $controller_name)
+	{
+		// Include the controller file
+		require_once(dirname(__FILE__).'/controllers/'.$controller_type.'/SellerMania'.$controller_name.'.php');
+		$controller_name = 'SellerMania'.$controller_name.'Controller';
+		$controller = new $controller_name($this, dirname(__FILE__), $this->_path);
+		return $controller->run();
+	}
+
 
 	/**
 	 * Configuration method
-	 * @return string html
+	 * @return string $html
 	 */
 	function getContent()
 	{
-		// Init vars
-		$languages_list = Language::getLanguages();
-		$this->context->shop->setContext(1);
-		$module_web_path = Tools::getHttpHost(true).$this->context->shop->physical_uri.'modules/'.$this->name.'/';
-		$export_directory_writable = 0;
-		if (is_writable(dirname(__FILE__).'/export'))
-			$export_directory_writable = 1;
-		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
-		$smec = new SellerManiaExportController();
-
-		// Check if file exists and retrieve the creation date
-		$files_list = array();
-		foreach ($languages_list as $language)
-		{
-			$iso_lang = strtolower($language['iso_code']);
-			$web_path_file = $module_web_path.$smec->get_export_filename($iso_lang, true);
-			$real_path_file = $smec->get_export_filename($iso_lang);
-			$files_list[$iso_lang]['file'] = $web_path_file;
-			if (file_exists($real_path_file))
-				$files_list[$iso_lang]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
-		}
-
-		// Assign to Smarty
-		$this->context->smarty->assign('script_path', dirname(__FILE__));
-		$this->context->smarty->assign('export_directory_writable', $export_directory_writable);
-		$this->context->smarty->assign('module_web_path', $module_web_path);
-		$this->context->smarty->assign('sellermania_key', $sellermania_key);
-		$this->context->smarty->assign('files_list', $files_list);
-		$this->context->smarty->assign('languages_list', $languages_list);
-		$this->context->smarty->assign('sellermania_module_path', $this->_path);
-
-		$this->context->smarty->assign('sm_import_orders', Configuration::get('SM_IMPORT_ORDERS'));
-		$this->context->smarty->assign('sm_order_email', Configuration::get('SM_ORDER_EMAIL'));
-		$this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
-		$this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
-
-		// Return display
-		return $this->compliantDisplay('displayGetContent.tpl');
+		return $this->runController('hook', 'GetContent');
 	}
-
-
 
 	/**
 	 * Export method
+	 * @return string $export
 	 */
 	public function export()
 	{
-		$controller = new SellerManiaExportController();
-		$controller->run();
+		return $this->runController('front', 'Export');
 	}
+
 }
 

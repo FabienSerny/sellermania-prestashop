@@ -39,7 +39,6 @@ class SellerManiaExportController
 
 	/**
 	 * Controller constructor
-	 * @param array $fields_to_export
 	 */
 	public function __construct()
 	{
