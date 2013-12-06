@@ -129,6 +129,11 @@ class SellerMania extends Module
 		$this->context->smarty->assign('languages_list', $languages_list);
 		$this->context->smarty->assign('sellermania_module_path', $this->_path);
 
+		$this->context->smarty->assign('sm_import_orders', Configuration::get('SM_IMPORT_ORDERS'));
+		$this->context->smarty->assign('sm_order_email', Configuration::get('SM_ORDER_EMAIL'));
+		$this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
+		$this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
+
 		// Return display
 		return $this->compliantDisplay('displayGetContent.tpl');
 	}
