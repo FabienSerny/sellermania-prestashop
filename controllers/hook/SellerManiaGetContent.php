@@ -41,14 +41,54 @@ class SellerManiaGetContentController
 		$this->context = Context::getContext();
 	}
 
+
+	/**
+	 * Test configuration
+	 */
+	public function testConfiguration()
+	{
+		// Creating an instance of OrderClient
+		$client = new Sellermania\OrderClient();
+		$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
+		$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
+		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
+
+		try
+		{
+			// Recovering dispatched orders for the last 30 days
+			$result = $client->getOrderByStatus(
+				Sellermania\OrderClient::STATUS_TO_BE_CONFIRMED,
+				Sellermania\OrderClient::MKP_PRICEMINISTER_FR,
+				new \DateTime(date('Y-m-d')),
+				new \DateTime(date('Y-m-d'))
+			);
+			$this->context->smarty->assign('sm_confirm_credentials', 'ok');
+		}
+		catch (\Exception $e)
+		{
+			$this->context->smarty->assign('sm_error_credentials', $e->getMessage());
+		}
+	}
+
+
+	/**
+	 * Save configuration
+	 */
 	public function saveConfiguration()
 	{
 		$params = array('sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint');
 		foreach ($params as $p)
 			if (isset($_POST[$p]))
 				Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
+
+		if (Configuration::get('SM_IMPORT_ORDERS') == 'yes')
+			$this->testConfiguration();
 	}
 
+
+	/**
+	 * Assign data to Smarty
+	 */
 	public function assignData()
 	{
 		// Init vars
@@ -88,6 +128,11 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
 	}
 
+
+	/**
+	 * Run method
+	 * @return string $html
+	 */
 	public function run()
 	{
 		$this->saveConfiguration();

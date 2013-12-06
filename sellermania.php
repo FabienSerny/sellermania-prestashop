@@ -33,6 +33,9 @@ if (version_compare(_PS_VERSION_, '1.5') < 0)
 else
 	require_once(dirname(__FILE__).'/classes/SellerManiaProduct15.php');
 
+// Loading the Sellermania API Client
+require_once(dirname(__FILE__).'/lib/Sellermania.php');
+
 
 class SellerMania extends Module
 {
