@@ -38,16 +38,6 @@ require_once(dirname(__FILE__).'/controllers/front/SellerManiaExport.php');
 class SellerMania extends Module
 {
 	/**
-	 * @var array fields to export
-	 */
-	private $fields_to_export = array(
-		'id_product', 'ean13', 'upc', 'ecotax', 'quantity', 'price', 'wholesale_price', 'reference',
-		'width', 'height', 'depth', 'weight', 'name', 'images', 'category_default',
-		'description', 'description_short', 'manufacturer_name'
-	);
-
-
-	/**
 	 * Module Constructor
 	 */
 	function __construct()
@@ -86,6 +76,21 @@ class SellerMania extends Module
 		Configuration::deleteByName('SELLERMANIA_KEY');
 		return parent::uninstall();
 	}
+
+	/**
+	 * Compliant display between 1.4 and 1.5
+	 * @param string $template
+	 * @return string $html
+	 */
+	public function compliantDisplay($template)
+	{
+		if (version_compare(_PS_VERSION_, '1.5') < 0)
+			return $this->display(__FILE__, 'views/templates/hook/'.$template);
+		else
+			return $this->display(__FILE__, $template);
+	}
+
+
 
 	/**
 	 * Configuration method
@@ -128,25 +133,14 @@ class SellerMania extends Module
 		return $this->compliantDisplay('displayGetContent.tpl');
 	}
 
-	/**
-	 * Compliant display between 1.4 and 1.5
-	 * @param string $template
-	 * @return string $html
-	 */
-	public function compliantDisplay($template)
-	{
-		if (version_compare(_PS_VERSION_, '1.5') < 0)
-			return $this->display(__FILE__, 'views/templates/hook/'.$template);
-		else
-			return $this->display(__FILE__, $template);
-	}
+
 
 	/**
 	 * Export method
 	 */
 	public function export()
 	{
-		$controller = new SellerManiaExportController($this->fields_to_export);
+		$controller = new SellerManiaExportController();
 		$controller->run();
 	}
 }

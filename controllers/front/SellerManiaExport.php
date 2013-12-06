@@ -29,12 +29,20 @@ if (!defined('_PS_VERSION_'))
 class SellerManiaExportController
 {
 	/**
+	 * @var array fields to export
+	 */
+	private $fields_to_export = array(
+		'id_product', 'ean13', 'upc', 'ecotax', 'quantity', 'price', 'wholesale_price', 'reference',
+		'width', 'height', 'depth', 'weight', 'name', 'images', 'category_default',
+		'description', 'description_short', 'manufacturer_name'
+	);
+
+	/**
 	 * Controller constructor
 	 * @param array $fields_to_export
 	 */
-	public function __construct($fields_to_export = array())
+	public function __construct()
 	{
-		$this->fields_to_export = $fields_to_export;
 		$this->context = Context::getContext();
 	}
 
