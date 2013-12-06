@@ -63,7 +63,14 @@ class SellerMania extends Module
 	 */
 	public function install()
 	{
+		// Execute module install MySQL commands
+		$sql_file = dirname(__FILE__).'/install/install.sql';
+		if (!$this->loadSQLFile($sql_file))
+			return false;
+
+		// Gen SellerMania key
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
+
 		return parent::install();
 	}
 
@@ -74,8 +81,43 @@ class SellerMania extends Module
 	 */
 	public function uninstall()
 	{
+		// Execute module install MySQL commands
+		$sql_file = dirname(__FILE__).'/install/uninstall.sql';
+		if (!$this->loadSQLFile($sql_file))
+			return false;
+
+		// Delete configuration values
+		Configuration::deleteByName('SM_IMPORT_ORDERS');
+		Configuration::deleteByName('SM_ORDER_EMAIL');
+		Configuration::deleteByName('SM_ORDER_TOKEN');
+		Configuration::deleteByName('SM_ORDER_ENDPOINT');
 		Configuration::deleteByName('SELLERMANIA_KEY');
+
 		return parent::uninstall();
+	}
+
+
+	/**
+	 * Load SQL file
+	 * @return boolean success
+	 */
+	public function loadSQLFile($sql_file)
+	{
+		// Get install MySQL file content
+		$sql_content = file_get_contents($sql_file);
+
+		// Replace prefix and store MySQL command in array
+		$sql_content = str_replace('PREFIX_', _DB_PREFIX_, $sql_content);
+		$sql_requests = preg_split("/;\s*[\r\n]+/", $sql_content);
+
+		// Execute each MySQL command
+		$result = true;
+		foreach($sql_requests AS $request)
+			if (!empty($request))
+				$result &= Db::getInstance()->execute(trim($request));
+
+		// Return result
+		return $result;
 	}
 
 
