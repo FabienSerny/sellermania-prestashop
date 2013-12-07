@@ -17,6 +17,14 @@
         <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" /></label></p>
         {if isset($sm_error_credentials)}<br><br><p class="error"><strong>{$sm_error_credentials}</strong></p>{/if}
         {if isset($sm_confirm_credentials)}<br><br><p class="conf"><strong>{l s='Configuration is valid' mod='sellermania'}</strong></p>{/if}
+
+        {if $sm_next_import ne ''}
+            <br>
+            <div class="margin-form" style="padding-left:15px">
+                <p>{l s='The last order importation was done:' mod='sellermania'} <b>{$sm_last_import}</b></p>
+                <p>{l s='Next order importation won\'t be done until:' mod='sellermania'} <b>{$sm_next_import}</b></p>
+            </div>
+        {/if}
     </fieldset>
 </form>
 
