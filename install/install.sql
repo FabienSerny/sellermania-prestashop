@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_sellermania_order` (
   `date_import` datetime NOT NULL,
   PRIMARY KEY (`id_sellermania_order`),
   KEY `marketplace` (`marketplace`),
-  KEY `marketplace` (`ref_order`),
-  KEY `marketplace` (`id_order`)
+  KEY `ref_order` (`ref_order`),
+  KEY `id_order` (`id_order`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
