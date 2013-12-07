@@ -71,10 +71,14 @@ class SellerMania extends Module
 		if (!$this->loadSQLFile($sql_file))
 			return false;
 
+		// Register hooks
+		if (!parent::install() || !$this->registerHook('displayAdminOrder') || !$this->registerHook('displayBackOfficeHeader'))
+			return false;
+
 		// Gen SellerMania key
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
 
-		return parent::install();
+		return true;
 	}
 
 
@@ -94,6 +98,8 @@ class SellerMania extends Module
 		Configuration::deleteByName('SM_ORDER_EMAIL');
 		Configuration::deleteByName('SM_ORDER_TOKEN');
 		Configuration::deleteByName('SM_ORDER_ENDPOINT');
+		Configuration::deleteByName('SM_NEXT_IMPORT');
+		Configuration::deleteByName('SM_CREDENTIALS_CHECK');
 		Configuration::deleteByName('SELLERMANIA_KEY');
 
 		return parent::uninstall();
@@ -160,6 +166,17 @@ class SellerMania extends Module
 	{
 		return $this->runController('hook', 'GetContent');
 	}
+
+
+	/**
+	 * Display BackOffice Header Hook
+	 * @return string $html
+	 */
+	public function hookDisplayBackOfficeHeader($params)
+	{
+		return $this->runController('hook', 'DisplayBackOfficeHeader');
+	}
+
 
 	/**
 	 * Export method

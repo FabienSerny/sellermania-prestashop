@@ -62,10 +62,12 @@ class SellerManiaGetContentController
 				new \DateTime(date('Y-m-d')),
 				new \DateTime(date('Y-m-d'))
 			);
+			Configuration::updateValue('SM_CREDENTIALS_CHECK', 'ok');
 			$this->context->smarty->assign('sm_confirm_credentials', 'ok');
 		}
 		catch (\Exception $e)
 		{
+			Configuration::updateValue('SM_CREDENTIALS_CHECK', 'ko');
 			$this->context->smarty->assign('sm_error_credentials', $e->getMessage());
 		}
 	}
