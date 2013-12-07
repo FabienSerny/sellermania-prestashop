@@ -104,15 +104,16 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
 		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
 
-		try
-		{
-			// Set dates limit
-			$date_start = date("Y-m-d H:i:s", strtotime('-30 days'));
-			$date_end = date('Y-m-d');
-			//$date_start = '2013-06-01';
-			//$date_end = '2013-06-31';
 
-			foreach ($this->marketplaces_list as $marketplace)
+		// Set dates limit
+		$date_start = date("Y-m-d H:i:s", strtotime('-30 days'));
+		$date_end = date('Y-m-d');
+		//$date_start = '2013-06-01';
+		//$date_end = '2013-06-31';
+
+		foreach ($this->marketplaces_list as $marketplace)
+		{
+			try
 			{
 				// Recovering dispatched orders for the last 30 days
 				$result = $client->getOrderByStatus(
@@ -122,20 +123,20 @@ class SellerManiaDisplayBackOfficeHeaderController
 					new \DateTime($date_end)
 				);
 
-				echo '<pre>';
-				print_r($result);
-				echo '</pre>';
-
 				// Import order
 				if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
 					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
 						if (!$this->orderHasAlreadyBeenImported($order))
 							$this->importOrder($order);
 			}
-		}
-		catch (\Exception $e)
-		{
-			// $e->getMessage();
+			catch (\Exception $e)
+			{
+				if (Tools::getValue('debug') == 'true')
+				{
+					$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+					file_put_contents(dirname(__FILE__).'/../../log/log-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+				}
+			}
 		}
 	}
 
