@@ -29,6 +29,30 @@ if (!defined('_PS_VERSION_'))
 
 class SellerManiaDisplayBackOfficeHeaderController
 {
+	public $marketplaces_list = array(
+              Sellermania\OrderClient::MKP_AMAZON_FR,
+              Sellermania\OrderClient::MKP_AMAZON_COM,
+              Sellermania\OrderClient::MKP_AMAZON_DE,
+              Sellermania\OrderClient::MKP_AMAZON_UK,
+              Sellermania\OrderClient::MKP_AMAZON_CA,
+              Sellermania\OrderClient::MKP_AMAZON_IT,
+              Sellermania\OrderClient::MKP_AMAZON_ES,
+              Sellermania\OrderClient::MKP_2XMOINSCHER,
+              Sellermania\OrderClient::MKP_FNAC_COM,
+              Sellermania\OrderClient::MKP_PRICEMINISTER_FR,
+              Sellermania\OrderClient::MKP_EBAY_FR,
+              Sellermania\OrderClient::MKP_EBAY_DE,
+              Sellermania\OrderClient::MKP_EBAY_UK,
+              Sellermania\OrderClient::MKP_PIXMANIA_FR,
+              Sellermania\OrderClient::MKP_PIXMANIA_UK,
+              Sellermania\OrderClient::MKP_PIXMANIA_DE,
+              Sellermania\OrderClient::MKP_PIXMANIA_IT,
+              Sellermania\OrderClient::MKP_PIXMANIA_ES,
+              Sellermania\OrderClient::MKP_RUEDUCOMMERCE_FR,
+              Sellermania\OrderClient::MKP_CDISCOUNT_COM,
+	);
+
+
 	/**
 	 * Controller constructor
 	 */
@@ -39,6 +63,82 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$this->dir_path = $dir_path;
 		$this->context = Context::getContext();
 	}
+
+
+	/**
+	 * Check if order has already been imported
+	 * @param $order
+	 */
+	public function orderHasAlreadyBeenImported($order)
+	{
+		$id_order_sellermania = (int)Db::getInstance()->getValue('
+		SELECT `id_order_sellermania`
+		FROM `'._DB_PREFIX_.'sellermania_order`
+		WHERE `marketplace` = \''.pSQL($order['OrderInfo']['MarketPlace']).'\'
+		AND `ref_order` = \''.pSQL($order['OrderInfo']['OrderId']).'\'');
+
+		if ($id_order_sellermania > 0)
+			return true;
+		return false;
+	}
+
+
+	/**
+	 * Import order
+	 * @param $order
+	 */
+	public function importOrder($order)
+	{
+
+	}
+
+
+	/**
+	 * Import SellerMania orders
+	 */
+	public function importOrders()
+	{
+		// Creating an instance of OrderClient
+		$client = new Sellermania\OrderClient();
+		$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
+		$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
+		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
+
+		try
+		{
+			// Set dates limit
+			$date_start = date("Y-m-d H:i:s", strtotime('-30 days'));
+			$date_end = date('Y-m-d');
+			//$date_start = '2013-06-01';
+			//$date_end = '2013-06-31';
+
+			foreach ($this->marketplaces_list as $marketplace)
+			{
+				// Recovering dispatched orders for the last 30 days
+				$result = $client->getOrderByStatus(
+					Sellermania\OrderClient::STATUS_TO_BE_CONFIRMED,
+					$marketplace,
+					new \DateTime($date_start),
+					new \DateTime($date_end)
+				);
+
+				echo '<pre>';
+				print_r($result);
+				echo '</pre>';
+
+				// Import order
+				if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
+					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
+						if (!$this->orderHasAlreadyBeenImported($order))
+							$this->importOrder($order);
+			}
+		}
+		catch (\Exception $e)
+		{
+			// $e->getMessage();
+		}
+	}
+
 
 	/**
 	 * Check if it's the time to import orders
@@ -60,13 +160,6 @@ class SellerManiaDisplayBackOfficeHeaderController
 		return false;
 	}
 
-	/**
-	 * Import SellerMania orders
-	 */
-	public function importOrders()
-	{
-
-	}
 
 	/**
 	 * Run method
