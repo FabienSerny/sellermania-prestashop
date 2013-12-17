@@ -131,7 +131,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 			}
 			catch (\Exception $e)
 			{
-				if (Tools::getValue('debug') == 'true')
+				if (Tools::getValue('debug') == 'import')
 				{
 					$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
 					file_put_contents(dirname(__FILE__).'/../../log/log-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
@@ -147,7 +147,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 	public function timeToImportOrders()
 	{
 		$next_import = Configuration::get('SM_NEXT_IMPORT');
-		if ($next_import == '' || $next_import < date('Y-m-d H:i:s'))
+		if ($next_import == '' || $next_import < date('Y-m-d H:i:s') || Tools::getValue('debug') == 'import')
 		{
 			// Update next import
 			$next_import = date("Y-m-d H:i:s", strtotime('+1 hour'));

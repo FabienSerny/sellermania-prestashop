@@ -28,12 +28,16 @@ if (!defined('_PS_VERSION_'))
 
 
 // Require Db requests class
+$db_requests_class_file = 'SellerManiaProduct15.php';
 if (version_compare(_PS_VERSION_, '1.5') < 0)
-	require_once(dirname(__FILE__).'/classes/SellerManiaProduct14.php');
-else
-	require_once(dirname(__FILE__).'/classes/SellerManiaProduct15.php');
+	$db_requests_class_file = 'SellerManiaProduct14.php';
+require_once(dirname(__FILE__).'/classes/'.$db_requests_class_file);
 
-// Loading the Sellermania API Client
+// Load ObjectModel and PaymentModule classes
+require_once(dirname(__FILE__).'/classes/SellermaniaOrder.php');
+require_once(dirname(__FILE__).'/classes/SellermaniaPaymentModule.php');
+
+// Load the Sellermania API Client
 require_once(dirname(__FILE__).'/lib/Sellermania.php');
 
 
