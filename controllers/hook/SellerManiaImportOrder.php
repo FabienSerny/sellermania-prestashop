@@ -42,6 +42,47 @@ class SellerManiaImportOrderController
 
 
 	/**
+	 * Get Product Identifier
+	 * @param array $product
+	 * @return array $product
+	 */
+	public function getProductIdentifier($product)
+	{
+		// Check product attribute
+		$attr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_attribute` LIKE `ean13` = \''.pSQL($product['Ean']).'\'');
+		if ($attr['id_product'] > 0)
+		{
+			$product['id_product'] = $attr['id_product'];
+			$product['id_product_attribute'] = $attr['id_product_attribute'];
+			return $product;
+		}
+
+		// Check product
+		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product` LIKE `ean13` = \''.pSQL($product['Ean']).'\'');
+		if ($pr['id_product'] > 0)
+		{
+			$product['id_product'] = $pr['id_product'];
+			$product['id_product_attribute'] = 0;
+			return $product;
+		}
+
+		// Check product
+		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_lang` LIKE `name` = \''.pSQL($product['ItemName']).'\'');
+		if ($pr['id_product'] > 0)
+		{
+			$product['id_product'] = $pr['id_product'];
+			$product['id_product_attribute'] = 0;
+			return $product;
+		}
+
+		$product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
+		$product['id_product_attribute'] = 0;
+
+		return $product;
+	}
+
+
+	/**
 	 * Import order
 	 * @param $order
 	 */
@@ -106,6 +147,49 @@ class SellerManiaImportOrderController
 		$customer_cart->recyclable = 0;
 		$customer_cart->gift = 0;
 		$customer_cart->add();
+
+		// Update cart with products
+		$cart_nb_products = 0;
+		$total_products_without_tax = 0;
+		foreach ($order['OrderInfo']['Product'] as $product)
+		{
+			// Add to cart
+			$product = $this->getProductIdentifier($product);
+			die('test start bis');
+			$quantity = (int)$product['quantity'];
+			$id_product = (int)$product['id_product'];
+			$id_product_attribute = (int)$product['id_product_attribute'];
+			die('test '.$id_product.' x '.$quantity.' !');
+			if ($customer_cart->updateQty($quantity, $id_product, $id_product_attribute))
+				$cart_nb_products++;
+			else
+				die('I could not '.$id_product.' x '.$quantity.' !');
+			die('OK');
+			// Calcul total product without tax
+			$product_price = $product['Amount']['Price'];
+			$vat_rate = 1 + ($product['VatRate'] / 10000);
+			$product_price = $product_price / $vat_rate;
+			$total_products_without_tax += $product_price;
+		}
+		$customer_cart->update();
+		die('test end');
+		// Create order
+		$amount_paid = (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'];
+		$payment_method = 'SM '.$order['OrderInfo']['MarketPlace'].' #'.$order['OrderInfo']['OrderId'];
+		$payment_module = new SellermaniaPaymentModule();
+		$payment_module->validateOrder((int)$customer_cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$customer_cart->id_currency);
+		$id_order = $payment_module->currentOrder;
+
+		// Fix on order
+		$update = array(
+			'total_paid' => (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'],
+			'total_paid_real' => (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'],
+			'total_products' => (float)$total_products_without_tax,
+			'total_products_wt' => (float)$order['OrderInfo']['Amount']['Price'],
+			'total_shipping' => (float)$order['OrderInfo']['Transport']['Amount']['Price'],
+			'date_add' => pSQL(substr($order['Paiement']['Date'], 0, 21)),
+		);
+		Db::getInstance()->update(_DB_PREFIX_.'orders', $update, '`id_order` = '.(int)$id_order);
 	}
 }
 
