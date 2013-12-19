@@ -82,6 +82,9 @@ class SellerMania extends Module
 		// Install Order States
 		$this->installOrderState();
 
+		// Install Product
+		$this->installSellermaniaProduct();
+
 		// Gen SellerMania key
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
 
@@ -171,6 +174,42 @@ class SellerMania extends Module
 					copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/tmp/order_state_mini_'.$order_state->id.'.gif');
 				}
 			}
+	}
+
+
+	/**
+	 * Install Sellermania Product (in case a product is not recognized)
+	 */
+	public function installSellermaniaProduct()
+	{
+		if (Configuration::get('SM_DEFAULT_PRODUCT_ID') > 0)
+			return true;
+
+		$label = $this->l('Sellermania product');
+
+		$product = new Product();
+		$product->name = array((int)Configuration::get('PS_LANG_DEFAULT') => pSQL($label));
+		$product->link_rewrite = array((int)Configuration::get('PS_LANG_DEFAULT') => 'sellermania-product');
+		$product->id_tax_rules_group = 0;
+		$product->id_supplier = 0;
+		$product->id_manufacturer = 0;
+		$product->id_category_default = 0;
+		$product->quantity = 0;
+		$product->minimal_quantity = 1;
+		$product->price = 1;
+		$product->wholesale_price = 0;
+		$product->out_of_stock = 1;
+		$product->available_for_order = 1;
+		$product->show_price = 1;
+		$product->date_add = pSQL(date('Y-m-d H:i:s'));
+		$product->date_upd = pSQL(date('Y-m-d H:i:s'));
+		$product->active = 1;
+		$product->add();
+
+		// Saving product ID
+		Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id);
+
+		return true;
 	}
 
 
