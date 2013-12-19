@@ -49,7 +49,7 @@ class SellerManiaImportOrderController
 	public function getProductIdentifier($product)
 	{
 		// Check product attribute
-		$attr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_attribute` LIKE `ean13` = \''.pSQL($product['Ean']).'\'');
+		$attr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_attribute` WHERE `ean13` = \''.pSQL($product['Ean']).'\'');
 		if ($attr['id_product'] > 0)
 		{
 			$product['id_product'] = $attr['id_product'];
@@ -58,7 +58,7 @@ class SellerManiaImportOrderController
 		}
 
 		// Check product
-		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product` LIKE `ean13` = \''.pSQL($product['Ean']).'\'');
+		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product` WHERE `ean13` = \''.pSQL($product['Ean']).'\'');
 		if ($pr['id_product'] > 0)
 		{
 			$product['id_product'] = $pr['id_product'];
@@ -67,7 +67,7 @@ class SellerManiaImportOrderController
 		}
 
 		// Check product
-		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_lang` LIKE `name` = \''.pSQL($product['ItemName']).'\'');
+		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_lang` WHERE `name` = \''.pSQL($product['ItemName']).'\'');
 		if ($pr['id_product'] > 0)
 		{
 			$product['id_product'] = $pr['id_product'];
