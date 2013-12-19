@@ -102,8 +102,16 @@ class SellerManiaDisplayBackOfficeHeaderController
 					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
 						if (!SellermaniaOrder::orderHasAlreadyBeenImported($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']))
 						{
+							// Save config value
+							$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
+
+							// Import Order
 							$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 							$import_order->run($order);
+
+							// Restore config value
+							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
 						}
 			}
 			catch (\Exception $e)
