@@ -155,16 +155,12 @@ class SellerManiaImportOrderController
 		{
 			// Add to cart
 			$product = $this->getProductIdentifier($product);
-			die('test start bis');
 			$quantity = (int)$product['quantity'];
 			$id_product = (int)$product['id_product'];
 			$id_product_attribute = (int)$product['id_product_attribute'];
-			die('test '.$id_product.' x '.$quantity.' !');
 			if ($customer_cart->updateQty($quantity, $id_product, $id_product_attribute))
 				$cart_nb_products++;
-			else
-				die('I could not '.$id_product.' x '.$quantity.' !');
-			die('OK');
+
 			// Calcul total product without tax
 			$product_price = $product['Amount']['Price'];
 			$vat_rate = 1 + ($product['VatRate'] / 10000);
@@ -172,7 +168,7 @@ class SellerManiaImportOrderController
 			$total_products_without_tax += $product_price;
 		}
 		$customer_cart->update();
-		die('test end');
+
 		// Create order
 		$amount_paid = (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'];
 		$payment_method = 'SM '.$order['OrderInfo']['MarketPlace'].' #'.$order['OrderInfo']['OrderId'];
