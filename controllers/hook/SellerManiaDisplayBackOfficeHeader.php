@@ -26,6 +26,8 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+// Load ImportOrder Controller
+require_once(dirname(__FILE__).'/SellerManiaImportOrder.php');
 
 class SellerManiaDisplayBackOfficeHeaderController
 {
@@ -66,34 +68,6 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 
 	/**
-	 * Check if order has already been imported
-	 * @param $order
-	 */
-	public function orderHasAlreadyBeenImported($order)
-	{
-		$id_order_sellermania = (int)Db::getInstance()->getValue('
-		SELECT `id_order_sellermania`
-		FROM `'._DB_PREFIX_.'sellermania_order`
-		WHERE `marketplace` = \''.pSQL($order['OrderInfo']['MarketPlace']).'\'
-		AND `ref_order` = \''.pSQL($order['OrderInfo']['OrderId']).'\'');
-
-		if ($id_order_sellermania > 0)
-			return true;
-		return false;
-	}
-
-
-	/**
-	 * Import order
-	 * @param $order
-	 */
-	public function importOrder($order)
-	{
-
-	}
-
-
-	/**
 	 * Import SellerMania orders
 	 */
 	public function importOrders()
@@ -126,8 +100,11 @@ class SellerManiaDisplayBackOfficeHeaderController
 				// Import order
 				if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
 					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
-						if (!$this->orderHasAlreadyBeenImported($order))
-							$this->importOrder($order);
+						if (!SellermaniaOrder::orderHasAlreadyBeenImported($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']))
+						{
+							$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+							$import_order->run($order);
+						}
 			}
 			catch (\Exception $e)
 			{

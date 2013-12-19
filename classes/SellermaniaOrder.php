@@ -71,6 +71,24 @@ class SellermaniaOrder extends ObjectModel
 	);
 
 
+	/**
+	 * Check if order has already been imported
+	 * @param $order
+	 */
+	public static function orderHasAlreadyBeenImported($marketplace, $ref_order)
+	{
+		$id_order_sellermania = (int)Db::getInstance()->getValue('
+		SELECT `id_sellermania_order`
+		FROM `'._DB_PREFIX_.'sellermania_order`
+		WHERE `marketplace` = \''.pSQL($marketplace).'\'
+		AND `ref_order` = \''.pSQL($ref_order).'\'');
+
+		if ($id_order_sellermania > 0)
+			return true;
+		return false;
+	}
+
+
 	/*** Retrocompatibility 1.4 ***/
 
 	protected 	$fieldsRequired = array('marketplace', 'ref_order', 'id_order');
