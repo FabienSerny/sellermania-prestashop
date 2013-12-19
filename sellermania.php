@@ -79,6 +79,9 @@ class SellerMania extends Module
 		if (!parent::install() || !$this->registerHook('displayAdminOrder') || !$this->registerHook('displayBackOfficeHeader'))
 			return false;
 
+		// Install Order States
+		$this->installOrderState();
+
 		// Gen SellerMania key
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
 
@@ -131,6 +134,43 @@ class SellerMania extends Module
 
 		// Return result
 		return $result;
+	}
+
+	/**
+	 * Install Sellermania Order States
+	 */
+	public function installOrderState()
+	{
+		$sellermania_order_states = array(
+			'PS_OS_SM_AWAITING' => array('label' => $this->l('Sellermania - Awaiting confirmation'), 'logable' => false, 'invoice' => false, 'shipped' => false, 'paid' => false),
+			'PS_OS_SM_CONFIRMED' => array('label' => $this->l('Sellermania - Order confirmed'), 'logable' => true, 'invoice' => false, 'shipped' => false, 'paid' => false),
+			'PS_OS_SM_SEND' => array('label' => $this->l('Sellermania - To send'), 'logable' => true, 'invoice' => true, 'shipped' => true, 'paid' => true),
+			'PS_OS_SM_SENT' => array('label' => $this->l('Sellermania - Sent'), 'logable' => true, 'invoice' => true, 'shipped' => true, 'paid' => true),
+		);
+
+		foreach ($sellermania_order_states as $order_state_key => $order_state_array)
+			if (Configuration::get($order_state_key) < 1)
+			{
+				$order_state = new OrderState();
+				$order_state->send_email = false;
+				$order_state->module_name = $this->name;
+				$order_state->invoice = $order_state_array['invoice'];
+				$order_state->color = '#98c3ff';
+				$order_state->logable = $order_state_array['logable'];
+				$order_state->shipped = $order_state_array['shipped'];
+				$order_state->unremovable = false;
+				$order_state->delivery = $order_state_array['shipped'];
+				$order_state->hidden = false;
+				$order_state->paid = $order_state_array['invoice'];
+				$order_state->deleted = true;
+				$order_state->name = array((int)Configuration::get('PS_LANG_DEFAULT') => pSQL($order_state_array['label']));
+				if ($order_state->add())
+				{
+					Configuration::updateValue($order_state_key, $order_state->id);
+					copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/os/'.$order_state->id.'.gif');
+					copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/tmp/order_state_mini_'.$order_state->id.'.gif');
+				}
+			}
 	}
 
 
