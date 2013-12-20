@@ -159,10 +159,13 @@ class SellerManiaImportOrderController
 			$order['OrderInfo']['Product'] = array($order['OrderInfo']['Product']);
 
 		// Update cart with products
-		foreach ($order['OrderInfo']['Product'] as $product)
+		foreach ($order['OrderInfo']['Product'] as $kp => $product)
 		{
-			// Add to cart
+			// Get Product Identifiers
 			$product = $this->getProductIdentifier($product);
+			$order['OrderInfo']['Product'][$kp] = $product;
+
+			// Add to cart
 			$quantity = (int)$product['QuantityPurchased'];
 			$id_product = (int)$product['id_product'];
 			$id_product_attribute = (int)$product['id_product_attribute'];
@@ -177,6 +180,11 @@ class SellerManiaImportOrderController
 		}
 		$customer_cart->update();
 
+		// Remove customer e-mail to avoid email sending
+		$customer_email = $this->context->customer->email;
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-SM'), 'UPDATE', '`id_customer` = '.(int)$customer->id);
+		$this->context->customer->email = 'NOSEND-SM';
+
 		// Create order
 		$amount_paid = (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'];
 		$payment_method = 'SM '.$order['OrderInfo']['MarketPlace'].' - '.$order['OrderInfo']['OrderId'];
@@ -185,7 +193,7 @@ class SellerManiaImportOrderController
 		$payment_module->validateOrder((int)$customer_cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$customer_cart->id_currency);
 		$id_order = $payment_module->currentOrder;
 
-		// Fix on order
+		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
 		$update = array(
 			'total_paid' => (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'],
 			'total_paid_real' => (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'],
@@ -194,7 +202,11 @@ class SellerManiaImportOrderController
 			'total_shipping' => (float)$order['OrderInfo']['Transport']['Amount']['Price'],
 			'date_add' => pSQL(substr($order['Paiement']['Date'], 0, 21)),
 		);
-		Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$id_order);
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$id_order);
+
+		// Restore customer e-mail
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$customer->id);
+		$this->context->customer->email = $customer_email;
 	}
 }
 
