@@ -166,7 +166,6 @@ class SellerManiaImportOrderController
 			$quantity = (int)$product['QuantityPurchased'];
 			$id_product = (int)$product['id_product'];
 			$id_product_attribute = (int)$product['id_product_attribute'];
-			echo 'test : '.$id_product.'<br>';
 			if ($customer_cart->updateQty($quantity, $id_product, $id_product_attribute))
 				$cart_nb_products++;
 
