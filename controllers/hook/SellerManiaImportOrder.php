@@ -36,6 +36,7 @@ class SellerManiaImportOrderController
 	public $cart;
 	public $order;
 
+
 	/**
 	 * Controller constructor
 	 */
@@ -46,7 +47,6 @@ class SellerManiaImportOrderController
 		$this->dir_path = $dir_path;
 		$this->context = Context::getContext();
 	}
-
 
 
 	/**
@@ -187,6 +187,7 @@ class SellerManiaImportOrderController
 		$this->cart->update();
 	}
 
+
 	/**
 	 * Create order
 	 */
@@ -215,7 +216,6 @@ class SellerManiaImportOrderController
 			$product_price = $product_price / $vat_rate;
 			$total_products_without_tax += $product_price;
 		}
-
 
 		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
 		$update = array(
