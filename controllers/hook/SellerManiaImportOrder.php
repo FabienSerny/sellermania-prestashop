@@ -29,6 +29,13 @@ if (!defined('_PS_VERSION_'))
 
 class SellerManiaImportOrderController
 {
+	public $data;
+
+	public $customer;
+	public $address;
+	public $cart;
+	public $order;
+
 	/**
 	 * Controller constructor
 	 */
@@ -38,6 +45,192 @@ class SellerManiaImportOrderController
 		$this->web_path = $web_path;
 		$this->dir_path = $dir_path;
 		$this->context = Context::getContext();
+	}
+
+
+
+	/**
+	 * Import order
+	 * @param $data
+	 */
+	public function run($data)
+	{
+		$this->data = $data;
+		$this->preprocessData();
+		$this->createCustomer();
+		$this->createAddress();
+		$this->createCart();
+		$this->createOrder();
+	}
+
+
+	/**
+	 * Preprocess data array
+	 */
+	public function preprocessData()
+	{
+		// Retrieve firstname and lastname
+		$names = explode(' ', $this->data['User'][0]['Name']);
+		$firstname = $names[0];
+		if (isset($names[1]) && !empty($names[1]) && count($names) == 2)
+			$lastname = $names[1];
+		else
+		{
+			$lastname = $this->data['User'][0]['Name'];
+			$lastname = str_replace($firstname.' ', '', $lastname);
+		}
+
+		// Retrieve shipping phone
+		$shipping_phone = '0100000000';
+		if (isset($this->data['User'][0]['Address']['ShippingPhone']) && !empty($this->data['User'][0]['Address']['ShippingPhone']))
+			$shipping_phone = $this->data['User'][0]['Address']['ShippingPhone'];
+
+		// Retrieve currency
+		$currency_iso_code = 'EUR';
+		if (isset($this->data['OrderInfo']['Amount']['Currency']))
+			$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
+
+		// Refill data
+		$this->data['User'][0]['FirstName'] = $firstname;
+		$this->data['User'][0]['LastName'] = $lastname;
+		$this->data['User'][0]['Address']['ShippingPhone'] = $shipping_phone;
+		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
+
+		// Set match with exception reservations
+		$country_exceptionnal_iso_code = array('FX' => 'FR');
+		if (isset($country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']]))
+			$this->data['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']];
+
+		// Fix data (when only one product, array is not the same)
+		if (!isset($this->data['OrderInfo']['Product'][0]))
+			$this->data['OrderInfo']['Product'] = array($this->data['OrderInfo']['Product']);
+	}
+
+
+	/**
+	 * Create customer
+	 */
+	public function createCustomer()
+	{
+		// Create customer as guest
+		$this->customer = new Customer();
+		$this->customer->id_gender = 9;
+		$this->customer->firstname = $this->data['User'][0]['FirstName'];
+		$this->customer->lastname = $this->data['User'][0]['LastName'];
+		$this->customer->email = Configuration::get('PS_SHOP_EMAIL');
+		$this->customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
+		$this->customer->is_guest = 1;
+		$this->customer->active = 1;
+		$this->customer->add();
+
+		// Set context
+		$this->context->customer = $this->customer;
+	}
+
+
+	/**
+	 * Create Address
+	 */
+	public function createAddress()
+	{
+		// Create address
+		$this->address = new Address();
+		$this->address->alias = 'Sellermania';
+		$this->address->firstname = $this->data['User'][0]['FirstName'];
+		$this->address->lastname = $this->data['User'][0]['LastName'];
+		$this->address->address1 = $this->data['User'][0]['Address']['Street1'];
+		$this->address->address2 = $this->data['User'][0]['Address']['Street2'];
+		$this->address->postcode = $this->data['User'][0]['Address']['ZipCode'];
+		$this->address->city = $this->data['User'][0]['Address']['City'];
+		$this->address->id_country = Country::getByIso($this->data['User'][0]['Address']['Country']);
+		$this->address->phone = $this->data['User'][0]['Address']['ShippingPhone'];
+		$this->address->id_customer = $this->customer->id;
+		$this->address->active = 1;
+		$this->address->add();
+	}
+
+
+	/**
+	 * Create Cart
+	 */
+	public function createCart()
+	{
+		// Create Cart
+		$this->cart = new Cart();
+		$this->cart->id_customer = $this->customer->id;
+		$this->cart->id_address_invoice = $this->address->id;
+		$this->cart->id_address_delivery = $this->address->id;
+		$this->cart->id_carrier = 0;
+		$this->cart->id_lang = $this->customer->id_lang;
+		$this->cart->id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
+		$this->cart->recyclable = 0;
+		$this->cart->gift = 0;
+		$this->cart->add();
+
+		// Update cart with products
+		$cart_nb_products = 0;
+		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
+		{
+			// Get Product Identifiers
+			$product = $this->getProductIdentifier($product);
+			$this->data['OrderInfo']['Product'][$kp] = $product;
+
+			// Add to cart
+			$quantity = (int)$product['QuantityPurchased'];
+			$id_product = (int)$product['id_product'];
+			$id_product_attribute = (int)$product['id_product_attribute'];
+			if ($this->cart->updateQty($quantity, $id_product, $id_product_attribute))
+				$cart_nb_products++;
+		}
+
+		// Cart update
+		$this->cart->update();
+	}
+
+	/**
+	 * Create order
+	 */
+	public function createOrder()
+	{
+		// Remove customer e-mail to avoid email sending
+		$customer_email = $this->context->customer->email;
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-SM'), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
+		$this->context->customer->email = 'NOSEND-SM';
+
+		// Create order
+		$amount_paid = (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
+		$payment_method = 'SM '.$this->data['OrderInfo']['MarketPlace'].' - '.$this->data['OrderInfo']['OrderId'];
+		$payment_module = new SellermaniaPaymentModule();
+		$payment_module->name = $this->module->name;
+		$payment_module->validateOrder((int)$this->cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$this->cart->id_currency);
+		$id_order = $payment_module->currentOrder;
+
+		// Calcul total product without tax
+		$total_products_without_tax = 0;
+		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
+		{
+			// Calcul total product without tax
+			$product_price = $product['Amount']['Price'];
+			$vat_rate = 1 + ($product['VatRate'] / 10000);
+			$product_price = $product_price / $vat_rate;
+			$total_products_without_tax += $product_price;
+		}
+
+
+		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
+		$update = array(
+			'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
+			'total_paid_real' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
+			'total_products' => (float)$total_products_without_tax,
+			'total_products_wt' => (float)$this->data['OrderInfo']['Amount']['Price'],
+			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 21)),
+		);
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$id_order);
+
+		// Restore customer e-mail
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
+		$this->context->customer->email = $customer_email;
 	}
 
 
@@ -73,140 +266,6 @@ class SellerManiaImportOrderController
 		$product['id_product_attribute'] = 0;
 
 		return $product;
-	}
-
-
-	/**
-	 * Import order
-	 * @param $order
-	 */
-	public function run($order)
-	{
-		// Set firstname and lastname
-		$names = explode(' ', $order['User'][0]['Name']);
-		$firstname = $names[0];
-		if (isset($names[1]) && !empty($names[1]) && count($names) == 2)
-			$lastname = $names[1];
-		else
-		{
-			$lastname = $order['User'][0]['Name'];
-			$lastname = str_replace($firstname.' ', '', $lastname);
-		}
-
-		// Set shipping phone
-		$shipping_phone = '0100000000';
-		if (isset($order['User'][0]['Address']['ShippingPhone']) && !empty($order['User'][0]['Address']['ShippingPhone']))
-			$shipping_phone = $order['User'][0]['Address']['ShippingPhone'];
-
-		// Set currency
-		$currency_iso_code = 'EUR';
-		if (isset($order['OrderInfo']['Amount']['Currency']))
-			$currency_iso_code = $order['OrderInfo']['Amount']['Currency'];
-
-		// Set match with exception reservations
-		$country_exceptionnal_iso_code = array('FX' => 'FR');
-		if (isset($country_exceptionnal_iso_code[$order['User'][0]['Address']['Country']]))
-			$order['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$order['User'][0]['Address']['Country']];
-
-
-		// Create customer as guest
-		$customer = new Customer();
-		$customer->id_gender = 9;
-		$customer->firstname = $firstname;
-		$customer->lastname = $lastname;
-		$customer->email = Configuration::get('PS_SHOP_EMAIL');
-		$customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
-		$customer->is_guest = 1;
-		$customer->active = 1;
-		$customer->add();
-
-		// Set context
-		$this->context->customer = $customer;
-
-		// Create address
-		$address = new Address();
-		$address->alias = 'Sellermania';
-		$address->firstname = $firstname;
-		$address->lastname = $lastname;
-		$address->address1 = $order['User'][0]['Address']['Street1'];
-		$address->address2 = $order['User'][0]['Address']['Street2'];
-		$address->postcode = $order['User'][0]['Address']['ZipCode'];
-		$address->city = $order['User'][0]['Address']['City'];
-		$address->id_country = Country::getByIso($order['User'][0]['Address']['Country']);
-		$address->phone = $shipping_phone;
-		$address->id_customer = $customer->id;
-		$address->active = 1;
-		$address->add();
-
-		// Create Cart
-		$customer_cart = new Cart();
-		$customer_cart->id_customer = $customer->id;
-		$customer_cart->id_address_invoice = $address->id;
-		$customer_cart->id_address_delivery = $address->id;
-		$customer_cart->id_carrier = 0;
-		$customer_cart->id_lang = $customer->id_lang;
-		$customer_cart->id_currency = Currency::getIdByIsoCode($currency_iso_code);
-		$customer_cart->recyclable = 0;
-		$customer_cart->gift = 0;
-		$customer_cart->add();
-
-		// Init values
-		$cart_nb_products = 0;
-		$total_products_without_tax = 0;
-
-		// Fix data (when only one product, array is not the same
-		if (!isset($order['OrderInfo']['Product'][0]))
-			$order['OrderInfo']['Product'] = array($order['OrderInfo']['Product']);
-
-		// Update cart with products
-		foreach ($order['OrderInfo']['Product'] as $kp => $product)
-		{
-			// Get Product Identifiers
-			$product = $this->getProductIdentifier($product);
-			$order['OrderInfo']['Product'][$kp] = $product;
-
-			// Add to cart
-			$quantity = (int)$product['QuantityPurchased'];
-			$id_product = (int)$product['id_product'];
-			$id_product_attribute = (int)$product['id_product_attribute'];
-			if ($customer_cart->updateQty($quantity, $id_product, $id_product_attribute))
-				$cart_nb_products++;
-
-			// Calcul total product without tax
-			$product_price = $product['Amount']['Price'];
-			$vat_rate = 1 + ($product['VatRate'] / 10000);
-			$product_price = $product_price / $vat_rate;
-			$total_products_without_tax += $product_price;
-		}
-		$customer_cart->update();
-
-		// Remove customer e-mail to avoid email sending
-		$customer_email = $this->context->customer->email;
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-SM'), 'UPDATE', '`id_customer` = '.(int)$customer->id);
-		$this->context->customer->email = 'NOSEND-SM';
-
-		// Create order
-		$amount_paid = (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'];
-		$payment_method = 'SM '.$order['OrderInfo']['MarketPlace'].' - '.$order['OrderInfo']['OrderId'];
-		$payment_module = new SellermaniaPaymentModule();
-		$payment_module->name = $this->module->name;
-		$payment_module->validateOrder((int)$customer_cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$customer_cart->id_currency);
-		$id_order = $payment_module->currentOrder;
-
-		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
-		$update = array(
-			'total_paid' => (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'],
-			'total_paid_real' => (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'],
-			'total_products' => (float)$total_products_without_tax,
-			'total_products_wt' => (float)$order['OrderInfo']['Amount']['Price'],
-			'total_shipping' => (float)$order['OrderInfo']['Transport']['Amount']['Price'],
-			'date_add' => pSQL(substr($order['Paiement']['Date'], 0, 21)),
-		);
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$id_order);
-
-		// Restore customer e-mail
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$customer->id);
-		$this->context->customer->email = $customer_email;
 	}
 }
 
