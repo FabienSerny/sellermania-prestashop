@@ -206,6 +206,8 @@ class SellerMania extends Module
 		$product->active = 1;
 		$product->add();
 
+		StockAvailable::setProductOutOfStock((int)$product->id, 1);
+
 		// Saving product ID
 		Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id);
 
