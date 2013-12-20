@@ -48,32 +48,26 @@ class SellerManiaImportOrderController
 	 */
 	public function getProductIdentifier($product)
 	{
-		// Check product attribute
-		$attr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_attribute` WHERE `ean13` = \''.pSQL($product['Ean']).'\'');
-		if ($attr['id_product'] > 0)
-		{
-			$product['id_product'] = $attr['id_product'];
-			$product['id_product_attribute'] = $attr['id_product_attribute'];
-			return $product;
-		}
+		$fields = array('reference' => 'Sku', 'ean13' => 'Ean');
+		$tables = array('product_attribute', 'product');
 
-		// Check product
-		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product` WHERE `ean13` = \''.pSQL($product['Ean']).'\'');
-		if ($pr['id_product'] > 0)
-		{
-			$product['id_product'] = $pr['id_product'];
-			$product['id_product_attribute'] = 0;
-			return $product;
-		}
-
-		// Check product
-		$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'product_lang` WHERE `name` = \''.pSQL($product['ItemName']).'\'');
-		if ($pr['id_product'] > 0)
-		{
-			$product['id_product'] = $pr['id_product'];
-			$product['id_product_attribute'] = 0;
-			return $product;
-		}
+		// Check fields sku and ean13 on table product_attribute and product
+		// If a match is found, we return it
+		foreach ($fields as $field_ps => $fields_sm)
+			foreach ($tables as $table)
+				if (isset($product[$fields_sm]) && strlen($product[$fields_sm]) > 2)
+				{
+					// Check product attribute
+					$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table.'` WHERE `'.$field_ps.'` = \''.pSQL($product[$fields_sm]).'\'');
+					if ($pr['id_product'] > 0)
+					{
+						$product['id_product'] = $pr['id_product'];
+						$product['id_product_attribute'] = 0;
+						if (isset($pr['id_product_attribute']))
+							$product['id_product_attribute'] = $pr['id_product_attribute'];
+						return $product;
+					}
+				}
 
 		$product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
 		$product['id_product_attribute'] = 0;
@@ -109,6 +103,11 @@ class SellerManiaImportOrderController
 		if (isset($order['OrderInfo']['Amount']['Currency']))
 			$currency_iso_code = $order['OrderInfo']['Amount']['Currency'];
 
+		// Set match with exception reservations
+		$country_exceptionnal_iso_code = array('FX' => 'FR');
+		if (isset($country_exceptionnal_iso_code[$order['User'][0]['Address']['Country']]))
+			$order['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$order['User'][0]['Address']['Country']];
+
 
 		// Create customer as guest
 		$customer = new Customer();
@@ -120,6 +119,9 @@ class SellerManiaImportOrderController
 		$customer->is_guest = 1;
 		$customer->active = 1;
 		$customer->add();
+
+		// Set context
+		$this->context->customer = $customer;
 
 		// Create address
 		$address = new Address();
@@ -148,16 +150,23 @@ class SellerManiaImportOrderController
 		$customer_cart->gift = 0;
 		$customer_cart->add();
 
-		// Update cart with products
+		// Init values
 		$cart_nb_products = 0;
 		$total_products_without_tax = 0;
+
+		// Fix data (when only one product, array is not the same
+		if (!isset($order['OrderInfo']['Product'][0]))
+			$order['OrderInfo']['Product'] = array($order['OrderInfo']['Product']);
+
+		// Update cart with products
 		foreach ($order['OrderInfo']['Product'] as $product)
 		{
 			// Add to cart
 			$product = $this->getProductIdentifier($product);
-			$quantity = (int)$product['quantity'];
+			$quantity = (int)$product['QuantityPurchased'];
 			$id_product = (int)$product['id_product'];
 			$id_product_attribute = (int)$product['id_product_attribute'];
+			echo 'test : '.$id_product.'<br>';
 			if ($customer_cart->updateQty($quantity, $id_product, $id_product_attribute))
 				$cart_nb_products++;
 
@@ -171,8 +180,9 @@ class SellerManiaImportOrderController
 
 		// Create order
 		$amount_paid = (float)$order['OrderInfo']['TotalAmount']['Amount']['Price'];
-		$payment_method = 'SM '.$order['OrderInfo']['MarketPlace'].' #'.$order['OrderInfo']['OrderId'];
+		$payment_method = 'SM '.$order['OrderInfo']['MarketPlace'].' - '.$order['OrderInfo']['OrderId'];
 		$payment_module = new SellermaniaPaymentModule();
+		$payment_module->name = $this->module->name;
 		$payment_module->validateOrder((int)$customer_cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$customer_cart->id_currency);
 		$id_order = $payment_module->currentOrder;
 
@@ -185,7 +195,7 @@ class SellerManiaImportOrderController
 			'total_shipping' => (float)$order['OrderInfo']['Transport']['Amount']['Price'],
 			'date_add' => pSQL(substr($order['Paiement']['Date'], 0, 21)),
 		);
-		Db::getInstance()->update(_DB_PREFIX_.'orders', $update, '`id_order` = '.(int)$id_order);
+		Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$id_order);
 	}
 }
 
