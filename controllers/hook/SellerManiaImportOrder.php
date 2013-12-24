@@ -213,8 +213,13 @@ class SellerManiaImportOrderController
 			// Calcul total product without tax
 			$product_price = $product['Amount']['Price'];
 			$vat_rate = 1 + ($product['VatRate'] / 10000);
+			$product_tax = $product_price * ($vat_rate - 1);
 			$product_price = $product_price / $vat_rate;
 			$total_products_without_tax += $product_price;
+
+			// Create order detail (only create order detail for unmatched product)
+			$product['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
+			$this->createOrderDetail($id_order, $product);
 		}
 
 		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
@@ -231,6 +236,94 @@ class SellerManiaImportOrderController
 		// Restore customer e-mail
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
 		$this->context->customer->email = $customer_email;
+
+		// Update Sellermania default product quantity
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'stock_available', array('quantity' => 0), 'UPDATE', '`id_product` = '.Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+	}
+
+
+	/**
+	 * Create order detail
+	 * @param $id_order
+	 * @param $product
+	 */
+	public function createOrderDetail($id_order, $product)
+	{
+		// If product ID does not match with default Sellermania product ID,
+		// it means the product is matched and is already in order details
+		if ($product['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID'))
+			return true;
+
+		// Calcul prices
+		$product_price_with_tax = $product['Amount']['Price'];
+		$vat_rate = 1 + ($product['VatRate'] / 10000);
+		$product_price_without_tax = $product_price_with_tax / $vat_rate;
+
+		// SQL data
+		$sql_data = array(
+			'id_order' => (int)$id_order,
+			'id_order_invoice' => 0,
+			'product_id' => $product['id_product'],
+			'product_attribute_id' => $product['id_product_attribute'],
+			'product_name' => pSQL($product['ItemName']),
+			'product_quantity' => (int)$product['QuantityPurchased'],
+			'product_quantity_in_stock' => 0,
+			'product_price' => (float)$product_price_without_tax,
+			'tax_rate' => '',
+			'tax_name' => '',
+			'reduction_percent' => 0,
+			'reduction_amount' => 0,
+			'product_ean13' => pSQL($product['Ean']),
+			'product_reference' => pSQL($product['Sku']),
+		);
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+		{
+			$sql_data['id_warehouse'] = 0;
+			$sql_data['id_shop'] = Context::getContext()->shop->id;
+			$sql_data['total_price_tax_incl'] = (float)($product_price_with_tax * (int)$product['QuantityPurchased']);
+			$sql_data['total_price_tax_excl'] = (float)($product_price_without_tax * (int)$product['QuantityPurchased']);
+			$sql_data['unit_price_tax_incl'] = (float)$product_price_with_tax;
+			$sql_data['unit_price_tax_excl'] = (float)$product_price_without_tax;
+			$sql_data['original_product_price'] = (float)$product_price_without_tax;
+
+			$sql_data_tax = array(
+				'id_tax' => 0,
+				'unit_amount' => (float)$product['ProductVAT']['total'],
+				'total_amount' => (float)((float)$product['ProductVAT']['total'] * (int)$product['QuantityPurchased']),
+			);
+		}
+
+
+		// We check if a default Sellermania product is in Order Detail
+		// If yes, we update it, if not, we create a new Order Detail
+		$id_order_detail = Db::getInstance()->getValue('
+		SELECT `id_order_detail`
+		FROM `'._DB_PREFIX_.'order_detail`
+		WHERE `id_order` = '.(int)$id_order.'
+		AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
+		AND `product_name` = \'Sellermania product\'');
+		if ($id_order_detail > 0)
+		{
+			$where = '`id_order` = '.(int)$id_order.' AND `id_order_detail` = '.(int)$id_order_detail;
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', $sql_data, 'UPDATE', $where);
+
+			if (version_compare(_PS_VERSION_, '1.5') >= 0)
+			{
+				$where = '`id_order_detail` = '.(int)$id_order_detail;
+				Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail_tax', $sql_data_tax, 'UPDATE', $where);
+			}
+		}
+		else
+		{
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', $sql_data, 'INSERT');
+			$id_order_detail = Db::getInstance()->Insert_ID();
+
+			if (version_compare(_PS_VERSION_, '1.5') >= 0)
+			{
+				$sql_data_tax['id_order_detail'] = (int)$id_order_detail;
+				Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail_tax', $sql_data_tax, 'INSERT');
+			}
+		}
 	}
 
 
@@ -262,6 +355,7 @@ class SellerManiaImportOrderController
 					}
 				}
 
+		// If product unmatch, we return the default SellerMania product, method createOrderDetail will fix this
 		$product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
 		$product['id_product_attribute'] = 0;
 
