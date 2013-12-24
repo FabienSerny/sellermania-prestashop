@@ -238,11 +238,18 @@ class SellerManiaImportOrderController
 		);
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$id_order);
 
-		// Fix payment
 		if (version_compare(_PS_VERSION_, '1.5') >= 0)
 		{
+			// Fix payment
 			$where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', array('amount' => $update['total_paid_real']), 'UPDATE', $where);
+
+			// Fix invoice
+			unset($update['total_paid']);
+			unset($update['total_paid_real']);
+			unset($update['total_shipping']);
+			$where = '`id_order` = '.(int)$id_order;
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $update, 'UPDATE', $where);
 		}
 
 		// Restore customer e-mail
