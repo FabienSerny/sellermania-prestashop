@@ -205,6 +205,7 @@ class SellerManiaImportOrderController
 		$payment_module->name = $this->module->name;
 		$payment_module->validateOrder((int)$this->cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$this->cart->id_currency);
 		$id_order = $payment_module->currentOrder;
+		$this->order = new Order((int)$id_order);
 
 		// Calcul total product without tax
 		$total_products_without_tax = 0;
@@ -226,12 +227,23 @@ class SellerManiaImportOrderController
 		$update = array(
 			'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
 			'total_paid_real' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
+			'total_paid_tax_incl' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
+			'total_paid_tax_excl' => (float)$total_products_without_tax + (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_products' => (float)$total_products_without_tax,
 			'total_products_wt' => (float)$this->data['OrderInfo']['Amount']['Price'],
 			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+			'total_shipping_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+			'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 21)),
 		);
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$id_order);
+
+		// Fix payment
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+		{
+			$where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', array('amount' => $update['total_paid_real']), 'UPDATE', $where);
+		}
 
 		// Restore customer e-mail
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
