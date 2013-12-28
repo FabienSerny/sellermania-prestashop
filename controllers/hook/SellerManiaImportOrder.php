@@ -280,7 +280,7 @@ class SellerManiaImportOrderController
 	{
 		// Fix order detail
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
-			$this->fixOrderDetail14($this->order->id, $product['ProductVAT']);
+			$this->fixOrderDetail14($this->order->id, $product);
 
 		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
 		$update = array(
@@ -291,7 +291,7 @@ class SellerManiaImportOrderController
 			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 21)),
 		);
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$id_order);
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$this->order->id);
 	}
 
 	/**
@@ -359,7 +359,7 @@ class SellerManiaImportOrderController
 	{
 		// Fix order detail
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
-			$this->fixOrderDetail15($this->order->id, $product['ProductVAT']);
+			$this->fixOrderDetail15($this->order->id, $product);
 
 		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
 		$update = array(
@@ -374,30 +374,30 @@ class SellerManiaImportOrderController
 			'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 21)),
 		);
-		Db::getInstance()->update(_DB_PREFIX_.'orders', $update, '`id_order` = '.(int)$id_order);
+		Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$this->order->id);
 
 
 		// Fix payment
 		$where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
-		Db::getInstance()->update(_DB_PREFIX_.'order_payment', array('amount' => $update['total_paid_real']), $where);
+		Db::getInstance()->update('order_payment', array('amount' => $update['total_paid_real']), $where);
 
 		// Fix carrier
 		$carrier_update = array(
-			'total_shipping_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-			'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+			'shipping_cost_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+			'shipping_cost_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 		);
 		$where = '`id_order` = \''.pSQL($this->order->id).'\'';
-		Db::getInstance()->update(_DB_PREFIX_.'order_carrier', $carrier_update, $where);
+		Db::getInstance()->update('order_carrier', $carrier_update, $where);
 
 		// Fix invoice
 		unset($update['total_paid']);
 		unset($update['total_paid_real']);
 		unset($update['total_shipping']);
-		$where = '`id_order` = '.(int)$id_order;
-		Db::getInstance()->update(_DB_PREFIX_.'order_invoice', $update, $where);
+		$where = '`id_order` = '.(int)$this->order->id;
+		Db::getInstance()->update('order_invoice', $update, $where);
 
 		// Update Sellermania default product quantity
-		Db::getInstance()->update(_DB_PREFIX_.'stock_available', array('quantity' => 0), '`id_product` = '.Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+		Db::getInstance()->update('stock_available', array('quantity' => 0), '`id_product` = '.Configuration::get('SM_DEFAULT_PRODUCT_ID'));
 	}
 
 
@@ -460,18 +460,18 @@ class SellerManiaImportOrderController
 		if ($id_order_detail > 0)
 		{
 			$where = '`id_order` = '.(int)$id_order.' AND `id_order_detail` = '.(int)$id_order_detail;
-			Db::getInstance()->update(_DB_PREFIX_.'order_detail', $sql_data, $where);
+			Db::getInstance()->update('order_detail', $sql_data, $where);
 
 			$where = '`id_order_detail` = '.(int)$id_order_detail;
-			Db::getInstance()->update(_DB_PREFIX_.'order_detail_tax', $sql_data_tax, $where);
+			Db::getInstance()->update('order_detail_tax', $sql_data_tax, $where);
 		}
 		else
 		{
-			Db::getInstance()->insert(_DB_PREFIX_.'order_detail', $sql_data);
+			Db::getInstance()->insert('order_detail', $sql_data);
 			$id_order_detail = Db::getInstance()->Insert_ID();
 
 			$sql_data_tax['id_order_detail'] = (int)$id_order_detail;
-			Db::getInstance()->insert(_DB_PREFIX_.'order_detail_tax', $sql_data_tax);
+			Db::getInstance()->insert('order_detail_tax', $sql_data_tax);
 		}
 	}
 
