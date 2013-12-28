@@ -86,7 +86,7 @@ class SellerMania extends Module
 		$this->installSellermaniaProduct();
 
 		// Gen SellerMania key
-		Configuration::updateValue('SELLERMANIA_INSTALL', date('Y-m-d H:i:s'));
+		Configuration::updateValue('SM_INSTALL_DATE', date('Y-m-d H:i:s'));
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
 
 		return true;
@@ -111,6 +111,7 @@ class SellerMania extends Module
 		Configuration::deleteByName('SM_ORDER_ENDPOINT');
 		Configuration::deleteByName('SM_NEXT_IMPORT');
 		Configuration::deleteByName('SM_CREDENTIALS_CHECK');
+		Configuration::deleteByName('SM_INSTALL_DATE');
 		Configuration::deleteByName('SELLERMANIA_KEY');
 
 		return parent::uninstall();
