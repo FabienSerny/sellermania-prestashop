@@ -61,6 +61,7 @@ class SellerManiaImportOrderController
 		$this->createAddress();
 		$this->createCart();
 		$this->createOrder();
+		$this->saveSellermaniaOrder();
 	}
 
 
@@ -233,6 +234,21 @@ class SellerManiaImportOrderController
 		$this->context->customer->email = $customer_email;
 	}
 
+	/**
+	 * Save Sellermania order
+	 */
+	public function saveSellermaniaOrder()
+	{
+		$sellermania_order = new SellermaniaOrder();
+		$sellermania_order->marketplace = $this->data['OrderInfo']['MarketPlace'];
+		$sellermania_order->ref_order = $this->data['OrderInfo']['OrderId'];
+		$sellermania_order->info = json_encode($this->data);
+		$sellermania_order->id_order = $this->order->id;
+		$sellermania_order->id_employee_accepted = 0;
+		$sellermania_order->date_payment = substr($this->data['Paiement']['Date'], 0, 19);
+		$sellermania_order->add();
+	}
+
 
 	/**
 	 * Get Product Identifier
@@ -372,7 +388,7 @@ class SellerManiaImportOrderController
 			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_shipping_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 21)),
+			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 19)),
 		);
 		Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$this->order->id);
 

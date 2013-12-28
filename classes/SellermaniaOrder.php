@@ -61,11 +61,11 @@ class SellermaniaOrder extends ObjectModel
 		'fields' => array(
 			'marketplace' => 				array('type' => self::TYPE_STRING, 'required' => true, 'size' => 20),
 			'ref_order' => 					array('type' => self::TYPE_STRING, 'required' => true, 'size' => 20),
-			'info' => 					array('type' => self::TYPE_STRING, 'required' => true, 'size' => 20),
+			'info' => 						array('type' => self::TYPE_STRING, 'required' => true),
 			'id_order' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_employee_accepted' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'date_payment' =>				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'date_accepted' =>				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_payment' =>				array('type' => self::TYPE_STRING, 'validate' => 'isDate'),
+			'date_accepted' =>				array('type' => self::TYPE_STRING, 'validate' => 'isDate'),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
 		),
 	);
@@ -100,6 +100,9 @@ class SellermaniaOrder extends ObjectModel
 
 	public	function getFields()
 	{
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+			return parent::getFields();
+
 		parent::validateFields();
 
 		$fields['marketplace'] = pSQL($this->marketplace);
