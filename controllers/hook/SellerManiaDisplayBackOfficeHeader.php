@@ -81,6 +81,8 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 		// Set dates limit
 		$date_start = date("Y-m-d H:i:s", strtotime('-30 days'));
+		if ($date_start < Configuration::get('SELLERMANIA_INSTALL'))
+			$date_start = Configuration::get('SELLERMANIA_INSTALL');
 		$date_end = date('Y-m-d');
 		//$date_start = '2013-06-01';
 		//$date_end = '2013-06-31';

@@ -86,6 +86,7 @@ class SellerMania extends Module
 		$this->installSellermaniaProduct();
 
 		// Gen SellerMania key
+		Configuration::updateValue('SELLERMANIA_INSTALL', date('Y-m-d H:i:s'));
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
 
 		return true;
