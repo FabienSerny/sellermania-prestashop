@@ -156,7 +156,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 	public function run()
 	{
 		// Check if credentials are ok
-		if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok')
+		if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes')
 			return '';
 
 		// Check if it's time to import
