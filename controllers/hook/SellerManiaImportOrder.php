@@ -314,6 +314,10 @@ class SellerManiaImportOrderController
 			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 21)),
 		);
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$this->order->id);
+
+		// Fix order state (in case total paid and total paid real was not the same when validateOrder was called)
+		$update = array('id_order_state' => (int)Configuration::get('PS_OS_SM_AWAITING'));
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_history', $update, 'UPDATE', '`id_order` = '.(int)$this->order->id);
 	}
 
 	/**

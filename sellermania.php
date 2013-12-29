@@ -175,7 +175,7 @@ class SellerMania extends Module
 				$order_state->delivery = $order_state_array['shipped'];
 				$order_state->hidden = false;
 				$order_state->paid = $order_state_array['invoice'];
-				$order_state->deleted = true;
+				$order_state->deleted = false;
 				$order_state->name = array((int)Configuration::get('PS_LANG_DEFAULT') => pSQL($order_state_array['label']));
 				if ($order_state->add())
 				{
