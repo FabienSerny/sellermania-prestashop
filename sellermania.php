@@ -76,8 +76,16 @@ class SellerMania extends Module
 			return false;
 
 		// Register hooks
-		if (!parent::install() || !$this->registerHook('displayAdminOrder') || !$this->registerHook('displayBackOfficeHeader'))
-			return false;
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+		{
+			if (!parent::install() || !$this->registerHook('displayAdminOrder') || !$this->registerHook('displayBackOfficeHeader'))
+				return false;
+		}
+		else
+		{
+			if (!parent::install() || !$this->registerHook('adminOrder') || !$this->registerHook('backOfficeHeader'))
+				return false;
+		}
 
 		// Install Order States
 		$this->installOrderState();
@@ -208,7 +216,8 @@ class SellerMania extends Module
 		$product->active = 1;
 		$product->add();
 
-		StockAvailable::setProductOutOfStock((int)$product->id, 1);
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+			StockAvailable::setProductOutOfStock((int)$product->id, 1);
 
 		// Saving product ID
 		Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id);
@@ -262,6 +271,10 @@ class SellerMania extends Module
 	public function hookDisplayBackOfficeHeader($params)
 	{
 		return $this->runController('hook', 'DisplayBackOfficeHeader');
+	}
+	public function hookBackOfficeHeader($params)
+	{
+		return $this->hookDisplayBackOfficeHeader($params);
 	}
 
 

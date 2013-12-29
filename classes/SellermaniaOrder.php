@@ -59,16 +59,25 @@ class SellermaniaOrder extends ObjectModel
 		'primary' => 'id_sellermania_order',
 		'multilang' => false,
 		'fields' => array(
-			'marketplace' => 				array('type' => self::TYPE_STRING, 'required' => true, 'size' => 20),
-			'ref_order' => 					array('type' => self::TYPE_STRING, 'required' => true, 'size' => 20),
-			'info' => 						array('type' => self::TYPE_STRING, 'required' => true),
-			'id_order' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_employee_accepted' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'date_payment' =>				array('type' => self::TYPE_STRING, 'validate' => 'isDate'),
-			'date_accepted' =>				array('type' => self::TYPE_STRING, 'validate' => 'isDate'),
-			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
+			'marketplace' => 				array('type' => 3, 'required' => true, 'size' => 20),
+			'ref_order' => 					array('type' => 3, 'required' => true, 'size' => 20),
+			'info' => 						array('type' => 3, 'required' => true),
+			'id_order' => 					array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_employee_accepted' =>		array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
+			'date_payment' =>				array('type' => 3, 'validate' => 'isDate'),
+			'date_accepted' =>				array('type' => 3, 'validate' => 'isDate'),
+			'date_add' => 					array('type' => 5, 'validate' => 'isDate', 'copy_post' => false),
 		),
 	);
+	/*	Can't use constant if we want to be compliant with PS 1.4
+	 * 	const TYPE_INT = 1;
+	 * 	const TYPE_BOOL = 2;
+	 * 	const TYPE_STRING = 3;
+	 * 	const TYPE_FLOAT = 4;
+	 * 	const TYPE_DATE = 5;
+	 * 	const TYPE_HTML = 6;
+	 * 	const TYPE_NOTHING = 7;
+	 */
 
 
 	/**

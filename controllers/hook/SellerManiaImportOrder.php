@@ -31,6 +31,7 @@ class SellerManiaImportOrderController
 {
 	public $data;
 
+	public $id_lang;
 	public $customer;
 	public $address;
 	public $cart;
@@ -139,6 +140,11 @@ class SellerManiaImportOrderController
 		$this->customer->active = 1;
 		$this->customer->add();
 
+		// Fix lang for PS 1.4
+		$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+			$this->id_lang = $this->customer->id_lang;
+
 		// Set context
 		$this->context->customer = $this->customer;
 	}
@@ -177,7 +183,7 @@ class SellerManiaImportOrderController
 		$this->cart->id_address_invoice = $this->address->id;
 		$this->cart->id_address_delivery = $this->address->id;
 		$this->cart->id_carrier = 0;
-		$this->cart->id_lang = $this->customer->id_lang;
+		$this->cart->id_lang = $this->id_lang;
 		$this->cart->id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
 		$this->cart->recyclable = 0;
 		$this->cart->gift = 0;
