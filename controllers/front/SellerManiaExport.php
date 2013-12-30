@@ -32,9 +32,11 @@ class SellerManiaExportController
 	 * @var array fields to export
 	 */
 	private $fields_to_export = array(
-		'id_product', 'ean13', 'upc', 'ecotax', 'quantity', 'price', 'wholesale_price', 'reference',
-		'width', 'height', 'depth', 'weight', 'name', 'images', 'category_default',
-		'description', 'description_short', 'manufacturer_name'
+		'id_product' => 'int', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
+		'quantity' => 'int', 'price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
+		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
+		'name' => 'string', 'images' => 'string', 'category_default' => 'string',
+		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
 	);
 
 	/**
@@ -120,7 +122,7 @@ class SellerManiaExportController
 	public function renderExportHeader($iso_lang, $output)
 	{
 		$line = '';
-		foreach ($this->fields_to_export as $field)
+		foreach ($this->fields_to_export as $field => $field_type)
 			$line .= $field.';';
 		$line .= "\n";
 		$this->renderLine($line, $iso_lang, $output);
@@ -161,8 +163,14 @@ class SellerManiaExportController
 		foreach ($rows as $row)
 		{
 			$row['images'] = implode('|', $row['images']);
-			foreach ($this->fields_to_export as $field)
+			foreach ($this->fields_to_export as $field => $field_type)
+			{
+				if ($field_type == 'int')
+					$row[$field] = (int)$row[$field];
+				else if ($field_type == 'float')
+					$row[$field] = round($row[$field], 2);
 				$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+			}
 			$line .= "\n";
 		}
 		$this->renderLine($line, $iso_lang, $output);
