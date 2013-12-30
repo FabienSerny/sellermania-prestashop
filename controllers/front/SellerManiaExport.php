@@ -161,18 +161,19 @@ class SellerManiaExportController
 		// Begin rendering
 		$line = '';
 		foreach ($rows as $row)
-		{
-			$row['images'] = implode('|', $row['images']);
-			foreach ($this->fields_to_export as $field => $field_type)
+			if ($row['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID') && $row['name'] != '')
 			{
-				if ($field_type == 'int')
-					$row[$field] = (int)$row[$field];
-				else if ($field_type == 'float')
-					$row[$field] = round($row[$field], 2);
-				$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+				$row['images'] = implode('|', $row['images']);
+				foreach ($this->fields_to_export as $field => $field_type)
+				{
+					if ($field_type == 'int')
+						$row[$field] = (int)$row[$field];
+					else if ($field_type == 'float')
+						$row[$field] = number_format($row[$field], 2, '.', '');
+					$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+				}
+				$line .= "\n";
 			}
-			$line .= "\n";
-		}
 		$this->renderLine($line, $iso_lang, $output);
 	}
 
