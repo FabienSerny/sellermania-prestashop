@@ -245,6 +245,7 @@ class SellerManiaImportOrderController
 		$customer_email = $this->context->customer->email;
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-SM'), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
 		$this->context->customer->email = 'NOSEND-SM';
+		$this->context->customer->clearCache();
 
 		// Create order
 		$amount_paid = (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
