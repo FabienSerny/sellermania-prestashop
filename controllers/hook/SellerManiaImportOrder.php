@@ -141,6 +141,10 @@ class SellerManiaImportOrderController
 
 			// Create order detail (only create order detail for unmatched product)
 			$this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
+
+			// Fix Ean
+			if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
+				$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
 		}
 	}
 
