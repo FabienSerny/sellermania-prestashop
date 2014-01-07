@@ -71,6 +71,18 @@ class SellerManiaImportOrderController
 	 */
 	public function preprocessData()
 	{
+		// Forbidden characters
+		$forbidden_characters = array('_', '/');
+
+		// Fix name
+		if (strpos($this->data['User'][0]['Name'], '/'))
+		{
+			$name = explode('/', $this->data['User'][0]['Name']);
+			$name[1] = trim($name[1]);
+			if (!empty($name[1]))
+				$this->data['User'][0]['Name'] = $name[1];
+		}
+
 		// Retrieve firstname and lastname
 		$names = explode(' ', $this->data['User'][0]['Name']);
 		$firstname = $names[0];
@@ -99,9 +111,18 @@ class SellerManiaImportOrderController
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
 		// Set match with exception reservations
-		$country_exceptionnal_iso_code = array('FX' => 'FR');
+		$country_exceptionnal_iso_code = array('FX' => 'FR', 'FRA' => 'FR', 'France' => 'FR');
 		if (isset($country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']]))
 			$this->data['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']];
+
+		// Fix address
+		$this->data['User'][0]['Address']['Street1'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['Street1']);
+		$this->data['User'][0]['Address']['Street2'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['Street2']);
+		if (empty($this->data['User'][0]['Address']['Street1']) && !empty($this->data['User'][0]['Address']['Street2']))
+		{
+			$this->data['User'][0]['Address']['Street1'] = $this->data['User'][0]['Address']['Street2'];
+			$this->data['User'][0]['Address']['Street2'] = '';
+		}
 
 		// Fix data (when only one product, array is not the same)
 		if (!isset($this->data['OrderInfo']['Product'][0]))
@@ -158,6 +179,7 @@ class SellerManiaImportOrderController
 		// Create address
 		$this->address = new Address();
 		$this->address->alias = 'Sellermania';
+		$this->address->company = $this->data['User'][0]['Company'];
 		$this->address->firstname = $this->data['User'][0]['FirstName'];
 		$this->address->lastname = $this->data['User'][0]['LastName'];
 		$this->address->address1 = $this->data['User'][0]['Address']['Street1'];
