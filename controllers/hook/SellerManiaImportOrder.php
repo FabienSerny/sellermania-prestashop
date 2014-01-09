@@ -37,6 +37,7 @@ class SellerManiaImportOrderController
 	public $cart;
 	public $order;
 
+	public $country_iso_match_cache = array();
 
 	/**
 	 * Controller constructor
@@ -111,10 +112,32 @@ class SellerManiaImportOrderController
 		$this->data['User'][0]['Address']['ShippingPhone'] = $shipping_phone;
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
-		// Set match with exception reservations
-		$country_exceptionnal_iso_code = array('FX' => 'FR', 'FRA' => 'FR', 'France' => 'FR');
-		if (isset($country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']]))
-			$this->data['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']];
+		// Retrieve from cache
+		$country_key = $this->data['User'][0]['Address']['Country'];
+		if (isset($this->country_iso_match_cache[$country_key]))
+			$this->data['User'][0]['Address']['Country'] = $this->country_iso_match_cache[$country_key];
+		else
+		{
+			// Set match with exception reservations
+			$country_exceptionnal_iso_code = array('FX' => 'FR', 'FRA' => 'FR', 'France' => 'FR');
+			if (isset($country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']]))
+				$this->data['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']];
+			else
+			{
+				// Check if there is a match with a country
+				$id_country = Country::getIdByName(null, $this->data['User'][0]['Address']['Country']);
+				if ($id_country > 0)
+					$this->data['User'][0]['Address']['Country'] = Country::getIsoById($id_country);
+
+				// If Iso is not known, we set FR
+				if (!Validate::isLanguageIsoCode($iso_code) || Country::getByIso($this->data['User'][0]['Address']['Country']) < 1)
+					$this->data['User'][0]['Address']['Country'] = 'FR';
+			}
+
+			// Set cache
+			$this->country_iso_match_cache[$country_key] = $this->data['User'][0]['Address']['Country'];
+		}
+
 
 		// Fix address
 		$this->data['User'][0]['Address']['Street1'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['Street1']);
