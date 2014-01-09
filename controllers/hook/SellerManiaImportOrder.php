@@ -75,6 +75,7 @@ class SellerManiaImportOrderController
 		$forbidden_characters = array('_', '/');
 
 		// Fix name
+		$this->data['User'][0]['Name'] = str_replace('*', '', $this->data['User'][0]['Name']);
 		if (strpos($this->data['User'][0]['Name'], '/'))
 		{
 			$name = explode('/', $this->data['User'][0]['Name']);
