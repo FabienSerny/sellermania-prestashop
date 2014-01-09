@@ -240,8 +240,11 @@ class SellerManiaImportOrderController
 		$this->cart->update();
 
 		// Flush cart delivery cache
-		$this->cart->getDeliveryOptionList(null, true);
-		$this->cart->getDeliveryOption(null, false, false);
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+		{
+			$this->cart->getDeliveryOptionList(null, true);
+			$this->cart->getDeliveryOption(null, false, false);
+		}
 	}
 
 
