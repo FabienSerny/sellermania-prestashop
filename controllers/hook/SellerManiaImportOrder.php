@@ -147,6 +147,10 @@ class SellerManiaImportOrderController
 			if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
 				$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
 		}
+
+		// Fix paiement date
+		if (!isset($this->data['Paiement']['Date']))
+			$this->data['Paiement']['Date'] = date('Y-m-d H:i:s');
 	}
 
 
@@ -234,6 +238,10 @@ class SellerManiaImportOrderController
 
 		// Cart update
 		$this->cart->update();
+
+		// Flush cart delivery cache
+		$this->cart->getDeliveryOptionList(null, true);
+		$this->cart->getDeliveryOption(null, false, false);
 	}
 
 
