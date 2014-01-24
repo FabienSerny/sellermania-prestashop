@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+    // Hide template
+    $('#sellermania-template').hide();
+
     // Retrieve data
     var sellermania_title = $('#sellermania-template-title').html();
     var sellermania_customer = $('#sellermania-template-customer').html();
