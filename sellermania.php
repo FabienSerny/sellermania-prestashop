@@ -51,7 +51,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = '23Prod';
-		$this->version = '0.9.3.2';
+		$this->version = '0.9.3.3';
 		$this->need_instance = 0;
 
 		parent::__construct();
