@@ -51,7 +51,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = '23Prod';
-		$this->version = '0.9.3.1';
+		$this->version = '0.9.3.2';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -277,6 +277,18 @@ class SellerMania extends Module
 		return $this->hookDisplayBackOfficeHeader($params);
 	}
 
+	/**
+	 * Display Admin Order
+	 * @return string $html
+	*/
+	public function hookDisplayAdminOrder($params)
+	{
+		return $this->runController('hook', 'DisplayAdminOrder');
+	}
+	public function hookAdminOrder($params)
+	{
+		return $this->hookDisplayAdminOrder($params);
+	}
 
 	/**
 	 * Export method
