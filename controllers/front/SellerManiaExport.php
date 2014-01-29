@@ -32,7 +32,7 @@ class SellerManiaExportController
 	 * @var array fields to export
 	 */
 	private $fields_to_export = array(
-		'id_product' => 'int', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
+		'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
 		'quantity' => 'int', 'price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
 		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
 		'name' => 'string', 'images' => 'string', 'category_default' => 'string',
@@ -40,11 +40,20 @@ class SellerManiaExportController
 	);
 
 	/**
+	 * @var array attribute groups
+	 */
+	private $attribute_groups = array();
+
+	/**
 	 * Controller constructor
 	 */
 	public function __construct()
 	{
 		$this->context = Context::getContext();
+
+		$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'attribute_group_lang` WHERE `id_lang` = '.(int)Language::getIdByIso(Tools::getValue('l')));
+		foreach ($tmp as $t)
+			$this->attribute_groups[$t['id_attribute_group']] = $t['name'];
 	}
 
 	/**
@@ -123,7 +132,9 @@ class SellerManiaExportController
 	{
 		$line = '';
 		foreach ($this->fields_to_export as $field => $field_type)
-			$line .= $field.';';
+			$line .= '"'.$field.'";';
+		foreach ($this->attribute_groups as $id_attribute_group => $group_name)
+			$line .= '"Attr '.$id_attribute_group.' - '.$group_name.'";';
 		$line .= "\n";
 		$this->renderLine($line, $iso_lang, $output);
 	}
@@ -143,13 +154,16 @@ class SellerManiaExportController
 			foreach ($row['declinations'] as $id_product_attribute => $declination)
 			{
 				$rowCopy = $row;
+				$rowCopy['id_product_attribute'] = $id_product_attribute;
 				$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
 				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
 				$rowCopy['ecotax'] = $declination['ecotax'];
 				$rowCopy['quantity'] = $declination['quantity'];
 				$rowCopy['reference'] = $declination['reference'];
+				$rowCopy['ean13'] = (isset($declination['ean13']) ? $declination['ean13'] : '');
 				if (isset($declination['images']) && count($declination['images']) >= 1)
 					$rowCopy['images'] = $declination['images'];
+				$rowCopy['attributes_values'] = $declination['attributes_values'];
 				$rows[] = $rowCopy;
 			}
 		}
@@ -166,12 +180,18 @@ class SellerManiaExportController
 				$row['images'] = implode('|', $row['images']);
 				foreach ($this->fields_to_export as $field => $field_type)
 				{
-					if ($field_type == 'int')
+					if ($field == 'id_unique')
+						$row[$field] = $row['id_product'].'-'.$row['id_product_attribute'];
+					else if (!isset($row[$field]))
+						$row[$field] = '';
+					else if ($field_type == 'int')
 						$row[$field] = (int)$row[$field];
 					else if ($field_type == 'float')
 						$row[$field] = number_format($row[$field], 2, '.', '');
-					$line .= str_replace(array("\r\n", "\n"), '', $row[$field]).';';
+					$line .= '"'.str_replace(array("\r\n", "\n", '"'), '', $row[$field]).'";';
 				}
+				foreach ($this->attribute_groups as $id_attribute_group => $group_name)
+					$line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
 				$line .= "\n";
 			}
 		$this->renderLine($line, $iso_lang, $output);
