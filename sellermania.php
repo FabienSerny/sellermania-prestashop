@@ -260,6 +260,8 @@ class SellerMania extends Module
 	 */
 	function getContent()
 	{
+		if (Tools::getValue('export') == 'true')
+			die($this->export());
 		return $this->runController('hook', 'GetContent');
 	}
 
