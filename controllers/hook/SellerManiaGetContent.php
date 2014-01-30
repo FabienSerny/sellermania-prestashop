@@ -47,21 +47,11 @@ class SellerManiaGetContentController
 	 */
 	public function testConfiguration()
 	{
-		// Creating an instance of OrderClient
-		$client = new Sellermania\OrderClient();
-		$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
-		$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
-		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
-
 		try
 		{
-			// Recovering dispatched orders for the last 30 days
-			$result = $client->getOrderByStatus(
-				Sellermania\OrderClient::STATUS_TO_BE_CONFIRMED,
-				Sellermania\OrderClient::MKP_PRICEMINISTER_FR,
-				new \DateTime(date('Y-m-d')),
-				new \DateTime(date('Y-m-d'))
-			);
+			require_once(dirname(__FILE__).'/../../classes/SellermaniaTestAPI.php');
+			$test = new SellermaniaTestAPI();
+			$test->run();
 			Configuration::updateValue('SM_CREDENTIALS_CHECK', 'ok');
 			$this->context->smarty->assign('sm_confirm_credentials', 'ok');
 		}
@@ -83,8 +73,9 @@ class SellerManiaGetContentController
 			if (isset($_POST[$p]))
 				Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
 
-		if (Configuration::get('SM_IMPORT_ORDERS') == 'yes')
-			$this->testConfiguration();
+		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+			if (Configuration::get('SM_IMPORT_ORDERS') == 'yes')
+				$this->testConfiguration();
 	}
 
 
@@ -116,6 +107,12 @@ class SellerManiaGetContentController
 		}
 
 		// Assign to Smarty
+		if (version_compare(PHP_VERSION, '5.3.0') < 0)
+		{
+			$this->context->smarty->assign('php_version', PHP_VERSION);
+			$this->context->smarty->assign('no_namespace_compatibility', '1');
+		}
+
 		$this->context->smarty->assign('script_path', $this->dir_path);
 		$this->context->smarty->assign('export_directory_writable', $export_directory_writable);
 		$this->context->smarty->assign('module_web_path', $module_web_path);

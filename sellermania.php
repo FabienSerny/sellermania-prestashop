@@ -38,7 +38,8 @@ require_once(dirname(__FILE__).'/classes/SellermaniaOrder.php');
 require_once(dirname(__FILE__).'/classes/SellermaniaPaymentModule.php');
 
 // Load the Sellermania API Client
-require_once(dirname(__FILE__).'/lib/Sellermania.php');
+if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+	require_once(dirname(__FILE__).'/lib/Sellermania.php');
 
 
 class SellerMania extends Module
@@ -51,7 +52,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = '23Prod';
-		$this->version = '0.9.3.3';
+		$this->version = '0.9.3.5';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -272,7 +273,9 @@ class SellerMania extends Module
 	 */
 	public function hookDisplayBackOfficeHeader($params)
 	{
-		return $this->runController('hook', 'DisplayBackOfficeHeader');
+		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+			return $this->runController('hook', 'DisplayBackOfficeHeader');
+		return '';
 	}
 	public function hookBackOfficeHeader($params)
 	{
@@ -285,7 +288,9 @@ class SellerMania extends Module
 	*/
 	public function hookDisplayAdminOrder($params)
 	{
-		return $this->runController('hook', 'DisplayAdminOrder');
+		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+			return $this->runController('hook', 'DisplayAdminOrder');
+		return '';
 	}
 	public function hookAdminOrder($params)
 	{
