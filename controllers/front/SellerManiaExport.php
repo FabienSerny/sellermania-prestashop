@@ -51,7 +51,10 @@ class SellerManiaExportController
 	{
 		$this->context = Context::getContext();
 
-		$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'attribute_group_lang` WHERE `id_lang` = '.(int)Language::getIdByIso(Tools::getValue('l')));
+		$id_lang = Configuration::get('PS_LANG_DEFAULT');
+		if (Tools::getValue('l') != '')
+			$id_lang = Language::getIdByIso(Tools::getValue('l'));
+		$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'attribute_group_lang` WHERE `id_lang` = '.(int)$id_lang);
 		foreach ($tmp as $t)
 			$this->attribute_groups[$t['id_attribute_group']] = $t['name'];
 	}
