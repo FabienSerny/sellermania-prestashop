@@ -60,10 +60,12 @@
 
     sellermania_products['{$product.Sku}'] = new Array();
     sellermania_products['{$product.Sku}']['order_item_id'] = '{if isset($product.OrderItemId)}{$product.OrderItemId}{/if}';
-    sellermania_products['{$product.Sku}']['status'] = '{if isset($product.Status)}{$product.Status}{/if}';
+    sellermania_products['{$product.Sku}']['status_id'] = '{if isset($product.Status)}{$product.Status}{/if}';
+    sellermania_products['{$product.Sku}']['status'] = '{if isset($product.Status) && isset($sellermania_status_list[$product.Status])}{$sellermania_status_list[$product.Status]}{/if}';
     sellermania_products['{$product.Sku}']['ean'] = '{if isset($product.Ean)}{$product.Ean}{/if}';
     sellermania_products['{$product.Sku}']['product_id'] = '{if isset($product.ProductId)}{$product.ProductId}{/if}';
-    sellermania_products['{$product.Sku}']['item_condition'] = '{if isset($product.ItemCondition)}{$product.ItemCondition}{/if}';
+    sellermania_products['{$product.Sku}']['item_condition_id'] = '{if isset($product.ItemCondition)}{$product.ItemCondition}{/if}';
+    sellermania_products['{$product.Sku}']['item_condition'] = '{if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]}{/if}';
 
     {/foreach}
 </script>

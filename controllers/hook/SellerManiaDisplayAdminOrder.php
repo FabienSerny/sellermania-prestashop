@@ -31,6 +31,16 @@ require_once(dirname(__FILE__).'/../front/SellerManiaExport.php');
 class SellerManiaDisplayAdminOrderController
 {
 	/**
+	 * @var private array conditions
+	 */
+	private $conditions_list = array();
+
+	/**
+	 * @var private array status
+	 */
+	private $status_list = array();
+
+	/**
 	 * Controller constructor
 	 */
 	public function __construct($module, $dir_path, $web_path)
@@ -39,6 +49,33 @@ class SellerManiaDisplayAdminOrderController
 		$this->web_path = $web_path;
 		$this->dir_path = $dir_path;
 		$this->context = Context::getContext();
+
+		$this->conditions_list = array(
+			0 => $this->module->l('Unknown'),
+			1 => $this->module->l('Like new'),
+			2 => $this->module->l('Very good'),
+			3 => $this->module->l('Good'),
+			4 => $this->module->l('Acceptable'),
+			5 => $this->module->l('Collectible like new'),
+			6 => $this->module->l('Collectible very good'),
+			7 => $this->module->l('Collectible good'),
+			8 => $this->module->l('Collectible acceptable'),
+			10 => $this->module->l('Refurbished mint'),
+			11 => $this->module->l('New'),
+			12 => $this->module->l('New OEM'),
+			13 => $this->module->l('Used openbox'),
+		);
+
+		$this->status_list = array(
+			6 => $this->module->l('To be confirmed'),
+			10 => $this->module->l('Awaiting confirmation'),
+			9 => $this->module->l('Confirmed'),
+			3 => $this->module->l('Cancelled by the customer'),
+			4 => $this->module->l('Cancelled by the seller'),
+			1 => $this->module->l('To dispatch'),
+			5 => $this->module->l('Awaiting dispatch'),
+			2 => $this->module->l('Dispatched'),
+		);
 	}
 
 	/**
@@ -61,6 +98,8 @@ class SellerManiaDisplayAdminOrderController
 
 		$this->context->smarty->assign('sellermania_order', $sellermania_order);
 		$this->context->smarty->assign('sellermania_module_path', $this->web_path);
+		$this->context->smarty->assign('sellermania_status_list', $this->status_list);
+		$this->context->smarty->assign('sellermania_conditions_list', $this->conditions_list);
 
 		return $this->module->compliantDisplay('displayAdminOrder.tpl');
 	}
