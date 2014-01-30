@@ -37,6 +37,7 @@ class SellerManiaExportController
 		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
 		'name' => 'string', 'images' => 'string', 'category_default' => 'string',
 		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
+		'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
 	);
 
 	/**
@@ -185,6 +186,8 @@ class SellerManiaExportController
 				{
 					if ($field == 'id_unique')
 						$row[$field] = $row['id_product'].'-'.$row['id_product_attribute'];
+					else if ($field == 'product_url')
+						$row[$field] = $this->context->link->getProductLink($row['id_product'], null, null, null, Language::getIdByIso($iso_lang));
 					else if (!isset($row[$field]))
 						$row[$field] = '';
 					else if ($field_type == 'int')
