@@ -112,7 +112,7 @@ class SellerManiaDisplayAdminOrderController
 			$result = $client->confirmOrder($order_items);
 
 			// Displaying results
-			Tools::dieObject($result);
+			// Tools::dieObject($result);
 		}
 		catch (\Exception $e)
 		{
