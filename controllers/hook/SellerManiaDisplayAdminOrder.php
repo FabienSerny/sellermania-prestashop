@@ -26,7 +26,8 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-require_once(dirname(__FILE__).'/../front/SellerManiaExport.php');
+// Load ImportOrder Controller
+require_once(dirname(__FILE__).'/SellerManiaImportOrder.php');
 
 class SellerManiaDisplayAdminOrderController
 {
@@ -79,6 +80,36 @@ class SellerManiaDisplayAdminOrderController
 	}
 
 	/**
+	 * Refresh order
+	 * @param string $order_id
+	 * @return mixed array data
+	 */
+	public function refreshOrder($order_id)
+	{
+		// Retrieving data
+		$client = new Sellermania\OrderClient();
+		$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
+		$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
+		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
+		$result = $client->getOrderById($order_id);
+
+		// Preprocess data
+		$controller = new SellerManiaImportOrderController();
+		$controller->data = $result['SellermaniaWs']['GetOrderResponse']['Order'];
+		$controller->preprocessData();
+
+		// Saving it
+		$id_sellermania_order = Db::getInstance()->getValue('SELECT `id_sellermania_order` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
+		$sellermania_order = new SellermaniaOrder($id_sellermania_order);
+		$sellermania_order->info = json_encode($controller->data);
+		$sellermania_order->date_accepted = NULL;
+		$sellermania_order->update();
+
+		// Return data
+		return $controller->data;
+	}
+
+	/**
 	 * Run method
 	 * @return string $html
 	 */
@@ -95,6 +126,9 @@ class SellerManiaDisplayAdminOrderController
 
 		// Decode order data
 		$sellermania_order = json_decode($sellermania_order, true);
+
+		// Refresh order ID
+		$sellermania_order = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
 
 		$this->context->smarty->assign('sellermania_order', $sellermania_order);
 		$this->context->smarty->assign('sellermania_module_path', $this->web_path);
