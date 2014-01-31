@@ -43,6 +43,7 @@ $(document).ready(function() {
                 if (sellermania_order_row == 1 && $(this).is(':visible'))
                 {
                     var sku = $(this).html().split('<br>');
+                    sku = sku[1].split(' ');
                     sku = sku[1].replace('Ref: ', '').trim();
 
                     var html_order_line = $(this).html();
@@ -82,6 +83,7 @@ $(document).ready(function() {
                     {
                         // Retrieve sku
                         var sku = $(this).html().split('<br>');
+                        sku = sku[1].split(' ');
                         sku = sku[1].replace('Ref: ', '').trim();
 
                         // Status
