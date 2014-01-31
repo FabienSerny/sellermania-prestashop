@@ -7,6 +7,7 @@ $(document).ready(function() {
     var sellermania_title = $('#sellermania-template-title').html();
     var sellermania_customer = $('#sellermania-template-customer').html();
     var sellermania_order_summary = $('#sellermania-template-order-summary').html();
+    var sellermania_status_update_result = $('#sellermania-template-status-update').html();
 
     // Replace status order selection
     $('#content div div form #id_order_state').after(sellermania_title);
@@ -66,6 +67,12 @@ $(document).ready(function() {
         }
         sellermania_order_line++;
     });
+
+
+    // If status has changed
+    if (sellermania_status_update_result !== 'undefined')
+        $('.add_product').parent().next().next().next().next().next().after(sellermania_status_update_result);
+
 
     // Check status
     $('.status_order_line').click(function() {

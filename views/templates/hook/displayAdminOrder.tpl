@@ -1,7 +1,17 @@
 <div id="sellermania-template">
+
+
+    {************************************************}
+    {*************** TITLE TEMPLATE *****************}
+    {************************************************}
     <div id="sellermania-template-title">
         <h2>{l s='SellerMania order from the marketplace' mod='sellermania'} {$sellermania_order.OrderInfo.MarketPlace}</h2>
     </div>
+
+
+    {***************************************************}
+    {*************** CUSTOMER TEMPLATE *****************}
+    {***************************************************}
     <div id="sellermania-template-customer">
         <legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information' mod='sellermania'}</legend>
         <b>{l s='Name:' mod='sellermania'}</b> {$sellermania_order.User[0].Name}<br>
@@ -9,7 +19,6 @@
         {if isset($sellermania_order.User[0].ShippingPhone) && !empty($sellermania_order.User[0].ShippingPhone)}<b>{l s='Shipping phone:' mod='sellermania'}</b> {$sellermania_order.User[0].ShippingPhone}<br>{/if}
         {if isset($sellermania_order.User[0].UserPhone) && !empty($sellermania_order.User[0].UserPhone)}<b>{l s='User phone:' mod='sellermania'}</b> {$sellermania_order.User[0].UserPhone}<br>{/if}
         <br>
-
         <table width="100%">
             <tr>
                 <td width="50%" align="left"><b>{l s='Shipping address:' mod='sellermania'}</b></td>
@@ -53,6 +62,11 @@
             </tr>
         </table>
     </div>
+
+
+    {********************************************************}
+    {*************** ORDER SUMMARY TEMPLATE *****************}
+    {********************************************************}
     <div id="sellermania-template-order-summary">
         <fieldset>
             <legend><img src="../img/admin/details.gif"> {l s='Order summary' mod='sellermania'}</legend>
@@ -98,7 +112,13 @@
                 <tbody>
                 <tr>
                     <td>{l s='Shipping:' mod='sellermania'}</td>
-                    <td>{$sellermania_order.OrderInfo.Transport.Name}</td>
+                    <td>
+                    {if empty($sellermania_order.OrderInfo.Transport.Name)}
+                        -{*<input type="text" name="shipping_name" id="shipping_name" /> <input type="submit" id="shipping_name_submit" value="{l s='Register' mod='sellermania'}" class="button" />*}
+                        {else}
+                        {$sellermania_order.OrderInfo.Transport.Name}
+                    {/if}
+                    </td>
                 </tr>
                 <tr>
                     <td>{l s='Tracking number:' mod='sellermania'}</td>
@@ -114,8 +134,34 @@
             </table>
         </fieldset>
     </div>
+
+
+    {***************************************************************}
+    {*************** RESULT STATUS UPDATE TEMPLATE *****************}
+    {***************************************************************}
+    {if is_array($sellermania_status_update)}
+    <div id="sellermania-template-status-update">
+        <br clear="left" /><br />
+        <div class="{if $sellermania_status_update.Status eq 'SUCCESS'}conf{else}error{/if}" style="float:left">
+            {l s='Status change result:' mod='sellermania'}<br>
+            <ul>
+                {foreach from=$sellermania_status_update.OrderItemConfirmationStatus item=result}
+                    <li>
+                        - {l s='Order line status for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
+                        {if isset($result.Message)}<br><i>{$result.Message}</i>{/if}
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+    {/if}
 </div>
 
+
+
+{*****************************************}
+{*************** JS DATA *****************}
+{*****************************************}
 <script>
     var sellermania_products = new Array();
 

@@ -111,8 +111,12 @@ class SellerManiaDisplayAdminOrderController
 			$client->setEndpoint(Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
 			$result = $client->confirmOrder($order_items);
 
-			// Displaying results
-			// Tools::dieObject($result);
+			// Fix data (when only one result, array is not the same)
+			if (!isset($result['OrderItemConfirmationStatus'][0]))
+				$result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
+
+			// Return results
+			return $result;
 		}
 		catch (\Exception $e)
 		{
@@ -136,7 +140,7 @@ class SellerManiaDisplayAdminOrderController
 		$result = $client->getOrderById($order_id);
 
 		// Preprocess data
-		$controller = new SellerManiaImportOrderController();
+		$controller = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 		$controller->data = $result['SellermaniaWs']['GetOrderResponse']['Order'];
 		$controller->preprocessData();
 
@@ -170,7 +174,7 @@ class SellerManiaDisplayAdminOrderController
 		$sellermania_order = json_decode($sellermania_order, true);
 
 		// Save order line status
-		$this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId']);
+		$result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId']);
 
 		// Refresh order from Sellermania webservices
 		$sellermania_order = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
@@ -179,6 +183,7 @@ class SellerManiaDisplayAdminOrderController
 		$this->context->smarty->assign('sellermania_module_path', $this->web_path);
 		$this->context->smarty->assign('sellermania_status_list', $this->status_list);
 		$this->context->smarty->assign('sellermania_conditions_list', $this->conditions_list);
+		$this->context->smarty->assign('sellermania_status_update', $result_status_update);
 
 		return $this->module->compliantDisplay('displayAdminOrder.tpl');
 	}
