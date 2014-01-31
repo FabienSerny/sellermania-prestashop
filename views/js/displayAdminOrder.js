@@ -43,8 +43,8 @@ $(document).ready(function() {
                 if (sellermania_order_row == 1 && $(this).is(':visible'))
                 {
                     var sku = $(this).html().split('<br>');
-                    sku = sku[1].split(' ');
-                    sku = sku[1].replace('Ref: ', '').trim();
+                    var remove = sku[1].split(' ');
+                    sku = sku[1].replace(remove[0], '').trim();
 
                     var html_order_line = $(this).html();
                     if (sellermania_products[sku].insurance_price > 0)
@@ -83,8 +83,8 @@ $(document).ready(function() {
                     {
                         // Retrieve sku
                         var sku = $(this).html().split('<br>');
-                        sku = sku[1].split(' ');
-                        sku = sku[1].replace('Ref: ', '').trim();
+                        var remove = sku[1].split(' ');
+                        sku = sku[1].replace(remove[0], '').trim();
 
                         // Status
                         var order_line_status = 'Not defined';
