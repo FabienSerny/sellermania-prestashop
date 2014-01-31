@@ -147,7 +147,7 @@
             <ul>
                 {foreach from=$sellermania_status_update.OrderItemConfirmationStatus item=result}
                     <li>
-                        - {l s='Order line status for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
+                        - {l s='Order line status update for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
                         {if isset($result.Message)}<br><i>{$result.Message}</i>{/if}
                     </li>
                 {/foreach}
