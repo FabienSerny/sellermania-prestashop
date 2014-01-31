@@ -111,12 +111,22 @@
             <table width="100%;" cellspacing="0" cellpadding="0" class="table">
                 <tbody>
                 <tr>
-                    <td>{l s='Shipping:' mod='sellermania'}</td>
+                    <td>{l s='Shipping carrier:' mod='sellermania'}</td>
                     <td>
                     {if empty($sellermania_order.OrderInfo.Transport.Name)}
                         -{*<input type="text" name="shipping_name" id="shipping_name" /> <input type="submit" id="shipping_name_submit" value="{l s='Register' mod='sellermania'}" class="button" />*}
                         {else}
                         {$sellermania_order.OrderInfo.Transport.Name}
+                    {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{l s='Shipping type:' mod='sellermania'}</td>
+                    <td>
+                    {if empty($sellermania_order.OrderInfo.Transport.ShippingType)}
+                        -{*<input type="text" name="shipping_type" id="shipping_type" /> <input type="submit" id="shipping_type_submit" value="{l s='Register' mod='sellermania'}" class="button" />*}
+                    {else}
+                        {$sellermania_order.OrderInfo.Transport.ShippingType}
                     {/if}
                     </td>
                 </tr>
@@ -169,6 +179,7 @@
 
     sellermania_products['{$product.Sku}'] = new Array();
     sellermania_products['{$product.Sku}']['order_item_id'] = '{if isset($product.OrderItemId)}{$product.OrderItemId}{/if}';
+    sellermania_products['{$product.Sku}']['external_order_id'] = '{if isset($product.ExternalOrderId)}{$product.ExternalOrderId}{/if}';
     sellermania_products['{$product.Sku}']['status_id'] = '{if isset($product.Status)}{$product.Status}{/if}';
     sellermania_products['{$product.Sku}']['status'] = '{if isset($product.Status) && isset($sellermania_status_list[$product.Status])}{$sellermania_status_list[$product.Status]}{/if}';
     sellermania_products['{$product.Sku}']['ean'] = '{if isset($product.Ean)}{$product.Ean}{/if}';

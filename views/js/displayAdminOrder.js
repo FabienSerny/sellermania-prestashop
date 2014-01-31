@@ -72,8 +72,10 @@ $(document).ready(function() {
         if (sellermania_products[sku].insurance_price > 0)
             html_order_line += '<br><b>Insurance price:</b> ' + sellermania_products[sku].insurance_price + ' ' + sellermania_products[sku].currency + '<br>';
         html_order_line += '<br><u>Order item ID:</u> <b>' + sellermania_products[sku].order_item_id + '</b><br>';
+        html_order_line += '<br><u>External order ID:</u> <b>' + sellermania_products[sku].external_order_id + '</b><br>';
         html_order_line += '<u>Sku:</u> <b>' + sku + '</b><br>';
         html_order_line += '<u>Ean:</u> <b>' + sellermania_products[sku].ean + '</b><br>';
+        html_order_line += '<u>ASIN:</u> <b>' + sellermania_products[sku].product_id + '</b><br>';
         html_order_line += '<u>Condition:</u> <b>' + sellermania_products[sku].item_condition + '</b><br>';
         html_order_line += '<u>Status:</u> <b>' + sellermania_products[sku].status + '</b><br>';
         if (sellermania_products[sku].status_id == 6)
