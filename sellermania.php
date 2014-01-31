@@ -52,7 +52,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = '23Prod';
-		$this->version = '0.9.3.5';
+		$this->version = '0.9.3.6';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -118,6 +118,7 @@ class SellerMania extends Module
 		Configuration::deleteByName('SM_ORDER_EMAIL');
 		Configuration::deleteByName('SM_ORDER_TOKEN');
 		Configuration::deleteByName('SM_ORDER_ENDPOINT');
+		Configuration::deleteByName('SM_CONFIRM_ORDER_ENDPOINT');
 		Configuration::deleteByName('SM_NEXT_IMPORT');
 		Configuration::deleteByName('SM_CREDENTIALS_CHECK');
 		Configuration::deleteByName('SM_INSTALL_DATE');
