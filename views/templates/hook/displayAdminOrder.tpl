@@ -60,7 +60,7 @@
                 <tbody>
                     <tr>
                         <td>{l s='Total products:' mod='sellermania'}</td>
-                        <td>{$sellermania_order.OrderInfo.Amount.Price|number_format:2} {$sellermania_order.OrderInfo.Amount.Currency}</td>
+                        <td>{($sellermania_order.OrderInfo.Amount.Price - $sellermania_order.OrderInfo.TotalInsurance)|number_format:2} {$sellermania_order.OrderInfo.Amount.Currency}</td>
                     </tr>
                     <tr>
                         <td>{l s='Shipping:' mod='sellermania'}</td>
@@ -68,7 +68,7 @@
                     </tr>
                     <tr>
                         <td>{l s='Insurance:' mod='sellermania'}</td>
-                        <td>0 {$sellermania_order.OrderInfo.Amount.Currency}</td>
+                        <td>{$sellermania_order.OrderInfo.TotalInsurance} {$sellermania_order.OrderInfo.Amount.Currency}</td>
                     </tr>
                     <tr>
                         <td style="color:red;font-weight:bold">{l s='Total amount:' mod='sellermania'}</td>
@@ -129,6 +129,8 @@
     sellermania_products['{$product.Sku}']['product_id'] = '{if isset($product.ProductId)}{$product.ProductId}{/if}';
     sellermania_products['{$product.Sku}']['item_condition_id'] = '{if isset($product.ItemCondition)}{$product.ItemCondition}{/if}';
     sellermania_products['{$product.Sku}']['item_condition'] = '{if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]}{/if}';
+    sellermania_products['{$product.Sku}']['insurance_price'] = '{if isset($product.InsurancePrice.Amount.Price) && $product.InsurancePrice.Amount.Price gt 0}{$product.InsurancePrice.Amount.Price}{else}0{/if}';
+    sellermania_products['{$product.Sku}']['currency'] = '{$sellermania_order.OrderInfo.Amount.Currency}';
 
     {/foreach}
 </script>

@@ -154,6 +154,7 @@ class SellerManiaImportOrderController
 
 		// Calcul total product without tax
 		$this->data['OrderInfo']['TotalProductsWithoutVAT'] = 0;
+		$this->data['OrderInfo']['TotalInsurance'] = 0;
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
 		{
 			// Calcul total product without tax
@@ -162,6 +163,10 @@ class SellerManiaImportOrderController
 			$product_tax = $product_price * ($vat_rate - 1);
 			$product_price = $product_price / $vat_rate;
 			$this->data['OrderInfo']['TotalProductsWithoutVAT'] += $product_price;
+
+			// Calcul total Insurance
+			if (isset($product['InsurancePrice']['Amount']['Price']))
+				$this->data['OrderInfo']['TotalInsurance'] += $product['InsurancePrice']['Amount']['Price'];
 
 			// Create order detail (only create order detail for unmatched product)
 			$this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
