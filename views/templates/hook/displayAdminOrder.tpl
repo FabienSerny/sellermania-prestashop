@@ -104,7 +104,7 @@
                     <td>{l s='Tracking number:' mod='sellermania'}</td>
                     <td>
                         {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}
-                            <input type="text" name="tracking_number" id="tracking_number" /> <input type="submit" id="tracking_number_submit" value="{l s='Register' mod='sellermania'}" class="button" />
+                            -{*<input type="text" name="tracking_number" id="tracking_number" /> <input type="submit" id="tracking_number_submit" value="{l s='Register' mod='sellermania'}" class="button" />*}
                         {else}
                             {$sellermania_order.OrderInfo.Transport.TrackingNumber}
                         {/if}
