@@ -19,6 +19,7 @@
                 <p><label>{l s='Order e-mail' mod='sellermania'}</label> <input type="text" name="sm_order_email" value="{$sm_order_email}" /></p>
                 <p><label>{l s='Order token' mod='sellermania'}</label> <input type="text" name="sm_order_token" value="{$sm_order_token}" /></p>
                 <p><label>{l s='Order endpoint' mod='sellermania'}</label> <input type="text" name="sm_order_endpoint" value="{$sm_order_endpoint}" /></p>
+                <p><label>{l s='Confirm order endpoint' mod='sellermania'}</label> <input type="text" name="sm_confirm_order_endpoint" value="{$sm_confirm_order_endpoint}" /></p>
             </div>
             <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" /></label></p>
             {if isset($sm_error_credentials)}<br><br><p class="error"><strong>{$sm_error_credentials}</strong></p>{/if}
