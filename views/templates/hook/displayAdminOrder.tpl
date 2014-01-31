@@ -4,10 +4,54 @@
     </div>
     <div id="sellermania-template-customer">
         <legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information' mod='sellermania'}</legend>
-        {$sellermania_order.User[0].FirstName} {$sellermania_order.User[0].LastName}<br>
+        <b>{l s='Name:' mod='sellermania'}</b> {$sellermania_order.User[0].Name}<br>
         <b>{l s='E-mail:' mod='sellermania'}</b> <a href="mailto:{$sellermania_order.User[0].Email}">{$sellermania_order.User[0].Email}</a><br>
         {if isset($sellermania_order.User[0].ShippingPhone) && !empty($sellermania_order.User[0].ShippingPhone)}<b>{l s='Shipping phone:' mod='sellermania'}</b> {$sellermania_order.User[0].ShippingPhone}<br>{/if}
         {if isset($sellermania_order.User[0].UserPhone) && !empty($sellermania_order.User[0].UserPhone)}<b>{l s='User phone:' mod='sellermania'}</b> {$sellermania_order.User[0].UserPhone}<br>{/if}
+        <br>
+
+        <table width="100%">
+            <tr>
+                <td width="50%" align="left"><b>{l s='Shipping address:' mod='sellermania'}</b></td>
+                <td width="50%" align="right"><b>{l s='Billing address:' mod='sellermania'}</b></td>
+            </tr>
+            <tr>
+                <td width="50%" align="left">
+                    {$sellermania_order.User[0].Name}<br>
+                    {if isset($sellermania_order.User[0].Company) && !empty($sellermania_order.User[0].Company)}{$sellermania_order.User[0].Company}<br>{/if}
+
+                    {if isset($sellermania_order.User[0].Address.Street1) && !empty($sellermania_order.User[0].Address.Street1)}{$sellermania_order.User[0].Address.Street1}<br>{/if}
+                    {if isset($sellermania_order.User[0].Address.Street2) && !empty($sellermania_order.User[0].Address.Street2)}{$sellermania_order.User[0].Address.Street2}<br>{/if}
+
+                    {if isset($sellermania_order.User[0].Address.ZipCode) && !empty($sellermania_order.User[0].Address.ZipCode)}{$sellermania_order.User[0].Address.ZipCode} {/if}
+                    {if isset($sellermania_order.User[0].Address.City) && !empty($sellermania_order.User[0].Address.City)}{$sellermania_order.User[0].Address.City}<br>{/if}
+
+                    {if isset($sellermania_order.User[0].Address.State) && !empty($sellermania_order.User[0].Address.State)}{$sellermania_order.User[0].Address.State} {/if}
+                    {if isset($sellermania_order.User[0].Address.Country) && !empty($sellermania_order.User[0].Address.Country)}{$sellermania_order.User[0].Address.Country}<br>{/if}
+
+                    {if isset($sellermania_order.User[0].Address.ShippingPhone) && !empty($sellermania_order.User[0].Address.ShippingPhone)}{$sellermania_order.User[0].Address.ShippingPhone}<br>{/if}
+                </td>
+                <td width="50%" align="right">
+                    {if isset($sellermania_order.User[1].Name) && !empty($sellermania_order.User[1].Name)}
+                        {$sellermania_order.User[1].Name}<br>
+                    {else}
+                        {$sellermania_order.User[0].Name}<br>
+                    {/if}
+                    {if isset($sellermania_order.User[1].Company) && !empty($sellermania_order.User[1].Company)}{$sellermania_order.User[1].Company}<br>{/if}
+
+                    {if isset($sellermania_order.User[1].Address.Street1) && !empty($sellermania_order.User[1].Address.Street1)}{$sellermania_order.User[1].Address.Street1}<br>{/if}
+                    {if isset($sellermania_order.User[1].Address.Street2) && !empty($sellermania_order.User[1].Address.Street2)}{$sellermania_order.User[1].Address.Street2}<br>{/if}
+
+                    {if isset($sellermania_order.User[1].Address.ZipCode) && !empty($sellermania_order.User[1].Address.ZipCode)}{$sellermania_order.User[1].Address.ZipCode} {/if}
+                    {if isset($sellermania_order.User[1].Address.City) && !empty($sellermania_order.User[1].Address.City)}{$sellermania_order.User[1].Address.City}<br>{/if}
+
+                    {if isset($sellermania_order.User[1].Address.State) && !empty($sellermania_order.User[1].Address.State)}{$sellermania_order.User[1].Address.State} {/if}
+                    {if isset($sellermania_order.User[1].Address.Country) && !empty($sellermania_order.User[1].Address.Country)}{$sellermania_order.User[1].Address.Country}<br>{/if}
+
+                    {if isset($sellermania_order.User[1].Address.ShippingPhone) && !empty($sellermania_order.User[1].Address.ShippingPhone)}{$sellermania_order.User[1].Address.ShippingPhone}<br>{/if}
+                </td>
+            </tr>
+        </table>
     </div>
     <div id="sellermania-template-order-summary">
         <fieldset>
@@ -46,6 +90,25 @@
                 <tr>
                     <td>{l s='Order ID:' mod='sellermania'}</td>
                     <td>{$sellermania_order.OrderInfo.OrderId}</td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <table width="100%;" cellspacing="0" cellpadding="0" class="table">
+                <tbody>
+                <tr>
+                    <td>{l s='Shipping:' mod='sellermania'}</td>
+                    <td>{$sellermania_order.OrderInfo.Transport.Name}</td>
+                </tr>
+                <tr>
+                    <td>{l s='Tracking number:' mod='sellermania'}</td>
+                    <td>
+                        {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}
+                            <input type="text" name="tracking_number" id="tracking_number" /> <input type="submit" id="tracking_number_submit" value="{l s='Register' mod='sellermania'}" />
+                        {else}
+                            {$sellermania_order.OrderInfo.Transport.TrackingNumber}
+                        {/if}
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -46,6 +46,9 @@ $(document).ready(function() {
                     sku = sku[1].replace('Ref: ', '').trim();
 
                     var html_order_line = $(this).html();
+                    html_order_line += '<u>Order item ID:</u> <b>' + sellermania_products[sku].order_item_id + '</b><br>';
+                    html_order_line += '<u>Sku:</u> <b>' + sku + '</b><br>';
+                    html_order_line += '<u>Ean:</u> <b>' + sellermania_products[sku].ean + '</b><br>';
                     html_order_line += '<u>Condition:</u> <b>' + sellermania_products[sku].item_condition + '</b><br>';
                     html_order_line += '<u>Status:</u> <b>' + sellermania_products[sku].status + '</b><br>';
                     $(this).html(html_order_line);
