@@ -55,8 +55,8 @@ $(document).ready(function() {
                     html_order_line += '<u>Status:</u> <b>' + sellermania_products[sku].status + '</b><br>';
                     if (sellermania_products[sku].status_id == 6)
                     {
-                        html_order_line += '<input type="radio" id="status_confirm_' + sellermania_order_line + '" name="status_' + sellermania_order_line + '" value="1" class="status_order_line" data-toggle="' + sellermania_products[sku].order_item_id + '" /> Confirm ';
-                        html_order_line += '<input type="radio" id="status_cancel_' + sellermania_order_line + '" name="status_' + sellermania_order_line + '" value="-1" class="status_order_line" data-toggle="' + sellermania_products[sku].order_item_id + '" /> Cancel ';
+                        html_order_line += '<input type="radio" id="status_confirm_' + sellermania_order_line + '" name="status_' + sellermania_order_line + '" value="9" class="status_order_line" data-toggle="' + sku + '" /> Confirm ';
+                        html_order_line += '<input type="radio" id="status_cancel_' + sellermania_order_line + '" name="status_' + sellermania_order_line + '" value="4" class="status_order_line" data-toggle="' + sku + '" /> Cancel ';
                     }
                     $(this).html(html_order_line);
                 }
@@ -112,11 +112,12 @@ $(document).ready(function() {
 
                 // Generate form
                 var html_form = '<form id="sellermania_status_form" action="" method="POST">';
+                html_form += '<input type="hidden" name="sellermania_status_form_registration" value="1" />';
                 $('.status_order_line').each(function() {
                     if ($(this).prop('checked'))
                     {
                         html_form += '<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).attr('value') + '" />';
-                        html_form += '<input type="hidden" name="order_item_id_' + $(this).attr('name') + '" value="' + $(this).attr('data-toggle') + '" />';
+                        html_form += '<input type="hidden" name="sku_' + $(this).attr('name') + '" value="' + $(this).attr('data-toggle') + '" />';
                     }
                 });
                 html_form += '</form>';

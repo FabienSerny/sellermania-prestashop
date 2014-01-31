@@ -80,6 +80,48 @@ class SellerManiaDisplayAdminOrderController
 	}
 
 	/**
+	 * Save status
+	 * @param string $order_id
+	 */
+	public function saveOrderStatus($order_id)
+	{
+		// Check if form has been submitted
+		if (Tools::getValue('sellermania_status_form_registration') == '')
+			return false;
+
+		// Preprocess data
+		$order_items = array();
+		for ($i = 1; Tools::getValue('status_'.$i) != ''; $i++)
+		{
+			$order_items[] = array(
+				'orderId' => pSQL($order_id),
+				'sku' => pSQL(Tools::getValue('sku_status_'.$i)),
+				'orderStatusId' => Tools::getValue('status_'.$i),
+				'trackingNumber' => '',
+				'shippingCarrier' => '',
+			);
+		}
+
+		try
+		{
+			// Calling the confirmOrder service
+			$client = new Sellermania\OrderConfirmClient();
+			$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
+			$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
+			$client->setEndpoint(Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
+			$result = $client->confirmOrder($order_items);
+
+			// Displaying results
+			Tools::dieObject($result);
+		}
+		catch (\Exception $e)
+		{
+			Tools::dieObject($e->getMessage());
+		}
+
+	}
+
+	/**
 	 * Refresh order
 	 * @param string $order_id
 	 * @return mixed array data
@@ -127,7 +169,10 @@ class SellerManiaDisplayAdminOrderController
 		// Decode order data
 		$sellermania_order = json_decode($sellermania_order, true);
 
-		// Refresh order ID
+		// Save order line status
+		$this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId']);
+
+		// Refresh order from Sellermania webservices
 		$sellermania_order = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
 
 		$this->context->smarty->assign('sellermania_order', $sellermania_order);
