@@ -102,7 +102,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 				// Import order
 				if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
 					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
-						if (!SellermaniaOrder::orderHasAlreadyBeenImported($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']))
+						if (isset($order['OrderInfo']['OrderId']) && !SellermaniaOrder::orderHasAlreadyBeenImported($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']))
 						{
 							// Save config value
 							$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
