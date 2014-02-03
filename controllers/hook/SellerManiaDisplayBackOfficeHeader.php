@@ -159,6 +159,10 @@ class SellerManiaDisplayBackOfficeHeaderController
 		if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || Configuration::get('SM_DEFAULT_PRODUCT_ID') < 1)
 			return '';
 
+		// If ajax, we do not import orders
+		if (Tools::getValue('ajax') != '')
+			return '';
+
 		// Check if it's time to import
 		if ($this->timeToImportOrders())
 			$this->importOrders();
