@@ -118,11 +118,8 @@ class SellerManiaDisplayBackOfficeHeaderController
 			}
 			catch (\Exception $e)
 			{
-				if (Tools::getValue('debug') == 'import')
-				{
-					$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
-					file_put_contents(dirname(__FILE__).'/../../log/log-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
-				}
+				$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+				file_put_contents(dirname(__FILE__).'/../../log/log-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
 			}
 		}
 	}
