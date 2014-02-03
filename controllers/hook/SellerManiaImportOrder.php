@@ -305,6 +305,22 @@ class SellerManiaImportOrderController
 		// Restore customer e-mail
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
 		$this->context->customer->email = $customer_email;
+
+		// If last order status is not PS_OS_SM_AWAITING, we update it
+		if ($this->order->current_state != Configuration::get('PS_OS_SM_AWAITING'))
+		{
+			// Check existings payment
+			$use_existings_payment = false;
+			if (!$this->order->hasInvoice())
+				$use_existings_payment = true;
+
+			// Create new OrderHistory
+			$history = new OrderHistory();
+			$history->id_order = $this->order->id;
+			$history->id_employee = (int)$this->context->employee->id;
+			$history->changeIdOrderState((int)Configuration::get('PS_OS_SM_AWAITING'), $order, $use_existings_payment);
+			$history->add();
+		}
 	}
 
 	/**
