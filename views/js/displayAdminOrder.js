@@ -18,8 +18,8 @@ $(document).ready(function() {
     var sellermania_block_address = $('.container-command:first').next();
     var sellermania_block_add_product = $('.add_product').parent();
     var sellermania_block_discount = $('#total_products').parent().parent().parent().next().next();
-    var sellermania_block_customer_thread = $('.add_product').parent().parent().parent().parent().next().next();
-    var sellermania_block_product_general_legend = $('.add_product').parent().next().next().next().next().next();
+    var sellermania_block_customer_thread = $('form.container-command-top-spacing').next().next();
+    var sellermania_block_product_general_legend = $('#orderProducts').next();
     var sellermania_block_products_list = new Array();
 
     // Get products list block identifier
