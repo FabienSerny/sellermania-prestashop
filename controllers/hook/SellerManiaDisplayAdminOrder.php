@@ -171,6 +171,8 @@ class SellerManiaDisplayAdminOrderController
 		$controller = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 		$controller->data = $result['SellermaniaWs']['GetOrderResponse']['Order'];
 		$controller->preprocessData();
+		$controller->order = new Order((int)Tools::getValue('id_order'));
+		$controller->fixOrder(false);
 
 		// Saving it
 		$id_sellermania_order = Db::getInstance()->getValue('SELECT `id_sellermania_order` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));

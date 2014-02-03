@@ -297,10 +297,7 @@ class SellerManiaImportOrderController
 		$this->order = new Order((int)$id_order);
 
 		// Fix order depending on version
-		if (version_compare(_PS_VERSION_, '1.5') >= 0)
-			$this->fixOrder15();
-		else
-			$this->fixOrder14();
+		$this->fixOrder(true);
 
 		// Restore customer e-mail
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
@@ -375,17 +372,31 @@ class SellerManiaImportOrderController
 	}
 
 
+	/************** FIX ORDER **************/
+
+	/**
+	 * Fix order on PrestaShop
+	 */
+	public function fixOrder($fix_details = true)
+	{
+		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+			$this->fixOrder15($fix_details);
+		else
+			$this->fixOrder14($fix_details);
+	}
+
 	/************** FIX ORDER 1.4 **************/
 
 
 	/**
 	 * Fix order on PrestaShop 1.4
 	 */
-	public function fixOrder14()
+	public function fixOrder14($fix_details = true)
 	{
 		// Fix order detail
-		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
-			$this->fixOrderDetail14($this->order->id, $product);
+		if ($fix_details)
+			foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
+				$this->fixOrderDetail14($this->order->id, $product);
 
 		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
 		$update = array(
@@ -464,11 +475,12 @@ class SellerManiaImportOrderController
 	/**
 	 * Create order on PrestaShop 1.5 / 1.6
 	 */
-	public function fixOrder15()
+	public function fixOrder15($fix_details = true)
 	{
 		// Fix order detail
-		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
-			$this->fixOrderDetail15($this->order->id, $product);
+		if ($fix_details)
+			foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
+				$this->fixOrderDetail15($this->order->id, $product);
 
 		// Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
 		$update = array(
