@@ -108,40 +108,54 @@
                 </tbody>
             </table>
             <br>
+            <form action="" method="POST">
             <table width="100%;" cellspacing="0" cellpadding="0" class="table">
                 <tbody>
                 <tr>
                     <td>{l s='Shipping carrier:' mod='sellermania'}</td>
                     <td>
-                    {if empty($sellermania_order.OrderInfo.Transport.Name)}
-                        -{*<input type="text" name="shipping_name" id="shipping_name" /> <input type="submit" id="shipping_name_submit" value="{l s='Register' mod='sellermania'}" class="button" />*}
+                        {if empty($sellermania_order.OrderInfo.Transport.Name) && $sellermania_status_to_ship eq 1}
+                            <input type="text" name="shipping_name" id="shipping_name" />
                         {else}
-                        {$sellermania_order.OrderInfo.Transport.Name}
-                    {/if}
+                            {if empty($sellermania_order.OrderInfo.Transport.Name)}-{else}{$sellermania_order.OrderInfo.Transport.Name}{/if}
+                        {/if}
                     </td>
                 </tr>
                 <tr>
                     <td>{l s='Shipping type:' mod='sellermania'}</td>
-                    <td>
-                    {if empty($sellermania_order.OrderInfo.Transport.ShippingType)}
-                        -{*<input type="text" name="shipping_type" id="shipping_type" /> <input type="submit" id="shipping_type_submit" value="{l s='Register' mod='sellermania'}" class="button" />*}
-                    {else}
-                        {$sellermania_order.OrderInfo.Transport.ShippingType}
-                    {/if}
-                    </td>
+                    <td>{if empty($sellermania_order.OrderInfo.Transport.ShippingType)}-{else}{$sellermania_order.OrderInfo.Transport.ShippingType}{/if}</td>
                 </tr>
                 <tr>
                     <td>{l s='Tracking number:' mod='sellermania'}</td>
                     <td>
-                        {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}
-                            -{*<input type="text" name="tracking_number" id="tracking_number" /> <input type="submit" id="tracking_number_submit" value="{l s='Register' mod='sellermania'}" class="button" />*}
+                        {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber) && $sellermania_status_to_ship eq 1}
+                            <input type="text" name="tracking_number" id="tracking_number" />
                         {else}
-                            {$sellermania_order.OrderInfo.Transport.TrackingNumber}
+                            {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}-{else}{$sellermania_order.OrderInfo.Transport.TrackingNumber}{/if}
                         {/if}
                     </td>
                 </tr>
                 </tbody>
             </table>
+            {if $sellermania_status_to_ship eq 1}
+                <input type="hidden" name="sellermania_tracking_registration" value="yes" />
+                <p align="center"><input type="submit" value="{l s='Validate' mod='sellermania'}" class="button" /></p>
+            {/if}
+            {if is_array($sellermania_shipping_status_update)}
+                    <br clear="left" /><br />
+                    <div class="{if $sellermania_shipping_status_update.Status eq 'SUCCESS'}conf{else}error{/if}" style="float:left">
+                        {l s='Status change result:' mod='sellermania'}<br>
+                        <ul>
+                            {foreach from=$sellermania_shipping_status_update.OrderItemConfirmationStatus item=result}
+                                <li>
+                                    - {l s='Order line status update for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
+                                    {if isset($result.Message)}<br><i>{$result.Message}</i>{/if}
+                                </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+            {/if}
+            </form>
         </fieldset>
     </div>
 
