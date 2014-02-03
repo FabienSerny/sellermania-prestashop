@@ -167,7 +167,7 @@ class SellerManiaDisplayAdminOrderController
 		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
 		$result = $client->getOrderById($order_id);
 
-		// Preprocess data
+		// Preprocess data and fix order
 		$controller = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 		$controller->data = $result['SellermaniaWs']['GetOrderResponse']['Order'];
 		$controller->preprocessData();
