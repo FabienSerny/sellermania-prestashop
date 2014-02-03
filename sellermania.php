@@ -109,9 +109,9 @@ class SellerMania extends Module
 	public function uninstall()
 	{
 		// Execute module install MySQL commands
-		$sql_file = dirname(__FILE__).'/install/uninstall.sql';
-		if (!$this->loadSQLFile($sql_file))
-			return false;
+		// $sql_file = dirname(__FILE__).'/install/uninstall.sql';
+		// if (!$this->loadSQLFile($sql_file))
+		//	return false;
 
 		// Delete configuration values
 		Configuration::deleteByName('SM_IMPORT_ORDERS');
