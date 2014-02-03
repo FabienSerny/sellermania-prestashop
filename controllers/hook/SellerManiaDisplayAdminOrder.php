@@ -89,6 +89,12 @@ class SellerManiaDisplayAdminOrderController
 		if (Tools::getValue('sellermania_status_form_registration') == '')
 			return false;
 
+		// Check confirm or cancel
+		$action = 'cancel';
+		for ($i = 1; Tools::getValue('status_'.$i) != ''; $i++)
+			if (Tools::getValue('status_'.$i) == 9)
+				$action = 'confirm';
+
 		// Preprocess data
 		$order_items = array();
 		for ($i = 1; Tools::getValue('status_'.$i) != ''; $i++)
@@ -114,6 +120,28 @@ class SellerManiaDisplayAdminOrderController
 			// Fix data (when only one result, array is not the same)
 			if (!isset($result['OrderItemConfirmationStatus'][0]))
 				$result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
+
+			// Change order status
+			if ($result['Status'] == 'SUCCESS')
+			{
+				// Get new order state ID
+				$new_order_state = Configuration::get('PS_OS_CANCELED');
+				if ($action == 'confirm')
+					$new_order_state = Configuration::get('PS_OS_SM_CONFIRMED');
+
+				// Load order and check existings payment
+				$order = new Order((int)Tools::getValue('id_order'));
+				$use_existings_payment = false;
+				if (!$order->hasInvoice())
+					$use_existings_payment = true;
+
+				// Create new OrderHistory
+				$history = new OrderHistory();
+				$history->id_order = $order->id;
+				$history->id_employee = (int)$this->context->employee->id;
+				$history->changeIdOrderState((int)$new_order_state, $order, $use_existings_payment);
+				$history->add();
+			}
 
 			// Return results
 			return $result;
