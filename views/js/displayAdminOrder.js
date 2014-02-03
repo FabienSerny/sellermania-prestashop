@@ -60,6 +60,7 @@ $(document).ready(function() {
 
 
     // Fill product details
+    var nb_buttons = 0;
     for (i = 1; sellermania_block_products_list[i]; i++)
     {
         var sm_block_product = sellermania_block_products_list[i];
@@ -82,10 +83,30 @@ $(document).ready(function() {
         {
             html_order_line += '<input type="radio" id="status_confirm_' + i + '" name="status_' + i + '" value="9" class="status_order_line" data-toggle="' + sku + '" /> Confirm ';
             html_order_line += '<input type="radio" id="status_cancel_' + i + '" name="status_' + i + '" value="4" class="status_order_line" data-toggle="' + sku + '" /> Cancel ';
+            nb_buttons++;
         }
         sm_block_product.append(html_order_line);
     }
 
+    // Add button check all
+    if (nb_buttons > 0)
+    {
+        var sellermania_html_buttons_all = '<input type="button" value="Confirm all products" id="sellermania_confirm_all_products" class="button" />';
+        sellermania_html_buttons_all += '<input type="button" value="Cancel all products" id="sellermania_cancel_all_products" class="button" />';
+        sellermania_block_product_general_legend.html(sellermania_html_buttons_all);
+        sellermania_block_product_general_legend.show();
+
+        $('#sellermania_confirm_all_products').click(function() {
+            for (i = 1; sellermania_block_products_list[i]; i++)
+                $('#status_confirm_' + i).prop('checked', 'checked');
+            sellermania_update_line_status();
+        });
+        $('#sellermania_cancel_all_products').click(function() {
+            for (i = 1; sellermania_block_products_list[i]; i++)
+                $('#status_cancel_' + i).prop('checked', 'checked');
+            sellermania_update_line_status();
+        });
+    }
 
     // If status has changed
     if (sellermania_status_update_result !== 'undefined')
@@ -94,7 +115,12 @@ $(document).ready(function() {
 
     // Check status
     $('.status_order_line').click(function() {
+        sellermania_update_line_status();
+    });
 
+
+    function sellermania_update_line_status()
+    {
         // Fill product details
         var sellermania_status_not_defined = 0;
         for (i = 1; sellermania_block_products_list[i]; i++)
@@ -116,12 +142,11 @@ $(document).ready(function() {
                 sellermania_status_not_defined++;
         }
 
-
         // Check how many not defined status there is
         if (sellermania_status_not_defined == 0)
         {
             // Display submit
-            $('.add_product').parent().next().next().next().next().next().html('<input type="button" id="sellermania_register_status" value="Register status" class="button" />');
+            sellermania_block_product_general_legend.html('<input type="button" id="sellermania_register_status" value="Register status" class="button" />');
 
             // Generate form and submit it
             $('#sellermania_register_status').click(function() {
@@ -145,5 +170,5 @@ $(document).ready(function() {
                 return false;
             });
         }
-    });
+    }
 });
