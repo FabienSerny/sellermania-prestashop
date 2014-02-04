@@ -59,8 +59,8 @@ class SellermaniaOrder extends ObjectModel
 		'primary' => 'id_sellermania_order',
 		'multilang' => false,
 		'fields' => array(
-			'marketplace' => 				array('type' => 3, 'required' => true, 'size' => 20),
-			'ref_order' => 					array('type' => 3, 'required' => true, 'size' => 20),
+			'marketplace' => 				array('type' => 3, 'required' => true, 'size' => 128),
+			'ref_order' => 					array('type' => 3, 'required' => true, 'size' => 128),
 			'info' => 						array('type' => 3, 'required' => true),
 			'id_order' => 					array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_employee_accepted' =>		array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
