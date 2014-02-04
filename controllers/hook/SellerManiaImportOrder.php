@@ -406,7 +406,7 @@ class SellerManiaImportOrderController
 			'total_products' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'],
 			'total_products_wt' => (float)$this->data['OrderInfo']['Amount']['Price'],
 			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 21)),
+			'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
 		);
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$this->order->id);
 
@@ -494,7 +494,7 @@ class SellerManiaImportOrderController
 			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_shipping_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-			'date_add' => pSQL(substr($this->data['Paiement']['Date'], 0, 19)),
+			'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
 		);
 		Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$this->order->id);
 
