@@ -292,7 +292,7 @@ class SellerManiaImportOrderController
 		$payment_method = $this->data['OrderInfo']['MarketPlace'].' - '.$this->data['OrderInfo']['OrderId'];
 		$payment_module = new SellermaniaPaymentModule();
 		$payment_module->name = $this->module->name;
-		$payment_module->validateOrder((int)$this->cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$this->cart->id_currency);
+		$payment_module->validateOrder((int)$this->cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$this->cart->id_currency, false, $this->customer->secure_key);
 		$id_order = $payment_module->currentOrder;
 		$this->order = new Order((int)$id_order);
 
