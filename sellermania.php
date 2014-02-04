@@ -307,5 +307,14 @@ class SellerMania extends Module
 		return $this->runController('front', 'Export');
 	}
 
+
+	/**
+	 * Log data
+	 * @param $string
+	 */
+	public function log($string)
+	{
+		file_put_contents(dirname(__FILE__).'/log/log.txt', $string."\n", FILE_APPEND);
+	}
 }
 
