@@ -157,6 +157,13 @@
             {/if}
             </form>
         </fieldset>
+
+
+        {********************************************************}
+        {**************** FORM STATUS TEMPLATE ******************}
+        {********************************************************}
+        <form id="sellermania_status_form" name="sellermania_status_form" action="" method="POST"></form>
+
     </div>
 
 

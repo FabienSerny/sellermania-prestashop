@@ -158,8 +158,7 @@ $(document).ready(function() {
             $('#sellermania_register_status').click(function() {
 
                 // Generate form
-                var html_form = '<form id="sellermania_status_form" action="" method="POST">';
-                html_form += '<input type="hidden" name="sellermania_status_form_registration" value="1" />';
+                var html_form = '<input type="hidden" name="sellermania_status_form_registration" value="1" />';
                 $('.status_order_line').each(function() {
                     if ($(this).prop('checked'))
                     {
@@ -167,11 +166,10 @@ $(document).ready(function() {
                         html_form += '<input type="hidden" name="sku_' + $(this).attr('name') + '" value="' + $(this).attr('data-toggle') + '" />';
                     }
                 });
-                html_form += '</form>';
 
                 // Display form and submit
-                sellermania_block_product_general_legend.html(html_form);
-                $('#sellermania_status_form').submit();
+                $('#sellermania_status_form').html(html_form);
+                document.forms["sellermania_status_form"].submit();
 
                 return false;
             });
