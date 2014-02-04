@@ -101,6 +101,12 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 				// Import order
 				if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
+				{
+					// Fix data (when only one order, array is not the same)
+					if (!isset($result['SellermaniaWs']['GetOrderResponse']['Order'][0]))
+						$result['SellermaniaWs']['GetOrderResponse']['Order'] = array($result['SellermaniaWs']['GetOrderResponse']['Order']);
+
+					// Import order
 					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
 						if (isset($order['OrderInfo']['OrderId']) && !SellermaniaOrder::orderHasAlreadyBeenImported($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']))
 						{
@@ -115,6 +121,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 							// Restore config value
 							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
 						}
+				}
 			}
 			catch (\Exception $e)
 			{
