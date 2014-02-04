@@ -130,7 +130,7 @@ class SellerManiaImportOrderController
 					$this->data['User'][0]['Address']['Country'] = Country::getIsoById($id_country);
 
 				// If Iso is not known, we set FR
-				if (!Validate::isLanguageIsoCode($iso_code) || Country::getByIso($this->data['User'][0]['Address']['Country']) < 1)
+				if (!Validate::isLanguageIsoCode($this->data['User'][0]['Address']['Country']) || Country::getByIso($this->data['User'][0]['Address']['Country']) < 1)
 					$this->data['User'][0]['Address']['Country'] = 'FR';
 			}
 
