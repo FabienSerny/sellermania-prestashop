@@ -20,6 +20,9 @@ $(document).ready(function() {
     var sellermania_block_discount = $('#total_products').parent().parent().parent().next().next();
     var sellermania_block_customer_thread = $('form.container-command-top-spacing').next().next();
     var sellermania_block_product_general_legend = $('#orderProducts').next();
+    var sellermania_block_partial_refund = $('#desc-order-partial_refund');
+    var sellermania_block_order_toolbar = $('.bloc-command');
+    var sellermania_block_warn = $('.warn');
     var sellermania_block_products_list = new Array();
 
     // Get products list block identifier
@@ -52,12 +55,15 @@ $(document).ready(function() {
     var order_buttons = '<div class="button-command-prev-next">' + sellermania_block_button_prev_next.html() + '</div><div class="clear"></div>';
     sellermania_block_parent_button_prev_next.html(order_buttons + sellermania_order_summary);
 
-    // Hide address block, "Add product" button, discount block and message thread customer block
+    // Hide address block, "Add product" button, discount block, message thread customer block and general legend
     sellermania_block_address.hide();
     sellermania_block_add_product.hide();
     sellermania_block_discount.hide();
     sellermania_block_customer_thread.hide();
-
+    sellermania_block_product_general_legend.hide();
+    sellermania_block_partial_refund.hide();
+    sellermania_block_order_toolbar.hide();
+    sellermania_block_warn.hide();
 
     // Fill product details
     var nb_buttons = 0;
