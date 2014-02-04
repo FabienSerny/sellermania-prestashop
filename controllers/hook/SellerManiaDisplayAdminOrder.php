@@ -164,6 +164,11 @@ class SellerManiaDisplayAdminOrderController
 		if (Tools::getValue('sellermania_tracking_registration') == '')
 			return false;
 
+		// Check shipping status
+		$status_to_ship = $this->isStatusToShip($sellermania_order);
+		if ($status_to_ship != 1)
+			return false;
+
 		// Preprocess data
 		$order_items = array();
 		foreach ($sellermania_order['OrderInfo']['Product'] as $product)
@@ -281,9 +286,7 @@ class SellerManiaDisplayAdminOrderController
 		$result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId']);
 
 		// Check if there is a flag to dispatch
-		$status_to_ship = $this->isStatusToShip($sellermania_order);
-		if ($status_to_ship == 1)
-			$result_shipping_status_update = $this->saveShippingStatus($sellermania_order);
+		$result_shipping_status_update = $this->saveShippingStatus($sellermania_order);
 
 		// Refresh order from Sellermania webservices
 		$sellermania_order = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
