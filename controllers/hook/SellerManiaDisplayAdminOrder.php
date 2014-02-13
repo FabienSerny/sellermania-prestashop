@@ -179,8 +179,8 @@ class SellerManiaDisplayAdminOrderController
 					'orderId' => pSQL($sellermania_order['OrderInfo']['OrderId']),
 					'sku' => pSQL($product['Sku']),
 					'orderStatusId' => 2,
-					'trackingNumber' => pSQL(Tools::getValue('shipping_name')),
-					'shippingCarrier' => pSQL(Tools::getValue('tracking_number')),
+					'trackingNumber' => pSQL(Tools::getValue('tracking_number')),
+					'shippingCarrier' => pSQL(Tools::getValue('shipping_name')),
 				);
 
 		try
