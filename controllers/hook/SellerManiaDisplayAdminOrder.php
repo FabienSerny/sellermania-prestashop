@@ -259,10 +259,10 @@ class SellerManiaDisplayAdminOrderController
 	public function isStatusToShip($sellermania_order)
 	{
 		// Check if there is a flag to dispatch
-		$status_to_ship = 0;
+		$status_to_ship = 1;
 		foreach ($sellermania_order['OrderInfo']['Product'] as $product)
-			if ($product['Status'] == 1)
-				$status_to_ship = 1;
+			if ($product['Status'] != 1)
+				$status_to_ship = 0;
 		return $status_to_ship;
 	}
 
