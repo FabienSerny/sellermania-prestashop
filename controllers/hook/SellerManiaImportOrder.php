@@ -113,29 +113,33 @@ class SellerManiaImportOrderController
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
 		// Retrieve from cache
-		$country_key = $this->data['User'][0]['Address']['Country'];
-		if (isset($this->country_iso_match_cache[$country_key]))
-			$this->data['User'][0]['Address']['Country'] = $this->country_iso_match_cache[$country_key];
-		else
+		$country_key = 'FR';
+		if (isset($this->data['User'][0]['Address']['Country']))
 		{
-			// Set match with exception reservations
-			$country_exceptionnal_iso_code = array('FX' => 'FR', 'FRA' => 'FR', 'France' => 'FR');
-			if (isset($country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']]))
-				$this->data['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']];
+			$country_key = $this->data['User'][0]['Address']['Country'];
+			if (isset($this->country_iso_match_cache[$country_key]))
+				$this->data['User'][0]['Address']['Country'] = $this->country_iso_match_cache[$country_key];
 			else
 			{
-				// Check if there is a match with a country
-				$id_country = Country::getIdByName(null, $this->data['User'][0]['Address']['Country']);
-				if ($id_country > 0)
-					$this->data['User'][0]['Address']['Country'] = Country::getIsoById($id_country);
+				// Set match with exception reservations
+				$country_exceptionnal_iso_code = array('FX' => 'FR', 'FRA' => 'FR', 'France' => 'FR');
+				if (isset($country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']]))
+					$this->data['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']];
+				else
+				{
+					// Check if there is a match with a country
+					$id_country = Country::getIdByName(null, $this->data['User'][0]['Address']['Country']);
+					if ($id_country > 0)
+						$this->data['User'][0]['Address']['Country'] = Country::getIsoById($id_country);
 
-				// If Iso is not known, we set FR
-				if (!Validate::isLanguageIsoCode($this->data['User'][0]['Address']['Country']) || Country::getByIso($this->data['User'][0]['Address']['Country']) < 1)
-					$this->data['User'][0]['Address']['Country'] = 'FR';
+					// If Iso is not known, we set FR
+					if (!Validate::isLanguageIsoCode($this->data['User'][0]['Address']['Country']) || Country::getByIso($this->data['User'][0]['Address']['Country']) < 1)
+						$this->data['User'][0]['Address']['Country'] = 'FR';
+				}
+
+				// Set cache
+				$this->country_iso_match_cache[$country_key] = $this->data['User'][0]['Address']['Country'];
 			}
-
-			// Set cache
-			$this->country_iso_match_cache[$country_key] = $this->data['User'][0]['Address']['Country'];
 		}
 
 
@@ -147,6 +151,12 @@ class SellerManiaImportOrderController
 			$this->data['User'][0]['Address']['Street1'] = $this->data['User'][0]['Address']['Street2'];
 			$this->data['User'][0]['Address']['Street2'] = '';
 		}
+		$checkNotProvided = array('Street1' => 'Not provided', 'ZipCode' => '00000', 'City' => 'Not Provided', 'Country' => 'Not Provided');
+		foreach ($checkNotProvided as $key => $value)
+			if (empty($this->data['User'][0]['Address'][$key]))
+				$this->data['User'][0]['Address'][$key] = $value;
+		if (!Validate::isPostCode($this->data['User'][0]['Address']['ZipCode']))
+			$this->data['User'][0]['Address']['ZipCode'] = '00000';
 
 		// Fix data (when only one product, array is not the same)
 		if (!isset($this->data['OrderInfo']['Product'][0]))
