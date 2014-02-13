@@ -128,7 +128,8 @@ $(document).ready(function() {
     function sellermania_update_line_status()
     {
         // Fill product details
-        var sellermania_status_not_defined = 0;
+        var line_max = 0;
+        var sellermania_status_defined = 0;
         for (i = 1; sellermania_block_products_list[i]; i++)
         {
             // Retrieve sku
@@ -144,12 +145,15 @@ $(document).ready(function() {
                 order_line_status = 'Cancelled';
 
             // Count not defined Status
-            if (order_line_status == 'Not defined')
-                sellermania_status_not_defined++;
+            if (order_line_status != 'Not defined')
+                sellermania_status_defined++;
+
+            // Save the line max
+            line_max = i;
         }
 
         // Check how many not defined status there is
-        if (sellermania_status_not_defined == 0)
+        if (sellermania_status_defined > 0)
         {
             // Display submit
             sellermania_block_product_general_legend.html('<input type="button" id="sellermania_register_status" value="Register status" class="button" />');
@@ -158,7 +162,7 @@ $(document).ready(function() {
             $('#sellermania_register_status').click(function() {
 
                 // Generate form
-                var html_form = '<input type="hidden" name="sellermania_status_form_registration" value="1" />';
+                var html_form = '<input type="hidden" name="sellermania_line_max" value="' + line_max + '" />';
                 $('.status_order_line').each(function() {
                     if ($(this).prop('checked'))
                     {

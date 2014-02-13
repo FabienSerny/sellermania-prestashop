@@ -86,7 +86,7 @@ class SellerManiaDisplayAdminOrderController
 	public function saveOrderStatus($order_id)
 	{
 		// Check if form has been submitted
-		if (Tools::getValue('sellermania_status_form_registration') == '')
+		if (Tools::getValue('sellermania_line_max') == '')
 			return false;
 
 		// Check confirm or cancel
@@ -97,16 +97,18 @@ class SellerManiaDisplayAdminOrderController
 
 		// Preprocess data
 		$order_items = array();
-		for ($i = 1; Tools::getValue('status_'.$i) != ''; $i++)
-		{
-			$order_items[] = array(
-				'orderId' => pSQL($order_id),
-				'sku' => pSQL(Tools::getValue('sku_status_'.$i)),
-				'orderStatusId' => Tools::getValue('status_'.$i),
-				'trackingNumber' => '',
-				'shippingCarrier' => '',
-			);
-		}
+		$line_max = Tools::getValue('sellermania_line_max');
+		for ($i = 1; $i <= $line_max; $i++)
+			if (Tools::getValue('sku_status_'.$i) != '')
+			{
+				$order_items[] = array(
+					'orderId' => pSQL($order_id),
+					'sku' => pSQL(Tools::getValue('sku_status_'.$i)),
+					'orderStatusId' => Tools::getValue('status_'.$i),
+					'trackingNumber' => '',
+					'shippingCarrier' => '',
+				);
+			}
 
 		try
 		{
