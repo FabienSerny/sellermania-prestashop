@@ -9,8 +9,8 @@
 namespace Sellermania;
 
 // Pear Mail_Mime dependancy
-//require_once(__DIR__ . '/Vendors/Mail/mimeDecode.php');
-//require_once(__DIR__ . '/Vendors/Mail/mimePart.php');
+require_once(__DIR__ . '/Vendors/Mail/mimeDecode.php');
+require_once(__DIR__ . '/Vendors/Mail/mimePart.php');
 
 // Sellermania MTOM and WS-Security customized SOAP client
 require_once(__DIR__ . '/Generic/Exception.class.php');
