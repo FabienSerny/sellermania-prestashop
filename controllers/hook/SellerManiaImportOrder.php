@@ -77,6 +77,7 @@ class SellerManiaImportOrderController
 
 		// Fix name
 		$this->data['User'][0]['Name'] = str_replace('*', '', $this->data['User'][0]['Name']);
+		$this->data['User'][0]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][0]['Name']);
 		if (strpos($this->data['User'][0]['Name'], '/'))
 		{
 			$name = explode('/', $this->data['User'][0]['Name']);
