@@ -115,8 +115,16 @@ class SellerManiaDisplayBackOfficeHeaderController
 							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
 
 							// Import Order
-							$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
-							$import_order->run($order);
+							try
+							{
+								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+								$import_order->run($order);
+							}
+							catch (\Exception $e)
+							{
+								$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+								file_put_contents(dirname(__FILE__).'/../../log/import-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+							}
 
 							// Restore config value
 							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
@@ -126,7 +134,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 			catch (\Exception $e)
 			{
 				$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
-				file_put_contents(dirname(__FILE__).'/../../log/log-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+				file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
 			}
 		}
 	}
