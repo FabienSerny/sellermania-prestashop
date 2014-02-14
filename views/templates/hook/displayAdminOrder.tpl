@@ -74,19 +74,19 @@
                 <tbody>
                     <tr>
                         <td>{l s='Total products:' mod='sellermania'}</td>
-                        <td>{($sellermania_order.OrderInfo.Amount.Price - $sellermania_order.OrderInfo.TotalInsurance)|number_format:2} {$sellermania_order.OrderInfo.Amount.Currency}</td>
+                        <td>{($sellermania_order.OrderInfo.Amount.Price - $sellermania_order.OrderInfo.TotalInsurance)|number_format:2} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
                     </tr>
                     <tr>
                         <td>{l s='Shipping:' mod='sellermania'}</td>
-                        <td>{$sellermania_order.OrderInfo.Transport.Amount.Price|number_format:2} {$sellermania_order.OrderInfo.Amount.Currency}</td>
+                        <td>{$sellermania_order.OrderInfo.Transport.Amount.Price|number_format:2} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
                     </tr>
                     <tr>
                         <td>{l s='Insurance:' mod='sellermania'}</td>
-                        <td>{$sellermania_order.OrderInfo.TotalInsurance} {$sellermania_order.OrderInfo.Amount.Currency}</td>
+                        <td>{$sellermania_order.OrderInfo.TotalInsurance} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
                     </tr>
                     <tr>
                         <td style="color:red;font-weight:bold">{l s='Total amount:' mod='sellermania'}</td>
-                        <td style="color:red;font-weight:bold">{$sellermania_order.OrderInfo.TotalAmount.Amount.Price|number_format:2} {$sellermania_order.OrderInfo.Amount.Currency}</td>
+                        <td style="color:red;font-weight:bold">{$sellermania_order.OrderInfo.TotalAmount.Amount.Price|number_format:2} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
                     </tr>
                 </tbody>
             </table>
@@ -95,11 +95,11 @@
                 <tbody>
                 <tr>
                     <td>{l s='Order date:' mod='sellermania'}</td>
-                    <td>{$sellermania_order.OrderInfo.Date}</td>
+                    <td>{dateFormat date=$sellermania_order.OrderInfo.Date full=true}</td>
                 </tr>
                 <tr>
                     <td>{l s='Payment date:' mod='sellermania'}</td>
-                    <td>{$sellermania_order.Paiement.Date}</td>
+                    <td>{dateFormat date=$sellermania_order.Paiement.Date full=true}</td>
                 </tr>
                 <tr>
                     <td>{l s='Order ID:' mod='sellermania'}</td>

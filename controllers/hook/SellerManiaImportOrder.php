@@ -112,6 +112,11 @@ class SellerManiaImportOrderController
 		$this->data['User'][0]['Address']['ShippingPhone'] = $shipping_phone;
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
+		// Set currency sign
+		$id_currency = (int)Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
+		$currency_object = new Currency($id_currency);
+		$this->data['OrderInfo']['Amount']['CurrencySign'] = $currency_object->sign;
+
 		// Retrieve from cache
 		$country_key = 'FR';
 		if (isset($this->data['User'][0]['Address']['Country']))
@@ -189,6 +194,8 @@ class SellerManiaImportOrderController
 		// Fix paiement date
 		if (!isset($this->data['Paiement']['Date']))
 			$this->data['Paiement']['Date'] = date('Y-m-d H:i:s');
+		$this->data['Paiement']['Date'] = substr($this->data['Paiement']['Date'], 0, 19);
+		$this->data['OrderInfo']['Date'] = substr($this->data['OrderInfo']['Date'], 0, 19);
 	}
 
 
