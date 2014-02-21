@@ -87,7 +87,7 @@ class SellerManiaImportOrderController
 		}
 
 		// Retrieve firstname and lastname
-		$names = explode(' ', $this->data['User'][0]['Name']);
+		$names = explode(' ', trim($this->data['User'][0]['Name']));
 		$firstname = $names[0];
 		if (isset($names[1]) && !empty($names[1]) && count($names) == 2)
 			$lastname = $names[1];
@@ -108,8 +108,8 @@ class SellerManiaImportOrderController
 			$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
 
 		// Refill data
-		$this->data['User'][0]['FirstName'] = $firstname;
-		$this->data['User'][0]['LastName'] = $lastname;
+		$this->data['User'][0]['FirstName'] = substr($firstname, 0, 32);
+		$this->data['User'][0]['LastName'] = substr($lastname, 0, 32);
 		$this->data['User'][0]['Address']['ShippingPhone'] = $shipping_phone;
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
