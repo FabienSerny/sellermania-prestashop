@@ -89,12 +89,6 @@ class SellerManiaDisplayAdminOrderController
 		if (Tools::getValue('sellermania_line_max') == '')
 			return false;
 
-		// Check confirm or cancel
-		$action = 'cancel';
-		for ($i = 1; Tools::getValue('status_'.$i) != ''; $i++)
-			if (Tools::getValue('status_'.$i) == 9)
-				$action = 'confirm';
-
 		// Preprocess data
 		$order_items = array();
 		$line_max = Tools::getValue('sellermania_line_max');
@@ -109,14 +103,20 @@ class SellerManiaDisplayAdminOrderController
 					'shippingCarrier' => '',
 				);
 				foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-					$sellermania_order['OrderInfo']['Product'][$kp]['Status'] = Tools::getValue('status_'.$i);
+					if ($product['Sku'] == Tools::getValue('sku_status_'.$i))
+						$sellermania_order['OrderInfo']['Product'][$kp]['Status'] = Tools::getValue('status_'.$i);
 			}
 
 		// Check if we have to change the status
+		$action = 'cancel';
 		$change_status = true;
 		foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-			if ($product['Status'] != 4 && $product['Status'] != 9)
+		{
+			if ($product['Status'] == 6)
 				$change_status = false;
+			if ($product['Status'] == 1 || $product['Status'] == 9)
+				$action = 'confirm';
+		}
 
 		try
 		{
