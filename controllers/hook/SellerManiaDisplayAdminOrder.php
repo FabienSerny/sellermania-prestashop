@@ -83,7 +83,7 @@ class SellerManiaDisplayAdminOrderController
 	 * Save status
 	 * @param string $order_id
 	 */
-	public function saveOrderStatus($order_id)
+	public function saveOrderStatus($order_id, $sellermania_order)
 	{
 		// Check if form has been submitted
 		if (Tools::getValue('sellermania_line_max') == '')
@@ -108,7 +108,15 @@ class SellerManiaDisplayAdminOrderController
 					'trackingNumber' => '',
 					'shippingCarrier' => '',
 				);
+				foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+					$sellermania_order['OrderInfo']['Product'][$kp]['Status'] = Tools::getValue('status_'.$i);
 			}
+
+		// Check if we have to change the status
+		$change_status = true;
+		foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+			if ($product['Status'] != 4 && $product['Status'] != 9)
+				$change_status = false;
 
 		try
 		{
@@ -124,7 +132,7 @@ class SellerManiaDisplayAdminOrderController
 				$result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
 
 			// Change order status
-			if ($result['Status'] == 'SUCCESS')
+			if ($result['Status'] == 'SUCCESS' && $change_status)
 			{
 				// Get new order state ID
 				$new_order_state = Configuration::get('PS_OS_CANCELED');
@@ -285,7 +293,7 @@ class SellerManiaDisplayAdminOrderController
 		$sellermania_order = json_decode($sellermania_order, true);
 
 		// Save order line status
-		$result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId']);
+		$result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId'], $sellermania_order);
 
 		// Check if there is a flag to dispatch
 		$result_shipping_status_update = $this->saveShippingStatus($sellermania_order);
