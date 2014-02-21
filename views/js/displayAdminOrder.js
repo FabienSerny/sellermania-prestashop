@@ -8,6 +8,7 @@ $(document).ready(function() {
     var sellermania_customer = $('#sellermania-template-customer').html();
     var sellermania_order_summary = $('#sellermania-template-order-summary').html();
     var sellermania_status_update_result = $('#sellermania-template-status-update').html();
+    var sellermania_error_result = $('#sellermania-template-error').html();
 
     // Get block identifier
     var sellermania_block_order_state = $('#content div div form #id_order_state');
@@ -117,6 +118,8 @@ $(document).ready(function() {
     // If status has changed
     if (sellermania_status_update_result !== 'undefined')
         sellermania_block_product_general_legend.after(sellermania_status_update_result);
+    if (sellermania_error_result !== 'undefined')
+        sellermania_block_product_general_legend.after(sellermania_error_result);
 
 
     // Check status

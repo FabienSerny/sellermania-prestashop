@@ -186,6 +186,16 @@
         </div>
     </div>
     {/if}
+
+    {if isset($sellermania_error)}
+    <div id="sellermania-template-error">
+        <br clear="left" /><br />
+        <div class="error" style="float:left">
+            {$sellermania_error}
+        </div>
+    </div>
+    {/if}
+
 </div>
 
 

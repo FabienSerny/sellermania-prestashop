@@ -151,7 +151,7 @@ class SellerManiaDisplayAdminOrderController
 		}
 		catch (\Exception $e)
 		{
-			Tools::dieObject($e->getMessage());
+			$this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
 		}
 
 	}
@@ -219,7 +219,7 @@ class SellerManiaDisplayAdminOrderController
 		}
 		catch (\Exception $e)
 		{
-			Tools::dieObject($e->getMessage());
+			$this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
 		}
 
 	}
