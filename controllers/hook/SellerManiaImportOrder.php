@@ -114,7 +114,6 @@ class SellerManiaImportOrderController
 		// Refill data
 		$this->data['User'][0]['FirstName'] = substr($firstname, 0, 32);
 		$this->data['User'][0]['LastName'] = substr($lastname, 0, 32);
-		$this->data['User'][0]['Address']['ShippingPhone'] = $shipping_phone;
 		$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = '0100000000';
 		if (!empty($shipping_phone))
 			$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = $shipping_phone;
