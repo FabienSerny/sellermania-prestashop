@@ -74,19 +74,19 @@
                 <tbody>
                     <tr>
                         <td>{l s='Total products:' mod='sellermania'}</td>
-                        <td>{($sellermania_order.OrderInfo.Amount.Price - $sellermania_order.OrderInfo.TotalInsurance)|number_format:2} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
+                        <td>{displayPrice price=($sellermania_order.OrderInfo.Amount.Price - $sellermania_order.OrderInfo.TotalInsurance) currency=$sellermania_currency->id}</td>
                     </tr>
                     <tr>
                         <td>{l s='Shipping:' mod='sellermania'}</td>
-                        <td>{$sellermania_order.OrderInfo.Transport.Amount.Price|number_format:2} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
+                        <td>{displayPrice price=$sellermania_order.OrderInfo.Transport.Amount.Price currency=$sellermania_currency->id}</td>
                     </tr>
                     <tr>
                         <td>{l s='Insurance:' mod='sellermania'}</td>
-                        <td>{$sellermania_order.OrderInfo.TotalInsurance} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
+                        <td>{displayPrice price=$sellermania_order.OrderInfo.TotalInsurance currency=$sellermania_currency->id}</td>
                     </tr>
                     <tr>
                         <td style="color:red;font-weight:bold">{l s='Total amount:' mod='sellermania'}</td>
-                        <td style="color:red;font-weight:bold">{$sellermania_order.OrderInfo.TotalAmount.Amount.Price|number_format:2} {$sellermania_order.OrderInfo.Amount.CurrencySign}</td>
+                        <td style="color:red;font-weight:bold">{displayPrice price=$sellermania_order.OrderInfo.TotalAmount.Amount.Price currency=$sellermania_currency->id}</td>
                     </tr>
                 </tbody>
             </table>

@@ -307,7 +307,12 @@ class SellerManiaDisplayAdminOrderController
 		// Refresh flag to dispatch
 		$status_to_ship = $this->isStatusToShip($sellermania_order);
 
+		// Get order currency
+		$order = new Order((int)Tools::getValue('id_order'));
+		$sellermania_currency = new Currency($order->id_currency);
+
 		$this->context->smarty->assign('sellermania_order', $sellermania_order);
+		$this->context->smarty->assign('sellermania_currency', $sellermania_currency);
 		$this->context->smarty->assign('sellermania_module_path', $this->web_path);
 		$this->context->smarty->assign('sellermania_status_list', $this->status_list);
 		$this->context->smarty->assign('sellermania_conditions_list', $this->conditions_list);
