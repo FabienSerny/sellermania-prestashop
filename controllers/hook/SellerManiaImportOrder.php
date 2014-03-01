@@ -98,9 +98,13 @@ class SellerManiaImportOrderController
 		}
 
 		// Retrieve shipping phone
-		$shipping_phone = '0100000000';
+		$shipping_phone = '';
 		if (isset($this->data['User'][0]['Address']['ShippingPhone']) && !empty($this->data['User'][0]['Address']['ShippingPhone']))
 			$shipping_phone = $this->data['User'][0]['Address']['ShippingPhone'];
+		if (isset($this->data['User'][0]['ShippingPhone']) && !empty($this->data['User'][0]['ShippingPhone']))
+			$shipping_phone = $this->data['User'][0]['ShippingPhone'];
+		if (isset($this->data['User'][0]['UserPhone']) && !empty($this->data['User'][0]['UserPhone']))
+			$shipping_phone = $this->data['User'][0]['UserPhone'];
 
 		// Retrieve currency
 		$currency_iso_code = 'EUR';
@@ -111,6 +115,9 @@ class SellerManiaImportOrderController
 		$this->data['User'][0]['FirstName'] = substr($firstname, 0, 32);
 		$this->data['User'][0]['LastName'] = substr($lastname, 0, 32);
 		$this->data['User'][0]['Address']['ShippingPhone'] = $shipping_phone;
+		$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = '0100000000';
+		if (!empty($shipping_phone))
+			$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = $shipping_phone;
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
 		// Set currency sign
@@ -242,7 +249,7 @@ class SellerManiaImportOrderController
 		$this->address->postcode = $this->data['User'][0]['Address']['ZipCode'];
 		$this->address->city = $this->data['User'][0]['Address']['City'];
 		$this->address->id_country = Country::getByIso($this->data['User'][0]['Address']['Country']);
-		$this->address->phone = $this->data['User'][0]['Address']['ShippingPhone'];
+		$this->address->phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];
 		$this->address->id_customer = $this->customer->id;
 		$this->address->active = 1;
 		$this->address->add();
@@ -314,9 +321,6 @@ class SellerManiaImportOrderController
 		$id_order = $payment_module->currentOrder;
 		$this->order = new Order((int)$id_order);
 
-		// Fix order depending on version
-		$this->fixOrder(true);
-
 		// Restore customer e-mail
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
 		$this->context->customer->email = $customer_email;
@@ -337,6 +341,9 @@ class SellerManiaImportOrderController
 			$history->changeIdOrderState((int)Configuration::get('PS_OS_SM_AWAITING'), $order, $use_existings_payment);
 			$history->add();
 		}
+
+		// Fix order depending on version
+		$this->fixOrder(true);
 	}
 
 	/**
