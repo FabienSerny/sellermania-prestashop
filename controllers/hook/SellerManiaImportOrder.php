@@ -163,7 +163,7 @@ class SellerManiaImportOrderController
 			$this->data['User'][0]['Address']['Street1'] = $this->data['User'][0]['Address']['Street2'];
 			$this->data['User'][0]['Address']['Street2'] = '';
 		}
-		$checkNotProvided = array('Street1' => 'Not provided', 'ZipCode' => '00000', 'City' => 'Not Provided', 'Country' => 'FR');
+		$checkNotProvided = array('Street1' => 'Not provided', 'ZipCode' => '00000', 'City' => 'Not provided', 'Country' => 'FR');
 		foreach ($checkNotProvided as $key => $value)
 			if (empty($this->data['User'][0]['Address'][$key]))
 				$this->data['User'][0]['Address'][$key] = $value;
