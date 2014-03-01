@@ -82,12 +82,12 @@ $(document).ready(function() {
         var html_order_line = '';
         if (sellermania_products[sku_short].insurance_price > 0)
             html_order_line += '<br><b>Insurance price:</b> ' + sellermania_products[sku_short].insurance_price + ' ' + sellermania_products[sku_short].currency + '<br>';
-        html_order_line += '<br><u>Order item ID:</u> <b>' + sellermania_products[sku_short].order_item_id + '</b><br>';
-        html_order_line += '<br><u>External order ID:</u> <b>' + sellermania_products[sku_short].external_order_id + '</b><br>';
+        if (sellermania_products[sku_short].order_item_id != '') html_order_line += '<br><u>Order item ID:</u> <b>' + sellermania_products[sku_short].order_item_id + '</b><br>';
+        if (sellermania_products[sku_short].external_order_id != '') html_order_line += '<br><u>External order ID:</u> <b>' + sellermania_products[sku_short].external_order_id + '</b><br>';
         html_order_line += '<u>Sku:</u> <b>' + sellermania_products[sku_short].sku + '</b><br>';
-        html_order_line += '<u>Ean:</u> <b>' + sellermania_products[sku_short].ean + '</b><br>';
-        html_order_line += '<u>ASIN:</u> <b>' + sellermania_products[sku_short].product_id + '</b><br>';
-        html_order_line += '<u>Condition:</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
+        if (sellermania_products[sku_short].ean != '') html_order_line += '<u>Ean:</u> <b>' + sellermania_products[sku_short].ean + '</b><br>';
+        if (sellermania_products[sku_short].product_id != '') html_order_line += '<u>ASIN:</u> <b>' + sellermania_products[sku_short].product_id + '</b><br>';
+        if (sellermania_products[sku_short].item_condition != '') html_order_line += '<u>Condition:</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
         html_order_line += '<u>Status:</u> <b>' + sellermania_products[sku_short].status + '</b><br>';
         if (sellermania_products[sku_short].status_id == 6)
         {
