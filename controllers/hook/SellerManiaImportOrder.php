@@ -580,6 +580,11 @@ class SellerManiaImportOrderController
 		$vat_rate = 1 + ($product['VatRate'] / 10000);
 		$product_price_without_tax = $product_price_with_tax / $vat_rate;
 
+		// Get order invoice ID
+		$id_order_invoice = Db::getInstance()->getValue('
+		SELECT `id_order_invoice` FROM `'._DB_PREFIX_.'order_invoice`
+		WHERE `id_order` = '.(int)$id_order);
+
 		// SQL data
 		$sql_data = array(
 			'id_order' => (int)$id_order,
@@ -594,7 +599,7 @@ class SellerManiaImportOrderController
 			'product_ean13' => pSQL($product['Ean']),
 			'product_reference' => pSQL($product['Sku']),
 
-			'id_order_invoice' => 0,
+			'id_order_invoice' => $id_order_invoice,
 			'id_warehouse' => 0,
 			'id_shop' => Context::getContext()->shop->id,
 			'total_price_tax_incl' => (float)($product_price_with_tax * (int)$product['QuantityPurchased']),
