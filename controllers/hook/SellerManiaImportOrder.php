@@ -76,6 +76,7 @@ class SellerManiaImportOrderController
 		$forbidden_characters = array('_', '/');
 
 		// Fix name
+		$this->data['User'][0]['OriginalName'] = $this->data['User'][0]['Name'];
 		$this->data['User'][0]['Name'] = str_replace('*', '', $this->data['User'][0]['Name']);
 		$this->data['User'][0]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][0]['Name']);
 		if (strpos($this->data['User'][0]['Name'], '/'))
@@ -350,10 +351,16 @@ class SellerManiaImportOrderController
 	 */
 	public function saveSellermaniaOrder()
 	{
+		$id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
+		$amount_total = $this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
+
 		$sellermania_order = new SellermaniaOrder();
 		$sellermania_order->marketplace = $this->data['OrderInfo']['MarketPlace'];
+		$sellermania_order->customer_name = $this->data['User'][0]['OriginalName'];
 		$sellermania_order->ref_order = $this->data['OrderInfo']['OrderId'];
+		$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
 		$sellermania_order->info = json_encode($this->data);
+		$sellermania_order->error = '';
 		$sellermania_order->id_order = $this->order->id;
 		$sellermania_order->id_employee_accepted = 0;
 		$sellermania_order->date_payment = substr($this->data['Paiement']['Date'], 0, 19);

@@ -30,11 +30,20 @@ class SellermaniaOrder extends ObjectModel
 	/** @var string Marketplace */
 	public $marketplace;
 
+	/** @var string Customer Name */
+	public $customer_name;
+
 	/** @var string Ref Order */
 	public $ref_order;
 
+	/** @var string Total Amount */
+	public $amount_total;
+
 	/** @var string Info */
 	public $info;
+
+	/** @var string Info */
+	public $error;
 
 	/** @var integer Order ID */
 	public $id_order;
@@ -60,8 +69,11 @@ class SellermaniaOrder extends ObjectModel
 		'multilang' => false,
 		'fields' => array(
 			'marketplace' => 				array('type' => 3, 'required' => true, 'size' => 128),
+			'customer_name' => 				array('type' => 3, 'required' => true, 'size' => 256),
 			'ref_order' => 					array('type' => 3, 'required' => true, 'size' => 128),
+			'amount_total' => 				array('type' => 3, 'required' => true, 'size' => 16),
 			'info' => 						array('type' => 3, 'required' => true),
+			'error' => 						array('type' => 3),
 			'id_order' => 					array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_employee_accepted' =>		array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
 			'date_payment' =>				array('type' => 3, 'validate' => 'isDate'),
@@ -115,8 +127,11 @@ class SellermaniaOrder extends ObjectModel
 		parent::validateFields();
 
 		$fields['marketplace'] = pSQL($this->marketplace);
+		$fields['customer_name'] = pSQL($this->customer_name);
 		$fields['ref_order'] = pSQL($this->ref_order);
+		$fields['amount_total'] = pSQL($this->amount_total);
 		$fields['info'] = pSQL($this->info);
+		$fields['error'] = pSQL($this->error);
 		$fields['id_order'] = (int)$this->id_order;
 		$fields['id_employee_accepted'] = (int)$this->id_employee_accepted;
 		$fields['date_payment'] = pSQL($this->date_payment);
