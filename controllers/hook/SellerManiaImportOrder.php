@@ -268,7 +268,7 @@ class SellerManiaImportOrderController
 		$this->cart->id_customer = $this->customer->id;
 		$this->cart->id_address_invoice = $this->address->id;
 		$this->cart->id_address_delivery = $this->address->id;
-		$this->cart->id_carrier = 0;
+		$this->cart->id_carrier = Configuration::get('PS_CARRIER_DEFAULT');
 		$this->cart->id_lang = $this->id_lang;
 		$this->cart->id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
 		$this->cart->recyclable = 0;
