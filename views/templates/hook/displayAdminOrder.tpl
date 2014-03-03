@@ -85,6 +85,10 @@
                         <td>{displayPrice price=$sellermania_order.OrderInfo.TotalInsurance currency=$sellermania_currency->id}</td>
                     </tr>
                     <tr>
+                        <td>{l s='Promotion discount:' mod='sellermania'}</td>
+                        <td>{displayPrice price=$sellermania_order.OrderInfo.TotalPromotionDiscount currency=$sellermania_currency->id}</td>
+                    </tr>
+                    <tr>
                         <td style="color:red;font-weight:bold">{l s='Total amount:' mod='sellermania'}</td>
                         <td style="color:red;font-weight:bold">{displayPrice price=$sellermania_order.OrderInfo.TotalAmount.Amount.Price currency=$sellermania_currency->id}</td>
                     </tr>
