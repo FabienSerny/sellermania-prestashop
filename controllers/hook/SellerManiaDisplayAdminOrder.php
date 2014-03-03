@@ -95,26 +95,34 @@ class SellerManiaDisplayAdminOrderController
 		for ($i = 1; $i <= $line_max; $i++)
 			if (Tools::getValue('sku_status_'.$i) != '')
 			{
-				$order_items[] = array(
-					'orderId' => pSQL($order_id),
-					'sku' => pSQL(Tools::getValue('sku_status_'.$i)),
-					'orderStatusId' => Tools::getValue('status_'.$i),
-					'trackingNumber' => '',
-					'shippingCarrier' => '',
-				);
+				// Find match and check if not already marked as changed
 				foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-					if ($product['Sku'] == Tools::getValue('sku_status_'.$i))
+					if ($product['Sku'] == Tools::getValue('sku_status_'.$i) &&
+						$sellermania_order['OrderInfo']['Product'][$kp]['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
+					{
+						$order_items[] = array(
+							'orderId' => pSQL($order_id),
+							'sku' => pSQL(Tools::getValue('sku_status_'.$i)),
+							'orderStatusId' => Tools::getValue('status_'.$i),
+							'trackingNumber' => '',
+							'shippingCarrier' => '',
+						);
 						$sellermania_order['OrderInfo']['Product'][$kp]['Status'] = Tools::getValue('status_'.$i);
+					}
 			}
 
-		// Check if we have to change the status
+		// Check if there order item status to change
+		if (empty($order_items))
+			return false;
+
+		// Check if we have to change the status or the order
 		$action = 'cancel';
 		$change_status = true;
 		foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
 		{
-			if ($product['Status'] == 6)
+			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
 				$change_status = false;
-			if ($product['Status'] == 1 || $product['Status'] == 9)
+			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_DISPATCH || $product['Status'] == \Sellermania\OrderConfirmClient::STATUS_CONFIRMED)
 				$action = 'confirm';
 		}
 
