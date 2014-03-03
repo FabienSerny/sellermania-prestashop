@@ -122,8 +122,23 @@ class SellerManiaDisplayBackOfficeHeaderController
 							}
 							catch (\Exception $e)
 							{
-								$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
-								file_put_contents(dirname(__FILE__).'/../../log/import-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+								// If could not import it in PrestaShop we stored it anyway
+								$currency_iso_code = 'EUR';
+								if (isset($this->data['OrderInfo']['Amount']['Currency']))
+									$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
+								$id_currency = Currency::getIdByIsoCode($currency_iso_code);
+								$amount_total = $order['OrderInfo']['TotalAmount']['Amount']['Price'];
+								$sellermania_order = new SellermaniaOrder();
+								$sellermania_order->marketplace = $order['OrderInfo']['MarketPlace'];
+								$sellermania_order->customer_name = $order['User'][0]['Name'];
+								$sellermania_order->ref_order = $order['OrderInfo']['OrderId'];
+								$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
+								$sellermania_order->info = json_encode($order);
+								$sellermania_order->error = $e->getMessage();
+								$sellermania_order->id_order = 0;
+								$sellermania_order->id_employee_accepted = 0;
+								$sellermania_order->date_payment = (isset($order['Paiement']['Date']) ? substr($order['Paiement']['Date'], 0, 19) : '');
+								$sellermania_order->add();
 							}
 
 							// Restore config value
