@@ -204,22 +204,26 @@
 {*************** JS DATA *****************}
 {*****************************************}
 <script>
+    var short_sku = '';
     var sellermania_products = new Array();
 
     {foreach from=$sellermania_order.OrderInfo.Product item=product}
 
-    sellermania_products['{$product.Sku|substr:0:32}'] = new Array();
-    sellermania_products['{$product.Sku|substr:0:32}']['order_item_id'] = '{if isset($product.OrderItemId)}{$product.OrderItemId}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['external_order_id'] = '{if isset($product.ExternalOrderId)}{$product.ExternalOrderId}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['status_id'] = '{if isset($product.Status)}{$product.Status}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['status'] = '{if isset($product.Status) && isset($sellermania_status_list[$product.Status])}{$sellermania_status_list[$product.Status]}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['sku'] = '{if isset($product.Sku)}{$product.Sku}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['ean'] = '{if isset($product.Ean)}{$product.Ean}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['product_id'] = '{if isset($product.ProductId)}{$product.ProductId}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['item_condition_id'] = '{if isset($product.ItemCondition)}{$product.ItemCondition}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['item_condition'] = '{if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]}{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['insurance_price'] = '{if isset($product.InsurancePrice.Amount.Price) && $product.InsurancePrice.Amount.Price gt 0}{$product.InsurancePrice.Amount.Price}{else}0{/if}';
-    sellermania_products['{$product.Sku|substr:0:32}']['currency'] = '{$sellermania_order.OrderInfo.Amount.Currency}';
+    short_sku = '{$product.Sku|addslashes}';
+    short_sku = short_sku.substr(0, 32);
+
+    sellermania_products[short_sku] = new Array();
+    sellermania_products[short_sku]['order_item_id'] = '{if isset($product.OrderItemId)}{$product.OrderItemId}{/if}';
+    sellermania_products[short_sku]['external_order_id'] = '{if isset($product.ExternalOrderId)}{$product.ExternalOrderId}{/if}';
+    sellermania_products[short_sku]['status_id'] = '{if isset($product.Status)}{$product.Status}{/if}';
+    sellermania_products[short_sku]['status'] = '{if isset($product.Status) && isset($sellermania_status_list[$product.Status])}{$sellermania_status_list[$product.Status]}{/if}';
+    sellermania_products[short_sku]['sku'] = '{if isset($product.Sku)}{$product.Sku}{/if}';
+    sellermania_products[short_sku]['ean'] = '{if isset($product.Ean)}{$product.Ean}{/if}';
+    sellermania_products[short_sku]['product_id'] = '{if isset($product.ProductId)}{$product.ProductId}{/if}';
+    sellermania_products[short_sku]['item_condition_id'] = '{if isset($product.ItemCondition)}{$product.ItemCondition}{/if}';
+    sellermania_products[short_sku]['item_condition'] = '{if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]}{/if}';
+    sellermania_products[short_sku]['insurance_price'] = '{if isset($product.InsurancePrice.Amount.Price) && $product.InsurancePrice.Amount.Price gt 0}{$product.InsurancePrice.Amount.Price}{else}0{/if}';
+    sellermania_products[short_sku]['currency'] = '{$sellermania_order.OrderInfo.Amount.Currency}';
 
     {/foreach}
 </script>
