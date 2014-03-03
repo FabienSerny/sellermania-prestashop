@@ -538,8 +538,12 @@ class SellerManiaImportOrderController
 
 
 		// Fix payment
+		$updateTab = array(
+			'amount' => $update['total_paid_real'],
+			'payment_method' => $this->data['OrderInfo']['MarketPlace'].' '.$this->data['OrderInfo']['OrderId'],
+		);
 		$where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
-		Db::getInstance()->update('order_payment', array('amount' => $update['total_paid_real']), $where);
+		Db::getInstance()->update('order_payment', $updateTab, $where);
 
 		// Fix carrier
 		$carrier_update = array(
