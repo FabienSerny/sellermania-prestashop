@@ -180,31 +180,32 @@ class SellerManiaImportOrderController
 		$this->data['OrderInfo']['TotalInsurance'] = 0;
 		$this->data['OrderInfo']['TotalPromotionDiscount'] = 0;
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
-		{
-			// Calcul total product without tax
-			$product_price = $product['Amount']['Price'];
-			$vat_rate = 1;
-			if (isset($product['VatRate']))
-				$vat_rate = 1 + ($product['VatRate'] / 10000);
-			$product_tax = $product_price * ($vat_rate - 1);
-			$product_price = $product_price / $vat_rate;
-			$this->data['OrderInfo']['TotalProductsWithoutVAT'] += $product_price;
+			if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_SELLER)
+			{
+				// Calcul total product without tax
+				$product_price = $product['Amount']['Price'];
+				$vat_rate = 1;
+				if (isset($product['VatRate']))
+					$vat_rate = 1 + ($product['VatRate'] / 10000);
+				$product_tax = $product_price * ($vat_rate - 1);
+				$product_price = $product_price / $vat_rate;
+				$this->data['OrderInfo']['TotalProductsWithoutVAT'] += $product_price;
 
-			// Calcul total Insurance
-			if (isset($product['InsurancePrice']['Amount']['Price']))
-				$this->data['OrderInfo']['TotalInsurance'] += $product['InsurancePrice']['Amount']['Price'];
+				// Calcul total Insurance
+				if (isset($product['InsurancePrice']['Amount']['Price']))
+					$this->data['OrderInfo']['TotalInsurance'] += $product['InsurancePrice']['Amount']['Price'];
 
-			// Calcul total Promotion Discount
-			if (isset($product['ItemPromotionDiscount']['Amount']['Price']))
-				$this->data['OrderInfo']['TotalPromotionDiscount'] += $product['ItemPromotionDiscount']['Amount']['Price'];
+				// Calcul total Promotion Discount
+				if (isset($product['ItemPromotionDiscount']['Amount']['Price']))
+					$this->data['OrderInfo']['TotalPromotionDiscount'] += $product['ItemPromotionDiscount']['Amount']['Price'];
 
-			// Create order detail (only create order detail for unmatched product)
-			$this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
+				// Create order detail (only create order detail for unmatched product)
+				$this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
 
-			// Fix Ean
-			if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
-				$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
-		}
+				// Fix Ean
+				if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
+					$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
+			}
 
 		// Fix paiement date
 		if (!isset($this->data['Paiement']['Date']))
