@@ -115,17 +115,7 @@ class SellerManiaDisplayAdminOrderController
 		if (empty($order_items))
 			return false;
 
-		// Check if we have to change the status or the order
-		$action = 'cancel';
-		$change_status = true;
-		foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-		{
-			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
-				$change_status = false;
-			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_DISPATCH || $product['Status'] == \Sellermania\OrderConfirmClient::STATUS_CONFIRMED)
-				$action = 'confirm';
-		}
-
+		// Make API call
 		try
 		{
 			// Calling the confirmOrder service
@@ -138,29 +128,6 @@ class SellerManiaDisplayAdminOrderController
 			// Fix data (when only one result, array is not the same)
 			if (!isset($result['OrderItemConfirmationStatus'][0]))
 				$result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
-
-			// Change order status
-			if ($result['Status'] == 'SUCCESS' && $change_status)
-			{
-				// Get new order state ID
-				$new_order_state = Configuration::get('PS_OS_CANCELED');
-				if ($action == 'confirm')
-					$new_order_state = Configuration::get('PS_OS_SM_CONFIRMED');
-
-				// Load order and check existings payment
-				$order = new Order((int)Tools::getValue('id_order'));
-				$use_existings_payment = false;
-				if (!$order->hasInvoice())
-					$use_existings_payment = true;
-
-				// Create new OrderHistory
-				$history = new OrderHistory();
-				$history->id_order = $order->id;
-				$history->id_employee = (int)$this->context->employee->id;
-				$history->id_order_state = (int)$new_order_state;
-				$history->changeIdOrderState((int)$new_order_state, $order, $use_existings_payment);
-				$history->add();
-			}
 
 			// Return results
 			return $result;
@@ -194,7 +161,7 @@ class SellerManiaDisplayAdminOrderController
 				$order_items[] = array(
 					'orderId' => pSQL($sellermania_order['OrderInfo']['OrderId']),
 					'sku' => pSQL($product['Sku']),
-					'orderStatusId' => 2,
+					'orderStatusId' => \Sellermania\OrderConfirmClient::STATUS_DISPATCHED,
 					'trackingNumber' => pSQL(Tools::getValue('tracking_number')),
 					'shippingCarrier' => pSQL(Tools::getValue('shipping_name')),
 				);
@@ -211,24 +178,6 @@ class SellerManiaDisplayAdminOrderController
 			// Fix data (when only one result, array is not the same)
 			if (!isset($result['OrderItemConfirmationStatus'][0]))
 				$result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
-
-			// Change order status
-			if ($result['Status'] == 'SUCCESS')
-			{
-				// Load order and check existings payment
-				$order = new Order((int)Tools::getValue('id_order'));
-				$use_existings_payment = false;
-				if (!$order->hasInvoice())
-					$use_existings_payment = true;
-
-				// Create new OrderHistory
-				$history = new OrderHistory();
-				$history->id_order = $order->id;
-				$history->id_employee = (int)$this->context->employee->id;
-				$history->id_order_state = (int)Configuration::get('PS_OS_SM_SENT');
-				$history->changeIdOrderState((int)Configuration::get('PS_OS_SM_SENT'), $order, $use_existings_payment);
-				$history->add();
-			}
 
 			// Return results
 			return $result;
@@ -272,6 +221,11 @@ class SellerManiaDisplayAdminOrderController
 		return $controller->data;
 	}
 
+	/**
+	 * Is order ready to be shipped
+	 * @param $sellermania_order
+	 * @return int flag
+	 */
 	public function isStatusToShip($sellermania_order)
 	{
 		// Check if there is a flag to dispatch
@@ -284,6 +238,76 @@ class SellerManiaDisplayAdminOrderController
 				$status_to_ship = 0;
 		return $status_to_ship;
 	}
+
+
+	/**
+	 * Refresh order status
+	 * @param $sellermania_order
+	 * @return bool
+	 */
+	public function refreshOrderStatus($sellermania_order)
+	{
+		// Init variable
+		$action = 'cancel';
+		$actions_list = array(
+			'confirm' => (int)Configuration::get('PS_OS_CANCELED').', '.(int)Configuration::get('PS_OS_SM_CONFIRMED'),
+			'cancel' => (int)Configuration::get('PS_OS_CANCELED').', '.(int)Configuration::get('PS_OS_SM_CONFIRMED'),
+			'sent' => (int)Configuration::get('PS_OS_SM_SENT'),
+		);
+		$change_status = true;
+
+		// Check which action it is and if we have to change the status of the order
+		if (!isset($sellermania_order['OrderInfo']['Product']))
+			return false;
+		foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+		{
+			if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_DISPATCHED)
+				$action = 'sent';
+			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
+				$change_status = false;
+			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_DISPATCH || $product['Status'] == \Sellermania\OrderConfirmClient::STATUS_CONFIRMED)
+				$action = 'confirm';
+		}
+
+		// In case of confirm, sent or cancel action, we check if the status is not already set
+		if ($change_status && isset($actions_list[$action]))
+		{
+			$id_order_history = Db::getInstance()->getValue('
+			SELECT `id_order_history` FROM `'._DB_PREFIX_.'order_history`
+			WHERE `id_order` = '.(int)Tools::getValue('id_order').'
+			AND `id_order_state` IN ('.$actions_list[$action].')');
+			if ($id_order_history > 0)
+				$change_status = false;
+		}
+
+		// If no status change is necessary
+		if (!$change_status)
+			return false;
+
+		// Change order status
+
+		// Get new order state ID
+		$new_order_state = Configuration::get('PS_OS_CANCELED');
+		if ($action == 'confirm')
+			$new_order_state = Configuration::get('PS_OS_SM_CONFIRMED');
+		if ($action == 'sent')
+			$new_order_state = Configuration::get('PS_OS_SM_SENT');
+
+		// Load order and check existings payment
+		$order = new Order((int)Tools::getValue('id_order'));
+		$use_existings_payment = false;
+		if (!$order->hasInvoice())
+			$use_existings_payment = true;
+
+		// Create new OrderHistory
+		$history = new OrderHistory();
+		$history->id_order = $order->id;
+		$history->id_employee = (int)$this->context->employee->id;
+		$history->id_order_state = (int)$new_order_state;
+		$history->changeIdOrderState((int)$new_order_state, $order, $use_existings_payment);
+		$history->add();
+	}
+
 
 	/**
 	 * Run method
@@ -314,6 +338,9 @@ class SellerManiaDisplayAdminOrderController
 
 		// Refresh flag to dispatch
 		$status_to_ship = $this->isStatusToShip($sellermania_order);
+
+		// Refresh order status
+		$this->refreshOrderStatus($sellermania_order);
 
 		// Get order currency
 		$order = new Order((int)Tools::getValue('id_order'));
