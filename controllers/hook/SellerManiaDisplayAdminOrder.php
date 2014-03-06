@@ -261,7 +261,7 @@ class SellerManiaDisplayAdminOrderController
 			return false;
 		foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
 		{
-			if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_DISPATCHED)
+			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_DISPATCHED)
 				$action = 'sent';
 			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
 				$change_status = false;
