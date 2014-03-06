@@ -213,7 +213,7 @@
 
     {foreach from=$sellermania_order.OrderInfo.Product item=product}
 
-    short_sku = '{$product.Sku|addslashes}';
+    short_sku = '{if isset($product.Sku)}{$product.Sku|addslashes}{else}no-sku{/if}';
     short_sku = short_sku.substr(0, 32).trim();
 
     sellermania_products[short_sku] = new Array();

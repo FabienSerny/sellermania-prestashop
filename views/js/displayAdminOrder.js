@@ -66,6 +66,10 @@ $(document).ready(function() {
     sellermania_block_order_toolbar.hide();
     sellermania_block_warn.hide();
 
+    // Hide product action
+    $('.product_action').hide();
+    $('.partial_refund_fields').next().hide();
+
     // Fill product details
     var nb_buttons = 0;
     for (i = 1; sellermania_block_products_list[i]; i++)
