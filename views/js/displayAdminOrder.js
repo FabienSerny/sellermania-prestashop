@@ -87,7 +87,10 @@ $(document).ready(function() {
         html_order_line += '<u>Sku:</u> <b>' + sellermania_products[sku_short].sku + '</b><br>';
         if (sellermania_products[sku_short].ean != '') html_order_line += '<u>Ean:</u> <b>' + sellermania_products[sku_short].ean + '</b><br>';
         if (sellermania_products[sku_short].product_id != '') html_order_line += '<u>ASIN:</u> <b>' + sellermania_products[sku_short].product_id + '</b><br>';
-        if (sellermania_products[sku_short].item_condition != '') html_order_line += '<u>Condition:</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
+        if (sellermania_products[sku_short].item_condition != '')
+            html_order_line += '<u>Condition:</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
+        else
+            html_order_line += '<u>Condition:</u> <b>Unknown</b><br>';
         html_order_line += '<u>Status:</u> <b>' + sellermania_products[sku_short].status + '</b><br>';
         if (sellermania_products[sku_short].status_id == 6)
         {
