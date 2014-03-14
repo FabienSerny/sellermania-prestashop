@@ -193,6 +193,13 @@ class SellerManiaDisplayBackOfficeHeaderController
 		// Check if it's time to import
 		if ($this->timeToImportOrders())
 			$this->importOrders();
+
+		// Include JS script
+		if (Tools::getValue('controller') == 'AdminOrders' || Tools::getValue('tab') == 'AdminOrders')
+		{
+			$this->context->smarty->assign('sellermania_module_path', $this->web_path);
+			return $this->module->compliantDisplay('displayBackOfficeHeader.tpl');
+		}
 	}
 }
 
