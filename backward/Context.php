@@ -154,6 +154,8 @@ class Context
 		$this->cart = $cart;
 		$this->smarty = $smarty;
 		$this->link = $link;
+		if (empty($this->link))
+			$this->link = new Link();
 
 		$this->controller = new ControllerBackwardModule();
 		if (is_object($cookie))

@@ -26,6 +26,10 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+// Define if not defined
+if (!defined('_PS_BASE_URL_'))
+	define('_PS_BASE_URL_', Tools::getShopDomain(true));
+
 class SellerManiaExportController
 {
 	/**
