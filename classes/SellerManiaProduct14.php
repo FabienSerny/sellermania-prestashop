@@ -143,7 +143,7 @@ class SellerManiaProduct
 
 		$link = new Link();
 		foreach ($result as $row)
-			$images[] = 'http://'.$link->getImageLink('product', $id_product.'-'.$row['id_image'], 'thickbox');
+			$images[] = $link->getImageLink('product', $id_product.'-'.$row['id_image'], 'thickbox');
 
 		return $images;
 	}

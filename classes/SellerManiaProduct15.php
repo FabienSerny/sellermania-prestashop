@@ -152,11 +152,8 @@ class SellerManiaProduct
 				ORDER BY `position`';
 		$result = Db::getInstance()->executeS($sql);
 
-		$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-		$web_path = $shop->domain.'/'.$shop->physical_uri;
-
 		foreach ($result as $row)
-			$images[] = str_replace(__PS_BASE_URI__, $web_path, $context->link->getImageLink('product', $row['id_image'], 'large_default'));
+			$images[] = $context->link->getImageLink('product', $row['id_image'], 'large_default');
 
 		return $images;
 	}
