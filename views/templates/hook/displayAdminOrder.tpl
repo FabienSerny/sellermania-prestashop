@@ -84,10 +84,22 @@
                         <td>{l s='Insurance:' mod='sellermania'}</td>
                         <td>{displayPrice price=$sellermania_order.OrderInfo.TotalInsurance currency=$sellermania_currency->id}</td>
                     </tr>
+                    {if isset($sellermania_order.OrderInfo.OptionalFeaturePrice)}
                     <tr>
-                        <td>{l s='Promotion discount:' mod='sellermania'}</td>
+                        <td>{l s='Management fees:' mod='sellermania'}</td>
+                        <td>{displayPrice price=$sellermania_order.OrderInfo.OptionalFeaturePrice currency=$sellermania_currency->id}</td>
+                    </tr>
+                    {/if}
+                    <tr>
+                        <td>{l s='Other:' mod='sellermania'}</td>
                         <td>{displayPrice price=$sellermania_order.OrderInfo.TotalPromotionDiscount currency=$sellermania_currency->id}</td>
                     </tr>
+                    {if isset($sellermania_order.OrderInfo.RefundedAmount)}
+                    <tr>
+                        <td>{l s='Refunded amount:' mod='sellermania'}</td>
+                        <td>{displayPrice price=$sellermania_order.OrderInfo.RefundedAmount currency=$sellermania_currency->id}</td>
+                    </tr>
+                    {/if}
                     <tr>
                         <td style="color:red;font-weight:bold">{l s='Total amount:' mod='sellermania'}</td>
                         <td style="color:red;font-weight:bold">{displayPrice price=$sellermania_order.OrderInfo.TotalAmount.Amount.Price currency=$sellermania_currency->id}</td>

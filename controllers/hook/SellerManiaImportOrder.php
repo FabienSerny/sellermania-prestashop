@@ -178,6 +178,8 @@ class SellerManiaImportOrderController
 		// Calcul total product without tax
 		$this->data['OrderInfo']['TotalProductsWithoutVAT'] = 0;
 		$this->data['OrderInfo']['TotalInsurance'] = 0;
+		$this->data['OrderInfo']['RefundedAmount'] = 0;
+		$this->data['OrderInfo']['OptionalFeaturePrice'] = 0;
 		$this->data['OrderInfo']['TotalPromotionDiscount'] = 0;
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
 			if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_SELLER)
@@ -198,6 +200,14 @@ class SellerManiaImportOrderController
 				// Calcul total Promotion Discount
 				if (isset($product['ItemPromotionDiscount']['Amount']['Price']))
 					$this->data['OrderInfo']['TotalPromotionDiscount'] += $product['ItemPromotionDiscount']['Amount']['Price'];
+
+				// Calcul total refunded
+				if (isset($product['RefundedAmount']['Amount']['Price']))
+					$this->data['OrderInfo']['RefundedAmount'] += $product['RefundedAmount']['Amount']['Price'];
+
+				// Calcul total optional feature price
+				if (isset($product['OptionalFeaturePrice']['Amount']['Price']))
+					$this->data['OrderInfo']['OptionalFeaturePrice'] += $product['OptionalFeaturePrice']['Amount']['Price'];
 
 				// Create order detail (only create order detail for unmatched product)
 				$this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
