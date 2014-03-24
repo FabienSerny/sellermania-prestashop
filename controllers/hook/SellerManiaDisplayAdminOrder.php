@@ -253,7 +253,7 @@ class SellerManiaDisplayAdminOrderController
 
 		// Check which status the order is
 		$new_order_state = false;
-		foreach ($this->module->sellermania_order_states as $os)
+		foreach ($this->module->sellermania_order_states as $kos => $os)
 			if ($new_order_state === false)
 			{
 				// If the status is a priority status and one of the product has this status
@@ -262,14 +262,14 @@ class SellerManiaDisplayAdminOrderController
 				{
 					foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
 						if ($product['Status'] == $os['sm_status'])
-							$new_order_state = $os['sm_status'];
+							$new_order_state = Configuration::get($kos);
 				}
 
 				// If the status is not a priority status and all products have this status
 				// The order will have this status
 				if ($os['sm_prior'] == 0)
 				{
-					$new_order_state = $os['sm_status'];
+					$new_order_state = Configuration::get($kos);
 					foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
 						if ($product['Status'] != $os['sm_status'])
 							$new_order_state = false;
@@ -277,7 +277,7 @@ class SellerManiaDisplayAdminOrderController
 			}
 
 		// If status is false or equal to first status assigned, we do not change it
-		if ($new_order_state === false || $new_order_state == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
+		if ($new_order_state === false || $new_order_state == Configuration::get('PS_OS_SM_AWAITING'))
 			return false;
 
 
