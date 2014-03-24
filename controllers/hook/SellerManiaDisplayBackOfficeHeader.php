@@ -55,13 +55,11 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
 		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
 
-
 		// Set dates limit
-		$date_start = date("Y-m-d H:i:s", strtotime('-30 days'));
+		$date_start = date("Y-m-d H:i:s", strtotime('-10 days'));
 		$date_end = date('Y-m-d H:i:s');
 		if ($date_start < Configuration::get('SM_INSTALL_DATE'))
 			$date_start = Configuration::get('SM_INSTALL_DATE');
-
 
 		try
 		{
@@ -82,9 +80,11 @@ class SellerManiaDisplayBackOfficeHeaderController
 				foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
 					if (isset($order['OrderInfo']['OrderId']))
 					{
+						// Check if order exists
 						$id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
 						if ($id_sellermania_order > 0)
 						{
+							// If do exist and associate to a PrestaShop order, we update order status
 							$smo = new SellermaniaOrder((int)$id_sellermania_order);
 							if ($smo->id_order > 0)
 							{
@@ -94,13 +94,14 @@ class SellerManiaDisplayBackOfficeHeaderController
 						}
 						else
 						{
-							// Import Order
+							// If does not exist, we import the order
 							try
 							{
 								// Save config value
 								$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
 								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
 
+								// Import order as PrestaShop order
 								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 								$import_order->run($order);
 
@@ -109,23 +110,12 @@ class SellerManiaDisplayBackOfficeHeaderController
 							}
 							catch (\Exception $e)
 							{
-								// If could not import it in PrestaShop we stored it anyway
-								$currency_iso_code = 'EUR';
-								if (isset($this->data['OrderInfo']['Amount']['Currency']))
-									$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
-								$id_currency = Currency::getIdByIsoCode($currency_iso_code);
-								$amount_total = $order['OrderInfo']['TotalAmount']['Amount']['Price'];
-								$sellermania_order = new SellermaniaOrder();
-								$sellermania_order->marketplace = trim($order['OrderInfo']['MarketPlace']);
-								$sellermania_order->customer_name = $order['User'][0]['Name'];
-								$sellermania_order->ref_order = trim($order['OrderInfo']['OrderId']);
-								$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
-								$sellermania_order->info = json_encode($order);
-								$sellermania_order->error = $e->getMessage();
-								$sellermania_order->id_order = 0;
-								$sellermania_order->id_employee_accepted = 0;
-								$sellermania_order->date_payment = (isset($order['Paiement']['Date']) ? substr($order['Paiement']['Date'], 0, 19) : '');
-								$sellermania_order->add();
+								// Import order as error
+								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+								$import_order->data = $order;
+								$import_order->preprocessData();
+								$import_order->order->id = 0;
+								$import_order->saveSellermaniaOrder($e->getMessage());
 							}
 						}
 					}

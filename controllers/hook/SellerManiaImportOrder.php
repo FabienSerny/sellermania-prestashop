@@ -367,7 +367,7 @@ class SellerManiaImportOrderController
 	/**
 	 * Save Sellermania order
 	 */
-	public function saveSellermaniaOrder()
+	public function saveSellermaniaOrder($error = '')
 	{
 		$id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
 		$amount_total = $this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
@@ -378,7 +378,7 @@ class SellerManiaImportOrderController
 		$sellermania_order->ref_order = trim($this->data['OrderInfo']['OrderId']);
 		$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
 		$sellermania_order->info = json_encode($this->data);
-		$sellermania_order->error = '';
+		$sellermania_order->error = $error;
 		$sellermania_order->id_order = $this->order->id;
 		$sellermania_order->id_employee_accepted = 0;
 		$sellermania_order->date_payment = substr($this->data['Paiement']['Date'], 0, 19);
