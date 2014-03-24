@@ -47,6 +47,8 @@ if (version_compare(PHP_VERSION, '5.3.0') >= 0)
 
 class SellerMania extends Module
 {
+	public $sellermania_order_states;
+
 	/**
 	 * Module Constructor
 	 */
@@ -55,7 +57,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = '23Prod';
-		$this->version = '0.9.4.3';
+		$this->version = '0.9.5.0';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -65,8 +67,43 @@ class SellerMania extends Module
 
 		$this->displayName = $this->l('SellerMania');
 		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
+
+		$this->loadSellermaniaOrderStates();
+		$this->upgrade();
 	}
 
+
+	/**
+	 * Load Sellermania order states
+	 */
+	public function loadSellermaniaOrderStates()
+	{
+		$this->sellermania_order_states = array(
+			'PS_OS_SM_ERR_CONF' => array('sm_status' => 11, 'sm_prior' => 1, 'label' => $this->l('Sellermania - Error confirmation'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_ERR_CANCEL_CUS' => array('sm_status' => 12, 'sm_prior' => 1, 'label' => $this->l('Sellermania - Error cancel by customer'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_ERR_CANCEL_SEL' => array('sm_status' => 13, 'sm_prior' => 1, 'label' => $this->l('Sellermania - Error cancel by seller'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+
+			'PS_OS_SM_AWAITING' => array('sm_status' => 6, 'sm_prior' => 1, 'label' => $this->l('Sellermania - To be confirmed'), 'logable' => false, 'invoice' => false, 'shipped' => false, 'paid' => false),
+			'PS_OS_SM_CONFIRMED' => array('sm_status' => 9, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Waiting for payment'), 'logable' => true, 'invoice' => false, 'shipped' => false, 'paid' => false),
+			'PS_OS_SM_TO_DISPATCH' => array('sm_status' => 1, 'sm_prior' => 1, 'label' => $this->l('Sellermania - To dispatch'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => true),
+			'PS_OS_SM_DISPATCHED' => array('sm_status' => 2, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Dispatched'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => true),
+
+			'PS_OS_SM_CANCEL_CUS' => array('sm_status' => 3, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Cancel by customer'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_CANCEL_SEL' => array('sm_status' => 4, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Cancel by seller'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+		);
+	}
+
+	/**
+	 *  Module upgrade
+	 */
+	public function upgrade()
+	{
+		if (Configuration::get('SM_VERSION') == '')
+		{
+			$this->installOrderStates();
+			Configuration::updateValue('SM_VERSION', $this->version);
+		}
+	}
 
 	/**
 	 * Install method
@@ -92,12 +129,13 @@ class SellerMania extends Module
 		}
 
 		// Install Order States
-		$this->installOrderState();
+		$this->installOrderStates();
 
 		// Install Product
 		$this->installSellermaniaProduct();
 
 		// Gen SellerMania key
+		Configuration::updateValue('SM_VERSION', $this->version);
 		Configuration::updateValue('SM_INSTALL_DATE', date('Y-m-d H:i:s'));
 		Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
 
@@ -157,16 +195,10 @@ class SellerMania extends Module
 	/**
 	 * Install Sellermania Order States
 	 */
-	public function installOrderState()
+	public function installOrderStates()
 	{
-		$sellermania_order_states = array(
-			'PS_OS_SM_AWAITING' => array('label' => $this->l('Sellermania - Awaiting confirmation'), 'logable' => false, 'invoice' => false, 'shipped' => false, 'paid' => false),
-			'PS_OS_SM_CONFIRMED' => array('label' => $this->l('Sellermania - Order confirmed'), 'logable' => true, 'invoice' => false, 'shipped' => false, 'paid' => false),
-			'PS_OS_SM_SEND' => array('label' => $this->l('Sellermania - To send'), 'logable' => true, 'invoice' => true, 'shipped' => true, 'paid' => true),
-			'PS_OS_SM_SENT' => array('label' => $this->l('Sellermania - Sent'), 'logable' => true, 'invoice' => true, 'shipped' => true, 'paid' => true),
-		);
-
-		foreach ($sellermania_order_states as $order_state_key => $order_state_array)
+		foreach ($this->sellermania_order_states as $order_state_key => $order_state_array)
+		{
 			if (Configuration::get($order_state_key) < 1)
 			{
 				$order_state = new OrderState();
@@ -189,6 +221,13 @@ class SellerMania extends Module
 					copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/tmp/order_state_mini_'.$order_state->id.'.gif');
 				}
 			}
+			else
+			{
+				$order_state = new OrderState((int)Configuration::get($order_state_key));
+				$order_state->name = array((int)Configuration::get('PS_LANG_DEFAULT') => pSQL($order_state_array['label']));
+				$order_state->update();
+			}
+		}
 	}
 
 
