@@ -32,30 +32,6 @@ require_once(dirname(__FILE__).'/SellerManiaDisplayAdminOrder.php');
 
 class SellerManiaDisplayBackOfficeHeaderController
 {
-	public $marketplaces_list = array(
-              Sellermania\OrderClient::MKP_AMAZON_FR,
-              Sellermania\OrderClient::MKP_AMAZON_COM,
-              Sellermania\OrderClient::MKP_AMAZON_DE,
-              Sellermania\OrderClient::MKP_AMAZON_UK,
-              Sellermania\OrderClient::MKP_AMAZON_CA,
-              Sellermania\OrderClient::MKP_AMAZON_IT,
-              Sellermania\OrderClient::MKP_AMAZON_ES,
-              Sellermania\OrderClient::MKP_2XMOINSCHER,
-              Sellermania\OrderClient::MKP_FNAC_COM,
-              Sellermania\OrderClient::MKP_PRICEMINISTER_FR,
-              Sellermania\OrderClient::MKP_EBAY_FR,
-              Sellermania\OrderClient::MKP_EBAY_DE,
-              Sellermania\OrderClient::MKP_EBAY_UK,
-              Sellermania\OrderClient::MKP_PIXMANIA_FR,
-              Sellermania\OrderClient::MKP_PIXMANIA_UK,
-              Sellermania\OrderClient::MKP_PIXMANIA_DE,
-              Sellermania\OrderClient::MKP_PIXMANIA_IT,
-              Sellermania\OrderClient::MKP_PIXMANIA_ES,
-              Sellermania\OrderClient::MKP_RUEDUCOMMERCE_FR,
-              Sellermania\OrderClient::MKP_CDISCOUNT_COM,
-	);
-
-
 	/**
 	 * Controller constructor
 	 */
@@ -86,15 +62,11 @@ class SellerManiaDisplayBackOfficeHeaderController
 		if ($date_start < Configuration::get('SM_INSTALL_DATE'))
 			$date_start = Configuration::get('SM_INSTALL_DATE');
 
-		// Loop on marketplace list
-		foreach ($this->marketplaces_list as $marketplace)
-		{
+
 			try
 			{
 				// Recovering dispatched orders for the last 30 days
-				$result = $client->getOrderByStatus(
-					Sellermania\OrderClient::STATUS_TO_BE_CONFIRMED,
-					$marketplace,
+				$result = $client->getOrderByDate(
 					new \DateTime($date_start),
 					new \DateTime($date_end)
 				);
@@ -164,7 +136,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 				$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
 				file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
 			}
-		}
+
 	}
 
 
