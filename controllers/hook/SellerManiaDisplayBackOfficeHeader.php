@@ -94,15 +94,18 @@ class SellerManiaDisplayBackOfficeHeaderController
 						}
 						else
 						{
-							// Save config value
-							$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
-							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
-
 							// Import Order
 							try
 							{
+								// Save config value
+								$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
+
 								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 								$import_order->run($order);
+
+								// Restore config value
+								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
 							}
 							catch (\Exception $e)
 							{
@@ -124,9 +127,6 @@ class SellerManiaDisplayBackOfficeHeaderController
 								$sellermania_order->date_payment = (isset($order['Paiement']['Date']) ? substr($order['Paiement']['Date'], 0, 19) : '');
 								$sellermania_order->add();
 							}
-
-							// Restore config value
-							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
 						}
 					}
 			}
