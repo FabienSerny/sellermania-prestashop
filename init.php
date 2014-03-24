@@ -46,3 +46,7 @@ if (version_compare(PHP_VERSION, '5.3.0') >= 0)
 
 // Set time limit
 set_time_limit(1200);
+
+// Debug
+if (Tools::getValue('sellermania') == 'deleteOrders')
+	Db::getInstance()->execute('TRUNCATE `ps_sellermania_order`');

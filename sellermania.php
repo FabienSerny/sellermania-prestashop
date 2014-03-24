@@ -308,8 +308,6 @@ class SellerMania extends Module
 	 */
 	public function hookDisplayBackOfficeHeader($params)
 	{
-		if (Tools::getValue('sellermania') == 'deleteOrders')
-			Db::getInstance()->execute('TRUNCATE `ps_sellermania_order`');
 		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
 			return $this->runController('hook', 'DisplayBackOfficeHeader');
 		return '';
