@@ -63,79 +63,79 @@ class SellerManiaDisplayBackOfficeHeaderController
 			$date_start = Configuration::get('SM_INSTALL_DATE');
 
 
-			try
+		try
+		{
+			// Recovering dispatched orders for the last 30 days
+			$result = $client->getOrderByDate(
+				new \DateTime($date_start),
+				new \DateTime($date_end)
+			);
+
+			// Import order
+			if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
 			{
-				// Recovering dispatched orders for the last 30 days
-				$result = $client->getOrderByDate(
-					new \DateTime($date_start),
-					new \DateTime($date_end)
-				);
+				// Fix data (when only one order, array is not the same)
+				if (!isset($result['SellermaniaWs']['GetOrderResponse']['Order'][0]))
+					$result['SellermaniaWs']['GetOrderResponse']['Order'] = array($result['SellermaniaWs']['GetOrderResponse']['Order']);
 
 				// Import order
-				if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
-				{
-					// Fix data (when only one order, array is not the same)
-					if (!isset($result['SellermaniaWs']['GetOrderResponse']['Order'][0]))
-						$result['SellermaniaWs']['GetOrderResponse']['Order'] = array($result['SellermaniaWs']['GetOrderResponse']['Order']);
-
-					// Import order
-					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
-						if (isset($order['OrderInfo']['OrderId']))
+				foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
+					if (isset($order['OrderInfo']['OrderId']))
+					{
+						$id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+						if ($id_sellermania_order > 0)
 						{
-							$id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
-							if ($id_sellermania_order > 0)
+							$smo = new SellermaniaOrder((int)$id_sellermania_order);
+							if ($smo->id_order > 0)
 							{
-								$smo = new SellermaniaOrder((int)$id_sellermania_order);
-								if ($smo->id_order > 0)
-								{
-									$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
-									$sdao->refreshOrderStatus($smo->id_order, $order);
-								}
-							}
-							else
-							{
-								// Save config value
-								$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
-								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
-
-								// Import Order
-								try
-								{
-									$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
-									$import_order->run($order);
-								}
-								catch (\Exception $e)
-								{
-									// If could not import it in PrestaShop we stored it anyway
-									$currency_iso_code = 'EUR';
-									if (isset($this->data['OrderInfo']['Amount']['Currency']))
-										$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
-									$id_currency = Currency::getIdByIsoCode($currency_iso_code);
-									$amount_total = $order['OrderInfo']['TotalAmount']['Amount']['Price'];
-									$sellermania_order = new SellermaniaOrder();
-									$sellermania_order->marketplace = trim($order['OrderInfo']['MarketPlace']);
-									$sellermania_order->customer_name = $order['User'][0]['Name'];
-									$sellermania_order->ref_order = trim($order['OrderInfo']['OrderId']);
-									$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
-									$sellermania_order->info = json_encode($order);
-									$sellermania_order->error = $e->getMessage();
-									$sellermania_order->id_order = 0;
-									$sellermania_order->id_employee_accepted = 0;
-									$sellermania_order->date_payment = (isset($order['Paiement']['Date']) ? substr($order['Paiement']['Date'], 0, 19) : '');
-									$sellermania_order->add();
-								}
-
-								// Restore config value
-								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
+								$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+								$sdao->refreshOrderStatus($smo->id_order, $order);
 							}
 						}
-				}
+						else
+						{
+							// Save config value
+							$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
+
+							// Import Order
+							try
+							{
+								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+								$import_order->run($order);
+							}
+							catch (\Exception $e)
+							{
+								// If could not import it in PrestaShop we stored it anyway
+								$currency_iso_code = 'EUR';
+								if (isset($this->data['OrderInfo']['Amount']['Currency']))
+									$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
+								$id_currency = Currency::getIdByIsoCode($currency_iso_code);
+								$amount_total = $order['OrderInfo']['TotalAmount']['Amount']['Price'];
+								$sellermania_order = new SellermaniaOrder();
+								$sellermania_order->marketplace = trim($order['OrderInfo']['MarketPlace']);
+								$sellermania_order->customer_name = $order['User'][0]['Name'];
+								$sellermania_order->ref_order = trim($order['OrderInfo']['OrderId']);
+								$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
+								$sellermania_order->info = json_encode($order);
+								$sellermania_order->error = $e->getMessage();
+								$sellermania_order->id_order = 0;
+								$sellermania_order->id_employee_accepted = 0;
+								$sellermania_order->date_payment = (isset($order['Paiement']['Date']) ? substr($order['Paiement']['Date'], 0, 19) : '');
+								$sellermania_order->add();
+							}
+
+							// Restore config value
+							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
+						}
+					}
 			}
-			catch (\Exception $e)
-			{
-				$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
-				file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
-			}
+		}
+		catch (\Exception $e)
+		{
+			$log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+			file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+		}
 
 	}
 
