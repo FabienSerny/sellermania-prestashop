@@ -100,7 +100,18 @@ class SellerMania extends Module
 	{
 		if (Configuration::get('SM_VERSION') == '')
 		{
+			// Change configuration name
+			Configuration::updateValue('PS_OS_SM_TO_DISPATCH', Configuration::get('PS_OS_SM_SEND'));
+			Configuration::updateValue('PS_OS_SM_DISPATCHED', Configuration::get('PS_OS_SM_SENT'));
+
+			// Delete old ones
+			Configuration::deleteByName('PS_OS_SM_SEND');
+			Configuration::deleteByName('PS_OS_SM_SENT');
+
+			// Update order states
 			$this->installOrderStates();
+
+			// Set module version
 			Configuration::updateValue('SM_VERSION', $this->version);
 		}
 	}
