@@ -101,8 +101,8 @@ class SellermaniaOrder extends ObjectModel
 		return (int)Db::getInstance()->getValue('
 		SELECT `id_sellermania_order`
 		FROM `'._DB_PREFIX_.'sellermania_order`
-		WHERE `marketplace` = \''.pSQL($marketplace).'\'
-		AND `ref_order` = \''.pSQL($ref_order).'\'');
+		WHERE `marketplace` = \''.pSQL(trim($marketplace)).'\'
+		AND `ref_order` = \''.pSQL(trim($ref_order)).'\'');
 	}
 
 

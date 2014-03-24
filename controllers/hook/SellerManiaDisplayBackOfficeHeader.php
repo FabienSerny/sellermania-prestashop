@@ -85,9 +85,8 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$date_end = date('Y-m-d H:i:s');
 		if ($date_start < Configuration::get('SM_INSTALL_DATE'))
 			$date_start = Configuration::get('SM_INSTALL_DATE');
-		//$date_start = '2013-06-01';
-		//$date_end = '2013-06-31';
 
+		// Loop on marketplace list
 		foreach ($this->marketplaces_list as $marketplace)
 		{
 			try
@@ -142,9 +141,9 @@ class SellerManiaDisplayBackOfficeHeaderController
 									$id_currency = Currency::getIdByIsoCode($currency_iso_code);
 									$amount_total = $order['OrderInfo']['TotalAmount']['Amount']['Price'];
 									$sellermania_order = new SellermaniaOrder();
-									$sellermania_order->marketplace = $order['OrderInfo']['MarketPlace'];
+									$sellermania_order->marketplace = trim($order['OrderInfo']['MarketPlace']);
 									$sellermania_order->customer_name = $order['User'][0]['Name'];
-									$sellermania_order->ref_order = $order['OrderInfo']['OrderId'];
+									$sellermania_order->ref_order = trim($order['OrderInfo']['OrderId']);
 									$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
 									$sellermania_order->info = json_encode($order);
 									$sellermania_order->error = $e->getMessage();

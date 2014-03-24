@@ -373,9 +373,9 @@ class SellerManiaImportOrderController
 		$amount_total = $this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
 
 		$sellermania_order = new SellermaniaOrder();
-		$sellermania_order->marketplace = $this->data['OrderInfo']['MarketPlace'];
+		$sellermania_order->marketplace = trim($this->data['OrderInfo']['MarketPlace']);
 		$sellermania_order->customer_name = $this->data['User'][0]['OriginalName'];
-		$sellermania_order->ref_order = $this->data['OrderInfo']['OrderId'];
+		$sellermania_order->ref_order = trim($this->data['OrderInfo']['OrderId']);
 		$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
 		$sellermania_order->info = json_encode($this->data);
 		$sellermania_order->error = '';
