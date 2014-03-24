@@ -26,8 +26,9 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-// Load ImportOrder Controller
+// Load ImportOrder Controller and DisplayAdminOrderController
 require_once(dirname(__FILE__).'/SellerManiaImportOrder.php');
+require_once(dirname(__FILE__).'/SellerManiaDisplayAdminOrder.php');
 
 class SellerManiaDisplayBackOfficeHeaderController
 {
@@ -108,41 +109,54 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 					// Import order
 					foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
-						if (isset($order['OrderInfo']['OrderId']) && !SellermaniaOrder::orderHasAlreadyBeenImported($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']))
+						if (isset($order['OrderInfo']['OrderId']))
 						{
-							// Save config value
-							$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
-							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
-
-							// Import Order
-							try
+							$id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+							if ($id_sellermania_order > 0)
 							{
-								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
-								$import_order->run($order);
+								$smo = new SellermaniaOrder((int)$id_sellermania_order);
+								if ($smo->id_order > 0)
+								{
+									$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+									$sdao->refreshOrderStatus($smo->id_order, $order);
+								}
 							}
-							catch (\Exception $e)
+							else
 							{
-								// If could not import it in PrestaShop we stored it anyway
-								$currency_iso_code = 'EUR';
-								if (isset($this->data['OrderInfo']['Amount']['Currency']))
-									$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
-								$id_currency = Currency::getIdByIsoCode($currency_iso_code);
-								$amount_total = $order['OrderInfo']['TotalAmount']['Amount']['Price'];
-								$sellermania_order = new SellermaniaOrder();
-								$sellermania_order->marketplace = $order['OrderInfo']['MarketPlace'];
-								$sellermania_order->customer_name = $order['User'][0]['Name'];
-								$sellermania_order->ref_order = $order['OrderInfo']['OrderId'];
-								$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
-								$sellermania_order->info = json_encode($order);
-								$sellermania_order->error = $e->getMessage();
-								$sellermania_order->id_order = 0;
-								$sellermania_order->id_employee_accepted = 0;
-								$sellermania_order->date_payment = (isset($order['Paiement']['Date']) ? substr($order['Paiement']['Date'], 0, 19) : '');
-								$sellermania_order->add();
-							}
+								// Save config value
+								$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
 
-							// Restore config value
-							Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
+								// Import Order
+								try
+								{
+									$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+									$import_order->run($order);
+								}
+								catch (\Exception $e)
+								{
+									// If could not import it in PrestaShop we stored it anyway
+									$currency_iso_code = 'EUR';
+									if (isset($this->data['OrderInfo']['Amount']['Currency']))
+										$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
+									$id_currency = Currency::getIdByIsoCode($currency_iso_code);
+									$amount_total = $order['OrderInfo']['TotalAmount']['Amount']['Price'];
+									$sellermania_order = new SellermaniaOrder();
+									$sellermania_order->marketplace = $order['OrderInfo']['MarketPlace'];
+									$sellermania_order->customer_name = $order['User'][0]['Name'];
+									$sellermania_order->ref_order = $order['OrderInfo']['OrderId'];
+									$sellermania_order->amount_total = Tools::displayPrice($amount_total, $id_currency);
+									$sellermania_order->info = json_encode($order);
+									$sellermania_order->error = $e->getMessage();
+									$sellermania_order->id_order = 0;
+									$sellermania_order->id_employee_accepted = 0;
+									$sellermania_order->date_payment = (isset($order['Paiement']['Date']) ? substr($order['Paiement']['Date'], 0, 19) : '');
+									$sellermania_order->add();
+								}
+
+								// Restore config value
+								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
+							}
 						}
 				}
 			}
