@@ -56,7 +56,8 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
 
 		// Set dates limit
-		$date_start = date("Y-m-d H:i:s", strtotime('-15 days'));
+		$count_order = 0;
+		$date_start = date("Y-m-d H:i:s", strtotime('-30 days'));
 		$date_end = date('Y-m-d H:i:s');
 		if ($date_start < Configuration::get('SM_INSTALL_DATE'))
 			$date_start = Configuration::get('SM_INSTALL_DATE');
@@ -104,9 +105,14 @@ class SellerManiaDisplayBackOfficeHeaderController
 								// Import order as PrestaShop order
 								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 								$import_order->run($order);
+								$count_order++;
 
 								// Restore config value
 								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
+
+								// Do not push it too hard
+								if ($count_order > 100)
+									return true;
 							}
 							catch (\Exception $e)
 							{
