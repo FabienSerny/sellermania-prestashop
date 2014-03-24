@@ -56,7 +56,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
 
 		// Set dates limit
-		$date_start = date("Y-m-d H:i:s", strtotime('-10 days'));
+		$date_start = date("Y-m-d H:i:s", strtotime('-15 days'));
 		$date_end = date('Y-m-d H:i:s');
 		if ($date_start < Configuration::get('SM_INSTALL_DATE'))
 			$date_start = Configuration::get('SM_INSTALL_DATE');
