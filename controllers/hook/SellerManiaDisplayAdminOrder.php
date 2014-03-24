@@ -245,56 +245,53 @@ class SellerManiaDisplayAdminOrderController
 	 * @param $sellermania_order
 	 * @return bool
 	 */
-	public function refreshOrderStatus($sellermania_order)
+	public function refreshOrderStatus($id_order, $sellermania_order)
 	{
-		// Init variable
-		$action = 'cancel';
-		$actions_list = array(
-			'confirm' => (int)Configuration::get('PS_OS_CANCELED').', '.(int)Configuration::get('PS_OS_SM_CONFIRMED'),
-			'cancel' => (int)Configuration::get('PS_OS_CANCELED').', '.(int)Configuration::get('PS_OS_SM_CONFIRMED'),
-			'sent' => (int)Configuration::get('PS_OS_SM_SENT'),
-		);
-		$change_status = true;
+		// Fix data (when only one product, array is not the same)
+		if (!isset($sellermania_order['OrderInfo']['Product'][0]))
+			$sellermania_order['OrderInfo']['Product'] = array($sellermania_order['OrderInfo']['Product']);
 
-		// Check which action it is and if we have to change the status of the order
-		if (!isset($sellermania_order['OrderInfo']['Product']))
-			return false;
-		foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-		{
-			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_DISPATCHED)
-				$action = 'sent';
-			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
-				$change_status = false;
-			if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_DISPATCH || $product['Status'] == \Sellermania\OrderConfirmClient::STATUS_CONFIRMED)
-				$action = 'confirm';
-		}
+		// Check which status the order is
+		$new_order_state = false;
+		foreach ($this->module->sellermania_order_states as $os)
+			if ($new_order_state === false)
+			{
+				// If the status is a priority status and one of the product has this status
+				// The order will have this status
+				if ($os['sm_prior'] == 1)
+				{
+					foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+						if ($product['Status'] == $os['sm_status'])
+							$new_order_state = $os['sm_status'];
+				}
 
-		// In case of confirm, sent or cancel action, we check if the status is not already set
-		if ($change_status && isset($actions_list[$action]))
-		{
-			$id_order_history = Db::getInstance()->getValue('
-			SELECT `id_order_history` FROM `'._DB_PREFIX_.'order_history`
-			WHERE `id_order` = '.(int)Tools::getValue('id_order').'
-			AND `id_order_state` IN ('.$actions_list[$action].')');
-			if ($id_order_history > 0)
-				$change_status = false;
-		}
+				// If the status is not a priority status and all products have this status
+				// The order will have this status
+				if ($os['sm_prior'] == 0)
+				{
+					$new_order_state = $os['sm_status'];
+					foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+						if ($product['Status'] != $os['sm_status'])
+							$new_order_state = false;
+				}
+			}
 
-		// If no status change is necessary
-		if (!$change_status)
+		// If status is false or equal to first status assigned, we do not change it
+		if ($new_order_state === false || $new_order_state == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
 			return false;
 
-		// Change order status
 
-		// Get new order state ID
-		$new_order_state = Configuration::get('PS_OS_CANCELED');
-		if ($action == 'confirm')
-			$new_order_state = Configuration::get('PS_OS_SM_CONFIRMED');
-		if ($action == 'sent')
-			$new_order_state = Configuration::get('PS_OS_SM_SENT');
+		// We check if the status is not already set
+		$id_order_history = Db::getInstance()->getValue('
+		SELECT `id_order_history` FROM `'._DB_PREFIX_.'order_history`
+		WHERE `id_order` = '.(int)$id_order.'
+		AND `id_order_state` = '.(int)$new_order_state);
+		if ($id_order_history > 0)
+			return false;
+
 
 		// Load order and check existings payment
-		$order = new Order((int)Tools::getValue('id_order'));
+		$order = new Order((int)$id_order);
 		$use_existings_payment = false;
 		if (!$order->hasInvoice())
 			$use_existings_payment = true;
@@ -340,7 +337,7 @@ class SellerManiaDisplayAdminOrderController
 		$status_to_ship = $this->isStatusToShip($sellermania_order);
 
 		// Refresh order status
-		$this->refreshOrderStatus($sellermania_order);
+		$this->refreshOrderStatus(Tools::getValue('id_order'), $sellermania_order);
 
 		// Get order currency
 		$order = new Order((int)Tools::getValue('id_order'));
