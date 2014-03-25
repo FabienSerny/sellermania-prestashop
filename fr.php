@@ -60,10 +60,6 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_e06929407ff952f42ff098fe488
 $_MODULE['<{sellermania}prestashop>displaygetcontent_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_74a2cfcce8646f0fbc21d9a2cd2b8080'] = 'Veuillez remplir le formulaire ci-dessous :';
-$_MODULE['<{sellermania}prestashop>displaygetcontent_c5a2512c875d3f0cc9bfe025998ee27d'] = 'Order e-mail';
-$_MODULE['<{sellermania}prestashop>displaygetcontent_a1e8e3e9701997280df6214578467435'] = 'Order token';
-$_MODULE['<{sellermania}prestashop>displaygetcontent_716424eda8e212234855dfd700a07a9e'] = 'Order endpoint';
-$_MODULE['<{sellermania}prestashop>displaygetcontent_e9d86eb28865fb19fd5b735c4eca7d66'] = 'Confirm order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';

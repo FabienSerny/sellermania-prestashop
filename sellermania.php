@@ -38,7 +38,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = '23Prod';
-		$this->version = '0.9.6';
+		$this->version = '0.9.7';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -60,17 +60,17 @@ class SellerMania extends Module
 	public function loadSellermaniaOrderStates()
 	{
 		$this->sellermania_order_states = array(
-			'PS_OS_SM_ERR_CONF' => array('sm_status' => 11, 'sm_prior' => 1, 'label' => $this->l('Sellermania - Error confirmation'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
-			'PS_OS_SM_ERR_CANCEL_CUS' => array('sm_status' => 12, 'sm_prior' => 1, 'label' => $this->l('Sellermania - Error cancel by customer'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
-			'PS_OS_SM_ERR_CANCEL_SEL' => array('sm_status' => 13, 'sm_prior' => 1, 'label' => $this->l('Sellermania - Error cancel by seller'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_ERR_CONF' => array('sm_status' => 11, 'sm_prior' => 1, 'label' => array('en' => 'Error confirmation', 'fr' => 'En erreur de confirmation'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_ERR_CANCEL_CUS' => array('sm_status' => 12, 'sm_prior' => 1, 'label' => array('en' => 'Error cancel by customer', 'fr' => 'En erreur, annulée par client'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_ERR_CANCEL_SEL' => array('sm_status' => 13, 'sm_prior' => 1, 'label' => array('en' => 'Error cancel by seller', 'fr' => 'En erreur, annulée par vendeur'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
 
-			'PS_OS_SM_AWAITING' => array('sm_status' => 6, 'sm_prior' => 1, 'label' => $this->l('Sellermania - To be confirmed'), 'logable' => false, 'invoice' => false, 'shipped' => false, 'paid' => false),
-			'PS_OS_SM_CONFIRMED' => array('sm_status' => 9, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Waiting for payment'), 'logable' => true, 'invoice' => false, 'shipped' => false, 'paid' => false),
-			'PS_OS_SM_TO_DISPATCH' => array('sm_status' => 1, 'sm_prior' => 1, 'label' => $this->l('Sellermania - To dispatch'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => true),
-			'PS_OS_SM_DISPATCHED' => array('sm_status' => 2, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Dispatched'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => true),
+			'PS_OS_SM_AWAITING' => array('sm_status' => 6, 'sm_prior' => 1, 'label' => array('en' => 'To be confirmed', 'fr' => 'A confirmer'), 'logable' => false, 'invoice' => false, 'shipped' => false, 'paid' => false),
+			'PS_OS_SM_CONFIRMED' => array('sm_status' => 9, 'sm_prior' => 0, 'label' => array('en' => 'Waiting for payment', 'fr' => 'En attente de paiement'), 'logable' => true, 'invoice' => false, 'shipped' => false, 'paid' => false),
+			'PS_OS_SM_TO_DISPATCH' => array('sm_status' => 1, 'sm_prior' => 1, 'label' => array('en' => 'To dispatch', 'fr' => 'A expédier'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => true),
+			'PS_OS_SM_DISPATCHED' => array('sm_status' => 2, 'sm_prior' => 0, 'label' => array('en' => 'Dispatched', 'fr' => 'Expédiée'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => true),
 
-			'PS_OS_SM_CANCEL_CUS' => array('sm_status' => 3, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Cancel by customer'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
-			'PS_OS_SM_CANCEL_SEL' => array('sm_status' => 4, 'sm_prior' => 0, 'label' => $this->l('Sellermania - Cancel by seller'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_CANCEL_CUS' => array('sm_status' => 3, 'sm_prior' => 0, 'label' => array('en' => 'Cancel by customer', 'fr' => 'Annulée par client'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
+			'PS_OS_SM_CANCEL_SEL' => array('sm_status' => 4, 'sm_prior' => 0, 'label' => array('en' => 'Cancel by seller', 'fr' => 'Annulée par vendeur'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false),
 		);
 	}
 
@@ -79,7 +79,8 @@ class SellerMania extends Module
 	 */
 	public function upgrade()
 	{
-		if (Configuration::get('SM_VERSION') == '')
+		$version_registered = Configuration::get('SM_VERSION');
+		if ($version_registered == '' || version_compare($version_registered, '0.9.7', '<'))
 		{
 			// Change configuration name
 			Configuration::updateValue('PS_OS_SM_TO_DISPATCH', Configuration::get('PS_OS_SM_SEND'));
@@ -189,6 +190,12 @@ class SellerMania extends Module
 	 */
 	public function installOrderStates()
 	{
+		$languages = array(
+			(int)Configuration::get('PS_LANG_DEFAULT') => 'en',
+			(int)Language::getIdByIso('fr') => 'fr',
+			(int)Language::getIdByIso('en') => 'en',
+		);
+
 		foreach ($this->sellermania_order_states as $order_state_key => $order_state_array)
 		{
 			if (Configuration::get($order_state_key) < 1)
@@ -205,7 +212,12 @@ class SellerMania extends Module
 				$order_state->hidden = false;
 				$order_state->paid = $order_state_array['invoice'];
 				$order_state->deleted = false;
-				$order_state->name = array((int)Configuration::get('PS_LANG_DEFAULT') => pSQL($order_state_array['label']));
+
+				$order_state->name = array();
+				foreach ($languages as $key_lang => $iso_lang)
+					if ($key_lang > 0)
+						$order_state->name[$key_lang] = pSQL('Sellermania - '.$order_state_array['label'][$iso_lang]);
+
 				if ($order_state->add())
 				{
 					Configuration::updateValue($order_state_key, $order_state->id);
@@ -216,7 +228,12 @@ class SellerMania extends Module
 			else
 			{
 				$order_state = new OrderState((int)Configuration::get($order_state_key));
-				$order_state->name = array((int)Configuration::get('PS_LANG_DEFAULT') => pSQL($order_state_array['label']));
+
+				$order_state->name = array();
+				foreach ($languages as $key_lang => $iso_lang)
+					if ($key_lang > 0)
+						$order_state->name[$key_lang] = pSQL('Sellermania - '.$order_state_array['label'][$iso_lang]);
+
 				$order_state->update();
 			}
 		}
