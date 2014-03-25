@@ -83,26 +83,29 @@ $(document).ready(function() {
         else
             sku_short = sku_short[1].replace(remove[0], '').trim();
 
-        var html_order_line = '';
-        if (sellermania_products[sku_short].insurance_price > 0)
-            html_order_line += '<br><b>' + insurance_price_label + '</b> ' + sellermania_products[sku_short].insurance_price + ' ' + sellermania_products[sku_short].currency + '<br>';
-        if (sellermania_products[sku_short].order_item_id != '') html_order_line += '<br><u>' + order_item_id_label + '</u> <b>' + sellermania_products[sku_short].order_item_id + '</b><br>';
-        if (sellermania_products[sku_short].external_order_id != '') html_order_line += '<br><u>' + external_order_id_label + '</u> <b>' + sellermania_products[sku_short].external_order_id + '</b><br>';
-        html_order_line += '<u>' + sku_label + '</u> <b>' + sellermania_products[sku_short].sku + '</b><br>';
-        if (sellermania_products[sku_short].ean != '') html_order_line += '<u>' + ean_label + '</u> <b>' + sellermania_products[sku_short].ean + '</b><br>';
-        if (sellermania_products[sku_short].product_id != '') html_order_line += '<u>' + asin_label + '</u> <b>' + sellermania_products[sku_short].product_id + '</b><br>';
-        if (sellermania_products[sku_short].item_condition != '')
-            html_order_line += '<u>' + condition_label + '</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
-        else
-            html_order_line += '<u>' + condition_label + '</u> <b>' + unknown_label + '</b><br>';
-        html_order_line += '<u>' + status_label + '</u> <b>' + sellermania_products[sku_short].status + '</b><br>';
-        if (sellermania_products[sku_short].status_id == 6)
+        if (sku_short != '')
         {
-            html_order_line += '<input type="radio" id="status_confirm_' + i + '" name="status_' + i + '" value="9" class="status_order_line" data-toggle="' + sellermania_products[sku_short].sku + '" /> ' + confirm_label + ' ';
-            html_order_line += '<input type="radio" id="status_cancel_' + i + '" name="status_' + i + '" value="4" class="status_order_line" data-toggle="' + sellermania_products[sku_short].sku + '" /> ' + cancel_label + ' ';
-            nb_buttons++;
+            var html_order_line = '';
+            if (sellermania_products[sku_short].insurance_price > 0)
+                html_order_line += '<br><b>' + insurance_price_label + '</b> ' + sellermania_products[sku_short].insurance_price + ' ' + sellermania_products[sku_short].currency + '<br>';
+            if (sellermania_products[sku_short].order_item_id != '') html_order_line += '<br><u>' + order_item_id_label + '</u> <b>' + sellermania_products[sku_short].order_item_id + '</b><br>';
+            if (sellermania_products[sku_short].external_order_id != '') html_order_line += '<br><u>' + external_order_id_label + '</u> <b>' + sellermania_products[sku_short].external_order_id + '</b><br>';
+            html_order_line += '<u>' + sku_label + '</u> <b>' + sellermania_products[sku_short].sku + '</b><br>';
+            if (sellermania_products[sku_short].ean != '') html_order_line += '<u>' + ean_label + '</u> <b>' + sellermania_products[sku_short].ean + '</b><br>';
+            if (sellermania_products[sku_short].product_id != '') html_order_line += '<u>' + asin_label + '</u> <b>' + sellermania_products[sku_short].product_id + '</b><br>';
+            if (sellermania_products[sku_short].item_condition != '')
+                html_order_line += '<u>' + condition_label + '</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
+            else
+                html_order_line += '<u>' + condition_label + '</u> <b>' + unknown_label + '</b><br>';
+            html_order_line += '<u>' + status_label + '</u> <b>' + sellermania_products[sku_short].status + '</b><br>';
+            if (sellermania_products[sku_short].status_id == 6)
+            {
+                html_order_line += '<input type="radio" id="status_confirm_' + i + '" name="status_' + i + '" value="9" class="status_order_line" data-toggle="' + sellermania_products[sku_short].sku + '" /> ' + confirm_label + ' ';
+                html_order_line += '<input type="radio" id="status_cancel_' + i + '" name="status_' + i + '" value="4" class="status_order_line" data-toggle="' + sellermania_products[sku_short].sku + '" /> ' + cancel_label + ' ';
+                nb_buttons++;
+            }
+            sm_block_product.append(html_order_line);
         }
-        sm_block_product.append(html_order_line);
     }
 
     // Add button check all
