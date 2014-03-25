@@ -61,6 +61,7 @@ $_MODULE['<{sellermania}prestashop>displayadminorder_ed51222f31afbf17ca5f3b0654d
 $_MODULE['<{sellermania}prestashop>displayadminorder_24a23d787190f2c4812ff9ab11847a72'] = 'Statut :';
 $_MODULE['<{sellermania}prestashop>displayadminorder_70d9be9b139893aa6c69b5e77e614311'] = 'Confirmer';
 $_MODULE['<{sellermania}prestashop>displayadminorder_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
+$_MODULE['<{sellermania}prestashop>displayadminorder_88183b946cc5f0e8c96b2e66e1c74a7e'] = 'Inconnu';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_92e316a9d4cbc0574518eb35db24cb27'] = 'SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_771847b3a8dd3d37f474493428ecca70'] = 'Configuration du module SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_8c4657fcd9c105a1189db23404cd7d6c'] = 'Votre version PHP actuelle est :';

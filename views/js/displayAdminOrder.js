@@ -94,7 +94,7 @@ $(document).ready(function() {
         if (sellermania_products[sku_short].item_condition != '')
             html_order_line += '<u>' + condition_label + '</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
         else
-            html_order_line += '<u>' + condition_label + '</u> <b>Unknown</b><br>';
+            html_order_line += '<u>' + condition_label + '</u> <b>' + unknown_label + '</b><br>';
         html_order_line += '<u>' + status_label + '</u> <b>' + sellermania_products[sku_short].status + '</b><br>';
         if (sellermania_products[sku_short].status_id == 6)
         {

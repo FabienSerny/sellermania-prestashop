@@ -253,5 +253,6 @@
     var status_label = '{l s='Status:' mod='sellermania'}';
     var confirm_label = '{l s='Confirm' mod='sellermania'}';
     var cancel_label = '{l s='Cancel' mod='sellermania'}';
+    var unknown_label = '{l s='Unknown' mod='sellermania'}';
 </script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>
