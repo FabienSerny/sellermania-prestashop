@@ -82,13 +82,16 @@ class SellerMania extends Module
 		$version_registered = Configuration::get('SM_VERSION');
 		if ($version_registered == '' || version_compare($version_registered, '0.9.7', '<'))
 		{
-			// Change configuration name
-			Configuration::updateValue('PS_OS_SM_TO_DISPATCH', Configuration::get('PS_OS_SM_SEND'));
-			Configuration::updateValue('PS_OS_SM_DISPATCHED', Configuration::get('PS_OS_SM_SENT'));
+			if ((int)Configuration::get('PS_OS_SM_SEND') > 0)
+			{
+				// Change configuration name
+				Configuration::updateValue('PS_OS_SM_TO_DISPATCH', Configuration::get('PS_OS_SM_SEND'));
+				Configuration::updateValue('PS_OS_SM_DISPATCHED', Configuration::get('PS_OS_SM_SENT'));
 
-			// Delete old ones
-			Configuration::deleteByName('PS_OS_SM_SEND');
-			Configuration::deleteByName('PS_OS_SM_SENT');
+				// Delete old ones
+				Configuration::deleteByName('PS_OS_SM_SEND');
+				Configuration::deleteByName('PS_OS_SM_SENT');
+			}
 
 			// Update order states
 			$this->installOrderStates();
