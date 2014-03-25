@@ -51,6 +51,16 @@ $_MODULE['<{sellermania}prestashop>displayadminorder_f3ebde38fb84b9d5677bf2600e4
 $_MODULE['<{sellermania}prestashop>displayadminorder_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displayadminorder_55cb2c86861b026f669b8c736ed05cf3'] = 'Résultat du changement de statut :';
 $_MODULE['<{sellermania}prestashop>displayadminorder_f74caf59620c0f4c08f85709d9b2bda0'] = 'Mise à jour de la ligne commande dont le SKU est';
+$_MODULE['<{sellermania}prestashop>displayadminorder_282b9e24346f2529f642148d7f8ac464'] = 'Prix assurance :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_3e46163e36b4fe0372e92add54a207bf'] = 'ID objet commande :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_e7db9477b2a1386f8d1de1bc1c49616f'] = 'ID commande marketplace :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_0df47ffec25dc91f8b00dc2e04fcade2'] = 'Sku :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_199215d030217e340c44cdf8ce04879f'] = 'Ean :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_b2550d43597d19d88f9fbc126fbedb04'] = 'ASIN :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_ed51222f31afbf17ca5f3b0654db8969'] = 'Condition :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_24a23d787190f2c4812ff9ab11847a72'] = 'Statut :';
+$_MODULE['<{sellermania}prestashop>displayadminorder_70d9be9b139893aa6c69b5e77e614311'] = 'Confirmer';
+$_MODULE['<{sellermania}prestashop>displayadminorder_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_92e316a9d4cbc0574518eb35db24cb27'] = 'SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_771847b3a8dd3d37f474493428ecca70'] = 'Configuration du module SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_8c4657fcd9c105a1189db23404cd7d6c'] = 'Votre version PHP actuelle est :';
@@ -60,6 +70,10 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_e06929407ff952f42ff098fe488
 $_MODULE['<{sellermania}prestashop>displaygetcontent_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_74a2cfcce8646f0fbc21d9a2cd2b8080'] = 'Veuillez remplir le formulaire ci-dessous :';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_c5a2512c875d3f0cc9bfe025998ee27d'] = 'Order e-mail';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_a1e8e3e9701997280df6214578467435'] = 'Order token';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_716424eda8e212234855dfd700a07a9e'] = 'Order endpoint';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_e9d86eb28865fb19fd5b735c4eca7d66'] = 'Confirm order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';

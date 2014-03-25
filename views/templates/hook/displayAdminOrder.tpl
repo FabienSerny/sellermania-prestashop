@@ -232,15 +232,26 @@
     sellermania_products[short_sku]['order_item_id'] = '{if isset($product.OrderItemId)}{$product.OrderItemId}{/if}';
     sellermania_products[short_sku]['external_order_id'] = '{if isset($product.ExternalOrderId)}{$product.ExternalOrderId}{/if}';
     sellermania_products[short_sku]['status_id'] = '{if isset($product.Status)}{$product.Status}{/if}';
-    sellermania_products[short_sku]['status'] = '{if isset($product.Status) && isset($sellermania_status_list[$product.Status])}{$sellermania_status_list[$product.Status]}{/if}';
+    sellermania_products[short_sku]['status'] = '{if isset($product.Status) && isset($sellermania_status_list[$product.Status])}{$sellermania_status_list[$product.Status]|addslashes}{/if}';
     sellermania_products[short_sku]['sku'] = '{if isset($product.Sku)}{$product.Sku}{/if}';
     sellermania_products[short_sku]['ean'] = '{if isset($product.Ean)}{$product.Ean}{/if}';
     sellermania_products[short_sku]['product_id'] = '{if isset($product.ProductId)}{$product.ProductId}{/if}';
     sellermania_products[short_sku]['item_condition_id'] = '{if isset($product.ItemCondition)}{$product.ItemCondition}{/if}';
-    sellermania_products[short_sku]['item_condition'] = '{if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]}{/if}';
+    sellermania_products[short_sku]['item_condition'] = '{if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]|addslashes}{/if}';
     sellermania_products[short_sku]['insurance_price'] = '{if isset($product.InsurancePrice.Amount.Price) && $product.InsurancePrice.Amount.Price gt 0}{$product.InsurancePrice.Amount.Price}{else}0{/if}';
     sellermania_products[short_sku]['currency'] = '{$sellermania_order.OrderInfo.Amount.Currency}';
 
     {/foreach}
+
+    var insurance_price_label = '{l s='Insurance price:' mod='sellermania'}';
+    var order_item_id_label = '{l s='Order item ID:' mod='sellermania'}';
+    var external_order_id_label = '{l s='External order ID:' mod='sellermania'}';
+    var sku_label = '{l s='Sku:' mod='sellermania'}';
+    var ean_label = '{l s='Ean:' mod='sellermania'}';
+    var asin_label = '{l s='ASIN:' mod='sellermania'}';
+    var condition_label = '{l s='Condition:' mod='sellermania'}';
+    var status_label = '{l s='Status:' mod='sellermania'}';
+    var confirm_label = '{l s='Confirm' mod='sellermania'}';
+    var cancel_label = '{l s='Cancel' mod='sellermania'}';
 </script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>

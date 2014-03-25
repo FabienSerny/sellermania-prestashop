@@ -52,30 +52,30 @@ class SellerManiaDisplayAdminOrderController
 		$this->context = Context::getContext();
 
 		$this->conditions_list = array(
-			0 => $this->module->l('Unknown'),
-			1 => $this->module->l('Like new'),
-			2 => $this->module->l('Very good'),
-			3 => $this->module->l('Good'),
-			4 => $this->module->l('Acceptable'),
-			5 => $this->module->l('Collectible like new'),
-			6 => $this->module->l('Collectible very good'),
-			7 => $this->module->l('Collectible good'),
-			8 => $this->module->l('Collectible acceptable'),
-			10 => $this->module->l('Refurbished mint'),
-			11 => $this->module->l('New'),
-			12 => $this->module->l('New OEM'),
-			13 => $this->module->l('Used openbox'),
+			0 => $this->module->l('Unknown', 'sellermaniadisplayadminorder'),
+			1 => $this->module->l('Like new', 'sellermaniadisplayadminorder'),
+			2 => $this->module->l('Very good', 'sellermaniadisplayadminorder'),
+			3 => $this->module->l('Good', 'sellermaniadisplayadminorder'),
+			4 => $this->module->l('Acceptable', 'sellermaniadisplayadminorder'),
+			5 => $this->module->l('Collectible like new', 'sellermaniadisplayadminorder'),
+			6 => $this->module->l('Collectible very good', 'sellermaniadisplayadminorder'),
+			7 => $this->module->l('Collectible good', 'sellermaniadisplayadminorder'),
+			8 => $this->module->l('Collectible acceptable', 'sellermaniadisplayadminorder'),
+			10 => $this->module->l('Refurbished mint', 'sellermaniadisplayadminorder'),
+			11 => $this->module->l('New', 'sellermaniadisplayadminorder'),
+			12 => $this->module->l('New OEM', 'sellermaniadisplayadminorder'),
+			13 => $this->module->l('Used openbox', 'sellermaniadisplayadminorder'),
 		);
 
 		$this->status_list = array(
-			6 => $this->module->l('To be confirmed'),
-			10 => $this->module->l('Awaiting confirmation'),
-			9 => $this->module->l('Confirmed'),
-			3 => $this->module->l('Cancelled by the customer'),
-			4 => $this->module->l('Cancelled by the seller'),
-			1 => $this->module->l('To dispatch'),
-			5 => $this->module->l('Awaiting dispatch'),
-			2 => $this->module->l('Dispatched'),
+			6 => $this->module->l('To be confirmed', 'sellermaniadisplayadminorder'),
+			10 => $this->module->l('Awaiting confirmation', 'sellermaniadisplayadminorder'),
+			9 => $this->module->l('Confirmed', 'sellermaniadisplayadminorder'),
+			3 => $this->module->l('Cancelled by the customer', 'sellermaniadisplayadminorder'),
+			4 => $this->module->l('Cancelled by the seller', 'sellermaniadisplayadminorder'),
+			1 => $this->module->l('To dispatch', 'sellermaniadisplayadminorder'),
+			5 => $this->module->l('Awaiting dispatch', 'sellermaniadisplayadminorder'),
+			2 => $this->module->l('Dispatched', 'sellermaniadisplayadminorder'),
 		);
 	}
 
