@@ -351,7 +351,7 @@ class SellerManiaImportOrderController
 			$history->id_order = $this->order->id;
 			$history->id_employee = (int)$this->context->employee->id;
 			$history->id_order_state = (int)Configuration::get('PS_OS_SM_AWAITING');
-			$history->changeIdOrderState((int)Configuration::get('PS_OS_SM_AWAITING'), $order);
+			$history->changeIdOrderState((int)Configuration::get('PS_OS_SM_AWAITING'), $this->order);
 			$history->add();
 		}
 
