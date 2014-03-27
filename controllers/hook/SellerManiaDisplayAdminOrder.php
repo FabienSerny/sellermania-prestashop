@@ -197,28 +197,36 @@ class SellerManiaDisplayAdminOrderController
 	public function refreshOrder($order_id)
 	{
 		// Retrieving data
-		$client = new Sellermania\OrderClient();
-		$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
-		$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
-		$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
-		$result = $client->getOrderById($order_id);
+		try
+		{
+			$client = new Sellermania\OrderClient();
+			$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
+			$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
+			$client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
+			$result = $client->getOrderById($order_id);
 
-		// Preprocess data and fix order
-		$controller = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
-		$controller->data = $result['SellermaniaWs']['GetOrderResponse']['Order'];
-		$controller->preprocessData();
-		$controller->order = new Order((int)Tools::getValue('id_order'));
-		$controller->fixOrder(false);
+			// Preprocess data and fix order
+			$controller = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+			$controller->data = $result['SellermaniaWs']['GetOrderResponse']['Order'];
+			$controller->preprocessData();
+			$controller->order = new Order((int)Tools::getValue('id_order'));
+			$controller->fixOrder(false);
 
-		// Saving it
-		$id_sellermania_order = Db::getInstance()->getValue('SELECT `id_sellermania_order` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
-		$sellermania_order = new SellermaniaOrder($id_sellermania_order);
-		$sellermania_order->info = json_encode($controller->data);
-		$sellermania_order->date_accepted = NULL;
-		$sellermania_order->update();
+			// Saving it
+			$id_sellermania_order = Db::getInstance()->getValue('SELECT `id_sellermania_order` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
+			$sellermania_order = new SellermaniaOrder($id_sellermania_order);
+			$sellermania_order->info = json_encode($controller->data);
+			$sellermania_order->date_accepted = NULL;
+			$sellermania_order->update();
 
-		// Return data
-		return $controller->data;
+			// Return data
+			return $controller->data;
+		}
+		catch (\Exception $e)
+		{
+			$this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
+			return false;
+		}
 	}
 
 	/**
@@ -312,10 +320,6 @@ class SellerManiaDisplayAdminOrderController
 	 */
 	public function run()
 	{
-		// Check if credentials are ok
-		if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || Configuration::get('SM_DEFAULT_PRODUCT_ID') < 1)
-			return '';
-
 		// Retrieve order data
 		$sellermania_order = Db::getInstance()->getValue('SELECT `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
 		if (empty($sellermania_order))
@@ -331,7 +335,9 @@ class SellerManiaDisplayAdminOrderController
 		$result_shipping_status_update = $this->saveShippingStatus($sellermania_order);
 
 		// Refresh order from Sellermania webservices
-		$sellermania_order = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
+		$return = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
+		if ($return !== false)
+			$sellermania_order = $return;
 
 		// Refresh flag to dispatch
 		$status_to_ship = $this->isStatusToShip($sellermania_order);
