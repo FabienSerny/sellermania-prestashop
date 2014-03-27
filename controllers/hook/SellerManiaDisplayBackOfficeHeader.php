@@ -108,6 +108,10 @@ class SellerManiaDisplayBackOfficeHeaderController
 								$import_order->run($order);
 								$count_order++;
 
+								// Refresh order status immediately
+								$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+								$sdao->refreshOrderStatus($import_order->order->id, $order);
+
 								// Restore config value
 								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
 
