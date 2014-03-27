@@ -347,6 +347,9 @@ class SellerManiaDisplayAdminOrderController
 		$order = new Order((int)Tools::getValue('id_order'));
 		$sellermania_currency = new Currency($order->id_currency);
 
+		// Compliancy date format with PS 1.4
+		$this->context->smarty->ps_language = new Language($this->context->cookie->id_lang);
+
 		$this->context->smarty->assign('ps_version', $this->ps_version);
 		$this->context->smarty->assign('sellermania_order', $sellermania_order);
 		$this->context->smarty->assign('sellermania_currency', $sellermania_currency);
