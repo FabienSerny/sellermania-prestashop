@@ -195,7 +195,7 @@ class SellerManiaImportOrderController
 
 				// Calcul total Insurance
 				if (isset($product['InsurancePrice']['Amount']['Price']))
-					$this->data['OrderInfo']['TotalInsurance'] += $product['InsurancePrice']['Amount']['Price'];
+					$this->data['OrderInfo']['TotalInsurance'] += ($product['InsurancePrice']['Amount']['Price'] * $product['QuantityPurchased']);
 
 				// Calcul total Promotion Discount
 				if (isset($product['ItemPromotionDiscount']['Amount']['Price']))

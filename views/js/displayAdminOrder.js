@@ -87,7 +87,7 @@ $(document).ready(function() {
         {
             var html_order_line = '';
             if (sellermania_products[sku_short].insurance_price > 0)
-                html_order_line += '<br><b>' + insurance_price_label + '</b> ' + sellermania_products[sku_short].insurance_price + ' ' + sellermania_products[sku_short].currency + '<br>';
+                html_order_line += '<br><u>' + insurance_price_label + '</u> <b>' + sellermania_products[sku_short].insurance_price + ' ' + sellermania_products[sku_short].currency + '</b><br>';
             if (sellermania_products[sku_short].order_item_id != '') html_order_line += '<br><u>' + order_item_id_label + '</u> <b>' + sellermania_products[sku_short].order_item_id + '</b><br>';
             if (sellermania_products[sku_short].external_order_id != '') html_order_line += '<br><u>' + external_order_id_label + '</u> <b>' + sellermania_products[sku_short].external_order_id + '</b><br>';
             html_order_line += '<u>' + sku_label + '</u> <b>' + sellermania_products[sku_short].sku + '</b><br>';
