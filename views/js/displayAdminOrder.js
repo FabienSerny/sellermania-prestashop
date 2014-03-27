@@ -48,12 +48,12 @@ $(document).ready(function() {
 
         $('#sellermania_confirm_all_products').click(function() {
             for (i = 1; sellermania_block_products_list[i]; i++)
-                $('#status_confirm_' + i).prop('checked', 'checked');
+                $('#status_confirm_' + i).attr('checked', 'checked');
             sellermania_update_line_status();
         });
         $('#sellermania_cancel_all_products').click(function() {
             for (i = 1; sellermania_block_products_list[i]; i++)
-                $('#status_cancel_' + i).prop('checked', 'checked');
+                $('#status_cancel_' + i).attr('checked', 'checked');
             sellermania_update_line_status();
         });
     }
@@ -80,9 +80,9 @@ $(document).ready(function() {
         {
             // Status
             var order_line_status = 'Not defined';
-            if ($('#status_confirm_' + i).prop('checked'))
+            if ($('#status_confirm_' + i).attr('checked'))
                 order_line_status = 'Confirmed';
-            if ($('#status_cancel_' + i).prop('checked'))
+            if ($('#status_cancel_' + i).attr('checked'))
                 order_line_status = 'Cancelled';
 
             // Count not defined Status
@@ -105,7 +105,7 @@ $(document).ready(function() {
                 // Generate form
                 var html_form = '<input type="hidden" name="sellermania_line_max" value="' + line_max + '" />';
                 $('.status_order_line').each(function() {
-                    if ($(this).prop('checked'))
+                    if ($(this).attr('checked'))
                     {
                         html_form += '<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).attr('value') + '" />';
                         html_form += '<input type="hidden" name="sku_' + $(this).attr('name') + '" value="' + $(this).attr('data-toggle') + '" />';
