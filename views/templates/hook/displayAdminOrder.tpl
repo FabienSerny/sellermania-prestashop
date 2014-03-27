@@ -130,8 +130,8 @@
                 <tr>
                     <td>{l s='Shipping carrier:' mod='sellermania'}</td>
                     <td>
-                        {if empty($sellermania_order.OrderInfo.Transport.Name) && $sellermania_status_to_ship eq 1}
-                            <input type="text" name="shipping_name" id="shipping_name" />
+                        {if $sellermania_status_to_ship eq 1}
+                            <input type="text" name="shipping_name" id="shipping_name" value="{if !empty($sellermania_order.OrderInfo.Transport.Name)}{$sellermania_order.OrderInfo.Transport.Name}{/if}" />
                         {else}
                             {if empty($sellermania_order.OrderInfo.Transport.Name)}-{else}{$sellermania_order.OrderInfo.Transport.Name}{/if}
                         {/if}
