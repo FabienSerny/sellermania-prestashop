@@ -255,4 +255,4 @@
     var cancel_label = '{l s='Cancel' mod='sellermania'}';
     var unknown_label = '{l s='Unknown' mod='sellermania'}';
 </script>
-<script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>
+<script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>

@@ -41,6 +41,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$this->web_path = $web_path;
 		$this->dir_path = $dir_path;
 		$this->context = Context::getContext();
+		$this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
 	}
 
 
@@ -178,6 +179,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		// Include JS script
 		if (Tools::getValue('controller') == 'AdminOrders' || Tools::getValue('tab') == 'AdminOrders')
 		{
+			$this->context->smarty->assign('ps_version', $this->ps_version);
 			$this->context->smarty->assign('sellermania_module_path', $this->web_path);
 			return $this->module->compliantDisplay('displayBackOfficeHeader.tpl');
 		}

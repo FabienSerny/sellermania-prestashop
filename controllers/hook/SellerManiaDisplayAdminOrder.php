@@ -50,6 +50,7 @@ class SellerManiaDisplayAdminOrderController
 		$this->web_path = $web_path;
 		$this->dir_path = $dir_path;
 		$this->context = Context::getContext();
+		$this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
 
 		$this->conditions_list = array(
 			0 => $this->module->l('Unknown', 'sellermaniadisplayadminorder'),
@@ -346,6 +347,7 @@ class SellerManiaDisplayAdminOrderController
 		$order = new Order((int)Tools::getValue('id_order'));
 		$sellermania_currency = new Currency($order->id_currency);
 
+		$this->context->smarty->assign('ps_version', $this->ps_version);
 		$this->context->smarty->assign('sellermania_order', $sellermania_order);
 		$this->context->smarty->assign('sellermania_currency', $sellermania_currency);
 		$this->context->smarty->assign('sellermania_module_path', $this->web_path);
