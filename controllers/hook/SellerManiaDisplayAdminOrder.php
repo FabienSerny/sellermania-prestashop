@@ -300,16 +300,13 @@ class SellerManiaDisplayAdminOrderController
 
 		// Load order and check existings payment
 		$order = new Order((int)$id_order);
-		$use_existings_payment = false;
-		if (!$order->hasInvoice())
-			$use_existings_payment = true;
 
 		// Create new OrderHistory
 		$history = new OrderHistory();
 		$history->id_order = $order->id;
 		$history->id_employee = (int)$this->context->employee->id;
 		$history->id_order_state = (int)$new_order_state;
-		$history->changeIdOrderState((int)$new_order_state, $order, $use_existings_payment);
+		$history->changeIdOrderState((int)$new_order_state, $order);
 		$history->add();
 	}
 
