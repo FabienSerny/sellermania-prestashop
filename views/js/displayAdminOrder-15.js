@@ -1,3 +1,8 @@
+var sellermania_status_update_result = '';
+var sellermania_error_result = '';
+var sellermania_block_product_general_legend = '';
+var sellermania_block_products_list = new Array();
+
 $(document).ready(function() {
 
     // Hide template
@@ -7,8 +12,8 @@ $(document).ready(function() {
     var sellermania_title = $('#sellermania-template-title').html();
     var sellermania_customer = $('#sellermania-template-customer').html();
     var sellermania_order_summary = $('#sellermania-template-order-summary').html();
-    var sellermania_status_update_result = $('#sellermania-template-status-update').html();
-    var sellermania_error_result = $('#sellermania-template-error').html();
+    sellermania_status_update_result = $('#sellermania-template-status-update').html();
+    sellermania_error_result = $('#sellermania-template-error').html();
 
     // Get block identifier
     var sellermania_block_order_state = $('#content div div form #id_order_state');
@@ -20,15 +25,14 @@ $(document).ready(function() {
     var sellermania_block_add_product = $('.add_product').parent();
     var sellermania_block_discount = $('#total_products').parent().parent().parent().next().next();
     var sellermania_block_customer_thread = $('form.container-command-top-spacing').next().next();
-    var sellermania_block_product_general_legend = $('#orderProducts').next();
     var sellermania_block_partial_refund = $('#desc-order-partial_refund');
     var sellermania_block_order_toolbar = $('.bloc-command');
     var sellermania_block_warn = $('.warn');
-    var sellermania_block_products_list = new Array();
 
     // Get products list block identifier
     var sellermania_order_line = 0;
-    var sellermania_block_products_list = new Array();
+    sellermania_block_products_list = new Array();
+    sellermania_block_product_general_legend = $('#orderProducts').next();
     $('#orderProducts tr').each(function() {
         if (sellermania_order_line > 0)
         {
