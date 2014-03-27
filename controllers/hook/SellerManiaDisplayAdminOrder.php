@@ -306,7 +306,7 @@ class SellerManiaDisplayAdminOrderController
 		$history->id_order = $order->id;
 		$history->id_employee = (int)$this->context->employee->id;
 		$history->id_order_state = (int)$new_order_state;
-		$history->changeIdOrderState((int)$new_order_state, $order);
+		$history->changeIdOrderState((int)$new_order_state, $order->id);
 		$history->add();
 	}
 
