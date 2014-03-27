@@ -38,7 +38,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = '23Prod';
-		$this->version = '0.9.8';
+		$this->version = '1.0.0';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -80,7 +80,7 @@ class SellerMania extends Module
 	public function upgrade()
 	{
 		$version_registered = Configuration::get('SM_VERSION');
-		if ($version_registered == '' || version_compare($version_registered, '0.9.8', '<'))
+		if ($version_registered == '' || version_compare($version_registered, '1.0.0', '<'))
 		{
 			if ((int)Configuration::get('PS_OS_SM_SEND') > 0)
 			{
@@ -219,7 +219,7 @@ class SellerMania extends Module
 				$order_state->name = array();
 				foreach ($languages as $key_lang => $iso_lang)
 					if ($key_lang > 0)
-						$order_state->name[$key_lang] = pSQL('Sellermania - '.$order_state_array['label'][$iso_lang]);
+						$order_state->name[$key_lang] = pSQL('Marketplace - '.$order_state_array['label'][$iso_lang]);
 
 				if ($order_state->add())
 				{
@@ -236,7 +236,7 @@ class SellerMania extends Module
 				$order_state->name = array();
 				foreach ($languages as $key_lang => $iso_lang)
 					if ($key_lang > 0)
-						$order_state->name[$key_lang] = pSQL('Sellermania - '.$order_state_array['label'][$iso_lang]);
+						$order_state->name[$key_lang] = pSQL('Marketplace - '.$order_state_array['label'][$iso_lang]);
 
 				$order_state->update();
 			}

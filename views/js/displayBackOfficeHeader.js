@@ -8,7 +8,7 @@ $(document).ready(function() {
         var flag_sellermania = 0;
 
         $(this).find('td').each(function() {
-            if (column == 7 && $(this).text().trim().toLowerCase().indexOf("sellermania") >= 0)
+            if (column == 7 && $(this).text().trim().toLowerCase().indexOf("marketplace") >= 0)
                 flag_sellermania = 1;
             else if (column == 9 && flag_sellermania == 1)
                 $(this).html('&nbsp;');
