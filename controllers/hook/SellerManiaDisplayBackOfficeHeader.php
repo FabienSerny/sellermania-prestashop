@@ -145,7 +145,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		if ($next_import == '' || $next_import < date('Y-m-d H:i:s') || Tools::getValue('debug') == 'import')
 		{
 			// Update next import
-			$next_import = date("Y-m-d H:i:s", strtotime('+1 hour'));
+			$next_import = date("Y-m-d H:i:s", strtotime('+15 minutes'));
 			Configuration::updateValue('SM_NEXT_IMPORT', $next_import);
 
 			// It's time!
