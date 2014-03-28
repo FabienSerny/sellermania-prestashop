@@ -27,6 +27,9 @@
 $config_path = dirname(__FILE__).'/../../config/config.inc.php';
 $module_path = dirname(__FILE__).'/sellermania.php';
 
+// Set _PS_ADMIN_DIR_ define
+define('_PS_ADMIN_DIR_', getcwd());
+
 // Keep going if config script is found
 if (file_exists($config_path))
 {

@@ -231,12 +231,14 @@ class SellerManiaExportController
 	public function run()
 	{
 		// Init
+		global $argv;
 		$argument_key = '';
 		if (isset($argv[1]))
 			$argument_key = $argv[1];
 
-		// Include config file and set default Shop
-		define('_PS_ADMIN_DIR_', getcwd());
+		// Set _PS_ADMIN_DIR_ define and set default Shop
+		if (!defined('_PS_ADMIN_DIR_'))
+			define('_PS_ADMIN_DIR_', getcwd());
 		$this->context->shop->setContext(4);
 
 		// Check if SellerMania key exists
