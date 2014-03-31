@@ -217,6 +217,10 @@ class SellerManiaImportOrderController
 					$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
 			}
 
+		// Fix total products
+		if ($this->data['OrderInfo']['Amount']['Price'] < 0)
+			$this->data['OrderInfo']['Amount']['Price'] = 0;
+
 		// Fix paiement date
 		if (!isset($this->data['Paiement']['Date']))
 			$this->data['Paiement']['Date'] = date('Y-m-d H:i:s');
