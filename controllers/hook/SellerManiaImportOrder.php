@@ -216,6 +216,16 @@ class SellerManiaImportOrderController
 				// Fix Ean
 				if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
 					$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
+
+				// Fix Sku
+				if (!isset($this->data['OrderInfo']['Product'][$kp]['Sku']))
+					$this->data['OrderInfo']['Product'][$kp]['Sku'] = '';
+
+				// Fix non existing variable
+				if (!isset($this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total']))
+					$this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'] = 0;
+				if (!isset($this->data['OrderInfo']['Product'][$kp]['Amount']['Price']))
+					$this->data['OrderInfo']['Product'][$kp]['Amount']['Price'] = 0;
 			}
 
 		// Fix paiement date
