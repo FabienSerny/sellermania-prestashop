@@ -46,3 +46,10 @@ if (version_compare(PHP_VERSION, '5.3.0') >= 0)
 
 // Set time limit
 set_time_limit(1200);
+
+// Debug Sellermania mode can be enabled only adding _SELLERMANIA_DEBUG_ define to your settings file
+if (defined('_SELLERMANIA_DEBUG_'))
+{
+	if (Tools::getValue('sellermania') == 'deleteOrders')
+		Db::getInstance()->execute('TRUNCATE `ps_sellermania_order`');
+}
