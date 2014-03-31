@@ -183,6 +183,8 @@ class SellerManiaImportOrderController
 		$this->data['OrderInfo']['OptionalFeaturePrice'] = 0;
 		$this->data['OrderInfo']['TotalPromotionDiscount'] = 0;
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
+		{
+			// If it's not a cancelled product
 			if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_SELLER)
 			{
 				// Calcul total product without tax
@@ -212,21 +214,22 @@ class SellerManiaImportOrderController
 
 				// Create order detail (only create order detail for unmatched product)
 				$this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
-
-				// Fix Ean
-				if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
-					$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
-
-				// Fix Sku
-				if (!isset($this->data['OrderInfo']['Product'][$kp]['Sku']))
-					$this->data['OrderInfo']['Product'][$kp]['Sku'] = '';
-
-				// Fix non existing variable
-				if (!isset($this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total']))
-					$this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'] = 0;
-				if (!isset($this->data['OrderInfo']['Product'][$kp]['Amount']['Price']))
-					$this->data['OrderInfo']['Product'][$kp]['Amount']['Price'] = 0;
 			}
+
+			// Fix Ean
+			if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
+				$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
+
+			// Fix Sku
+			if (!isset($this->data['OrderInfo']['Product'][$kp]['Sku']))
+				$this->data['OrderInfo']['Product'][$kp]['Sku'] = '';
+
+			// Fix non existing variable
+			if (!isset($this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total']))
+				$this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'] = 0;
+			if (!isset($this->data['OrderInfo']['Product'][$kp]['Amount']['Price']))
+				$this->data['OrderInfo']['Product'][$kp]['Amount']['Price'] = 0;
+		}
 
 		// Fix paiement date
 		if (!isset($this->data['Paiement']['Date']))
