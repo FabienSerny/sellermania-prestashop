@@ -176,6 +176,7 @@ class SellerManiaImportOrderController
 			$this->data['OrderInfo']['Product'] = array($this->data['OrderInfo']['Product']);
 
 		// Calcul total product without tax
+		$this->data['OrderInfo']['TotalProductsWithVAT'] = 0;
 		$this->data['OrderInfo']['TotalProductsWithoutVAT'] = 0;
 		$this->data['OrderInfo']['TotalInsurance'] = 0;
 		$this->data['OrderInfo']['RefundedAmount'] = 0;
@@ -190,8 +191,8 @@ class SellerManiaImportOrderController
 				if (isset($product['VatRate']))
 					$vat_rate = 1 + ($product['VatRate'] / 10000);
 				$product_tax = $product_price * ($vat_rate - 1);
-				$product_price = $product_price / $vat_rate;
-				$this->data['OrderInfo']['TotalProductsWithoutVAT'] += $product_price;
+				$this->data['OrderInfo']['TotalProductsWithoutVAT'] += (($product_price / $vat_rate) * $product['QuantityPurchased']);
+				$this->data['OrderInfo']['TotalProductsWithVAT'] += ($product_price * $product['QuantityPurchased']);
 
 				// Calcul total Insurance
 				if (isset($product['InsurancePrice']['Amount']['Price']))
@@ -216,10 +217,6 @@ class SellerManiaImportOrderController
 				if (!isset($this->data['OrderInfo']['Product'][$kp]['Ean']))
 					$this->data['OrderInfo']['Product'][$kp]['Ean'] = '';
 			}
-
-		// Fix total products
-		if ($this->data['OrderInfo']['Amount']['Price'] < 0)
-			$this->data['OrderInfo']['Amount']['Price'] = 0;
 
 		// Fix paiement date
 		if (!isset($this->data['Paiement']['Date']))
@@ -452,7 +449,7 @@ class SellerManiaImportOrderController
 			'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
 			'total_paid_real' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
 			'total_products' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'],
-			'total_products_wt' => (float)$this->data['OrderInfo']['Amount']['Price'],
+			'total_products_wt' => (float)$this->data['OrderInfo']['TotalProductsWithVAT'],
 			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
 		);
@@ -534,7 +531,7 @@ class SellerManiaImportOrderController
 			'total_paid_tax_excl' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'] + (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_paid_real' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
 			'total_products' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'],
-			'total_products_wt' => (float)$this->data['OrderInfo']['Amount']['Price'],
+			'total_products_wt' => (float)$this->data['OrderInfo']['TotalProductsWithVAT'],
 			'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_shipping_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
 			'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
