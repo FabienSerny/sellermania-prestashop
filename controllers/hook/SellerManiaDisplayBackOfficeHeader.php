@@ -90,8 +90,18 @@ class SellerManiaDisplayBackOfficeHeaderController
 							$smo = new SellermaniaOrder((int)$id_sellermania_order);
 							if ($smo->id_order > 0)
 							{
-								$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
-								$sdao->refreshOrderStatus($smo->id_order, $order);
+								try
+								{
+									$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+									$sdao->refreshOrderStatus($smo->id_order, $order);
+								}
+								catch (\Exception $e)
+								{
+									// Log error
+									$log = '[UPDATE] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+									$log .= var_export($order, true)."\n";
+									file_put_contents(dirname(__FILE__).'/../../log/order-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+								}
 							}
 						}
 						else
@@ -127,6 +137,11 @@ class SellerManiaDisplayBackOfficeHeaderController
 								$import_order->preprocessData();
 								$import_order->order->id = 0;
 								$import_order->saveSellermaniaOrder($e->getMessage());
+
+								// Log error
+								$log = '[INSERT] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+								$log .= var_export($order, true)."\n";
+								file_put_contents(dirname(__FILE__).'/../../log/order-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
 							}
 						}
 					}
