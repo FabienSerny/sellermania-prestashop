@@ -476,11 +476,6 @@ class SellerManiaImportOrderController
 	 */
 	public function fixOrderDetail14($id_order, $product)
 	{
-		// If product ID does not match with default Sellermania product ID,
-		// it means the product is matched and is already in order details
-		if ($product['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID'))
-			return true;
-
 		// Calcul price without tax
 		$product_price_with_tax = $product['Amount']['Price'];
 		$vat_rate = 1 + ($product['VatRate'] / 10000);
@@ -588,11 +583,6 @@ class SellerManiaImportOrderController
 	 */
 	public function fixOrderDetail15($id_order, $product)
 	{
-		// If product ID does not match with default Sellermania product ID,
-		// it means the product is matched and is already in order details
-		if ($product['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID'))
-			return true;
-
 		// Calcul prices
 		if (!isset($product['VatRate']))
 			$product['VatRate'] = 0;
