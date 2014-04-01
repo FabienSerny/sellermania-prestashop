@@ -210,7 +210,7 @@ class SellerManiaImportOrderController
 
 				// Calcul total optional feature price
 				if (isset($product['OptionalFeaturePrice']['Amount']['Price']))
-					$this->data['OrderInfo']['OptionalFeaturePrice'] += $product['OptionalFeaturePrice']['Amount']['Price'];
+					$this->data['OrderInfo']['OptionalFeaturePrice'] += $product['OptionalFeaturePrice']['Amount']['Price'] * $product['QuantityPurchased'];
 
 				// Create order detail (only create order detail for unmatched product)
 				$this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
