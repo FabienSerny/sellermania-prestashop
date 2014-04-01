@@ -252,7 +252,7 @@ class SellerMania extends Module
 		if (Configuration::get('SM_DEFAULT_PRODUCT_ID') > 0)
 			return true;
 
-		$label = $this->l('Sellermania product');
+		$label = 'Sellermania product';
 
 		$product = new Product();
 		$product->name = array((int)Configuration::get('PS_LANG_DEFAULT') => pSQL($label));
