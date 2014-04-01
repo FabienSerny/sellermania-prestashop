@@ -167,8 +167,8 @@ class SellerManiaExportController
 				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
 				$rowCopy['ecotax'] = $declination['ecotax'];
 				$rowCopy['quantity'] = $declination['quantity'];
-				$rowCopy['reference'] = $declination['reference'];
-				$rowCopy['ean13'] = (isset($declination['ean13']) ? $declination['ean13'] : '');
+				$rowCopy['reference'] = (!empty($declination['reference']) ? $declination['reference'] : $row['reference']);
+				$rowCopy['ean13'] = (!empty($declination['ean13']) ? $declination['ean13'] : $row['ean13']);
 				if (isset($declination['images']) && count($declination['images']) >= 1)
 					$rowCopy['images'] = $declination['images'];
 				$rowCopy['attributes_values'] = $declination['attributes_values'];
