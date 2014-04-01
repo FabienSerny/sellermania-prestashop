@@ -74,7 +74,7 @@
                 <tbody>
                     <tr>
                         <td>{l s='Total products:' mod='sellermania'}</td>
-                        <td>{displayPrice price=($sellermania_order.OrderInfo.Amount.Price - $sellermania_order.OrderInfo.TotalInsurance) currency=$sellermania_currency->id}</td>
+                        <td>{displayPrice price=($sellermania_order.OrderInfo.TotalProductsWithVAT) currency=$sellermania_currency->id}</td>
                     </tr>
                     <tr>
                         <td>{l s='Shipping:' mod='sellermania'}</td>
