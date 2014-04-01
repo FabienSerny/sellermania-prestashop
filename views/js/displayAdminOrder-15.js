@@ -74,4 +74,6 @@ $(document).ready(function() {
     $('.product_action').hide();
     $('.partial_refund_fields').next().hide();
 
+    // Hide total at the bottom of the screen
+    $('#total_products').parent().parent().hide();
 });
