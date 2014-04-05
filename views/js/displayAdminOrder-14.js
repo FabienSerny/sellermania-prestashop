@@ -15,7 +15,28 @@ $(document).ready(function() {
     sellermania_status_update_result = $('#sellermania-template-status-update').html();
     sellermania_error_result = $('#sellermania-template-error').html();
 
-    // Get block identifier
+    // Get block identifiers
+    if ($('.path_bar').next().is('h2'))
+    {
+        // FOR 1.4.10
+        var sellermania_block_order_state = $('#content div form select[name="id_order_state"]');
+        var sellermania_block_order_state_button = $('#content div form input[name="submitState"]');
+        var sellermania_block_customer = sellermania_block_order_state.parent().next().next();
+        var sellermania_block_button_prev_next = $('#content h2');
+        var sellermania_block_next_button_prev_next = sellermania_block_order_state.parent().prev().prev().prev().prev();
+        var sellemernia_right_column = sellermania_block_button_prev_next.next().next();
+        var sellermania_block_address1 = sellermania_block_button_prev_next.next().next().next().next().next();
+        var sellermania_block_address2 = sellermania_block_address1.next();
+        var sellermania_block_customer_thread = sellermania_block_address2.next().next().next().next().next();
+        var sellermania_block_discount = sellermania_block_customer_thread.next();
+        var sellermania_block_cancel_button = $('#content form fieldset div div input');
+
+        var sellermania_cancel_check =  $('.cancelCheck');
+        var sellermania_cancel_quantity =  $('.cancelQuantity');
+    }
+    else
+    {
+        // LOWER THAN 1.4.10
     var sellermania_block_order_state = $('#content div form select[name="id_order_state"]');
     var sellermania_block_order_state_button = $('#content div form input[name="submitState"]');
     var sellermania_block_customer = $('#content div h2').next().next().next().next().next().next().next();
@@ -27,6 +48,10 @@ $(document).ready(function() {
     var sellermania_block_customer_thread = sellermania_block_address2.next().next().next().next().next();
     var sellermania_block_discount = sellermania_block_customer_thread.next();
     var sellermania_block_cancel_button = $('#content form fieldset div div input');
+
+    var sellermania_cancel_check =  $('.cancelCheck');
+    var sellermania_cancel_quantity =  $('.cancelQuantity');
+    }
 
     // Get products list block identifier
     var sellermania_order_line = 0;
@@ -66,8 +91,6 @@ $(document).ready(function() {
     sellermania_block_cancel_button.hide();
 
     // Hide column products
-    $('.cancelCheck').hide();
-    $('.cancelQuantity').hide();
-    $('#orderProducts tbody tr th').next().next().next().next().next().next().hide();
-
+    sellermania_cancel_check.html(' ');
+    sellermania_cancel_quantity.html(' ');
 });
