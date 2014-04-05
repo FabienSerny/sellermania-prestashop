@@ -159,7 +159,7 @@
             {/if}
             {if is_array($sellermania_shipping_status_update)}
                     <br clear="left" /><br />
-                    <div class="{if $sellermania_shipping_status_update.Status eq 'SUCCESS'}conf{else}error{/if}" style="float:left">
+                    <div class="{if $sellermania_shipping_status_update.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}" style="float:left">
                         {l s='Status change result:' mod='sellermania'}<br>
                         <ul>
                             {foreach from=$sellermania_shipping_status_update.OrderItemConfirmationStatus item=result}
@@ -189,7 +189,7 @@
     {if is_array($sellermania_status_update)}
     <div id="sellermania-template-status-update">
         <br clear="left" /><br />
-        <div class="{if $sellermania_status_update.Status eq 'SUCCESS'}conf{else}error{/if}" style="float:left">
+        <div class="{if $sellermania_status_update.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}" style="float:left">
             {l s='Status change result:' mod='sellermania'}<br>
             <ul>
                 {foreach from=$sellermania_status_update.OrderItemConfirmationStatus item=result}
@@ -206,7 +206,7 @@
     {if isset($sellermania_error)}
     <div id="sellermania-template-error">
         <br clear="left" /><br />
-        <div class="error" style="float:left">
+        <div class="error alert alert-danger" style="float:left">
             {$sellermania_error}
         </div>
     </div>
