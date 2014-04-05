@@ -41,8 +41,8 @@ $(document).ready(function() {
     // Add button check all
     if (nb_buttons > 0)
     {
-        var sellermania_html_buttons_all = '<input type="button" value="Confirm all products" id="sellermania_confirm_all_products" class="button" />';
-        sellermania_html_buttons_all += '<input type="button" value="Cancel all products" id="sellermania_cancel_all_products" class="button" />';
+        var sellermania_html_buttons_all = '<input type="button" value="Confirm all products" id="sellermania_confirm_all_products" class="button btn btn-default" />';
+        sellermania_html_buttons_all += '<input type="button" value="Cancel all products" id="sellermania_cancel_all_products" class="button btn btn-default" />';
         sellermania_block_product_general_legend.html(sellermania_html_buttons_all);
         sellermania_block_product_general_legend.show();
 
@@ -97,7 +97,7 @@ $(document).ready(function() {
         if (sellermania_status_defined > 0)
         {
             // Display submit
-            sellermania_block_product_general_legend.html('<input type="button" id="sellermania_register_status" value="Register status" class="button" />');
+            sellermania_block_product_general_legend.html('<input type="button" id="sellermania_register_status" value="Register status" class="button btn btn-default" />');
 
             // Generate form and submit it
             $('#sellermania_register_status').click(function() {

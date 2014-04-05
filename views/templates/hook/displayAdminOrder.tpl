@@ -155,7 +155,7 @@
             </table>
             {if $sellermania_status_to_ship eq 1}
                 <input type="hidden" name="sellermania_tracking_registration" value="yes" />
-                <p align="center"><input type="submit" value="{l s='Validate' mod='sellermania'}" class="button" /></p>
+                <p align="center"><input type="submit" value="{l s='Validate' mod='sellermania'}" class="button btn btn-default" /></p>
             {/if}
             {if is_array($sellermania_shipping_status_update)}
                     <br clear="left" /><br />

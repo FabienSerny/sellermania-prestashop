@@ -30,6 +30,7 @@ $(document).ready(function() {
     var sellermania_block_payment = $('#formAddPayment').parent().parent().parent();
     var sellermania_block_documents = $('#tabOrder li').next();
     var sellermania_add_voucher = $('#add_voucher');
+    var sellermania_add_product = $('#add_product');
     var sellermania_panel_voucher = $('.panel-vouchers');
     var sellermania_panel_total = $('.panel-vouchers').next();
     var sellermania_toolbar = $('.icon-calendar-empty').parent().parent().parent();
@@ -68,9 +69,11 @@ $(document).ready(function() {
     sellermania_block_payment.hide();
     sellermania_block_documents.hide();
     sellermania_add_voucher.hide();
+    sellermania_add_product.hide();
     sellermania_panel_voucher.hide();
     sellermania_panel_total.hide();
     sellermania_toolbar.hide();
+    $('.product_action').hide();
 
     // Legend
     sellermania_block_product_general_legend.hide();
