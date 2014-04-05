@@ -37,20 +37,20 @@ $(document).ready(function() {
     else
     {
         // LOWER THAN 1.4.10
-    var sellermania_block_order_state = $('#content div form select[name="id_order_state"]');
-    var sellermania_block_order_state_button = $('#content div form input[name="submitState"]');
-    var sellermania_block_customer = $('#content div h2').next().next().next().next().next().next().next();
-    var sellermania_block_button_prev_next = $('#content div h2');
-    var sellermania_block_next_button_prev_next = $('#content div h2').next();
-    var sellemernia_right_column = $('.path_bar').next().next().next().next();
-    var sellermania_block_address1 = sellermania_block_button_prev_next.parent().next().next().next().next();
-    var sellermania_block_address2 = sellermania_block_address1.next();
-    var sellermania_block_customer_thread = sellermania_block_address2.next().next().next().next().next();
-    var sellermania_block_discount = sellermania_block_customer_thread.next();
-    var sellermania_block_cancel_button = $('#content form fieldset div div input');
+        var sellermania_block_order_state = $('#content div form select[name="id_order_state"]');
+        var sellermania_block_order_state_button = $('#content div form input[name="submitState"]');
+        var sellermania_block_customer = $('#content div h2').next().next().next().next().next().next().next();
+        var sellermania_block_button_prev_next = $('#content div h2');
+        var sellermania_block_next_button_prev_next = $('#content div h2').next();
+        var sellemernia_right_column = $('.path_bar').next().next().next().next();
+        var sellermania_block_address1 = sellermania_block_button_prev_next.parent().next().next().next().next();
+        var sellermania_block_address2 = sellermania_block_address1.next();
+        var sellermania_block_customer_thread = sellermania_block_address2.next().next().next().next().next();
+        var sellermania_block_discount = sellermania_block_customer_thread.next();
+        var sellermania_block_cancel_button = $('#content form fieldset div div input');
 
-    var sellermania_cancel_check =  $('.cancelCheck');
-    var sellermania_cancel_quantity =  $('.cancelQuantity');
+        var sellermania_cancel_check =  $('.cancelCheck');
+        var sellermania_cancel_quantity =  $('.cancelQuantity');
     }
 
     // Get products list block identifier
