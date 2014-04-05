@@ -140,7 +140,7 @@ class SellerManiaGetContentController
 	{
 		$this->saveConfiguration();
 		$this->assignData();
-		return $this->module->compliantDisplay('displayGetContent.tpl');
+		return $this->module->compliantDisplay('displayGetContent'.(isset($this->module->bootstrap) ? '.bootstrap' : '').'.tpl');
 	}
 }
 

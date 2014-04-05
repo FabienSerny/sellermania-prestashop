@@ -43,8 +43,13 @@ class SellerMania extends Module
 
 		parent::__construct();
 
+		// If PS 1.4, we use backward compatibility
 		if (version_compare(_PS_VERSION_, '1.5') < 0)
 			require(dirname(__FILE__).'/backward/backward.php');
+
+		// If PS 1.6 or greater, we enable bootstrap
+		if (version_compare(_PS_VERSION_, '1.6.0') >= 0)
+			$this->bootstrap = true;
 
 		$this->displayName = $this->l('SellerMania');
 		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
