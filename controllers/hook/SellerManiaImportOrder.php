@@ -498,14 +498,24 @@ class SellerManiaImportOrderController
 		);
 
 
-		// We check if a default Sellermania product is in Order Detail
-		// If yes, we update it, if not, we create a new Order Detail
-		$id_order_detail = Db::getInstance()->getValue('
+		// We check if the product has a match
+		// If yes, we update it, if not, we continue
+		$id_order_detail = (int)Db::getInstance()->getValue('
 		SELECT `id_order_detail`
 		FROM `'._DB_PREFIX_.'order_detail`
 		WHERE `id_order` = '.(int)$id_order.'
-		AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
-		AND `product_name` = \'Sellermania product\'');
+		AND `product_reference` = \''.pSQL($product['Sku']).'\'');
+
+		// We check if a default Sellermania product is in Order Detail
+		// If yes, we update it, if not, we create a new Order Detail
+		if ($id_order_detail < 1)
+			$id_order_detail = (int)Db::getInstance()->getValue('
+			SELECT `id_order_detail`
+			FROM `'._DB_PREFIX_.'order_detail`
+			WHERE `id_order` = '.(int)$id_order.'
+			AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
+			AND `product_name` = \'Sellermania product\'');
+
 		if ($id_order_detail > 0)
 		{
 			$where = '`id_order` = '.(int)$id_order.' AND `id_order_detail` = '.(int)$id_order_detail;
@@ -626,15 +636,24 @@ class SellerManiaImportOrderController
 			'total_amount' => (float)((float)$product['ProductVAT']['total'] * (int)$product['QuantityPurchased']),
 		);
 
-
-		// We check if a default Sellermania product is in Order Detail
-		// If yes, we update it, if not, we create a new Order Detail
-		$id_order_detail = Db::getInstance()->getValue('
+		// We check if the product has a match
+		// If yes, we update it, if not, we continue
+		$id_order_detail = (int)Db::getInstance()->getValue('
 		SELECT `id_order_detail`
 		FROM `'._DB_PREFIX_.'order_detail`
 		WHERE `id_order` = '.(int)$id_order.'
-		AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
-		AND `product_name` = \'Sellermania product\'');
+		AND `product_reference` = \''.pSQL($product['Sku']).'\'');
+
+		// We check if a default Sellermania product is in Order Detail
+		// If yes, we update it, if not, we create a new Order Detail
+		if ($id_order_detail < 1)
+			$id_order_detail = Db::getInstance()->getValue('
+			SELECT `id_order_detail`
+			FROM `'._DB_PREFIX_.'order_detail`
+			WHERE `id_order` = '.(int)$id_order.'
+			AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
+			AND `product_name` = \'Sellermania product\'');
+
 		if ($id_order_detail > 0)
 		{
 			$where = '`id_order` = '.(int)$id_order.' AND `id_order_detail` = '.(int)$id_order_detail;
