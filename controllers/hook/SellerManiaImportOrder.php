@@ -372,6 +372,10 @@ class SellerManiaImportOrderController
 
 		// Fix order depending on version
 		$this->fixOrder(true);
+
+		// Since we update the order values by direct SQL request, we need to flush the Object cache
+		// "changeIdOrderState" method uses order "update" method (old values were set again)
+		$this->order->clearCache();
 	}
 
 	/**
