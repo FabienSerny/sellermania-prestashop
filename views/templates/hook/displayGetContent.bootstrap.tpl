@@ -76,6 +76,12 @@
                                     <input type="text" name="sm_confirm_order_endpoint" value="{$sm_confirm_order_endpoint}" />
                                 </div>
                             </div>
+                            {if empty($sm_order_email)}
+                                <div class="form-group clearfix">
+                                    <strong><u>{l s='Note:' mod='sellermania'}</u></strong>
+                                    {l s='These four credentials are provided by Sellermania, if you don\'t have them, please contact Sellermania.' mod='sellermania'}
+                                </div>
+                            {/if}
                         </div>
                     </div>
                     <div class="panel-footer">
