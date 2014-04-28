@@ -73,11 +73,11 @@ class SellerManiaImportOrderController
 	public function preprocessData()
 	{
 		// Forbidden characters
-		$forbidden_characters = array('_', '/');
+		$forbidden_characters = array('_', '/', '(', ')', '*');
 
 		// Fix name
 		$this->data['User'][0]['OriginalName'] = $this->data['User'][0]['Name'];
-		$this->data['User'][0]['Name'] = str_replace('*', '', $this->data['User'][0]['Name']);
+		$this->data['User'][0]['Name'] = str_replace($forbidden_characters, '', $this->data['User'][0]['Name']);
 		$this->data['User'][0]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][0]['Name']);
 		if (strpos($this->data['User'][0]['Name'], '/'))
 		{
