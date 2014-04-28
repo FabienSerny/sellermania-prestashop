@@ -238,7 +238,9 @@
 
 </div>
 
-
+{* Fix to avoid JS error on google map load since PS 1.6.0.6 *}
+<div id="map-delivery-canvas" style="display:none"></div>
+<div id="map-invoice-canvas" style="display:none"></div>
 
 {*****************************************}
 {*************** JS DATA *****************}
