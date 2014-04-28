@@ -117,7 +117,7 @@ class SellerManiaImportOrderController
 		$this->data['User'][0]['LastName'] = substr($lastname, 0, 32);
 		$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = '0100000000';
 		if (!empty($shipping_phone))
-			$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = substr($shipping_phone, 0, 16);
+			$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = substr(str_replace($forbidden_characters, ' ', $shipping_phone), 0, 16);
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
 		// Set currency sign
