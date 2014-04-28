@@ -157,6 +157,7 @@ class SellerManiaImportOrderController
 
 
 		// Fix address
+		$this->data['User'][0]['Company'] = substr(str_replace($forbidden_characters, ' ', $this->data['User'][0]['Company']), 0, 32);
 		$this->data['User'][0]['Address']['Street1'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['Street1']);
 		$this->data['User'][0]['Address']['Street2'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['Street2']);
 		$this->data['User'][0]['Address']['City'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['City']);
