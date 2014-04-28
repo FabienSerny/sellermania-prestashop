@@ -109,7 +109,7 @@ class SellerManiaImportOrderController
 
 		// Retrieve currency
 		$currency_iso_code = 'EUR';
-		if (isset($this->data['OrderInfo']['Amount']['Currency']))
+		if (isset($this->data['OrderInfo']['Amount']['Currency']) && Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']) > 0)
 			$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
 
 		// Refill data
