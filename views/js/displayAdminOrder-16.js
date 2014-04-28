@@ -85,7 +85,7 @@ $(document).ready(function() {
 
     // Replace right column
     sellermania_right_column.html(sellermania_order_summary);
-    sellermania_block_shipping.html(sellermania_customer)
+    sellermania_block_shipping.html(sellermania_customer);
 
     // Hide order actions
     sellermania_block_order_actions.hide();
