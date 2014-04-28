@@ -76,6 +76,17 @@ $(document).ready(function() {
         sellermania_order_line++;
     });
 
+    // Fix for 1.6.0.6
+    if ($('#addressShipping .thumbnail').length < 1)
+    {
+        sellermania_block_order_state = $('#id_order_state_chosen');
+        sellermania_block_button_prev_next = $('#content .row .col-lg-7 .panel .panel-heading');
+        sellermania_block_order_actions = sellermania_block_button_prev_next.next();
+        sellermania_block_payment = $('#formAddPayment').parent();
+        sellermania_toolbar = $('.icon-calendar-empty').parent().parent().parent().parent();
+        sellermania_block_product_general_legend = $('#orderProducts').parent().next().next().next().find('div:first');
+        $('#messages').parent().hide();
+    }
 
 
     // Replace status order selection
