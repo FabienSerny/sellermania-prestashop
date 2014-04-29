@@ -346,8 +346,14 @@ class SellerManiaImportOrderController
 		$this->context->customer->email = 'NOSEND-SM';
 		$this->context->customer->clearCache();
 
-		// Create order
+		// Retrieve amount paid
 		$amount_paid = (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
+
+		// Fix for PS 1.4 to avoid PS_OS_ERROR status, amount paid will be fixed after order creation anyway
+		if (version_compare(_PS_VERSION_, '1.5') < 0)
+			$amount_paid = (float)(Tools::ps_round((float)($this->cart->getOrderTotal(true, Cart::BOTH)), 2));
+
+		// Create order
 		$payment_method = $this->data['OrderInfo']['MarketPlace'].' - '.$this->data['OrderInfo']['OrderId'];
 		$payment_module = new SellermaniaPaymentModule();
 		$payment_module->name = $this->module->name;
