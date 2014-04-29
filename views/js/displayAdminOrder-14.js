@@ -104,7 +104,7 @@ $(document).ready(function() {
 
     // Replace right column
     sellemernia_right_column.html(sellermania_order_summary);
-    sellemernia_right_column.css('width', '45%');
+    sellemernia_right_column.css('width', '42%');
 
     // Hide address block, "Add product" button, discount block, message thread customer block and general legend
     sellermania_block_address1.hide();
