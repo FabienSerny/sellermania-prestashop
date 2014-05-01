@@ -180,6 +180,7 @@ class SellerManiaExportController
 			$row['price'] = Product::getPriceStatic($row['id_product'], true, null, 2);
 			$rows = array($row);
 		}
+
 		// Begin rendering
 		$line = '';
 		foreach ($rows as $row)
@@ -204,6 +205,10 @@ class SellerManiaExportController
 					$line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
 				$line .= "\n";
 			}
+
+		// Free memory
+		$row = null;
+
 		$this->renderLine($line, $iso_lang, $output);
 	}
 
@@ -250,7 +255,7 @@ class SellerManiaExportController
 		{
 			// Up time and memory limit
 			set_time_limit(600);
-			ini_set('memory_limit', '64M');
+			ini_set('memory_limit', '256M');
 
 			// If no cart, we create one
 			if (!is_object($this->context->cart))
