@@ -107,6 +107,8 @@ class SellerManiaProduct
 		{
 			// Retrieve context
 			$context = Context::getContext();
+			if (!isset($context->link))
+				$context->link = new Link();
 
 			// Retrieve images corresponding to each declination
 			$ids = array();
