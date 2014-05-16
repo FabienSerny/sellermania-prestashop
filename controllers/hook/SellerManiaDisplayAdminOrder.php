@@ -302,6 +302,10 @@ class SellerManiaDisplayAdminOrderController
 		// Load order and check existings payment
 		$order = new Order((int)$id_order);
 
+		// If order does not exists anymore we stop status update
+		if ($order->id < 1)
+			return false;
+
 		// Create new OrderHistory
 		$history = new OrderHistory();
 		$history->id_order = $order->id;
