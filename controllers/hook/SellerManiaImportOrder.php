@@ -73,7 +73,7 @@ class SellerManiaImportOrderController
 	public function preprocessData()
 	{
 		// Forbidden characters
-		$forbidden_characters = array('_', '/', '(', ')', '*', ';');
+		$forbidden_characters = array('_', '/', '(', ')', '*', ';', '=');
 
 		// Fix name
 		$this->data['User'][0]['OriginalName'] = $this->data['User'][0]['Name'];
@@ -106,6 +106,7 @@ class SellerManiaImportOrderController
 			$shipping_phone = $this->data['User'][0]['ShippingPhone'];
 		if (isset($this->data['User'][0]['UserPhone']) && !empty($this->data['User'][0]['UserPhone']))
 			$shipping_phone = $this->data['User'][0]['UserPhone'];
+		$shipping_phone = substr(str_replace($forbidden_characters, ' ', $shipping_phone), 0, 16);
 
 		// Retrieve currency
 		$currency_iso_code = 'EUR';
@@ -116,8 +117,8 @@ class SellerManiaImportOrderController
 		$this->data['User'][0]['FirstName'] = substr($firstname, 0, 32);
 		$this->data['User'][0]['LastName'] = substr($lastname, 0, 32);
 		$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = '0100000000';
-		if (!empty($shipping_phone))
-			$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = substr(str_replace($forbidden_characters, ' ', $shipping_phone), 0, 16);
+		if (!empty($shipping_phone) && Validate::isPhoneNumber($shipping_phone))
+			$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = $shipping_phone;
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
 		// Set currency sign
