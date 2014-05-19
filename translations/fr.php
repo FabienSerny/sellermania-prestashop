@@ -62,6 +62,12 @@ $_MODULE['<{sellermania}prestashop>displayadminorder_70d9be9b139893aa6c69b5e77e6
 $_MODULE['<{sellermania}prestashop>displayadminorder_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{sellermania}prestashop>displayadminorder_88183b946cc5f0e8c96b2e66e1c74a7e'] = 'Inconnu';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_92e316a9d4cbc0574518eb35db24cb27'] = 'SellerMania';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d0929930c42442a6db4aa07342b7ddfa'] = 'Erreurs d\'importation';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_3b4e304af7c4be4cd3fe1ea62540f640'] = 'commandes n\'ont pas pu être importées, pour plus d\'explications contactez l\'équipe';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_4b730b0376cf11c12078eaf2680edb58'] = 'Froggy Commerce';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_ec8803912680c6e8e1d2e144a390528f'] = 'Tenter de la réimporter durant le prochain import';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_840f19ad548daaf3e5e0aae0323c594f'] = 'Le module essaiera de réimporter cette commande durant le prochain import.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_988fd738de9c6d177440c5dcf69e73ce'] = 'Retour';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_771847b3a8dd3d37f474493428ecca70'] = 'Configuration du module SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_8c4657fcd9c105a1189db23404cd7d6c'] = 'Votre version PHP actuelle est :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_9151835865b71ed67cc009718fdb711b'] = 'Votre version PHP est trop ancienne, vous devez avoir au minimum PHP 5.3 pour faire fonctionner l\'API Sellermania.';
@@ -80,6 +86,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_ad3d06d03d94223fa
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_4930a7655f859a031a7569d1fed96524'] = 'La prochaine importation de commandes n\'aura pas lieu avant :';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_7f9686e49601273d7f90acc988a5eacb'] = 'Erreurs d\'importation :';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_e0ecf87a37a644f03b78cc3d2b81bd35'] = 'commandes n\'ont pas pu être importées';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_8e46f6ecf73c49b1c8962c6dcaa98835'] = 'Voir les détails';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_857ad3e93dd2266a7c1ae04e44f9858a'] = 'Export Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_b6fbf11efeb3341088e2df23d06028c0'] = 'Vous avez deux solutions pour envoyer votre catalogue à SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_b984240384dfae4038b9f5d4a8e46238'] = 'Mettre en place une tâche automatisée (tâche cron)';
@@ -91,6 +100,12 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_7c231695492ff85c2
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_1d00e7dce692e8dc3f6877f035e3a616'] = 'OU';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_718269b9af911f6f5c0973cba5ae4e36'] = 'Envoyer ces liens à SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_92e316a9d4cbc0574518eb35db24cb27'] = 'SellerMania';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_d0929930c42442a6db4aa07342b7ddfa'] = 'Erreurs d\'importation';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_ed39386824c3a230056aef4b02a21406'] = 'commandes n\'ont pas pu être importées, pour plus d\'explications contactez l\'équipe';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_4b730b0376cf11c12078eaf2680edb58'] = 'Froggy Commerce';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_ec8803912680c6e8e1d2e144a390528f'] = 'Tenter de la réimporter durant le prochain import';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_840f19ad548daaf3e5e0aae0323c594f'] = 'Le module essaiera de réimporter cette commande durant le prochain import.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_988fd738de9c6d177440c5dcf69e73ce'] = 'Retour';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_771847b3a8dd3d37f474493428ecca70'] = 'Configuration du module SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_8c4657fcd9c105a1189db23404cd7d6c'] = 'Votre version PHP actuelle est :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_9151835865b71ed67cc009718fdb711b'] = 'Votre version PHP est trop ancienne, vous devez avoir au minimum PHP 5.3 pour faire fonctionner l\'API Sellermania.';
@@ -109,6 +124,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_ad3d06d03d94223fa652babc913
 $_MODULE['<{sellermania}prestashop>displaygetcontent_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_4930a7655f859a031a7569d1fed96524'] = 'La prochaine importation de commandes n\'aura pas lieu avant :';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_7f9686e49601273d7f90acc988a5eacb'] = 'Erreurs d\'importation :';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_e0ecf87a37a644f03b78cc3d2b81bd35'] = 'commandes n\'ont pas pu être importées';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_8e46f6ecf73c49b1c8962c6dcaa98835'] = 'Voir les détails';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_857ad3e93dd2266a7c1ae04e44f9858a'] = 'Export Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_b6fbf11efeb3341088e2df23d06028c0'] = 'Vous avez deux solutions pour envoyer votre catalogue à SellerMania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_b984240384dfae4038b9f5d4a8e46238'] = 'Mettre en place une tâche automatisée (tâche cron)';
