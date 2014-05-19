@@ -73,7 +73,7 @@ class SellerManiaImportOrderController
 	public function preprocessData()
 	{
 		// Forbidden characters
-		$forbidden_characters = array('_', '/', '(', ')', '*', ';', '=');
+		$forbidden_characters = array('_', '/', '(', ')', '*', ';', '=', ',', '!', '?', '.', '+', '*', '$', '%');
 
 		// Fix name
 		$this->data['User'][0]['OriginalName'] = $this->data['User'][0]['Name'];
@@ -173,6 +173,7 @@ class SellerManiaImportOrderController
 				$this->data['User'][0]['Address'][$key] = $value;
 		if (!Validate::isPostCode($this->data['User'][0]['Address']['ZipCode']))
 			$this->data['User'][0]['Address']['ZipCode'] = '00000';
+		$this->data['User'][0]['Address']['ZipCode'] = substr($this->data['User'][0]['Address']['ZipCode'], 0, 12);
 
 		// Fix data (when only one product, array is not the same)
 		if (!isset($this->data['OrderInfo']['Product'][0]))
