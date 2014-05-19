@@ -29,7 +29,7 @@
 <fieldset>
     <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Importation errors' mod='sellermania'}</legend>
     <div class="margin-form" style="padding-left:15px">
-        <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p><br>
+        <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported, for more information please contact the team' mod='sellermania'} <a href="http://www.froggy-commerce.com" target="_blank">{l s='Froggy Commerce' mod='sellermania'}</a>.</p><br>
         <ul>
         {foreach from=$orders_in_error item=order_in_error}
             <li>
