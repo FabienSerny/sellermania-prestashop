@@ -109,6 +109,42 @@ class SellermaniaOrder extends ObjectModel
 		AND `ref_order` = \''.pSQL(trim($ref_order)).'\'');
 	}
 
+	/**
+	 * Get Nb Sellermania orders in error
+	 * @return int
+	 */
+	public static function getNbSellermaniaOrdersInError()
+	{
+		return (int)Db::getInstance()->getValue('
+		SELECT COUNT(`id_sellermania_order`)
+		FROM `'._DB_PREFIX_.'sellermania_order`
+		WHERE `id_order` = 0
+		AND `date_add` > \''.pSQL(date("Y-m-d H:i:s", strtotime('-15 days'))).'\'');
+	}
+
+	/**
+	 * Get Sellermania orders in error
+	 * @return array
+	 */
+	public static function getSellermaniaOrdersInError()
+	{
+		return Db::getInstance()->ExecuteS('
+		SELECT * FROM `'._DB_PREFIX_.'sellermania_order`
+		WHERE `id_order` = 0
+		AND `date_add` > \''.pSQL(date("Y-m-d H:i:s", strtotime('-15 days'))).'\'');
+	}
+
+	/**
+	 * Delete Sellermania order
+	 * @return bool
+	 */
+	public static function deleteSellermaniaOrder($id_sellermania_order)
+	{
+		return Db::getInstance()->getValue('
+		DELETE FROM `'._DB_PREFIX_.'sellermania_order`
+		WHERE `id_order` = 0
+		AND `id_sellermania_order` = '.(int)$id_sellermania_order);
+	}
 
 	/*** Retrocompatibility 1.4 ***/
 
