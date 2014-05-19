@@ -24,6 +24,29 @@
 
 <h2>{l s='SellerMania' mod='sellermania'}</h2>
 
+{if isset($smarty.get.see) && $smarty.get.see eq 'orders-error'}
+
+<fieldset>
+    <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Importation errors' mod='sellermania'}</legend>
+    <div class="margin-form" style="padding-left:15px">
+        <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p><br>
+        <ul>
+        {foreach from=$orders_in_error item=order_in_error}
+            <li>
+                {$order_in_error.id_sellermania_order}) {$order_in_error.marketplace} - {$order_in_error.ref_order} ({$order_in_error.amount_total}) : {$order_in_error.customer_name}<br>
+                <b>{$order_in_error.error}</b><br>
+                <a href="{$module_url}&reimport={$order_in_error.id_sellermania_order}">{l s='Try to reimport during next importation' mod='sellermania'}</a>
+                <br><br>
+            </li>
+        {/foreach}
+        </ul>
+
+        <p><u><a href="{$module_url}">{l s='Return' mod='sellermania'}</a></u></p>
+    </div>
+</fieldset>
+
+{else}
+
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
     <fieldset>
         <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='SellerMania configuration' mod='sellermania'}</legend>
@@ -57,6 +80,11 @@
                 <div class="margin-form" style="padding-left:15px">
                     <p>{l s='The last order importation was done:' mod='sellermania'} <b>{$sm_last_import}</b></p>
                     <p>{l s='Next order importation won\'t be done until:' mod='sellermania'} <b>{$sm_next_import}</b></p>
+                    {if $nb_orders_in_error gt 0}
+                        <br>
+                        <h4>{l s='Importation errors:' mod='sellermania'}</h4>
+                        <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p>
+                    {/if}
                 </div>
             {/if}
         {/if}
@@ -93,3 +121,5 @@
 </fieldset>
 
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayGetContent.js"></script>
+
+{/if}

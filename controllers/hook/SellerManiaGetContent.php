@@ -93,6 +93,14 @@ class SellerManiaGetContentController
 			$export_directory_writable = 1;
 		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
 		$smec = new SellerManiaExportController();
+		$module_url = 'index.php?controller='.Tools::getValue('controller').'&tab='.Tools::getValue('tab').'&token='.Tools::getValue('token');
+		$module_url .= '&configure='.Tools::getValue('configure').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'';
+
+		// Retrieve orders in error
+		if (Tools::getValue('reimport') > 0)
+			SellermaniaOrder::deleteSellermaniaOrder((int)Tools::getValue('reimport'));
+		$orders_in_error = SellermaniaOrder::getSellermaniaOrdersInError();
+		$nb_orders_in_error = count($orders_in_error);
 
 		// Check if file exists and retrieve the creation date
 		$files_list = array();
@@ -113,6 +121,10 @@ class SellerManiaGetContentController
 			$this->context->smarty->assign('no_namespace_compatibility', '1');
 		}
 
+		$this->context->smarty->assign('orders_in_error', $orders_in_error);
+		$this->context->smarty->assign('nb_orders_in_error', $nb_orders_in_error);
+
+		$this->context->smarty->assign('module_url', $module_url);
 		$this->context->smarty->assign('script_path', $this->dir_path);
 		$this->context->smarty->assign('export_directory_writable', $export_directory_writable);
 		$this->context->smarty->assign('module_web_path', $module_web_path);
@@ -127,7 +139,7 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
 		$this->context->smarty->assign('sm_confirm_order_endpoint', Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
 
-		$this->context->smarty->assign('sm_last_import', date('Y-m-d H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -1 hour')));
+		$this->context->smarty->assign('sm_last_import', date('Y-m-d H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -15 minutes')));
 		$this->context->smarty->assign('sm_next_import', Configuration::get('SM_NEXT_IMPORT'));
 	}
 
@@ -138,7 +150,8 @@ class SellerManiaGetContentController
 	 */
 	public function run()
 	{
-		$this->saveConfiguration();
+		if (Tools::getValue('see') != 'orders-error')
+			$this->saveConfiguration();
 		$this->assignData();
 		return $this->module->compliantDisplay('displayGetContent'.(isset($this->module->bootstrap) ? '.bootstrap' : '').'.tpl');
 	}
