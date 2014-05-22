@@ -40,7 +40,7 @@ class SellerManiaExportController
 		'quantity' => 'int', 'price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
 		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
 		'name' => 'string', 'images' => 'string', 'category_default' => 'string',
-		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
+		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string', 'tags' => 'string',
 		'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
 	);
 
@@ -109,6 +109,13 @@ class SellerManiaExportController
 		if ($output == 'file')
 			$this->delete_export_files($iso_lang);
 
+		// If output is displayed, we force format download
+		if ($output == 'display' && Tools::getValue('display') != 'inline')
+		{
+			header('Content-type: application/vnd.ms-excel');
+			header('Content-disposition: attachment; filename="sellermania.csv"');
+		}
+
 		// Init
 		if (!empty($iso_lang))
 			$languages_list = array(array('iso_code' => $iso_lang));
@@ -124,6 +131,7 @@ class SellerManiaExportController
 			$result = SellerManiaProduct::getProductsRequest($id_lang, $start, $limit);
 			while ($row = Db::getInstance()->nextRow($result))
 			{
+				$row['tags'] = SellerManiaProduct::getProductTags($row['id_product'], $id_lang);
 				$row['declinations'] = SellerManiaProduct::getProductDeclinations($row['id_product'], $id_lang);
 				$row['images'] = SellerManiaProduct::getImages($row['id_product']);
 				$this->renderExport($row, $iso_lang, $output);

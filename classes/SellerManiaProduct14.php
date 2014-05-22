@@ -132,6 +132,31 @@ class SellerManiaProduct
 		return $combinations;
 	}
 
+	/**
+	 * Get product tags
+	 * @param integer $id_product
+	 * @param integer $id_lang
+	 * @return string
+	 */
+	public static function getProductTags($id_product, $id_lang)
+	{
+		$sql = 'SELECT t.`name` FROM `'._DB_PREFIX_.'product_tag` pt
+				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.`id_tag` = pt.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+				WHERE pt.`id_product` = '.(int)$id_product;
+		$tags_list = Db::getInstance()->executeS($sql);
+
+		$tags = array();
+		foreach ($tags_list as $t)
+			$tags[] = $t['name'];
+
+		return implode(',', $tags);
+	}
+
+	/**
+	 * Get images
+	 * @param integer $id_product
+	 * @return array
+	 */
 	public static function getImages($id_product)
 	{
 		// Retrieves images
