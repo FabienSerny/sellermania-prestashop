@@ -159,7 +159,7 @@ class SellerManiaProduct
 		foreach ($tags_list as $t)
 			$tags[] = $t['name'];
 
-		return implode(',', $tags);
+		return $tags;
 	}
 
 	/**
