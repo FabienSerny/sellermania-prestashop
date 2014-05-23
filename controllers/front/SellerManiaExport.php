@@ -39,8 +39,8 @@ class SellerManiaExportController
 		'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
 		'quantity' => 'int', 'price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
 		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
-		'name' => 'string', 'images' => 'string', 'category_default' => 'string',
-		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string', 'tags' => 'string',
+		'name' => 'string', 'category_default' => 'string',
+		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
 		'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
 	);
 
@@ -150,9 +150,14 @@ class SellerManiaExportController
 		foreach ($this->fields_to_export as $field => $field_type)
 			$line .= '"'.$field.'";';
 		for ($i = 1; $i <= 5; $i++)
-			$line .= '"Tag '.$i.'";';
+			$line .= '"tag '.$i.'";';
 		for ($i = 1; $i <= 5; $i++)
-			$line .= '"Image '.$i.'";';
+		{
+			if ($i == 1)
+				$line .= '"images";';
+			else
+				$line .= '"image '.$i.'";';
+		}
 		foreach ($this->attribute_groups as $id_attribute_group => $group_name)
 			$line .= '"Attr '.$id_attribute_group.' - '.$group_name.'";';
 		$line .= "\n";
@@ -198,10 +203,6 @@ class SellerManiaExportController
 		foreach ($rows as $row)
 			if ($row['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID') && $row['name'] != '')
 			{
-				$tags = $row['tags'];
-				$images = $row['images'];
-				$row['tags'] = implode('|', $row['tags']);
-				$row['images'] = implode('|', $row['images']);
 				foreach ($this->fields_to_export as $field => $field_type)
 				{
 					if ($field == 'id_unique')
@@ -217,9 +218,9 @@ class SellerManiaExportController
 					$line .= '"'.str_replace(array("\r\n", "\n", '"'), '', $row[$field]).'";';
 				}
 				for ($i = 1; $i <= 5; $i++)
-					$line .= '"'.(isset($tags[$i - 1]) ? $tags[$i - 1] : '').'";';
+					$line .= '"'.(isset($row['tags'][$i - 1]) ? $row['tags'][$i - 1] : '').'";';
 				for ($i = 1; $i <= 5; $i++)
-					$line .= '"'.(isset($images[$i - 1]) ? $images[$i - 1] : '').'";';
+					$line .= '"'.(isset($row['images'][$i - 1]) ? $row['images'][$i - 1] : '').'";';
 				foreach ($this->attribute_groups as $id_attribute_group => $group_name)
 					$line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
 				$line .= "\n";

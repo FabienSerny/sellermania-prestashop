@@ -146,8 +146,18 @@ class SellerManiaProduct
 		$tags_list = Db::getInstance()->executeS($sql);
 
 		$tags = array();
+		$tags_tmp = array();
 		foreach ($tags_list as $t)
-			$tags[] = $t['name'];
+		{
+			if (count($tags_tmp) == 5)
+			{
+				$tags[] = implode(',', $tags_tmp);
+				$tags_tmp = array();
+			}
+			if (!empty($t['name']))
+				$tags_tmp[] = $t['name'];
+		}
+		$tags[] = implode(',', $tags_tmp);
 
 		return $tags;
 	}
