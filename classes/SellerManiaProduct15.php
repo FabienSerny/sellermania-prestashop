@@ -122,7 +122,7 @@ class SellerManiaProduct
 			WHERE pai.`id_product_attribute` IN ('.implode(', ', $ids).') ORDER by i.`position`');
 			foreach ($result as $row)
 				if ($row['id_image'] > 0)
-					$images[$row['id_product_attribute']][] = $context->link->getImageLink('product', $row['id_image'], 'large_default');
+					$images[$row['id_product_attribute']][] = $context->link->getImageLink('product', $row['id_image'], 'thickbox_default');
 
 			// Retrieve infos for each declination
 			foreach ($attributes_groups as $k => $row)
@@ -192,7 +192,7 @@ class SellerManiaProduct
 		$result = Db::getInstance()->executeS($sql);
 
 		foreach ($result as $row)
-			$images[] = $context->link->getImageLink('product', $row['id_image'], 'large_default');
+			$images[] = $context->link->getImageLink('product', $row['id_image'], 'thickbox_default');
 
 		return $images;
 	}
