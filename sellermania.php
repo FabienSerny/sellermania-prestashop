@@ -38,7 +38,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = 'Froggy Commerce';
-		$this->version = '1.0.29';
+		$this->version = '1.1.0';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -104,6 +104,17 @@ class SellerMania extends Module
 			// Set module version
 			Configuration::updateValue('SM_VERSION', $this->version);
 		}
+		if (version_compare($version_registered, '1.1.0', '<'))
+		{
+			// Register new hook
+			if (version_compare(_PS_VERSION_, '1.5') >= 0)
+				$this->registerHook('actionValidateOrder');
+			else
+				$this->registerHook('newOrder');
+
+			// Set module version
+			Configuration::updateValue('SM_VERSION', $this->version);
+		}
 	}
 
 	/**
@@ -120,12 +131,14 @@ class SellerMania extends Module
 		// Register hooks
 		if (version_compare(_PS_VERSION_, '1.5') >= 0)
 		{
-			if (!parent::install() || !$this->registerHook('displayAdminOrder') || !$this->registerHook('displayBackOfficeHeader'))
+			if (!parent::install() || !$this->registerHook('displayAdminOrder') ||
+				!$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder'))
 				return false;
 		}
 		else
 		{
-			if (!parent::install() || !$this->registerHook('adminOrder') || !$this->registerHook('backOfficeHeader'))
+			if (!parent::install() || !$this->registerHook('adminOrder') ||
+				!$this->registerHook('backOfficeHeader') || !$this->registerHook('newOrder'))
 				return false;
 		}
 
