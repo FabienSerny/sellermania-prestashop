@@ -37,7 +37,7 @@ class SellerManiaExportController
 	 */
 	private $fields_to_export = array(
 		'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
-		'quantity' => 'int', 'price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
+		'quantity' => 'int', 'price' => 'float', 'crossed_price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
 		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
 		'name' => 'string', 'category_default' => 'string',
 		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
@@ -193,6 +193,9 @@ class SellerManiaExportController
 				$rowCopy['id_product_attribute'] = $id_product_attribute;
 				$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
 				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
+				$rowCopy['crossed_price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2, null, false, false);
+				if ($rowCopy['crossed_price'] == $rowCopy['price'])
+					unset($rowCopy['crossed_price']);
 				$rowCopy['ecotax'] = $declination['ecotax'];
 				$rowCopy['quantity'] = $declination['quantity'];
 				$rowCopy['reference'] = (!empty($declination['reference']) ? $declination['reference'] : '');
@@ -206,6 +209,9 @@ class SellerManiaExportController
 		else
 		{
 			$row['price'] = Product::getPriceStatic($row['id_product'], true, null, 2);
+			$row['crossed_price'] = Product::getPriceStatic($row['id_product'], true, null, 2, null, false, false);
+			if ($row['crossed_price'] == $row['price'])
+				unset($row['crossed_price']);
 			$rows = array($row);
 		}
 
