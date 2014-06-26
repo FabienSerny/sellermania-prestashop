@@ -189,12 +189,10 @@ class SellerManiaImportOrderController
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
 		{
 			// If it's not a cancelled product
-			if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_SELLER)
+			if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_CUSTOMER && $product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_SELLER)
 			{
 				// Calcul total product without tax
 				$product_price = $product['Amount']['Price'];
-				if (!isset($product['Amount']['Price']))
-					$product['Amount']['Price'] = 0;
 				$vat_rate = 1;
 				if (isset($product['VatRate']))
 					$vat_rate = 1 + ($product['VatRate'] / 10000);
