@@ -50,6 +50,11 @@ class SellerManiaExportController
 	private $attribute_groups = array();
 
 	/**
+	 * @var array features
+	 */
+	private $features = array();
+
+	/**
 	 * Controller constructor
 	 */
 	public function __construct()
@@ -59,9 +64,12 @@ class SellerManiaExportController
 		$id_lang = Configuration::get('PS_LANG_DEFAULT');
 		if (Tools::getValue('l') != '')
 			$id_lang = Language::getIdByIso(Tools::getValue('l'));
-		$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'attribute_group_lang` WHERE `id_lang` = '.(int)$id_lang);
+		$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'attribute_group_lang` WHERE `id_lang` = '.(int)$id_lang.' ORDER BY `id_attribute_group`');
 		foreach ($tmp as $t)
 			$this->attribute_groups[$t['id_attribute_group']] = $t['name'];
+		$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'feature_lang` WHERE `id_lang` = '.(int)$id_lang.' ORDER BY `id_feature`');
+		foreach ($tmp as $t)
+			$this->features[$t['id_feature']] = $t['name'];
 	}
 
 	/**
@@ -132,6 +140,7 @@ class SellerManiaExportController
 			while ($row = Db::getInstance()->nextRow($result))
 			{
 				$row['tags'] = SellerManiaProduct::getProductTags($row['id_product'], $id_lang);
+				$row['features'] = SellerManiaProduct::getFeatures($row['id_product'], $id_lang);
 				$row['declinations'] = SellerManiaProduct::getProductDeclinations($row['id_product'], $id_lang);
 				$row['images'] = SellerManiaProduct::getImages($row['id_product']);
 				$this->renderExport($row, $iso_lang, $output);
@@ -160,6 +169,8 @@ class SellerManiaExportController
 		}
 		foreach ($this->attribute_groups as $id_attribute_group => $group_name)
 			$line .= '"Attr '.$id_attribute_group.' - '.$group_name.'";';
+		foreach ($this->features as $id_feature => $name)
+			$line .= '"Feature '.$id_feature.' - '.$name.'";';
 		$line .= "\n";
 		$this->renderLine($line, $iso_lang, $output);
 	}
@@ -223,6 +234,8 @@ class SellerManiaExportController
 					$line .= '"'.(isset($row['images'][$i - 1]) ? $row['images'][$i - 1] : '').'";';
 				foreach ($this->attribute_groups as $id_attribute_group => $group_name)
 					$line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
+				foreach ($this->features as $id_feature => $name)
+					$line .= '"'.(isset($row['features'][$id_feature]) ? $row['features'][$id_feature] : '').'";';
 				$line .= "\n";
 			}
 

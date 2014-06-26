@@ -136,7 +136,7 @@ class SellerManiaProduct
 	 * Get product tags
 	 * @param integer $id_product
 	 * @param integer $id_lang
-	 * @return string
+	 * @return string $tags
 	 */
 	public static function getProductTags($id_product, $id_lang)
 	{
@@ -160,6 +160,25 @@ class SellerManiaProduct
 		$tags[] = implode(',', $tags_tmp);
 
 		return $tags;
+	}
+
+	/**
+	 * Get product features
+	 * @param integer $id_product
+	 * @param integer $id_lang
+	 * @return array $features
+	 */
+	public static function getFeatures($id_product, $id_lang)
+	{
+		$tmp = Db::getInstance()->executeS('
+		SELECT fp.`id_feature`, fvl.`value` as feature_value_name
+		FROM `'._DB_PREFIX_.'feature_product` fp
+		LEFT JOIN `'._DB_PREFIX_.'feature_value_lang` fvl ON (fvl.`id_feature_value` = fp.`id_feature_value` AND fvl.`id_lang` = '.(int)$id_lang.')
+		WHERE fp.`id_product` = '.(int)$id_product);
+		$result = array();
+		foreach ($tmp as $t)
+			$result[$t['id_feature']] = $t['feature_value_name'];
+		return $result;
 	}
 
 	/**
