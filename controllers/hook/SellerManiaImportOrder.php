@@ -193,6 +193,8 @@ class SellerManiaImportOrderController
 			{
 				// Calcul total product without tax
 				$product_price = $product['Amount']['Price'];
+				if (!isset($product['Amount']['Price']))
+					$product['Amount']['Price'] = 0;
 				$vat_rate = 1;
 				if (isset($product['VatRate']))
 					$vat_rate = 1 + ($product['VatRate'] / 10000);
