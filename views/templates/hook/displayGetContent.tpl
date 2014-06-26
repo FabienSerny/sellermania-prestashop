@@ -71,6 +71,7 @@
                 <p><label>{l s='Order token' mod='sellermania'}</label> <input type="text" name="sm_order_token" value="{$sm_order_token}" /></p>
                 <p><label>{l s='Order endpoint' mod='sellermania'}</label> <input type="text" name="sm_order_endpoint" value="{$sm_order_endpoint}" /></p>
                 <p><label>{l s='Confirm order endpoint' mod='sellermania'}</label> <input type="text" name="sm_confirm_order_endpoint" value="{$sm_confirm_order_endpoint}" /></p>
+				<p><label>{l s='Inventory endpoint' mod='sellermania'}</label> <input type="text" name="sm_inventory_endpoint" value="{$sm_inventory_endpoint}" /></p>
                 {if empty($sm_order_email)}
                     <p><strong><u>{l s='Note:' mod='sellermania'}</u></strong> {l s='These four credentials are provided by Sellermania, if you don\'t have them, please contact Sellermania.' mod='sellermania'}</p>
                 {/if}

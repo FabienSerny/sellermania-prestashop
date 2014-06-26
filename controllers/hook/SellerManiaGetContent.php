@@ -68,7 +68,7 @@ class SellerManiaGetContentController
 	 */
 	public function saveConfiguration()
 	{
-		$params = array('sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint', 'sm_confirm_order_endpoint');
+		$params = array('sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint', 'sm_confirm_order_endpoint', 'sm_inventory_endpoint');
 		foreach ($params as $p)
 			if (isset($_POST[$p]))
 				Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
@@ -138,6 +138,7 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
 		$this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
 		$this->context->smarty->assign('sm_confirm_order_endpoint', Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
+		$this->context->smarty->assign('sm_inventory_endpoint', Configuration::get('SM_INVENTORY_ENDPOINT'));
 
 		$this->context->smarty->assign('sm_last_import', date('Y-m-d H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -15 minutes')));
 		$this->context->smarty->assign('sm_next_import', Configuration::get('SM_NEXT_IMPORT'));
