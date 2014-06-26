@@ -135,6 +135,8 @@ class SellerManiaDisplayBackOfficeHeaderController
 								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
 								$import_order->data = $order;
 								$import_order->preprocessData();
+								if (!isset($import_order->order->id))
+									$import_order->order = (object)$import_order->order;
 								$import_order->order->id = 0;
 								$import_order->saveSellermaniaOrder($e->getMessage());
 
