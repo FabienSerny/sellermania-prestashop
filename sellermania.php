@@ -319,12 +319,14 @@ class SellerMania extends Module
 	 * @param string $hook_name
 	 * @return mixed $result
 	 */
-	public function runController($controller_type, $controller_name)
+	public function runController($controller_type, $controller_name, $params = array())
 	{
 		// Include the controller file
 		require_once(dirname(__FILE__).'/controllers/'.$controller_type.'/SellerMania'.$controller_name.'.php');
 		$controller_name = 'SellerMania'.$controller_name.'Controller';
 		$controller = new $controller_name($this, dirname(__FILE__), $this->_path);
+		$controller->params = $params;
+
 		return $controller->run();
 	}
 
@@ -347,6 +349,7 @@ class SellerMania extends Module
 	 */
 	public function hookDisplayBackOfficeHeader($params)
 	{
+		return '';
 		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
 			return $this->runController('hook', 'DisplayBackOfficeHeader');
 		return '';
@@ -369,6 +372,21 @@ class SellerMania extends Module
 	public function hookAdminOrder($params)
 	{
 		return $this->hookDisplayAdminOrder($params);
+	}
+
+	/**
+	 * Display Admin Order
+	 * @return string $html
+	 */
+	public function hookActionValidateOrder($params)
+	{
+		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+			return $this->runController('hook', 'ActionValidateOrder', $params);
+		return '';
+	}
+	public function hookNewOrder($params)
+	{
+		return $this->hookActionValidateOrder($params);
 	}
 
 	/**
