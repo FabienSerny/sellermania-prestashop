@@ -50,6 +50,11 @@ class SellerManiaActionValidateOrderController
 	 */
 	public function run()
 	{
+		// If we are in the import orders context, we do not update anything
+		if (defined('SELLERMANIA_IMPORT_ORDERS_CONTEXT'))
+			return false;
+
+		// Else we retrieve the SKU
 		$skus = array();
 		$skus_quantities = array();
 		$products = $this->params['order']->getProducts();
@@ -59,6 +64,7 @@ class SellerManiaActionValidateOrderController
 			$skus_quantities[$product['product_reference']] = $product['product_quantity'];
 		}
 
+		// We synchronize the stock
 		$this->syncStock('ORDER', $this->params['order']->id, $skus, $skus_quantities);
 	}
 

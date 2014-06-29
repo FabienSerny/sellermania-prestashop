@@ -55,6 +55,9 @@ class SellerManiaDisplayBackOfficeHeaderController
 	 */
 	public function importOrders()
 	{
+		// Define that we are in the Import Orders Context
+		define('SELLERMANIA_IMPORT_ORDERS_CONTEXT', 1);
+
 		// Creating an instance of OrderClient
 		$client = new Sellermania\OrderClient();
 		$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
