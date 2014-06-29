@@ -208,14 +208,17 @@ class SellerManiaDisplayBackOfficeHeaderController
 	 */
 	public function handleProductQuantityUpdate()
 	{
+		// We retrieve GET and POST values
 		$id_product = (int)Tools::getValue('id_product');
 		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 		$id_lang = (int)$this->context->cookie->id_lang;
+
+		// We retrieve the product
+		$product = new Product((int)$id_product, false, $id_lang);
+
+		// Retrieve SKU and quantity depending of PS version
 		if (Tools::getValue('controller') == 'AdminProducts' && Tools::getValue('actionQty') == 'set_qty' && $id_product > 0)
 		{
-			// We retrieve the product
-			$product = new Product((int)$id_product, false, $id_lang);
-
 			// We retrieve the SKU and current quantity
 			if ($id_product_attribute > 0)
 			{
@@ -229,20 +232,45 @@ class SellerManiaDisplayBackOfficeHeaderController
 				$current_quantity = (int)$product->getQuantity($id_product, $id_product_attribute);
 			}
 
-			// If no SKU, we stop
-			if (empty($sku_value))
-				return false;
-
-			// We calcul the difference in quantity
+			// We calcul the new quantity
 			$new_quantity = (int)Tools::getValue('value');
-			$difference = $current_quantity - $new_quantity;
-
-			// We synchronize the stock
-			$skus_quantities = array($sku_value => $difference);
-			$skus = array($sku_value);
-			$savo = new SellerManiaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
-			$savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
 		}
+		else if (Tools::getValue('tab') == 'AdminCatalog' && $id_product > 0 && Tools::getValue('id_mvt_reason') > 0)
+		{
+			// We retrieve the SKU and current quantity
+			if ($id_product_attribute > 0 && Tools::getValue('attribute_mvt_quantity') > 0)
+			{
+				$attrs = $product->getAttributeCombinaisons($id_lang);
+				foreach ($attrs as $attr)
+					if ($attr['id_product_attribute'] == $id_product_attribute)
+					{
+						$sku_value = $attr['reference'];
+						$current_quantity = (int)$attr['quantity'];
+					}
+				$new_quantity = (int)Tools::getValue('attribute_mvt_quantity');
+				if (!in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
+					$new_quantity = - ($new_quantity);
+			}
+			else if (Tools::getValue('mvt_quantity') > 0)
+			{
+				$sku_value = $product->reference;
+				$current_quantity = (int)$product->quantity;
+				$new_quantity = (int)Tools::getValue('mvt_quantity');
+				if (!in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
+					$new_quantity = - ($new_quantity);
+			}
+		}
+
+		// If no SKU, we stop
+		if (!isset($sku_value) || empty($sku_value))
+			return false;
+
+		// We synchronize the stock
+		$difference = $current_quantity - $new_quantity;
+		$skus_quantities = array($sku_value => $difference);
+		$skus = array($sku_value);
+		$savo = new SellerManiaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
+		$savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
 	}
 
 
