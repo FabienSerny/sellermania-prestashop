@@ -234,6 +234,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 			// We calcul the new quantity
 			$new_quantity = (int)Tools::getValue('value');
+			$difference = $current_quantity - $new_quantity;
 		}
 		else if (Tools::getValue('tab') == 'AdminCatalog' && $id_product > 0 && Tools::getValue('id_mvt_reason') > 0)
 		{
@@ -243,21 +244,17 @@ class SellerManiaDisplayBackOfficeHeaderController
 				$attrs = $product->getAttributeCombinaisons($id_lang);
 				foreach ($attrs as $attr)
 					if ($attr['id_product_attribute'] == $id_product_attribute)
-					{
 						$sku_value = $attr['reference'];
-						$current_quantity = (int)$attr['quantity'];
-					}
-				$new_quantity = (int)Tools::getValue('attribute_mvt_quantity');
+				$difference = (int)Tools::getValue('attribute_mvt_quantity');
 				if (!in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
-					$new_quantity = - ($new_quantity);
+					$difference = - ($difference);
 			}
 			else if (Tools::getValue('mvt_quantity') > 0)
 			{
 				$sku_value = $product->reference;
-				$current_quantity = (int)$product->quantity;
-				$new_quantity = (int)Tools::getValue('mvt_quantity');
+				$difference = (int)Tools::getValue('mvt_quantity');
 				if (!in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
-					$new_quantity = - ($new_quantity);
+					$difference = - ($difference);
 			}
 		}
 
@@ -266,7 +263,6 @@ class SellerManiaDisplayBackOfficeHeaderController
 			return false;
 
 		// We synchronize the stock
-		$difference = $current_quantity - $new_quantity;
 		$skus_quantities = array($sku_value => $difference);
 		$skus = array($sku_value);
 		$savo = new SellerManiaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
