@@ -211,7 +211,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$id_product = (int)Tools::getValue('id_product');
 		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 		$id_lang = (int)$this->context->cookie->id_lang;
-		if (Tools::getValue('actionQty') == 'set_qty' && $id_product > 0)
+		if (Tools::getValue('controller') == 'AdminProducts' && Tools::getValue('actionQty') == 'set_qty' && $id_product > 0)
 		{
 			// We retrieve the product
 			$product = new Product((int)$id_product, false, $id_lang);
