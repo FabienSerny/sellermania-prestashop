@@ -211,18 +211,27 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$id_product = (int)Tools::getValue('id_product');
 		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 		$id_lang = (int)$this->context->cookie->id_lang;
-		if (Tools::getValue('actionQty') == 'set_qty' && $id_product > 0 && $id_product_attribute > 0)
+		if (Tools::getValue('actionQty') == 'set_qty' && $id_product > 0)
 		{
 			$product = new Product((int)$id_product, false, $id_lang);
-			$attr = $product->getAttributeCombinationsById($id_product_attribute, $id_lang);
 
-			$current_quantity = (int)$attr[0]['quantity'];
+			if ($id_product_attribute > 0)
+			{
+				$attr = $product->getAttributeCombinationsById($id_product_attribute, $id_lang);
+				$sku_value = $attr[0]['reference'];
+				$current_quantity = (int)$attr[0]['quantity'];
+			}
+			else
+			{
+				$sku_value = $product->reference;
+				$current_quantity = (int)$product->getQuantity($id_product, $id_product_attribute);
+			}
+
 			$new_quantity = (int)Tools::getValue('value');
 			$difference = $current_quantity - $new_quantity;
 
-			$skus_quantities = array($attr[0]['reference'] => $difference);
-			$skus = array($attr[0]['reference']);
-
+			$skus_quantities = array($sku_value => $difference);
+			$skus = array($sku_value);
 			$savo = new SellerManiaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
 			$savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
 		}
