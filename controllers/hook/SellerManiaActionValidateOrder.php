@@ -73,6 +73,11 @@ class SellerManiaActionValidateOrderController
 			$client->setEndpoint(Configuration::get('SM_INVENTORY_ENDPOINT'));
 			$getResult = $client->getSkuQuantity($skus);
 
+			// Fix data (when only one product, array is not the same)
+			if (!isset($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'][0]))
+				$getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'] = array($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku']);
+
+			// Build Xml
 			$xml = '';
 			foreach ($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'] as $sku_line)
 				if ($sku_line['Status'] == 'SUCCESS' && isset($skus_quantities[$sku_line['Id']]))
@@ -80,12 +85,18 @@ class SellerManiaActionValidateOrderController
 					$quantity = (int)$sku_line['Quantity'] - (int)$skus_quantities[$sku_line['Id']];
 					$xml .= '<UpdateInventory><Sku>'.$sku_line['Id'].'</Sku><Quantity>'.$quantity.'</Quantity></UpdateInventory>';
 				}
+
+			// Update inventory
 			if (!empty($xml))
 			{
+				// Sleep to handle Sellermania webservice limitation
+				sleep(12);
 				$xml = '<?xml version="1.0" encoding="UTF-8"?><SellermaniaWs>'.$xml.'</SellermaniaWs>';
 				$tmpfname = tempnam('/tmp', 'ps_sellermania_');
 				file_put_contents($tmpfname, $xml);
 				$result = $client->updateInventory($tmpfname);
+				if ($result['SellermaniaWs']['Header']['Status'] != 'SUCCESS')
+					throw new Exception($result['SellermaniaWs']['Header']['Status'].' '.$result['SellermaniaWs']['Header']['MessageId'].' : '.$result['SellermaniaWs']['Header']['Message']);
 				unlink($tmpfname);
 			}
 		}
