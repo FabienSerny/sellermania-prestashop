@@ -30,6 +30,11 @@ if (!defined('_PS_VERSION_'))
 require_once(dirname(__FILE__).'/SellerManiaImportOrder.php');
 require_once(dirname(__FILE__).'/SellerManiaDisplayAdminOrder.php');
 
+
+// Load ValidateOrder Controller
+require_once(dirname(__FILE__).'/SellerManiaActionValidateOrder.php');
+
+
 class SellerManiaDisplayBackOfficeHeaderController
 {
 	/**
@@ -184,6 +189,10 @@ class SellerManiaDisplayBackOfficeHeaderController
 	 */
 	public function handleOrderImportation()
 	{
+		// If ajax, we do not do anything
+		if (Tools::getValue('ajax') != '')
+			return '';
+
 		// Check if it's time to import
 		if ($this->timeToImportOrders())
 			$this->importOrders();
@@ -196,7 +205,24 @@ class SellerManiaDisplayBackOfficeHeaderController
 	 */
 	public function handleProductQuantityUpdate()
 	{
+		$id_product = (int)Tools::getValue('id_product');
+		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
+		$id_lang = (int)$this->context->cookie->id_lang;
+		if (Tools::getValue('actionQty') == 'set_qty' && $id_product > 0 && $id_product_attribute > 0)
+		{
+			$product = new Product((int)$id_product, false, $id_lang);
+			$attr = $product->getAttributeCombinationsById($id_product_attribute, $id_lang);
 
+			$current_quantity = (int)$attr[0]['quantity'];
+			$new_quantity = (int)Tools::getValue('value');
+			$difference = $current_quantity - $new_quantity;
+
+			$skus_quantities = array($attr[0]['reference'] => $difference);
+			$skus = array($attr[0]['reference']);
+
+			$savo = new SellerManiaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
+			$savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
+		}
 	}
 
 
@@ -205,6 +231,10 @@ class SellerManiaDisplayBackOfficeHeaderController
 	 */
 	public function handleSellermaniaOrderDisplay()
 	{
+		// If ajax, we do not do anything
+		if (Tools::getValue('ajax') != '')
+			return '';
+
 		// Include JS script
 		if (Tools::getValue('controller') == 'AdminOrders' || Tools::getValue('tab') == 'AdminOrders')
 		{
@@ -225,11 +255,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || Configuration::get('SM_DEFAULT_PRODUCT_ID') < 1)
 			return '';
 
-		// If ajax, we do not do anything
-		if (Tools::getValue('ajax') != '')
-			return '';
-
-		// Handle actions
+		// Handle order actions
 		$this->handleOrderImportation();
 		$this->handleProductQuantityUpdate();
 		$this->handleSellermaniaOrderDisplay();
