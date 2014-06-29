@@ -73,6 +73,10 @@ class SellerManiaActionValidateOrderController
 			$client->setEndpoint(Configuration::get('SM_INVENTORY_ENDPOINT'));
 			$getResult = $client->getSkuQuantity($skus);
 
+			// If no sku returned, we get out of here!
+			if (!isset($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku']))
+				return false;
+
 			// Fix data (when only one product, array is not the same)
 			if (!isset($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'][0]))
 				$getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'] = array($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku']);
