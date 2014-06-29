@@ -213,8 +213,10 @@ class SellerManiaDisplayBackOfficeHeaderController
 		$id_lang = (int)$this->context->cookie->id_lang;
 		if (Tools::getValue('actionQty') == 'set_qty' && $id_product > 0)
 		{
+			// We retrieve the product
 			$product = new Product((int)$id_product, false, $id_lang);
 
+			// We retrieve the SKU and current quantity
 			if ($id_product_attribute > 0)
 			{
 				$attr = $product->getAttributeCombinationsById($id_product_attribute, $id_lang);
@@ -227,9 +229,15 @@ class SellerManiaDisplayBackOfficeHeaderController
 				$current_quantity = (int)$product->getQuantity($id_product, $id_product_attribute);
 			}
 
+			// If no SKU, we stop
+			if (empty($sku_value))
+				return false;
+
+			// We calcul the difference in quantity
 			$new_quantity = (int)Tools::getValue('value');
 			$difference = $current_quantity - $new_quantity;
 
+			// We synchronize the stock
 			$skus_quantities = array($sku_value => $difference);
 			$skus = array($sku_value);
 			$savo = new SellerManiaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
