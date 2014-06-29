@@ -180,6 +180,42 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 
 	/**
+	 * Handle order importation
+	 */
+	public function handleOrderImportation()
+	{
+		// Check if it's time to import
+		if ($this->timeToImportOrders())
+			$this->importOrders();
+
+	}
+
+
+	/**
+	 * Handle product quantity update
+	 */
+	public function handleProductQuantityUpdate()
+	{
+
+	}
+
+
+	/**
+	 * Handle Sellermania order display
+	 */
+	public function handleSellermaniaOrderDisplay()
+	{
+		// Include JS script
+		if (Tools::getValue('controller') == 'AdminOrders' || Tools::getValue('tab') == 'AdminOrders')
+		{
+			$this->context->smarty->assign('ps_version', $this->ps_version);
+			$this->context->smarty->assign('sellermania_module_path', $this->web_path);
+			return $this->module->compliantDisplay('displayBackOfficeHeader.tpl');
+		}
+	}
+
+
+	/**
 	 * Run method
 	 * @return string $html
 	 */
@@ -189,21 +225,14 @@ class SellerManiaDisplayBackOfficeHeaderController
 		if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || Configuration::get('SM_DEFAULT_PRODUCT_ID') < 1)
 			return '';
 
-		// If ajax, we do not import orders
+		// If ajax, we do not do anything
 		if (Tools::getValue('ajax') != '')
 			return '';
 
-		// Check if it's time to import
-		if ($this->timeToImportOrders())
-			$this->importOrders();
-
-		// Include JS script
-		if (Tools::getValue('controller') == 'AdminOrders' || Tools::getValue('tab') == 'AdminOrders')
-		{
-			$this->context->smarty->assign('ps_version', $this->ps_version);
-			$this->context->smarty->assign('sellermania_module_path', $this->web_path);
-			return $this->module->compliantDisplay('displayBackOfficeHeader.tpl');
-		}
+		// Handle actions
+		$this->handleOrderImportation();
+		$this->handleProductQuantityUpdate();
+		$this->handleSellermaniaOrderDisplay();
 	}
 }
 
