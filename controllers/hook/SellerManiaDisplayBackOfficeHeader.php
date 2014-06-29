@@ -246,14 +246,14 @@ class SellerManiaDisplayBackOfficeHeaderController
 					if ($attr['id_product_attribute'] == $id_product_attribute)
 						$sku_value = $attr['reference'];
 				$difference = (int)Tools::getValue('attribute_mvt_quantity');
-				if (!in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
+				if (in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
 					$difference = - ($difference);
 			}
 			else if (Tools::getValue('mvt_quantity') > 0)
 			{
 				$sku_value = $product->reference;
 				$difference = (int)Tools::getValue('mvt_quantity');
-				if (!in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
+				if (in_array(Tools::getValue('id_mvt_reason'), array(1, 5)))
 					$difference = - ($difference);
 			}
 		}
