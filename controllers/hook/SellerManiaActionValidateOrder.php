@@ -132,6 +132,7 @@ class SellerManiaActionValidateOrderController
 		catch (\Exception $e)
 		{
 			// Log error
+			$this->addSleepingUpdates($skus, $skus_quantities);
 			$log = '['.$type.' '.$id.'] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
 			file_put_contents(dirname(__FILE__).'/../../log/inventory-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
 		}
