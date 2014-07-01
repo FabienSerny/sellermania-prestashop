@@ -159,6 +159,9 @@ class SellerManiaActionValidateOrderController
 				$sleeping_updates['skus_quantities'][$sku] = $sku_quantity;
 		}
 
+		// We delete data from configuration table
+		Configuration::updateValue('SM_SLEEPING_UPDATES', '');
+
 		// Return values
 		return array($sleeping_updates['skus'], $sleeping_updates['skus_quantities']);
 	}
