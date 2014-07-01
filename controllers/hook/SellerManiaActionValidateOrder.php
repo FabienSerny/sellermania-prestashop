@@ -100,13 +100,15 @@ class SellerManiaActionValidateOrderController
 			if (!empty($xml))
 			{
 				// Sleep to handle Sellermania webservice limitation
-				sleep(12);
+				sleep(3);
+
+				// Build XML
 				$xml = '<?xml version="1.0" encoding="UTF-8"?><SellermaniaWs>'.$xml.'</SellermaniaWs>';
 				$tmpfname = tempnam('/tmp', 'ps_sellermania_');
 				file_put_contents($tmpfname, $xml);
 				$result = $client->updateInventory($tmpfname);
 				if ($result['SellermaniaWs']['Header']['Status'] != 'SUCCESS')
-					throw new Exception($result['SellermaniaWs']['Header']['Status'].' '.$result['SellermaniaWs']['Header']['MessageId'].' : '.$result['SellermaniaWs']['Header']['Message']);
+					throw new Exception($result['SellermaniaWs']['Header']['Status'].' '.$result['SellermaniaWs']['Header']['MessageId'].' : '.$result['SellermaniaWs']['Header']['Message'].' => '.$xml);
 				unlink($tmpfname);
 			}
 		}
