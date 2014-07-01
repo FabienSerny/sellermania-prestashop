@@ -61,23 +61,37 @@ class SellerManiaActionValidateOrderController
 		foreach ($products as $product)
 		{
 			$skus[] = $product['product_reference'];
-			$skus_quantities[$product['product_reference']] = $product['product_quantity'];
+			$skus_quantities[$product['product_reference']] = - ($product['product_quantity']);
 		}
 
 		// We synchronize the stock
 		$this->syncStock('ORDER', $this->params['order']->id, $skus, $skus_quantities);
 	}
 
-	public function syncStock($type, $id, $skus, $skus_quantities)
+	public function syncStock($type, $id, $new_skus, $new_skus_quantities)
 	{
 		try
 		{
+			// Sleep to handle Sellermania webservice limitation
+			sleep(2);
+
+			// We retrieved the sleeping updates and merge them with the new updates
+			list($skus, $skus_quantities) = $this->getSleepingUpdates($new_skus, $new_skus_quantities);
+
 			// Creating an instance of InventoryClient
 			$client = new Sellermania\InventoryClient();
 			$client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
 			$client->setToken(Configuration::get('SM_ORDER_TOKEN'));
 			$client->setEndpoint(Configuration::get('SM_INVENTORY_ENDPOINT'));
 			$getResult = $client->getSkuQuantity($skus);
+
+			// If webservice failed, we saved the update
+			if ($getResult['SellermaniaWs']['Header']['Status'] != 'SUCCESS')
+			{
+				$this->addSleepingUpdates($skus, $skus_quantities);
+				return false;
+			}
+
 
 			// If no sku returned, we get out of here!
 			if (!isset($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku']))
@@ -92,7 +106,7 @@ class SellerManiaActionValidateOrderController
 			foreach ($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'] as $sku_line)
 				if ($sku_line['Status'] == 'SUCCESS' && isset($skus_quantities[$sku_line['Id']]))
 				{
-					$quantity = (int)$sku_line['Quantity'] - (int)$skus_quantities[$sku_line['Id']];
+					$quantity = (int)$sku_line['Quantity'] + (int)$skus_quantities[$sku_line['Id']];
 					$xml .= '<UpdateInventory><Sku>'.$sku_line['Id'].'</Sku><Quantity>'.$quantity.'</Quantity></UpdateInventory>';
 				}
 
@@ -100,7 +114,7 @@ class SellerManiaActionValidateOrderController
 			if (!empty($xml))
 			{
 				// Sleep to handle Sellermania webservice limitation
-				sleep(3);
+				sleep(2);
 
 				// Build XML
 				$xml = '<?xml version="1.0" encoding="UTF-8"?><SellermaniaWs>'.$xml.'</SellermaniaWs>';
@@ -108,7 +122,10 @@ class SellerManiaActionValidateOrderController
 				file_put_contents($tmpfname, $xml);
 				$result = $client->updateInventory($tmpfname);
 				if ($result['SellermaniaWs']['Header']['Status'] != 'SUCCESS')
-					throw new Exception($result['SellermaniaWs']['Header']['Status'].' '.$result['SellermaniaWs']['Header']['MessageId'].' : '.$result['SellermaniaWs']['Header']['Message'].' => '.$xml);
+				{
+					$this->addSleepingUpdates($skus, $skus_quantities);
+					throw new Exception($result['SellermaniaWs']['Header']['Status'].' '.$result['SellermaniaWs']['Header']['MessageId'].' : '.$result['SellermaniaWs']['Header']['Message']);
+				}
 				unlink($tmpfname);
 			}
 		}
@@ -116,9 +133,39 @@ class SellerManiaActionValidateOrderController
 		{
 			// Log error
 			$log = '['.$type.' '.$id.'] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
-			$log .= var_export($order, true)."\n";
 			file_put_contents(dirname(__FILE__).'/../../log/inventory-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
 		}
+	}
+
+	public function getSleepingUpdates($skus, $skus_quantities)
+	{
+		// Retrieve data from configuration table
+		$json = Configuration::get('SM_SLEEPING_UPDATES');
+		if (!empty($json))
+			$sleeping_updates = json_decode($json, true);
+		else
+			$sleeping_updates = array('skus' => array(), 'skus_quantities' => array());
+
+		// Merge array
+		foreach ($skus as $sku)
+			if (!in_array($sku, $sleeping_updates['skus']))
+				$sleeping_updates['skus'][] = $sku;
+		foreach ($skus_quantities as $sku => $sku_quantity)
+		{
+			if (isset($sleeping_updates['skus_quantities'][$sku]))
+				$sleeping_updates['skus_quantities'][$sku] += $sku_quantity;
+			else
+				$sleeping_updates['skus_quantities'][$sku] = $sku_quantity;
+		}
+
+		// Return values
+		return array($sleeping_updates['skus'], $sleeping_updates['skus_quantities']);
+	}
+
+	public function addSleepingUpdates($skus, $skus_quantities)
+	{
+		$sleeping_updates = array('skus' => $skus, 'skus_quantities' => $skus_quantities);
+		Configuration::updateValue('SM_SLEEPING_UPDATES', json_encode($sleeping_updates));
 	}
 }
 
