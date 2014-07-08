@@ -70,6 +70,9 @@ class SellerManiaActionValidateOrderController
 
 	public function syncStock($type, $id, $new_skus, $new_skus_quantities)
 	{
+		if (Configuration::get('SM_INVENTORY_ENDPOINT') == '')
+			return false;
+
 		try
 		{
 			// Sleep to handle Sellermania webservice limitation
