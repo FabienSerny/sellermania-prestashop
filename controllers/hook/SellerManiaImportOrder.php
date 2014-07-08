@@ -461,6 +461,19 @@ class SellerManiaImportOrderController
 	 */
 	public function fixOrder($fix_details = true)
 	{
+		// Update delivery address
+		$this->address = new Address($this->order->id_address_delivery);
+		$this->address->company = $this->data['User'][0]['Company'];
+		$this->address->firstname = $this->data['User'][0]['FirstName'];
+		$this->address->lastname = $this->data['User'][0]['LastName'];
+		$this->address->address1 = $this->data['User'][0]['Address']['Street1'];
+		$this->address->address2 = $this->data['User'][0]['Address']['Street2'];
+		$this->address->postcode = $this->data['User'][0]['Address']['ZipCode'];
+		$this->address->city = $this->data['User'][0]['Address']['City'];
+		$this->address->id_country = Country::getByIso($this->data['User'][0]['Address']['Country']);
+		$this->address->phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];
+		$this->address->update();
+
 		if (version_compare(_PS_VERSION_, '1.5') >= 0)
 			$this->fixOrder15($fix_details);
 		else
