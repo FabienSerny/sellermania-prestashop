@@ -433,6 +433,15 @@ class SellerManiaImportOrderController
 						$product['id_product_attribute'] = 0;
 						if (isset($pr['id_product_attribute']))
 							$product['id_product_attribute'] = $pr['id_product_attribute'];
+
+						// If product is disabled, we return the default product
+						$active = Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$product['id_product']);
+						if ($active != 1)
+						{
+							$product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
+							$product['id_product_attribute'] = 0;
+						}
+
 						return $product;
 					}
 				}
