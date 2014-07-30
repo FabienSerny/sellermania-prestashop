@@ -29,7 +29,7 @@
     {*************** TITLE TEMPLATE *****************}
     {************************************************}
     <div id="sellermania-template-title">
-        <h2>{l s='SellerMania order from the marketplace' mod='sellermania'} {$sellermania_order.OrderInfo.MarketPlace}</h2>
+        <h2>{l s='Sellermania order from the marketplace' mod='sellermania'} {$sellermania_order.OrderInfo.MarketPlace}</h2>
     </div>
 
 

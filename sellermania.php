@@ -38,7 +38,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = 'Froggy Commerce';
-		$this->version = '1.1.3';
+		$this->version = '1.1.4';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -51,8 +51,8 @@ class SellerMania extends Module
 		if (version_compare(_PS_VERSION_, '1.6.0') >= 0)
 			$this->bootstrap = true;
 
-		$this->displayName = $this->l('SellerMania');
-		$this->description = $this->l('Connect your PrestaShop with SellerMania webservices');
+		$this->displayName = $this->l('Sellermania');
+		$this->description = $this->l('Connect your PrestaShop with Sellermania webservices');
 
 		$this->loadSellermaniaOrderStates();
 		$this->upgrade();

@@ -121,6 +121,11 @@ class SellerManiaGetContentController
 			$this->context->smarty->assign('no_namespace_compatibility', '1');
 		}
 
+		$documentation_iso_code = 'en';
+		if (isset($this->context->language->iso_code) && in_array($this->context->language->iso_code, array('fr', 'en', 'es')))
+			$documentation_iso_code = $this->context->language->iso_code;
+		$this->context->smarty->assign('documentation_iso_code', $documentation_iso_code);
+
 		$this->context->smarty->assign('orders_in_error', $orders_in_error);
 		$this->context->smarty->assign('nb_orders_in_error', $nb_orders_in_error);
 

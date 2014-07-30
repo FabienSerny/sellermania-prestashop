@@ -22,7 +22,7 @@
 *  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-<h2>{l s='SellerMania' mod='sellermania'}</h2>
+<h2>{l s='Sellermania' mod='sellermania'}</h2>
 
 {if isset($smarty.get.see) && $smarty.get.see eq 'orders-error'}
 
@@ -53,11 +53,22 @@
 
 {else}
 
+<div class="panel">
+	<div class="panel-heading">
+		<legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania help' mod='sellermania'}</legend>
+	</div>
+	<div class="margin-form">
+		<h4>{l s='You do not know how to configure the module? You don\'t know how it works?' mod='sellermania'}</h4>
+		<p><strong>{l s='Please look at the documentation by clicking on the button below.' mod='sellermania'}</strong></p>
+		<p><a href="http://www.froggy-commerce.com/docs/sellermania/{$documentation_iso_code}" class="btn btn-default" target="_blank">{l s='See the documentation' mod='sellermania'}</a></p>
+	</div>
+</div>
+
     <form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
         <fieldset>
             <div class="panel">
                 <div class="panel-heading">
-                    <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='SellerMania configuration' mod='sellermania'}</legend>
+                    <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania configuration' mod='sellermania'}</legend>
                 </div>
                 {if isset($no_namespace_compatibility) && $no_namespace_compatibility eq '1'}
                     <div class="form-group clearfix">
@@ -81,13 +92,13 @@
                                 <label class="col-lg-12">{l s='Please fill up with the informations Sellermania provide you:' mod='sellermania'}</label>
                             </div>
                             <div class="form-group clearfix">
-                                <label class="col-lg-4">{l s='Order e-mail' mod='sellermania'}</label>
+                                <label class="col-lg-4">{l s='Sellermania e-mail' mod='sellermania'}</label>
                                 <div class="col-lg-8">
                                     <input type="text" name="sm_order_email" value="{$sm_order_email}" />
                                 </div>
                             </div>
                             <div class="form-group clearfix">
-                                <label class="col-lg-4">{l s='Order token' mod='sellermania'}</label>
+                                <label class="col-lg-4">{l s='Token webservices' mod='sellermania'}</label>
                                 <div class="col-lg-8">
                                     <input type="text" name="sm_order_token" value="{$sm_order_token}" />
                                 </div>
@@ -146,10 +157,10 @@
 
 <div class="panel">
     <div class="panel-heading">
-        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='SellerMania export' mod='sellermania'}</legend>
+        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania export' mod='sellermania'}</legend>
     </div>
     <div class="margin-form">
-        <p>{l s='You have two solutions to send your catalog to SellerMania' mod='sellermania'}</p><br>
+        <p>{l s='You have two solutions to send your catalog to Sellermania' mod='sellermania'}</p><br>
         <p><b>1) {l s='Set a cron task' mod='sellermania'}</b></p>
         <p>{l s='Script path:' mod='sellermania'} {$script_path}/export.php {$sellermania_key}</p>
         <p>{l s='Generated files will be available at these urls:' mod='sellermania'}</p>
@@ -164,7 +175,7 @@
 
         <br><p><b><u>{l s='OR' mod='sellermania'}</u></b></p><br>
 
-        <p><b>2) {l s='Send these links to SellerMania' mod='sellermania'}</b></p>
+        <p><b>2) {l s='Send these links to Sellermania' mod='sellermania'}</b></p>
         <p>
         {foreach from=$languages_list item=language}
             <strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export.php?l={$language.iso_code|strtolower}&k={$sellermania_key} <br>
