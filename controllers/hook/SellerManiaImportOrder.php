@@ -310,7 +310,6 @@ class SellerManiaImportOrderController
 		$this->cart->add();
 
 		// Update cart with products
-		$cart_nb_products = 0;
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
 		{
 			// Get Product Identifiers
@@ -321,8 +320,8 @@ class SellerManiaImportOrderController
 			$quantity = (int)$product['QuantityPurchased'];
 			$id_product = (int)$product['id_product'];
 			$id_product_attribute = (int)$product['id_product_attribute'];
-			if ($this->cart->updateQty($quantity, $id_product, $id_product_attribute))
-				$cart_nb_products++;
+			if (!$this->cart->updateQty($quantity, $id_product, $id_product_attribute))
+				$this->cart->updateQty($quantity, Configuration::get('SM_DEFAULT_PRODUCT_ID'), 0);
 		}
 
 		// Cart update
