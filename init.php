@@ -45,7 +45,8 @@ if (version_compare(PHP_VERSION, '5.3.0') >= 0)
 	require_once(dirname(__FILE__).'/lib/Sellermania.php');
 
 // Set time limit
-set_time_limit(1200);
+@set_time_limit(1200);
+@ini_set('memory_limit', '512M');
 
 // Debug Sellermania mode can be enabled only adding _SELLERMANIA_DEBUG_ define to your settings file
 if (defined('_SELLERMANIA_DEBUG_'))
