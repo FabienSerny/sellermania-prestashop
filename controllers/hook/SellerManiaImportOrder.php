@@ -79,6 +79,9 @@ class SellerManiaImportOrderController
 		$this->data['User'][0]['OriginalName'] = $this->data['User'][0]['Name'];
 		$this->data['User'][0]['Name'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Name']);
 		$this->data['User'][0]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][0]['Name']);
+		$this->data['User'][0]['Name'] = trim($this->data['User'][0]['Name']);
+		if ($this->data['User'][0]['Name'] < 2)
+			$this->data['User'][0]['Name'] = 'Not provided';
 		if (strpos($this->data['User'][0]['Name'], '/'))
 		{
 			$name = explode('/', $this->data['User'][0]['Name']);
