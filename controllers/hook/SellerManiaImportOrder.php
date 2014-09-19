@@ -368,6 +368,7 @@ class SellerManiaImportOrderController
 		// Restore customer e-mail
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
 		$this->context->customer->email = $customer_email;
+		$this->context->customer->clearCache();
 
 		// If last order status is not PS_OS_SM_AWAITING, we update it
 		if ($this->order->getCurrentState() != Configuration::get('PS_OS_SM_AWAITING'))
