@@ -80,7 +80,7 @@ class SellerManiaImportOrderController
 		$this->data['User'][0]['Name'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Name']);
 		$this->data['User'][0]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][0]['Name']);
 		$this->data['User'][0]['Name'] = trim($this->data['User'][0]['Name']);
-		if ($this->data['User'][0]['Name'] < 2)
+		if (strlen($this->data['User'][0]['Name']) < 2)
 			$this->data['User'][0]['Name'] = 'Not provided';
 		if (strpos($this->data['User'][0]['Name'], '/'))
 		{
@@ -463,6 +463,12 @@ class SellerManiaImportOrderController
 	 */
 	public function fixOrder($fix_details = true)
 	{
+		// Update customer
+		$this->customer = new Customer($this->order->id_customer);
+		$this->customer->firstname = $this->data['User'][0]['FirstName'];
+		$this->customer->lastname = $this->data['User'][0]['LastName'];
+		$this->customer->update();
+
 		// Update delivery address
 		$this->address = new Address($this->order->id_address_delivery);
 		$this->address->company = $this->data['User'][0]['Company'];
