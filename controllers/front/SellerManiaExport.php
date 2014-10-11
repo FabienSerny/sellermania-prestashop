@@ -203,11 +203,15 @@ class SellerManiaExportController
 				if (isset($declination['images']) && count($declination['images']) >= 1)
 					$rowCopy['images'] = $declination['images'];
 				$rowCopy['attributes_values'] = $declination['attributes_values'];
+				if ($rowCopy['active'] != 1)
+					$rowCopy['quantity'] = 0;
 				$rows[] = $rowCopy;
 			}
 		}
 		else
 		{
+			if ($row['active'] != 1)
+				$row['quantity'] = 0;
 			$row['price'] = Product::getPriceStatic($row['id_product'], true, null, 2);
 			$row['crossed_price'] = Product::getPriceStatic($row['id_product'], true, null, 2, null, false, false);
 			if ($row['crossed_price'] == $row['price'])

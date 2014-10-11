@@ -73,7 +73,7 @@ class SellerManiaImportOrderController
 	public function preprocessData()
 	{
 		// Forbidden characters
-		$forbidden_characters = array('_', '/', '(', ')', '*', ';', '=', ',', '!', '?', '.', '+', '*', '$', '%', '&', '#', '@');
+		$forbidden_characters = array('_', '/', '(', ')', '*', ';', ':', '=', ',', '!', '?', '.', '+', '*', '$', '%', '&', '#', '@');
 
 		// Fix name
 		$this->data['User'][0]['OriginalName'] = $this->data['User'][0]['Name'];
