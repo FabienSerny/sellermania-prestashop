@@ -38,7 +38,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = 'Froggy Commerce';
-		$this->version = '1.1.9';
+		$this->version = '1.1.10';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -270,7 +270,11 @@ class SellerMania extends Module
 	public function installSellermaniaProduct()
 	{
 		if (Configuration::get('SM_DEFAULT_PRODUCT_ID') > 0)
-			return true;
+		{
+			$product = new Product((int)Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+			if ($product->id > 0)
+				return true;
+		}
 
 		$label = 'Sellermania product';
 
@@ -341,6 +345,8 @@ class SellerMania extends Module
 	{
 		if (Tools::getValue('export') == 'true')
 			die($this->export());
+		if (Tools::getValue('sellermania') == 'CreateProduct')
+			$this->installSellermaniaProduct();
 		return $this->runController('hook', 'GetContent');
 	}
 

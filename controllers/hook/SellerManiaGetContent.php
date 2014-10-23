@@ -138,6 +138,8 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('languages_list', $languages_list);
 		$this->context->smarty->assign('sellermania_module_path', $this->web_path);
 
+		$this->context->smarty->assign('sm_default_product', new Product(Configuration::get('SM_DEFAULT_PRODUCT_ID')));
+		$this->context->smarty->assign('sm_default_product_id', Configuration::get('SM_DEFAULT_PRODUCT_ID'));
 		$this->context->smarty->assign('sm_import_orders', Configuration::get('SM_IMPORT_ORDERS'));
 		$this->context->smarty->assign('sm_order_email', Configuration::get('SM_ORDER_EMAIL'));
 		$this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
