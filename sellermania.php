@@ -414,5 +414,15 @@ class SellerMania extends Module
 	{
 		file_put_contents(dirname(__FILE__).'/log/log.txt', $string."\n", FILE_APPEND);
 	}
+
+	/**
+	 * Debug Log data
+	 * @param $string
+	 */
+	public function debugLog($string)
+	{
+		if (Tools::getValue('debug') == 'import')
+			echo '<!-- '.date('Y-m-d H:i:s').' '.$string.' -->'."\n";
+	}
 }
 
