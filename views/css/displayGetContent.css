@@ -22,27 +22,17 @@
  *  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-$(document).ready(function() {
+.sellermania-button {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: #333;
+    float: left;
+    padding: 5px;
+    text-align: center;
+    background-color: #f8f8f8;
+}
 
-    function displaySellermaniaCredentials()
-    {
-        if ($('#sm_import_orders_yes').attr('checked') == 'checked' || $('#sm_import_orders_yes').attr('checked') == true)
-            $('#sm_import_orders_credentials').fadeIn();
-        else
-            $('#sm_import_orders_credentials').fadeOut();
-        return true;
-    }
-
-    $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
-    $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
-    displaySellermaniaCredentials();
-
-	$('#see-advanced-export').click(function() {
-		if ($('#advanced-export').is(':visible'))
-			$('#advanced-export').fadeOut();
-		else
-			$('#advanced-export').fadeIn();
-		return false;
-	});
-
-});
+#advanced-export {
+    display:none;
+    padding-top:5px;
+}
