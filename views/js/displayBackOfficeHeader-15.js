@@ -44,4 +44,5 @@ $(document).ready(function() {
 
 	if (nb_sellermania_orders_in_error > 0)
 		$('.toolbar-placeholder').after('<p align="center" style="border: 1px solid #cc0000;color: #d8000c;background-color:#ffbaba;padding:5px"><b>' + nb_sellermania_orders_in_error + '</b> ' + txt_sellermania_orders_in_error + '</p>');
+
 });
