@@ -95,7 +95,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_716424eda8e212234
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_e9d86eb28865fb19fd5b735c4eca7d66'] = 'Confirm order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_fc9d3df613063ee57906c461320744e2'] = 'Note :';
-$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par SellerMania, si vous ne les avez pas, veuillez contacter SellerMania afin qu\'il vous les communique.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par Sellermania, si vous ne les avez pas, veuillez contacter Sellermania afin qu\'il vous les communique.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
@@ -139,7 +139,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_716424eda8e212234855dfd700a
 $_MODULE['<{sellermania}prestashop>displaygetcontent_e9d86eb28865fb19fd5b735c4eca7d66'] = 'Confirm order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_fc9d3df613063ee57906c461320744e2'] = 'Note :';
-$_MODULE['<{sellermania}prestashop>displaygetcontent_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par SellerMania, si vous ne les avez pas, veuillez contacter SellerMania afin qu\'il vous les communique.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par Sellermania, si vous ne les avez pas, veuillez contacter Sellermania afin qu\'il vous les communique.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
