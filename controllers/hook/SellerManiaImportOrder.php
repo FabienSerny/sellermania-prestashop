@@ -260,6 +260,12 @@ class SellerManiaImportOrderController
 		$this->customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
 		$this->customer->is_guest = 1;
 		$this->customer->active = 1;
+		if (substr(_PS_VERSION_, 0, 3) == '1.4')
+		{
+			$return = $this->customer->validateFields(false, true);
+			if ($return !== true)
+				throw new Exception('Error on customer creation: '.$return);
+		}
 		$this->customer->add();
 
 		// Fix lang for PS 1.4
@@ -291,6 +297,12 @@ class SellerManiaImportOrderController
 		$this->address->phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];
 		$this->address->id_customer = $this->customer->id;
 		$this->address->active = 1;
+		if (substr(_PS_VERSION_, 0, 3) == '1.4')
+		{
+			$return = $this->address->validateFields(false, true);
+			if ($return !== true)
+				throw new Exception('Error on address creation: '.$return);
+		}
 		$this->address->add();
 	}
 
@@ -408,6 +420,7 @@ class SellerManiaImportOrderController
 		$sellermania_order->id_order = $this->order->id;
 		$sellermania_order->id_employee_accepted = 0;
 		$sellermania_order->date_payment = substr($this->data['Paiement']['Date'], 0, 19);
+		$sellermania_order->date_add = date('Y-m-d H:i:s');
 		$sellermania_order->add();
 	}
 
