@@ -147,8 +147,16 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('sm_confirm_order_endpoint', Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
 		$this->context->smarty->assign('sm_inventory_endpoint', Configuration::get('SM_INVENTORY_ENDPOINT'));
 
-		$this->context->smarty->assign('sm_last_import', date('Y-m-d H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -15 minutes')));
-		$this->context->smarty->assign('sm_next_import', Configuration::get('SM_NEXT_IMPORT'));
+		if ($this->context->language->iso_code == 'fr')
+		{
+			$this->context->smarty->assign('sm_last_import', date('d/m/Y H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -15 minutes')));
+			$this->context->smarty->assign('sm_next_import', date('d/m/Y H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT'))));
+		}
+		else
+		{
+			$this->context->smarty->assign('sm_last_import', date('Y-m-d H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -15 minutes')));
+			$this->context->smarty->assign('sm_next_import', Configuration::get('SM_NEXT_IMPORT'));
+		}
 	}
 
 
