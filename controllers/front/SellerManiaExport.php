@@ -160,7 +160,7 @@ class SellerManiaExportController
 			$line .= '"'.$field.'";';
 		for ($i = 1; $i <= 5; $i++)
 			$line .= '"tag '.$i.'";';
-		for ($i = 1; $i <= 5; $i++)
+		for ($i = 1; $i <= 12; $i++)
 		{
 			if ($i == 1)
 				$line .= '"images";';
@@ -240,7 +240,7 @@ class SellerManiaExportController
 				}
 				for ($i = 1; $i <= 5; $i++)
 					$line .= '"'.(isset($row['tags'][$i - 1]) ? $row['tags'][$i - 1] : '').'";';
-				for ($i = 1; $i <= 5; $i++)
+				for ($i = 1; $i <= 12; $i++)
 					$line .= '"'.(isset($row['images'][$i - 1]) ? $row['images'][$i - 1] : '').'";';
 				foreach ($this->attribute_groups as $id_attribute_group => $group_name)
 					$line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
