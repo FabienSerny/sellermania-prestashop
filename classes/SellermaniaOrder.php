@@ -172,6 +172,7 @@ class SellermaniaOrder extends ObjectModel
 		$fields['id_employee_accepted'] = (int)$this->id_employee_accepted;
 		$fields['date_payment'] = pSQL($this->date_payment);
 		$fields['date_accepted'] = pSQL($this->date_accepted);
+		$fields['date_add'] = pSQL($this->date_add);
 
 		return $fields;
 	}
