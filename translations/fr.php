@@ -61,6 +61,7 @@ $_MODULE['<{sellermania}prestashop>displayadminorder_24a23d787190f2c4812ff9ab118
 $_MODULE['<{sellermania}prestashop>displayadminorder_70d9be9b139893aa6c69b5e77e614311'] = 'Confirmer';
 $_MODULE['<{sellermania}prestashop>displayadminorder_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{sellermania}prestashop>displayadminorder_88183b946cc5f0e8c96b2e66e1c74a7e'] = 'Inconnu';
+$_MODULE['<{sellermania}prestashop>displaybackofficeheader_ab7977ed2ae8de1653f3d76bc38f2a56'] = 'commandes Sellermania n\'ont pas pu être importées. Pour plus de détails, veuillez vous rendre dans la section de configuration du module.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_2e85cd9d755e0649b73bd54393781069'] = 'Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d0929930c42442a6db4aa07342b7ddfa'] = 'Erreurs d\'importation';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_3b4e304af7c4be4cd3fe1ea62540f640'] = 'commandes n\'ont pas pu être importées, pour plus d\'explications contactez l\'équipe';
