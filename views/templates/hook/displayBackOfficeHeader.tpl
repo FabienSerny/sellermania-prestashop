@@ -22,4 +22,8 @@
 *  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
+<script>
+    var nb_sellermania_orders_in_error = {$nb_orders_in_error|intval};
+	var txt_sellermania_orders_in_error = '{l s='Sellermania orders could not be imported. Look at the module configuration for more details.' mod='sellermania'}';
+</script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayBackOfficeHeader-{$ps_version}.js"></script>

@@ -282,8 +282,13 @@ class SellerManiaDisplayBackOfficeHeaderController
 		// Include JS script
 		if (Tools::getValue('controller') == 'AdminOrders' || Tools::getValue('tab') == 'AdminOrders')
 		{
+			$orders_in_error = SellermaniaOrder::getSellermaniaOrdersInError();
+			$nb_orders_in_error = count($orders_in_error);
+			$this->context->smarty->assign('nb_orders_in_error', $nb_orders_in_error);
+
 			$this->context->smarty->assign('ps_version', $this->ps_version);
 			$this->context->smarty->assign('sellermania_module_path', $this->web_path);
+
 			return $this->module->compliantDisplay('displayBackOfficeHeader.tpl');
 		}
 	}
