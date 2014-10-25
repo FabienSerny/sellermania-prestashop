@@ -302,7 +302,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		// Handle order actions
 		$this->handleOrderImportation();
 		$this->handleProductQuantityUpdate();
-		$this->handleSellermaniaOrderDisplay();
+		return $this->handleSellermaniaOrderDisplay();
 	}
 }
 
