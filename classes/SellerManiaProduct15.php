@@ -46,6 +46,15 @@ class SellerManiaProduct
 		if ((int)$start > 0 && (int)$limit > 0)
 			$limitSQL = ' LIMIT '.(int)$start.','.(int)$limit;
 
+		$where = '';
+		if (Configuration::get('SM_EXPORT_ALL') == 'no')
+		{
+			$categories = json_decode(Configuration::get('SM_EXPORT_CATEGORIES'), true);
+			foreach ($categories as $kc => $vc)
+				$categories[(int)$kc] = (int)$vc;
+			$where = ' AND p.`id_product` IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.implode(',', $categories).'))';
+		}
+
 		// SQL request
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
 					   product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
@@ -64,6 +73,7 @@ class SellerManiaProduct
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 				AND product_shop.`visibility` IN ("both", "catalog")
+				'.$where.'
 				GROUP BY product_shop.id_product '.$limitSQL;
 
 		// Return query

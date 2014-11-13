@@ -46,6 +46,15 @@ class SellerManiaProduct
 		if ((int)$start > 0 && (int)$limit > 0)
 			$limitSQL = ' LIMIT '.(int)$start.','.(int)$limit;
 
+		$where = '';
+		if (Configuration::get('SM_EXPORT_ALL') == 'no')
+		{
+			$categories = json_decode(Configuration::get('SM_EXPORT_CATEGORIES'), true);
+			foreach ($categories as $kc => $vc)
+				$categories[(int)$kc] = (int)$vc;
+			$where = ' AND p.`id_product` IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.implode(',', $categories).'))';
+		}
+
 		// SQL request
 		$sql = 'SELECT p.*, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`, cl.`name` AS category_default,
 			(p.`price` * IF(t.`rate`,((100 + (t.`rate`))/100),1)) AS orderprice, p.`active`
@@ -61,7 +70,7 @@ class SellerManiaProduct
 	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-		WHERE 1';
+		WHERE 1'.$where;
 
 		// Return query
 		return Db::getInstance()->Execute($sql);
