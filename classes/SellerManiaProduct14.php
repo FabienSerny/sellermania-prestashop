@@ -50,6 +50,8 @@ class SellerManiaProduct
 		if (Configuration::get('SM_EXPORT_ALL') == 'no')
 		{
 			$categories = json_decode(Configuration::get('SM_EXPORT_CATEGORIES'), true);
+			if (empty($categories))
+				$categories[] = 0;
 			foreach ($categories as $kc => $vc)
 				$categories[(int)$kc] = (int)$vc;
 			$where = ' AND p.`id_product` IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.implode(',', $categories).'))';
