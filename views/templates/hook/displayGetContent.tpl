@@ -61,9 +61,22 @@
 </fieldset>
 <br>
 
+<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
 <fieldset>
 	<legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Sellermania export' mod='sellermania'}</legend>
 	<div class="margin-form" style="padding-left:15px">
+
+		<p><b>{l s='Do you want to export all your catalog to Sellermania?' mod='sellermania'}</b></p><br>
+		<div class="margin-form" style="padding-left:15px">
+			<input type="radio" name="sm_export_all" id="sm_export_all_yes" value="yes" {if $sm_export_all eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+			<input type="radio" name="sm_export_all" id="sm_export_all_no" value="no" {if $sm_export_all eq 'no' || $sm_export_all eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+		</div>
+		<div id="sm_export_all_configuration">
+			    <p>{l s='Please select the categories you want to export:' mod='sellermania'}</p>
+				{$category_tree}
+			    <br><br>
+		</div>
+
 
 		<p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
 		<p>
@@ -86,8 +99,12 @@
             {if $export_directory_writable ne 1}<p class="error"><strong>{l s='Beware, the following directory is not writable:' mod='sellermania'} {$script_path}/export/</strong></p>{/if}
 		</div>
 
+		<br><p><input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="button" /></p>
+        {if isset($sm_confirm_export_options)}<br><p class="conf"><strong>{l s='Configuration has been saved' mod='sellermania'}</strong></p>{/if}
+
 	</div>
 </fieldset>
+</form>
 <br />
 
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">

@@ -64,12 +64,32 @@
 	</div>
 </div>
 
+<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
+	<fieldset>
 
 <div class="panel">
 	<div class="panel-heading">
 		<legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania export' mod='sellermania'}</legend>
 	</div>
 	<div class="margin-form">
+
+		<div class="form-group">
+			<div class="clearfix">
+				<label class="col-lg-4">{l s='Do you want to export all your catalog to Sellermania?' mod='sellermania'}</label>
+				<div class="col-lg-8">
+					<input type="radio" name="sm_export_all" id="sm_export_all_yes" value="yes" {if $sm_export_all eq 'yes'}checked="checked"{/if} />
+					<label for="sm_export_all_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+					<input type="radio" name="sm_export_all" id="sm_export_all_no" value="no" {if $sm_export_all eq 'no' || $sm_export_all eq ''}checked="checked"{/if} />
+					<label for="sm_export_all_no">{l s='No' mod='sellermania'}</label>
+				</div>
+			</div>
+			<div id="sm_export_all_configuration" class="clearfix">
+				<div class="form-group clearfix">
+					<label class="col-lg-4">{l s='Please select the categories you want to export:' mod='sellermania'}</label>
+					<div class="col-lg-8">{$category_tree}</div>
+				</div>
+			</div>
+		</div>
 
 		<p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
 		<p>
@@ -95,8 +115,20 @@
             {/if}
         </div>
 
-	</div>
+
+
+		<div class="panel-footer">
+			<input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
+		</div>
+        {if isset($sm_confirm_export_options)}<div class="alert alert-success"><p class="conf"><strong>{l s='Configuration has been saved' mod='sellermania'}</strong></p></div>{/if}
+
+
+
+    </div>
 </div>
+
+    </fieldset>
+</form>
 
     <form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
         <fieldset>

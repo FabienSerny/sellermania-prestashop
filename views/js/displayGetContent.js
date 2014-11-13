@@ -24,6 +24,7 @@
 
 $(document).ready(function() {
 
+
     function displaySellermaniaCredentials()
     {
         if ($('#sm_import_orders_yes').attr('checked') == 'checked' || $('#sm_import_orders_yes').attr('checked') == true)
@@ -33,9 +34,24 @@ $(document).ready(function() {
         return true;
     }
 
-    $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
-    $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
+    $('#sm_export_all_yes').click(function() { return displaySellermaniaCredentials(); });
+    $('#sm_export_all_no').click(function() { return displaySellermaniaCredentials(); });
     displaySellermaniaCredentials();
+
+
+	function displaySellermaniaExportOptions()
+	{
+		if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true)
+			$('#sm_export_all_configuration').fadeOut();
+		else
+			$('#sm_export_all_configuration').fadeIn();
+		return true;
+	}
+
+	$('#sm_export_all_yes').click(function() { return displaySellermaniaExportOptions(); });
+	$('#sm_export_all_no').click(function() { return displaySellermaniaExportOptions(); });
+	displaySellermaniaExportOptions();
+
 
 	$('#see-advanced-export').click(function() {
 		if ($('#advanced-export').is(':visible'))

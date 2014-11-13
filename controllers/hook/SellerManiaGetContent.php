@@ -26,6 +26,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+require_once(dirname(__FILE__).'/../../classes/FroggyHelperTreeCategories.php');
 require_once(dirname(__FILE__).'/../front/SellerManiaExport.php');
 
 class SellerManiaGetContentController
@@ -68,7 +69,20 @@ class SellerManiaGetContentController
 	 */
 	public function saveConfiguration()
 	{
-		$params = array('sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint', 'sm_confirm_order_endpoint', 'sm_inventory_endpoint');
+		if (Tools::isSubmit('export_configuration'))
+		{
+			Configuration::updateValue('SM_EXPORT_CATEGORIES', '');
+			if (isset($_POST['categories_to_export']) && count($_POST['categories_to_export']) > 0)
+			{
+				$categories = $_POST['categories_to_export'];
+				foreach ($categories as $kc => $vc)
+					$categories[(int)$kc] = (int)$vc;
+				Configuration::updateValue('SM_EXPORT_CATEGORIES', json_encode($categories));
+			}
+			$this->context->smarty->assign('sm_confirm_export_options', 1);
+		}
+
+		$params = array('sm_export_all', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint', 'sm_confirm_order_endpoint', 'sm_inventory_endpoint');
 		foreach ($params as $p)
 			if (isset($_POST[$p]))
 				Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
@@ -138,8 +152,11 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('languages_list', $languages_list);
 		$this->context->smarty->assign('sellermania_module_path', $this->web_path);
 
+		$this->context->smarty->assign('category_tree', $this->renderCategoriesTree());
+
 		$this->context->smarty->assign('sm_default_product', new Product(Configuration::get('SM_DEFAULT_PRODUCT_ID')));
 		$this->context->smarty->assign('sm_default_product_id', Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+		$this->context->smarty->assign('sm_export_all', Configuration::get('SM_EXPORT_ALL'));
 		$this->context->smarty->assign('sm_import_orders', Configuration::get('SM_IMPORT_ORDERS'));
 		$this->context->smarty->assign('sm_order_email', Configuration::get('SM_ORDER_EMAIL'));
 		$this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
@@ -159,6 +176,28 @@ class SellerManiaGetContentController
 		}
 	}
 
+	/**
+	 * Render categories tree method
+	 */
+	public function renderCategoriesTree()
+	{
+		$root = Category::getRootCategory();
+
+		$categories = array();
+		$categories_selected = Configuration::get('SM_EXPORT_CATEGORIES');
+		if (!empty($categories_selected))
+			foreach (json_decode($categories_selected, true) as $key => $category)
+				$categories[] = $category;
+
+		$tree = new FroggyHelperTreeCategories();
+		$tree->setAttributeName('categories_to_export');
+		$tree->setRootCategory($root->id);
+		$tree->setLang($this->context->employee->id_lang);
+		$tree->setSelectedCategories($categories);
+		$tree->setContext($this->context);
+		$tree->setModule($this->module);
+		return $tree->render();
+	}
 
 	/**
 	 * Run method
