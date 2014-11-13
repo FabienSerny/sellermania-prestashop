@@ -29,10 +29,10 @@
 
 <script>
 	$('#category-tree-select-all-{$categories_tree_id}').click(function() {
-		$('.categories-tree-checkbox-{$categories_tree_id}').prop('checked', 'checked');
+		$('.categories-tree-checkbox-{$categories_tree_id}').attr('checked', 'checked');
 	});
 	$('#category-tree-unselect-all-{$categories_tree_id}').click(function() {
-		$('.categories-tree-checkbox-{$categories_tree_id}').prop('checked', '');
+		$('.categories-tree-checkbox-{$categories_tree_id}').removeAttr('checked');
 	});
 </script>
 
