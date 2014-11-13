@@ -34,8 +34,8 @@ $(document).ready(function() {
         return true;
     }
 
-    $('#sm_export_all_yes').click(function() { return displaySellermaniaCredentials(); });
-    $('#sm_export_all_no').click(function() { return displaySellermaniaCredentials(); });
+    $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
+    $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
     displaySellermaniaCredentials();
 
 
