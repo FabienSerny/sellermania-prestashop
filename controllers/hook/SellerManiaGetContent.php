@@ -83,7 +83,10 @@ class SellerManiaGetContentController
 			$this->context->smarty->assign('sm_confirm_export_options', 1);
 		}
 
-		$params = array('sm_export_all', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint', 'sm_confirm_order_endpoint', 'sm_inventory_endpoint');
+		$params = array('sm_export_all', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint',
+						'sm_confirm_order_endpoint', 'sm_inventory_endpoint', 'sm_stock_sync_option',
+						'sm_stock_sync_nb_char', 'sm_stock_sync_position');
+
 		foreach ($params as $p)
 			if (isset($_POST[$p]))
 				Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
@@ -164,6 +167,9 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
 		$this->context->smarty->assign('sm_confirm_order_endpoint', Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
 		$this->context->smarty->assign('sm_inventory_endpoint', Configuration::get('SM_INVENTORY_ENDPOINT'));
+		$this->context->smarty->assign('sm_stock_sync_option', Configuration::get('SM_STOCK_SYNC_OPTION'));
+		$this->context->smarty->assign('sm_stock_sync_nb_char', Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
+		$this->context->smarty->assign('sm_stock_sync_position', Configuration::get('SM_STOCK_SYNC_POSITION'));
 
 		if ($this->context->language->iso_code == 'fr')
 		{

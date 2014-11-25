@@ -34,9 +34,22 @@ $(document).ready(function() {
         return true;
     }
 
-    $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
-    $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
-    displaySellermaniaCredentials();
+	$('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
+	$('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
+	displaySellermaniaCredentials();
+
+	function displaySellermaniaSyncOption()
+	{
+		if ($('#sm_stock_sync_option_yes').attr('checked') == 'checked' || $('#sm_stock_sync_option_yes').attr('checked') == true)
+			$('#sm_stock_sync_option_configuration').fadeIn();
+		else
+			$('#sm_stock_sync_option_configuration').fadeOut();
+		return true;
+	}
+
+    $('#sm_stock_sync_option_yes').click(function() { return displaySellermaniaSyncOption(); });
+    $('#sm_stock_sync_option_no').click(function() { return displaySellermaniaSyncOption(); });
+	displaySellermaniaSyncOption();
 
 
 	function displaySellermaniaExportOptions()

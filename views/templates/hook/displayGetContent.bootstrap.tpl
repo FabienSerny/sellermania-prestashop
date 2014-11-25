@@ -187,6 +187,31 @@
 									<input type="text" name="sm_inventory_endpoint" value="{$sm_inventory_endpoint}" />
 								</div>
 							</div>
+							<div class="form-group clearfix">
+								<label class="col-lg-4">{l s='Synchronization by reference (optional)' mod='sellermania'}</label>
+								<div class="col-lg-4">
+									<input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_yes" value="yes" {if $sm_stock_sync_option eq 'yes'}checked="checked"{/if} />
+									<label for="sm_stock_sync_option_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+									<input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_no" value="no" {if $sm_stock_sync_option eq 'no' || $sm_stock_sync_option eq ''}checked="checked"{/if} />
+									<label for="sm_stock_sync_option_no">{l s='No' mod='sellermania'}</label>
+                                </div>
+							</div>
+                            <div class="form-group clearfix" id="sm_stock_sync_option_configuration">
+								<label class="col-lg-4">&nbsp;</label>
+								<div class="col-lg-1">
+                                    {l s='Use the' mod='sellermania'}
+								</div>
+                                <div class="col-lg-2"><input type="text" name="sm_stock_sync_nb_char" value="{$sm_stock_sync_nb_char|intval}" /></div>
+                                <div class="col-lg-2">
+									<input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_first" value="first" {if $sm_stock_sync_position eq 'first'}checked="checked"{/if} />
+									<label for="sm_stock_sync_position_first">{l s='first' mod='sellermania'}</label>&nbsp;&nbsp;
+									<input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_last" value="last" {if $sm_stock_sync_position eq 'last' || $sm_stock_sync_position eq ''}checked="checked"{/if} />
+									<label for="sm_stock_sync_position_last">{l s='last' mod='sellermania'}</label>
+                                </div>
+								<div class="col-lg-2">
+                                    {l s='reference\'s characters.' mod='sellermania'}
+                                </div>
+							</div>
                             {if empty($sm_order_email)}
                                 <div class="form-group clearfix">
                                     <strong><u>{l s='Note:' mod='sellermania'}</u></strong>
