@@ -26,7 +26,8 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-require_once(dirname(__FILE__).'/../../classes/FroggyHelperTreeCategories.php');
+if (!class_exists('FroggyHelperTreeCategories'))
+	require_once(dirname(__FILE__).'/../../classes/FroggyHelperTreeCategories.php');
 require_once(dirname(__FILE__).'/../front/SellerManiaExport.php');
 
 class SellerManiaGetContentController

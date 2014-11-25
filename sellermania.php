@@ -324,6 +324,12 @@ class SellerMania extends Module
 		else
 			return $this->display(__FILE__, $template);
 	}
+	public function fcdisplay($file, $template)
+	{
+		if ($this->bootstrap)
+			$template = str_replace('.tpl', '.bootstrap.tpl', $template);
+		return $this->compliantDisplay($template);
+	}
 
 
 	/**
