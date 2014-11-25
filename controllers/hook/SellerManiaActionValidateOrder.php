@@ -68,7 +68,7 @@ class SellerManiaActionValidateOrderController
 		}
 
 		// We synchronize the stock
-		//$this->syncStock('ORDER', $this->params['order']->id, $skus, $skus_quantities);
+		$this->syncStock('ORDER', $this->params['order']->id, $skus, $skus_quantities);
 	}
 
 	public function syncStockByReference()
@@ -100,7 +100,7 @@ class SellerManiaActionValidateOrderController
 
 					// Then we continue to fill the skus arrays
 					foreach ($matched_products as $match)
-						if ($match['id_product'] != $product['product_id'] && $match['id_product_attribute'] != $product['product_attribute_id'])
+						if ($match['id_product'] != $product['product_id'] || $match['id_product_attribute'] != $product['product_attribute_id'])
 						{
 							$skus[] = $match['product_reference'];
 							$skus_quantities[$match['product_reference']] = - ($product['product_quantity']);
@@ -117,7 +117,7 @@ class SellerManiaActionValidateOrderController
 						}
 				}
 			}
-			//$this->syncStock('ORDER', $this->params['order']->id, $skus, $skus_quantities);
+			$this->syncStock('ORDER', $this->params['order']->id, $skus, $skus_quantities);
 		}
 	}
 
