@@ -64,6 +64,39 @@ class SellerManiaActionValidateOrderController
 			$skus_quantities[$product['product_reference']] = - ($product['product_quantity']);
 		}
 
+		// If the merchant use the synchronisation options
+		if (Configuration::get('SM_STOCK_SYNC_OPTION') == 'yes' && (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR') > 0)
+		{
+			// We run again over the products
+			foreach ($products as $product)
+			{
+				// We retrieve the X firt or last characters of the reference of each product
+				$refcode = substr($product['product_reference'], 0, (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
+				$sql_filter = "`reference` LIKE '".$refcode."%'";
+				if (Configuration::get('SM_STOCK_SYNC_POSITION') == 'last')
+				{
+					$refcode = substr($product['product_reference'], - (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
+					$sql_filter = "`reference` LIKE '%".$refcode."'";
+				}
+
+				// If reference is not empty
+				if (!empty($refcode))
+				{
+					// We try to find a match in product and product_attribute tables
+					$matched_products1 = Db::getInstance()->executeS('SELECT `reference` FROM `'._DB_PREFIX_.'product` WHERE '.$sql_filter);
+					$matched_products2 = Db::getInstance()->executeS('SELECT `reference` FROM `'._DB_PREFIX_.'product_attribute` WHERE '.$sql_filter);
+					$matched_products = array_merge($matched_products1, $matched_products2);
+
+					// Then we continue to fill the skus arrays
+					foreach ($matched_products as $match)
+					{
+						$skus[] = $match['product_reference'];
+						$skus_quantities[$match['product_reference']] = - ($product['product_quantity']);
+					}
+				}
+			}
+		}
+
 		// We synchronize the stock
 		$this->syncStock('ORDER', $this->params['order']->id, $skus, $skus_quantities);
 	}
