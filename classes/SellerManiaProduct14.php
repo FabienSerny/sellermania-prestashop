@@ -209,7 +209,12 @@ class SellerManiaProduct
 
 		$link = new Link();
 		foreach ($result as $row)
-			$images[] = 'http://'.$link->getImageLink('product', $id_product.'-'.$row['id_image'], 'thickbox');
+		{
+			$image_link = 'http://'.$link->getImageLink('product', $id_product.'-'.$row['id_image'], 'thickbox');
+			if (Tools::getHttpHost() == '')
+				$image_link = str_replace('http:///', 'http://'.Configuration::get('PS_SHOP_DOMAIN').'/', $image_link);
+			$images[] = $image_link;
+		}
 
 		return $images;
 	}
