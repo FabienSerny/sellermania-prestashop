@@ -224,7 +224,12 @@ class SellerManiaProduct
 		$result = Db::getInstance()->executeS($sql);
 
 		foreach ($result as $row)
-			$images[] = $context->link->getImageLink('product', $row['id_image'], 'thickbox_default');
+		{
+			$image_link = $context->link->getImageLink('product', $row['id_image'], 'thickbox_default');
+			if (Tools::getHttpHost() == '')
+				$image_link = str_replace('http://./', 'http://'.$context->shop->domain.'/'.$context->shop->physical_uri, $image_link);
+			$images[] = $image_link;
+		}
 
 		return $images;
 	}
