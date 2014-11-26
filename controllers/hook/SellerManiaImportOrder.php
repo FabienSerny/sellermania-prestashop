@@ -312,12 +312,15 @@ class SellerManiaImportOrderController
 	 */
 	public function createCart()
 	{
+		// Retrieve a carrier
+		$id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `active` = 1 AND `deleted` = 0');
+
 		// Create Cart
 		$this->cart = new Cart();
 		$this->cart->id_customer = $this->customer->id;
 		$this->cart->id_address_invoice = $this->address->id;
 		$this->cart->id_address_delivery = $this->address->id;
-		$this->cart->id_carrier = Configuration::get('PS_CARRIER_DEFAULT');
+		$this->cart->id_carrier = $id_carrier;
 		$this->cart->id_lang = $this->id_lang;
 		$this->cart->id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
 		$this->cart->recyclable = 0;
