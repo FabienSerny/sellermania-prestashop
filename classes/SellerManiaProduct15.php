@@ -212,6 +212,7 @@ class SellerManiaProduct
 	{
 		// Retrieve context
 		$context = Context::getContext();
+		$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 
 		// Retrieves images
 		$images = array();
