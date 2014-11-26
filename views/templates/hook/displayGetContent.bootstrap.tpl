@@ -198,6 +198,13 @@
 							</div>
                             <div class="form-group clearfix" id="sm_stock_sync_option_configuration">
 								<label class="col-lg-4">&nbsp;</label>
+								<div class="col-lg-8">
+                                    <p align="left">
+                                        {l s='This feature allows you to "chain" some references to each other, which will permit to update the stock of all the chained references at the same time.' mod='sellermania'}<br>
+                                        {l s='Define how you want to chain the references, the X first or X last characters of the reference.' mod='sellermania'}
+									</p>
+                                </div>
+								<label class="col-lg-4">&nbsp;</label>
 								<div class="col-lg-1">
                                     {l s='Use the' mod='sellermania'}
 								</div>

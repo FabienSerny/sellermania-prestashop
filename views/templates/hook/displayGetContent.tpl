@@ -136,9 +136,10 @@
 					<label>{l s='Synchronization by reference (optional)' mod='sellermania'}</label>
 					<input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_yes" value="yes" {if $sm_stock_sync_option eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
 					<input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_no" value="no" {if $sm_stock_sync_option eq 'no' || $sm_stock_sync_option eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
-				</p>
+				</p><br clear="left" />
 				<p id="sm_stock_sync_option_configuration">
-					<label>&nbsp;</label>
+					{l s='This feature allows you to "chain" some references to each other, which will permit to update the stock of all the chained references at the same time.' mod='sellermania'}<br>
+                    {l s='Define how you want to chain the references, the X first or X last characters of the reference.' mod='sellermania'}<br><br>
                     {l s='Use the' mod='sellermania'} <input type="text" name="sm_stock_sync_nb_char" value="{$sm_stock_sync_nb_char|intval}" />
 					<input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_first" value="first" {if $sm_stock_sync_position eq 'first'}checked="checked"{/if} /> {l s='first' mod='sellermania'}
 					<input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_last" value="last" {if $sm_stock_sync_position eq 'last' || $sm_stock_sync_position eq ''}checked="checked"{/if} /> {l s='last' mod='sellermania'}

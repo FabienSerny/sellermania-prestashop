@@ -99,7 +99,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_052a082e01751049b
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_716424eda8e212234855dfd700a07a9e'] = 'Order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_e9d86eb28865fb19fd5b735c4eca7d66'] = 'Confirm order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
-$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation par référence (optionnel)';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation du stock par chainage (optionnel)';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f6e6e93c0de5c4044e1651383b4c450b'] = 'Cette fonctionnalité vous permet de ‘chaîner’ plusieurs références les unes aux autres, pour mettre à jour les stocks sur toutes les références chaînées en même temps.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_ae7d12443d6e65123e1b427213fad178'] = 'Définissez comment vous souhaitez chaîner les références, soit par les x premiers ou x derniers caractères de la référence';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_7400a1a595f19cde496a4d3cdf6a4570'] = 'Utiliser les';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_8b04d5e3775d298e78455efc5ca404d5'] = 'premiers';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_98bd1c45684cf587ac2347a92dd7bb51'] = 'derniers';
@@ -153,7 +155,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_e9d86eb28865fb19fd5b735c4ec
 $_MODULE['<{sellermania}prestashop>displaygetcontent_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_fc9d3df613063ee57906c461320744e2'] = 'Note :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par Sellermania, si vous ne les avez pas, veuillez contacter Sellermania afin qu\'il vous les communique.';
-$_MODULE['<{sellermania}prestashop>displaygetcontent_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation par référence (optionnel)';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation du stock par chainage (optionnel)';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_f6e6e93c0de5c4044e1651383b4c450b'] = 'Cette fonctionnalité vous permet de ‘chaîner’ plusieurs références les unes aux autres, pour mettre à jour les stocks sur toutes les références chaînées en même temps.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_ae7d12443d6e65123e1b427213fad178'] = 'Définissez comment vous souhaitez chaîner les références, soit par les x premiers ou x derniers caractères de la référence';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_7400a1a595f19cde496a4d3cdf6a4570'] = 'Utiliser les';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_8b04d5e3775d298e78455efc5ca404d5'] = 'premiers';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_98bd1c45684cf587ac2347a92dd7bb51'] = 'derniers';
