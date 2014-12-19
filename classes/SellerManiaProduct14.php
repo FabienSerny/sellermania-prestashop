@@ -212,7 +212,10 @@ class SellerManiaProduct
 		{
 			$image_link = 'http://'.$link->getImageLink('product', $id_product.'-'.$row['id_image'], 'thickbox');
 			if (Tools::getHttpHost() == '')
+			{
 				$image_link = str_replace('http:///', 'http://'.Configuration::get('PS_SHOP_DOMAIN').'/', $image_link);
+				$image_link = str_replace('http://html/', 'http://'.Configuration::get('PS_SHOP_DOMAIN').'/', $image_link);
+			}
 			$images[] = $image_link;
 		}
 
