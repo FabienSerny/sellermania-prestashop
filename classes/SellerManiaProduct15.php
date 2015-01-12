@@ -75,7 +75,10 @@ class SellerManiaProduct
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 				AND product_shop.`visibility` IN ("both", "catalog")
-				'.$where.'
+				AND (
+					p.`active` = 1 OR
+					p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-7 days'))).'\'
+				) '.$where.'
 				GROUP BY product_shop.id_product '.$limitSQL;
 
 		// Return query

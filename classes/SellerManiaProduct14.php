@@ -72,7 +72,10 @@ class SellerManiaProduct
 	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-		WHERE 1'.$where;
+		WHERE (
+			p.`active` = 1 OR
+			p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-7 days'))).'\'
+		) '.$where;
 
 		// Return query
 		return Db::getInstance()->Execute($sql);
