@@ -138,12 +138,18 @@ class SellermaniaOrder extends ObjectModel
 	 * Delete Sellermania order
 	 * @return bool
 	 */
-	public static function deleteSellermaniaOrder($id_sellermania_order)
+	public static function deleteSellermaniaOrderInError($id_sellermania_order)
 	{
 		return Db::getInstance()->getValue('
 		DELETE FROM `'._DB_PREFIX_.'sellermania_order`
 		WHERE `id_order` = 0
 		AND `id_sellermania_order` = '.(int)$id_sellermania_order);
+	}
+	public static function deleteAllSellermaniaOrdersInError()
+	{
+		return Db::getInstance()->getValue('
+		DELETE FROM `'._DB_PREFIX_.'sellermania_order`
+		WHERE `id_order` = 0');
 	}
 
 	/*** Retrocompatibility 1.4 ***/

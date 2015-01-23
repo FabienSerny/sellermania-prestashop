@@ -42,6 +42,7 @@
                 </li>
             {/foreach}
         </ul>
+        <p><a href="{$module_url}&see=orders-error&reimport=all">{l s='Try to reimport all orders during next importation' mod='sellermania'}</a></p>
 
         {if isset($smarty.get.reimport)}
             <div class="alert alert-success"><p class="conf"><strong>{l s='The module will try to reimport this order during next importation.' mod='sellermania'}</strong></p></div>

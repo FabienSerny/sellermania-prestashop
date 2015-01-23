@@ -116,7 +116,9 @@ class SellerManiaGetContentController
 
 		// Retrieve orders in error
 		if (Tools::getValue('reimport') > 0)
-			SellermaniaOrder::deleteSellermaniaOrder((int)Tools::getValue('reimport'));
+			SellermaniaOrder::deleteSellermaniaOrderInError((int)Tools::getValue('reimport'));
+		if (Tools::getValue('reimport') == 'all')
+			SellermaniaOrder::deleteAllSellermaniaOrdersInError();
 		$orders_in_error = SellermaniaOrder::getSellermaniaOrdersInError();
 		$nb_orders_in_error = count($orders_in_error);
 
