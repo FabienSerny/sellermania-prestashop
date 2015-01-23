@@ -217,6 +217,10 @@ class SellerManiaProduct
 		$context = Context::getContext();
 		$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 
+		// Retrieve context link
+		if (!isset($context->link))
+			$context->link = new Link();
+
 		// Retrieves images
 		$images = array();
 		$sql = 'SELECT image_shop.`cover`, i.`id_image`, i.`position`
