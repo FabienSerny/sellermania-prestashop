@@ -147,7 +147,7 @@ class SellermaniaOrder extends ObjectModel
 	}
 	public static function deleteAllSellermaniaOrdersInError()
 	{
-		return Db::getInstance()->getValue('
+		return Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'sellermania_order`
 		WHERE `id_order` = 0');
 	}
