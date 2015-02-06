@@ -1,5 +1,5 @@
 {*
-* 2010 - 2014 Sellermania / Froggy Commerce / 23Prod SARL
+* 2010 - 2015 Sellermania / Froggy Commerce / 23Prod SARL
 *
 * NOTICE OF LICENSE
 *
