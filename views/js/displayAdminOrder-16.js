@@ -88,6 +88,15 @@ $(document).ready(function() {
         $('#messages').parent().hide();
     }
 
+	// Fix for 1.6.0.11
+	if (sellermania_right_column == '')
+	{
+		$('#onboarding-starter').parent().hide();
+		$('.kpi-container').hide();
+		$('.icon-print').parent().parent().hide();
+		sellermania_right_column = $('.col-lg-5').find('.panel');
+	}
+
 
     // Replace status order selection
     sellermania_block_order_state.after(sellermania_title);
