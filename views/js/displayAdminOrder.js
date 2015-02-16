@@ -31,7 +31,8 @@ $(document).ready(function() {
         var sm_block_product = sellermania_block_products_list[i];
 
         var sku_short = sm_block_product.html().split('<br>');
-        var remove = sku_short[1].split(' ');
+		sku_short[1] = sku_short[1].replace('Numéro de référence', 'Ref');
+		var remove = sku_short[1].split(' ');
         if (remove[1] == ':')
             sku_short = sku_short[1].replace(remove[0] + ' ' + remove[1], '').trim();
         else
