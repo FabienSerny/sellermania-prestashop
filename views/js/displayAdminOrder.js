@@ -38,7 +38,7 @@ $(document).ready(function() {
         else
             sku_short = sku_short[1].replace(remove[0], '').trim();
 
-        if (sku_short != '')
+        if (sku_short != '' && typeof sellermania_products[sku_short] != 'undefined')
         {
             var html_order_line = '';
             if (sellermania_products[sku_short].insurance_price > 0)
