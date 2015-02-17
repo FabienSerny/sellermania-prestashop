@@ -702,7 +702,10 @@ class SellerManiaImportOrderController
 		SELECT `id_order_detail`
 		FROM `'._DB_PREFIX_.'order_detail`
 		WHERE `id_order` = '.(int)$id_order.'
-		AND `product_reference` = \''.pSQL($product['Sku']).'\'');
+		AND (
+			`product_reference` = \''.pSQL($product['Sku']).'\' OR
+			(`product_ean13` = \''.pSQL($product['Ean']).'\' AND `product_ean13` != \'\')
+		)');
 
 		// We check if a default Sellermania product is in Order Detail
 		// If yes, we update it, if not, we create a new Order Detail
