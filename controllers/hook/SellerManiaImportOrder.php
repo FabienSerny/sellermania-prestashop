@@ -269,8 +269,9 @@ class SellerManiaImportOrderController
 		$this->customer->add();
 
 		// Fix lang for PS 1.4
+		$rp = new ReflectionProperty($this->customer,'id_lang');
 		$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
-		if (version_compare(_PS_VERSION_, '1.5') >= 0)
+		if (version_compare(_PS_VERSION_, '1.5') >= 0 && !$rp->isProtected())
 			$this->id_lang = $this->customer->id_lang;
 
 		// Set context
