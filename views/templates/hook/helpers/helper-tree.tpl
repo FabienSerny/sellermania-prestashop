@@ -27,16 +27,18 @@
 <br><br>
 {$categories_tree}
 
+{literal}
 <script>
-	$('#category-tree-select-all-{$categories_tree_id}').click(function() {
-		$('.categories-tree-checkbox-{$categories_tree_id}').attr('checked', 'checked');
-	});
-	$('#category-tree-unselect-all-{$categories_tree_id}').click(function() {
-		$('.categories-tree-checkbox-{$categories_tree_id}').removeAttr('checked');
-	});
+		$('#category-tree-select-all-{/literal}{$categories_tree_id}{literal}').click(function() {
+	$('.categories-tree-checkbox-{$categories_tree_id}').attr('checked', 'checked');
+});
+		$('#category-tree-unselect-all-{/literal}{$categories_tree_id}{literal}').click(function() {
+	$('.categories-tree-checkbox-{$categories_tree_id}').removeAttr('checked');
+});
 </script>
 
 <style>
 	.froggy-categories-tree { padding-left:15px }
-    .froggy-categories-tree li { list-style-type: none }
+	.froggy-categories-tree li { list-style-type: none }
 </style>
+{/literal}
