@@ -248,7 +248,6 @@ class SellerManiaImportOrderController
 			{
 				$pointer = $existing_ref[$sku.'-'.$ean];
 				$this->data['OrderInfo']['Product'][$pointer]['QuantityPurchased'] += $this->data['OrderInfo']['Product'][$kp]['QuantityPurchased'];
-				$this->data['OrderInfo']['Product'][$pointer]['Amount']['Price'] += $this->data['OrderInfo']['Product'][$kp]['Amount']['Price'];
 				$this->data['OrderInfo']['Product'][$pointer]['ShippingFee']['Amount']['Price'] += $this->data['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['Price'];
 				$this->data['OrderInfo']['Product'][$pointer]['ProductVAT']['total'] += $this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'];
 				unset($this->data['OrderInfo']['Product'][$kp]);
