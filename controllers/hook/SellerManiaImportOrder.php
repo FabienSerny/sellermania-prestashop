@@ -183,6 +183,7 @@ class SellerManiaImportOrderController
 			$this->data['OrderInfo']['Product'] = array($this->data['OrderInfo']['Product']);
 
 		// Calcul total product without tax
+		$existing_ref = array();
 		$this->data['OrderInfo']['TotalProductsWithVAT'] = 0;
 		$this->data['OrderInfo']['TotalProductsWithoutVAT'] = 0;
 		$this->data['OrderInfo']['TotalInsurance'] = 0;
@@ -236,6 +237,24 @@ class SellerManiaImportOrderController
 				$this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'] = 0;
 			if (!isset($this->data['OrderInfo']['Product'][$kp]['Amount']['Price']))
 				$this->data['OrderInfo']['Product'][$kp]['Amount']['Price'] = 0;
+
+			// Get Product Identifiers
+			$this->data['OrderInfo']['Product'][$kp] = $this->getProductIdentifier($this->data['OrderInfo']['Product'][$kp]);
+
+			// If product already exists
+			$sku = $this->data['OrderInfo']['Product'][$kp]['Sku'];
+			$ean = $this->data['OrderInfo']['Product'][$kp]['Ean'];
+			if (isset($existing_ref[$sku.'-'.$ean]))
+			{
+				$pointer = $existing_ref[$sku.'-'.$ean];
+				$this->data['OrderInfo']['Product'][$pointer]['QuantityPurchased'] += $this->data['OrderInfo']['Product'][$kp]['QuantityPurchased'];
+				$this->data['OrderInfo']['Product'][$pointer]['Amount']['Price'] += $this->data['OrderInfo']['Product'][$kp]['Amount']['Price'];
+				$this->data['OrderInfo']['Product'][$pointer]['ShippingFee']['Amount']['Price'] += $this->data['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['Price'];
+				$this->data['OrderInfo']['Product'][$pointer]['ProductVAT']['total'] += $this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'];
+				unset($this->data['OrderInfo']['Product'][$kp]);
+			}
+			else
+				$existing_ref[$sku.'-'.$ean] = $kp;
 		}
 
 		// Fix paiement date
@@ -331,10 +350,6 @@ class SellerManiaImportOrderController
 		// Update cart with products
 		foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
 		{
-			// Get Product Identifiers
-			$product = $this->getProductIdentifier($product);
-			$this->data['OrderInfo']['Product'][$kp] = $product;
-
 			// Add to cart
 			$quantity = (int)$product['QuantityPurchased'];
 			$id_product = (int)$product['id_product'];
