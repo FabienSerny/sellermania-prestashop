@@ -163,6 +163,8 @@ class SellerManiaActionValidateOrderController
 				if ($sku_line['Status'] == 'SUCCESS' && isset($skus_quantities[$sku_line['Id']]))
 				{
 					$quantity = (int)$sku_line['Quantity'] + (int)$skus_quantities[$sku_line['Id']];
+					if ($quantity < 0)
+						$quantity = 0;
 					$xml .= '<UpdateInventory><Sku>'.$sku_line['Id'].'</Sku><Quantity>'.$quantity.'</Quantity></UpdateInventory>';
 				}
 
