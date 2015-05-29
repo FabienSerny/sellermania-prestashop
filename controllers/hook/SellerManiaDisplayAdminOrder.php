@@ -151,7 +151,7 @@ class SellerManiaDisplayAdminOrderController
 			return false;
 
 		// Check shipping status
-		$status_to_ship = $this->isStatusToShip($sellermania_order);
+		$status_to_ship = self::isStatusToShip($sellermania_order);
 		if ($status_to_ship != 1)
 			return false;
 
@@ -186,7 +186,7 @@ class SellerManiaDisplayAdminOrderController
 			if (!empty($sellermania_order))
 			{
 				// Check shipping status
-				$status_to_ship = $this->isStatusToShip($sellermania_order);
+				$status_to_ship = self::isStatusToShip($sellermania_order);
 				if ($status_to_ship == 1)
 				{
 					// Preprocess data
@@ -274,7 +274,7 @@ class SellerManiaDisplayAdminOrderController
 	 * @param $sellermania_order
 	 * @return int flag
 	 */
-	public function isStatusToShip($sellermania_order)
+	public static function isStatusToShip($sellermania_order)
 	{
 		// Check if there is a flag to dispatch
 		$status_to_ship = 0;
@@ -406,7 +406,7 @@ class SellerManiaDisplayAdminOrderController
 			$sellermania_order = $return;
 
 		// Refresh flag to dispatch
-		$status_to_ship = $this->isStatusToShip($sellermania_order);
+		$status_to_ship = self::isStatusToShip($sellermania_order);
 
 		// Refresh order status
 		$this->refreshOrderStatus(Tools::getValue('id_order'), $sellermania_order);
