@@ -155,17 +155,56 @@ class SellerManiaDisplayAdminOrderController
 		if ($status_to_ship != 1)
 			return false;
 
-		// Preprocess data
+		// Set orders param
+		$orders = array(
+			array(
+				'id_order' => (int)Tools::getValue('id_order'),
+				'tracking_number' => Tools::getValue('tracking_number'),
+				'shipping_name' => Tools::getValue('shipping_name'),
+			),
+		);
+
+		// Register shipping data
+		return self::registerShippingData($orders);
+	}
+
+
+	/**
+	 * Save shipping status
+	 * @param string $order_id
+	 */
+	public static function registerShippingData($orders)
+	{
+		// Set order items array
 		$order_items = array();
-		foreach ($sellermania_order['OrderInfo']['Product'] as $product)
-			if ($product['Status'] == 1)
-				$order_items[] = array(
-					'orderId' => pSQL($sellermania_order['OrderInfo']['OrderId']),
-					'sku' => pSQL($product['Sku']),
-					'orderStatusId' => \Sellermania\OrderConfirmClient::STATUS_DISPATCHED,
-					'trackingNumber' => pSQL(Tools::getValue('tracking_number')),
-					'shippingCarrier' => pSQL(Tools::getValue('shipping_name')),
-				);
+
+		// For each order
+		foreach ($orders as $order)
+		{
+			// Retrieve order data
+			$sellermania_order = Db::getInstance()->getValue('SELECT `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)$order['id_order']);
+			if (!empty($sellermania_order))
+			{
+				// Check shipping status
+				$status_to_ship = $this->isStatusToShip($sellermania_order);
+				if ($status_to_ship == 1)
+				{
+					// Preprocess data
+					foreach ($sellermania_order['OrderInfo']['Product'] as $product)
+						if ($product['Status'] == 1)
+							$order_items[] = array(
+								'orderId' => pSQL($sellermania_order['OrderInfo']['OrderId']),
+								'sku' => pSQL($product['Sku']),
+								'orderStatusId' => \Sellermania\OrderConfirmClient::STATUS_DISPATCHED,
+								'trackingNumber' => pSQL($order['tracking_number']),
+								'shippingCarrier' => pSQL($order['shipping_name']),
+							);
+				}
+			}
+		}
+
+		if (empty($order_items))
+			return false;
 
 		try
 		{
@@ -186,8 +225,8 @@ class SellerManiaDisplayAdminOrderController
 		catch (\Exception $e)
 		{
 			$this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
+			return false;
 		}
-
 	}
 
 	/**
