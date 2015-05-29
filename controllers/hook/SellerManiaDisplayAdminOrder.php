@@ -185,6 +185,9 @@ class SellerManiaDisplayAdminOrderController
 			$sellermania_order = Db::getInstance()->getValue('SELECT `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)$order['id_order']);
 			if (!empty($sellermania_order))
 			{
+				// Decode order data
+				$sellermania_order = json_decode($sellermania_order, true);
+
 				// Check shipping status
 				$status_to_ship = self::isStatusToShip($sellermania_order);
 				if ($status_to_ship == 1)
