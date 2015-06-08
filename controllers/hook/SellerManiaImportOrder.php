@@ -474,6 +474,10 @@ class SellerManiaImportOrderController
 							if (Configuration::get('SM_STOCK_SYNC_POSITION') == 'last')
 								$search_filter = '%'.substr($product[$fields_sm], - (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
 							$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table.'` WHERE `'.$field_ps.'` LIKE \''.pSQL($search_filter).'\'');
+
+							// Alter Sku if matched
+							if (isset($pr['id_product']) && $pr['id_product'] > 0)
+								$product[$fields_sm] = $pr[$field_ps];
 						}
 
 					// If product is matched
