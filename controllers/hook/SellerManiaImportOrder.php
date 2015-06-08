@@ -464,7 +464,18 @@ class SellerManiaImportOrderController
 				{
 					// Check product attribute
 					$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table.'` WHERE `'.$field_ps.'` = \''.pSQL($product[$fields_sm]).'\'');
-					if ($pr['id_product'] > 0)
+
+					// Check with chain option
+					if (!isset($pr['id_product']) || $pr['id_product'] < 1)
+						if (Configuration::get('SM_STOCK_SYNC_OPTION_2') == 'yes' && (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR') > 0)
+						{
+							$search_filter = substr($product[$fields_sm], 0, (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR')).'%';
+							if (Configuration::get('SM_STOCK_SYNC_POSITION') == 'last')
+								$search_filter = substr($product[$fields_sm], - (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
+							$pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table.'` WHERE `'.$field_ps.'` LIKE \''.pSQL($search_filter).'\'');
+						}
+
+					if (isset($pr['id_product']) && $pr['id_product'] > 0)
 					{
 						$product['id_product'] = $pr['id_product'];
 						$product['id_product_attribute'] = 0;
