@@ -74,9 +74,10 @@ class SellerManiaActionValidateOrderController
 	public function syncStockByReference()
 	{
 		// If the merchant use the synchronisation option, for all orders (PrestaShop & Sellermania)
-		if (Configuration::get('SM_STOCK_SYNC_OPTION') == 'yes' && (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR') > 0)
+		if (Configuration::get('SM_STOCK_SYNC_OPTION_1') == 'yes' && (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR') > 0)
 		{
 			// We ran over the products
+			$skus = array();
 			$skus_quantities = array();
 			$products = $this->params['order']->getProducts();
 			foreach ($products as $product)
