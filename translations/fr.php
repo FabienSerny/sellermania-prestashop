@@ -67,6 +67,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d0929930c42442a6d
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_3b4e304af7c4be4cd3fe1ea62540f640'] = 'commandes n\'ont pas pu être importées, pour plus d\'explications contactez l\'équipe';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_4b730b0376cf11c12078eaf2680edb58'] = 'Froggy Commerce';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_ec8803912680c6e8e1d2e144a390528f'] = 'Tenter de la réimporter durant le prochain import';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_531ef383505e2734991a90a0089c1534'] = 'Tenter de réimporter toutes les commandes durant le prochain import';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_840f19ad548daaf3e5e0aae0323c594f'] = 'Le module essaiera de réimporter cette commande durant le prochain import.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_988fd738de9c6d177440c5dcf69e73ce'] = 'Retour';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f8cc31906a756650862b6f8a10d0a1ae'] = 'Aide Sellermania';
@@ -100,7 +101,13 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_716424eda8e212234
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_e9d86eb28865fb19fd5b735c4eca7d66'] = 'Confirm order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation du stock par chainage (optionnel)';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_fd577a8bfd88959b13dfc6803c7ef6ce'] = 'Option 1';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f6e6e93c0de5c4044e1651383b4c450b'] = 'Cette fonctionnalité vous permet de ‘chaîner’ plusieurs références les unes aux autres, pour mettre à jour les stocks sur toutes les références chaînées en même temps.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_76a3a1f1c9a5e1312d1c37be07dba85f'] = 'Exemple : Vous choississez de chaîner avec les 5 premiers caractères du SKU. Si le SKU d\'un produit d\'une commande importée est \"D6HSIQKZJD\", tous les produits ayant un SKU commençant par \"D6HSI\" auront leur stock mis à jour.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_e24963e40778134b357f4a5eac58e1f5'] = 'Option 2';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f2c9f520176ca0b88a031aa5d5f70ff5'] = 'Cette fonctionnalité vous permet de faire correspondre le SKU d\'un produit d\'une commande importée avec la référence d\'un produit présent dans PrestaShop.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_84a99c9bd19de3b906e98b3851e5ade1'] = 'Exemple : Vous choississez de chaîner avec les 5 premiers caractères du SKU. Si le SKU d\'un produit d\'une commande importée est \"D6HSIQKZJD\", PrestaShop associera le premier produit dont la référence commence par \"D6HSI\".';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_254f642527b45bc260048e30704edb39'] = 'Configuration';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_ae7d12443d6e65123e1b427213fad178'] = 'Définissez comment vous souhaitez chaîner les références, soit par les x premiers ou x derniers caractères de la référence';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_7400a1a595f19cde496a4d3cdf6a4570'] = 'Utiliser les';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_8b04d5e3775d298e78455efc5ca404d5'] = 'premiers';
@@ -121,6 +128,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_d0929930c42442a6db4aa07342b
 $_MODULE['<{sellermania}prestashop>displaygetcontent_ed39386824c3a230056aef4b02a21406'] = 'commandes n\'ont pas pu être importées, pour plus d\'explications contactez l\'équipe';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_4b730b0376cf11c12078eaf2680edb58'] = 'Froggy Commerce';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_ec8803912680c6e8e1d2e144a390528f'] = 'Tenter de la réimporter durant le prochain import';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_531ef383505e2734991a90a0089c1534'] = 'Tenter de réimporter toutes les commandes durant le prochain import';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_840f19ad548daaf3e5e0aae0323c594f'] = 'Le module essaiera de réimporter cette commande durant le prochain import.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_988fd738de9c6d177440c5dcf69e73ce'] = 'Retour';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_f8cc31906a756650862b6f8a10d0a1ae'] = 'Aide Sellermania';
@@ -156,7 +164,13 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_5151a85f50264168c66e9793b8d
 $_MODULE['<{sellermania}prestashop>displaygetcontent_fc9d3df613063ee57906c461320744e2'] = 'Note :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par Sellermania, si vous ne les avez pas, veuillez contacter Sellermania afin qu\'il vous les communique.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation du stock par chainage (optionnel)';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_72252a9e447b2f1ce6aac87bac6d2794'] = 'Option 1 :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_f6e6e93c0de5c4044e1651383b4c450b'] = 'Cette fonctionnalité vous permet de ‘chaîner’ plusieurs références les unes aux autres, pour mettre à jour les stocks sur toutes les références chaînées en même temps.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_76a3a1f1c9a5e1312d1c37be07dba85f'] = 'Exemple : Vous choississez de chaîner avec les 5 premiers caractères du SKU. Si le SKU d\'un produit d\'une commande importée est \"D6HSIQKZJD\", tous les produits ayant un SKU commençant par \"D6HSI\" auront leur stock mis à jour.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_eb499f7aadd76ba50d5925ea6552dcff'] = 'Option 2 :';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_f2c9f520176ca0b88a031aa5d5f70ff5'] = 'Cette fonctionnalité vous permet de faire correspondre le SKU d\'un produit d\'une commande importée avec la référence d\'un produit présent dans PrestaShop.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_84a99c9bd19de3b906e98b3851e5ade1'] = 'Exemple : Vous choississez de chaîner avec les 5 premiers caractères du SKU. Si le SKU d\'un produit d\'une commande importée est \"D6HSIQKZJD\", PrestaShop associera le premier produit dont la référence commence par \"D6HSI\".';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_41ce711f2c8e882ba8f384bdc3d45e1f'] = 'Configuration :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_ae7d12443d6e65123e1b427213fad178'] = 'Définissez comment vous souhaitez chaîner les références, soit par les x premiers ou x derniers caractères de la référence';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_7400a1a595f19cde496a4d3cdf6a4570'] = 'Utiliser les';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_8b04d5e3775d298e78455efc5ca404d5'] = 'premiers';
