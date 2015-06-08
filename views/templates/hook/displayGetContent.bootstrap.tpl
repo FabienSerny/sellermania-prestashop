@@ -223,8 +223,8 @@
 									</p>
 								</div>
                                 <br>
-								<label class="col-lg-4">&nbsp;</label>
-								<p><br><b>{l s='Define how you want to chain the references, the X first or X last characters of the reference.' mod='sellermania'}</b></p>
+								<label class="col-lg-4" style="text-align:right"><b>{l s='Configuration' mod='sellermania'}</b></label>
+								<p>&nbsp;&nbsp;<b>{l s='Define how you want to chain the references, the X first or X last characters of the reference.' mod='sellermania'}</b></p>
 								<label class="col-lg-4">&nbsp;</label>
                                 <div class="col-lg-1">
                                     {l s='Use the' mod='sellermania'}
