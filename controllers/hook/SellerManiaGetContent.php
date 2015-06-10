@@ -111,6 +111,14 @@ class SellerManiaGetContentController
 		if (is_writable($this->dir_path.'/export/'))
 			$export_directory_writable = 1;
 		$sellermania_key = Configuration::get('SELLERMANIA_KEY');
+		if (empty($sellermania_key) && version_compare(_PS_VERSION_, '1.5') >= 0)
+		{
+			$sellermania_key_tmp = Configuration::get('SELLERMANIA_KEY', null, 1, 1);
+			if (!empty($sellermania_key_tmp))
+				Configuration::updateValue('SELLERMANIA_KEY', $sellermania_key_tmp);
+			$sellermania_key = Configuration::get('SELLERMANIA_KEY');
+		}
+
 		$smec = new SellerManiaExportController();
 		$module_url = 'index.php?controller='.Tools::getValue('controller').'&tab='.Tools::getValue('tab').'&token='.Tools::getValue('token');
 		$module_url .= '&configure='.Tools::getValue('configure').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'';
