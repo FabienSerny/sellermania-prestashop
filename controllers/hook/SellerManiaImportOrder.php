@@ -241,6 +241,23 @@ class SellerManiaImportOrderController
 			// Get Product Identifiers
 			$this->data['OrderInfo']['Product'][$kp] = $this->getProductIdentifier($this->data['OrderInfo']['Product'][$kp]);
 
+			// If reference is not found
+			$alert_email = Configuration::get('SM_ALERT_MISSING_REF_MAIL');
+			if (Configuration::get('SM_ALERT_MISSING_REF_OPTION') == 'yes' &&
+				!empty($alert_email) && Validate::isEmail($alert_email))
+			{
+				$id_lang = Configuration::get('PS_LANG_DEFAULT');
+				$alert_directory_mail = dirname(__FILE__).'/../../mails/';
+				$templateVars = array(
+					'{sku}' => $this->data['OrderInfo']['Product'][$kp]['Sku'],
+					'{ean13}' => $this->data['OrderInfo']['Product'][$kp]['Ean'],
+					'{marketplace}' => $this->data['OrderInfo']['MarketPlace'],
+					'{order_reference}' => $this->data['OrderInfo']['OrderId'],
+				);
+				Mail::Send($id_lang, 'missing_ref', sprintf(Mail::l('Sellermania - Missing reference on PrestaShop: %s', (int)$id_lang), $this->data['OrderInfo']['Product'][$kp]['Sku']), $templateVars, $alert_email, null, null, null, null, null, $alert_directory_mail);
+				die('OK');
+			}
+
 			// If product already exists
 			$sku = $this->data['OrderInfo']['Product'][$kp]['Sku'];
 			$ean = $this->data['OrderInfo']['Product'][$kp]['Ean'];

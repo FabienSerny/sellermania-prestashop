@@ -1,0 +1,10 @@
+
+[{shop_url}] 
+
+Reference problem detected !
+
+The order {order_reference} from the marketplace {marketplace} contains a product which reference could not be found in PrestaShop (Sku: {sku} / Ean13 {ean13})
+
+{shop_name} [{shop_url}] propulsé par
+PrestaShop(tm) [http://www.prestashop.com/] 
+

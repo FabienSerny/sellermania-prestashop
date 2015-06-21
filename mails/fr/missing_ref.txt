@@ -1,0 +1,10 @@
+
+[{shop_url}] 
+
+Problème de référence détecté !
+
+La commande {order_reference} de la marketplace {marketplace} contient un produit dont la référence n'est pas trouvé dans PrestaShop (Sku: {sku} / Ean13 {ean13})
+
+{shop_name} [{shop_url}] propulsé par
+PrestaShop(tm) [http://www.prestashop.com/] 
+
