@@ -255,7 +255,6 @@ class SellerManiaImportOrderController
 					'{order_reference}' => $this->data['OrderInfo']['OrderId'],
 				);
 				Mail::Send($id_lang, 'missing_ref', sprintf(Mail::l('Sellermania - Missing reference on PrestaShop: %s', (int)$id_lang), $this->data['OrderInfo']['Product'][$kp]['Sku']), $templateVars, $alert_email, null, null, null, null, null, $alert_directory_mail);
-				die('OK');
 			}
 
 			// If product already exists
