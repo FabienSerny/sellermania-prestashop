@@ -86,7 +86,8 @@ class SellerManiaGetContentController
 		$params = array('sm_export_all', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint',
 						'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
 						'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',
-						'sm_stock_sync_nb_char', 'sm_stock_sync_position');
+						'sm_stock_sync_nb_char', 'sm_stock_sync_position',
+						'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail');
 
 		foreach ($params as $p)
 			if (isset($_POST[$p]))
@@ -183,6 +184,9 @@ class SellerManiaGetContentController
 		$this->context->smarty->assign('sm_stock_sync_option_2', Configuration::get('SM_STOCK_SYNC_OPTION_2'));
 		$this->context->smarty->assign('sm_stock_sync_nb_char', Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
 		$this->context->smarty->assign('sm_stock_sync_position', Configuration::get('SM_STOCK_SYNC_POSITION'));
+
+		$this->context->smarty->assign('sm_alert_missing_ref_option', Configuration::get('SM_ALERT_MISSING_REF_OPTION'));
+		$this->context->smarty->assign('sm_alert_missing_ref_mail', Configuration::get('SM_ALERT_MISSING_REF_MAIL'));
 
 		if ($this->context->language->iso_code == 'fr')
 		{

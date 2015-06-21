@@ -165,6 +165,17 @@
 					<br>
 				</p>
 
+				<p>
+					<label>{l s='Alert me by e-mail when a reference is not found' mod='sellermania'}</label>
+					<input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_yes" value="yes" {if $sm_alert_missing_ref_option eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+					<input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_no" value="no" {if $sm_alert_missing_ref_option eq 'no' || $sm_alert_missing_ref_option eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+				</p><br clear="left" />
+				<p id="sm_alert_missing_ref_option_configuration">
+					<label>{l s='Your e-mail' mod='sellermania'}</label>
+                    <input type="text" name="sm_alert_missing_ref_mail" value="{$sm_alert_missing_ref_mail}" />
+                </p>
+
+
             </div>
             <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" class="button" /></label></p>
             {if isset($sm_error_credentials)}<br><br><p class="error"><strong>{$sm_error_credentials|strip_tags}</strong></p>{/if}

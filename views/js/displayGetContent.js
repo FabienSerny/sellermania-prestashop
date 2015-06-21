@@ -52,6 +52,20 @@ $(document).ready(function() {
 	displaySellermaniaSyncOption();
 
 
+	function displaySellermaniaAlertOption()
+	{
+		if ($('#sm_alert_missing_ref_option_yes').attr('checked') == 'checked' || $('#sm_alert_missing_ref_option_yes').attr('checked') == true)
+			$('#sm_alert_missing_ref_option_configuration').fadeIn();
+		else
+			$('#sm_alert_missing_ref_option_configuration').fadeOut();
+		return true;
+	}
+
+	$('#sm_alert_missing_ref_option_yes').click(function() { return displaySellermaniaAlertOption(); });
+	$('#sm_alert_missing_ref_option_no').click(function() { return displaySellermaniaAlertOption(); });
+	displaySellermaniaAlertOption();
+
+
 	function displaySellermaniaExportOptions()
 	{
 		if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true)

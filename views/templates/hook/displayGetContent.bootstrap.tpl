@@ -188,6 +188,14 @@
 									<input type="text" name="sm_inventory_endpoint" value="{$sm_inventory_endpoint}" />
 								</div>
 							</div>
+
+                            {if empty($sm_order_email)}
+								<div class="form-group clearfix">
+									<strong><u>{l s='Note:' mod='sellermania'}</u></strong>
+                                    {l s='These credentials are provided by Sellermania, if you don\'t have them, please contact Sellermania.' mod='sellermania'}
+								</div>
+                            {/if}
+
 							<div class="form-group clearfix">
 								<label class="col-lg-4">{l s='Synchronization by reference (optional)' mod='sellermania'}</label>
 								<div class="col-lg-4">
@@ -240,12 +248,29 @@
                                     {l s='reference\'s characters.' mod='sellermania'}
                                 </div>
 							</div>
-                            {if empty($sm_order_email)}
-                                <div class="form-group clearfix">
-                                    <strong><u>{l s='Note:' mod='sellermania'}</u></strong>
-                                    {l s='These four credentials are provided by Sellermania, if you don\'t have them, please contact Sellermania.' mod='sellermania'}
-                                </div>
-                            {/if}
+
+
+
+
+							<div class="form-group clearfix">
+								<label class="col-lg-4">{l s='Alert me by e-mail when a reference is not found' mod='sellermania'}</label>
+								<div class="col-lg-4">
+									<input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_yes" value="yes" {if $sm_alert_missing_ref_option eq 'yes'}checked="checked"{/if} />
+									<label for="sm_alert_missing_ref_option_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+									<input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_no" value="no" {if $sm_alert_missing_ref_option eq 'no' || $sm_alert_missing_ref_option eq ''}checked="checked"{/if} />
+									<label for="sm_alert_missing_ref_option_no">{l s='No' mod='sellermania'}</label>
+								</div>
+							</div>
+							<div class="form-group clearfix" id="sm_alert_missing_ref_option_configuration">
+								<label class="col-lg-4">{l s='Your email' mod='sellermania'}</label>
+								<div class="col-lg-2">
+									<input type="text" name="sm_alert_missing_ref_mail" value="{$sm_alert_missing_ref_mail}" />
+								</div>
+							</div>
+
+
+
+
                         </div>
                     </div>
                     <div class="panel-footer">
