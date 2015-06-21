@@ -38,7 +38,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = 'Froggy Commerce';
-		$this->version = '1.4.1';
+		$this->version = '1.4.3';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -195,6 +195,9 @@ class SellerMania extends Module
 		Configuration::deleteByName('SM_STOCK_SYNC_OPTION_2');
 		Configuration::deleteByName('SM_STOCK_SYNC_POSITION');
 		Configuration::deleteByName('SM_STOCK_SYNC_NB_CHAR');
+
+		Configuration::deleteByName('SM_ALERT_MISSING_REF_OPTION');
+		Configuration::deleteByName('SM_ALERT_MISSING_REF_MAIL');
 
 		return parent::uninstall();
 	}
