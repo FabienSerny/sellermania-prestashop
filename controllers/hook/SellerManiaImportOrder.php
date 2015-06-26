@@ -243,7 +243,8 @@ class SellerManiaImportOrderController
 
 			// If reference is not found
 			$alert_email = Configuration::get('SM_ALERT_MISSING_REF_MAIL');
-			if (Configuration::get('SM_ALERT_MISSING_REF_OPTION') == 'yes' &&
+			if ($this->data['OrderInfo']['Product'][$kp]['id_product'] == Configuration::get('SM_DEFAULT_PRODUCT_ID') &&
+				Configuration::get('SM_ALERT_MISSING_REF_OPTION') == 'yes' &&
 				!empty($alert_email) && Validate::isEmail($alert_email))
 			{
 				$id_lang = Configuration::get('PS_LANG_DEFAULT');
