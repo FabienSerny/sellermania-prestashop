@@ -120,6 +120,8 @@ class SellerManiaDisplayBackOfficeHeaderController
 								// Save config value
 								$ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
 								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
+								$ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
+								Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', 1);
 
 								// Import order as PrestaShop order
 								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
@@ -132,6 +134,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 								// Restore config value
 								Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
+								Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', $ps_order_out_of_stock);
 
 								// Do not push it too hard
 								if ($count_order > 100)
