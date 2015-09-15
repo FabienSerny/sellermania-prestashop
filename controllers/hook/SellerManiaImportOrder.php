@@ -380,6 +380,10 @@ class SellerManiaImportOrderController
 		// Cart update
 		$this->cart->update();
 
+        // Check if cart is not empty (in case of Sellermania order with only one product and a quantity of 0)
+        if (!$this->cart->getProducts() || empty($this->cart->getProducts()))
+            throw new Exception('Cart seems empty, check the details of the order if the quantity is superior to 0');
+
 		// Flush cart delivery cache
 		if (version_compare(_PS_VERSION_, '1.5') >= 0)
 		{
