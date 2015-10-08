@@ -25,22 +25,28 @@
 $(document).ready(function() {
 
     // Hide PDF invoice link on orders list when the order status contains "Sellermania"
-    var row = 0;
     $('#order div table tbody tr').each(function() {
+        hidePDFButtons($(this));
+    });
 
+    $('#form-order div div table tbody tr').each(function() {
+        hidePDFButtons($(this));
+    });
+
+    function hidePDFButtons(line)
+    {
         var column = 0;
         var flag_sellermania = 0;
 
-        $(this).find('td').each(function() {
-            if (column == 8 && $(this).text().trim().toLowerCase().indexOf("marketplace") >= 0)
+        line.find('td').each(function() {
+            if (column == 8 && line.text().trim().toLowerCase().indexOf("marketplace") >= 0)
                 flag_sellermania = 1;
             else if (column == 10 && flag_sellermania == 1)
                 $(this).html('&nbsp;');
             column++;
         });
+    }
 
-        row++;
-    });
 
 	if (nb_sellermania_orders_in_error > 0)
 		$('#order').before('<p align="center" style="border: 1px solid #cc0000;color: #d8000c;background-color:#ffbaba;padding:5px"><b>' + nb_sellermania_orders_in_error + '</b> ' + txt_sellermania_orders_in_error + '</p>');
