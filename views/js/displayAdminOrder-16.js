@@ -88,7 +88,7 @@ $(document).ready(function() {
 
         // Fix in case of missing div (it happens sometimes)
         if (sellermania_block_product_general_legend.parent().hasClass('standard_refund_fields'))
-            sellermania_block_product_general_legend = $('#orderProducts').parent().next().next().next().find('div:first');
+            sellermania_block_product_general_legend = $('#orderProducts').parent().next().next().find('div:first');
 
         $('#messages').parent().hide();
     }
