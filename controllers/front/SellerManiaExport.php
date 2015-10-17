@@ -219,6 +219,14 @@ class SellerManiaExportController
 			$rows = array($row);
 		}
 
+        // Filter ref without EAN13
+        if (Tools::getValue('filter') == 'without_ean13')
+            foreach ($rows as $krow => $row)
+                if (empty($row['ean13']))
+                    unset($rows[$krow]);
+        if (empty($rows))
+            return false;
+
 		// Begin rendering
 		$line = '';
 		foreach ($rows as $row)

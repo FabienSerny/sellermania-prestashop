@@ -85,6 +85,11 @@ $(document).ready(function() {
         sellermania_block_payment = $('#formAddPayment').parent();
         sellermania_toolbar = $('.icon-calendar-empty').parent().parent().parent().parent();
         sellermania_block_product_general_legend = $('#orderProducts').parent().next().next().next().find('div:first');
+
+        // Fix in case of missing div (it happens sometimes)
+        if (sellermania_block_product_general_legend.parent().hasClass('standard_refund_fields'))
+            sellermania_block_product_general_legend = $('#orderProducts').parent().next().next().next().find('div:first');
+
         $('#messages').parent().hide();
     }
 
