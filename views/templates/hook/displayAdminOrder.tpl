@@ -38,7 +38,7 @@
     {***************************************************}
     <div id="sellermania-template-customer">
         <legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information' mod='sellermania'}</legend>
-        <b>{l s='Name:' mod='sellermania'}</b> {$sellermania_order.User[0].Name}<br>
+        <b>{l s='Name:' mod='sellermania'}</b> {$sellermania_order.User[0].OriginalName}<br>
         <b>{l s='E-mail:' mod='sellermania'}</b> <a href="mailto:{$sellermania_order.User[0].Email}">{$sellermania_order.User[0].Email}</a><br>
         {if isset($sellermania_order.User[0].ShippingPhone) && !empty($sellermania_order.User[0].ShippingPhone)}<b>{l s='Shipping phone:' mod='sellermania'}</b> {$sellermania_order.User[0].ShippingPhone}<br>{/if}
         {if isset($sellermania_order.User[0].UserPhone) && !empty($sellermania_order.User[0].UserPhone)}<b>{l s='User phone:' mod='sellermania'}</b> {$sellermania_order.User[0].UserPhone}<br>{/if}
@@ -50,7 +50,7 @@
             </tr>
             <tr>
                 <td width="50%" align="left">
-                    {$sellermania_order.User[0].Name}<br>
+                    {$sellermania_order.User[0].OriginalName}<br>
                     {if isset($sellermania_order.User[0].Company) && !empty($sellermania_order.User[0].Company)}{$sellermania_order.User[0].Company}<br>{/if}
 
                     {if isset($sellermania_order.User[0].Address.Street1) && !empty($sellermania_order.User[0].Address.Street1) && $sellermania_order.User[0].Address.Street1 ne 'Not provided'}{$sellermania_order.User[0].Address.Street1}<br>{/if}
