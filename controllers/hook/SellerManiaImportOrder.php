@@ -186,7 +186,8 @@ class SellerManiaImportOrderController
     {
         // Preprocess User Data
         $this->preprocessUserData(0);
-        $this->preprocessUserData(1);
+        if (isset($this->data['User'][1]['Name']) && !empty($this->data['User'][1]['Name']))
+            $this->preprocessUserData(1);
 
 		// Fix data (when only one product, array is not the same)
 		if (!isset($this->data['OrderInfo']['Product'][0]))
