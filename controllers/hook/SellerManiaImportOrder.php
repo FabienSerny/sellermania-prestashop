@@ -58,7 +58,7 @@ class SellerManiaImportOrderController
 	public function run($data)
 	{
 		$this->data = $data;
-		$this->preprocessData();
+        $this->preprocessData();
 		$this->createCustomer();
 		$this->createAddress();
 		$this->createCart();
@@ -68,47 +68,47 @@ class SellerManiaImportOrderController
 
 
 	/**
-	 * Preprocess data array
+	 * Preprocess user data array
 	 */
-	public function preprocessData()
+	public function preprocessUserData($index)
 	{
 		// Forbidden characters
 		$forbidden_characters = array('_', '/', '(', ')', '*', ';', ':', '=', ',', '!', '?', '.', '+', '*', '$', '%', '&', '#', '@');
 
 		// Fix name
-		$this->data['User'][0]['OriginalName'] = $this->data['User'][0]['Name'];
-		$this->data['User'][0]['Name'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Name']);
-		$this->data['User'][0]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][0]['Name']);
-		$this->data['User'][0]['Name'] = trim($this->data['User'][0]['Name']);
-		if (strlen($this->data['User'][0]['Name']) < 2)
-			$this->data['User'][0]['Name'] = 'Not provided';
-		if (strpos($this->data['User'][0]['Name'], '/'))
+		$this->data['User'][$index]['OriginalName'] = $this->data['User'][$index]['Name'];
+		$this->data['User'][$index]['Name'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Name']);
+		$this->data['User'][$index]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][$index]['Name']);
+		$this->data['User'][$index]['Name'] = trim($this->data['User'][$index]['Name']);
+		if (strlen($this->data['User'][$index]['Name']) < 2)
+			$this->data['User'][$index]['Name'] = 'Not provided';
+		if (strpos($this->data['User'][$index]['Name'], '/'))
 		{
-			$name = explode('/', $this->data['User'][0]['Name']);
+			$name = explode('/', $this->data['User'][$index]['Name']);
 			$name[1] = trim($name[1]);
 			if (!empty($name[1]))
-				$this->data['User'][0]['Name'] = $name[1];
+				$this->data['User'][$index]['Name'] = $name[1];
 		}
 
 		// Retrieve firstname and lastname
-		$names = explode(' ', trim($this->data['User'][0]['Name']));
+		$names = explode(' ', trim($this->data['User'][$index]['Name']));
 		$firstname = $names[0];
 		if (isset($names[1]) && !empty($names[1]) && count($names) == 2)
 			$lastname = $names[1];
 		else
 		{
-			$lastname = $this->data['User'][0]['Name'];
+			$lastname = $this->data['User'][$index]['Name'];
 			$lastname = str_replace($firstname.' ', '', $lastname);
 		}
 
 		// Retrieve shipping phone
 		$shipping_phone = '';
-		if (isset($this->data['User'][0]['Address']['ShippingPhone']) && !empty($this->data['User'][0]['Address']['ShippingPhone']))
-			$shipping_phone = $this->data['User'][0]['Address']['ShippingPhone'];
-		if (isset($this->data['User'][0]['ShippingPhone']) && !empty($this->data['User'][0]['ShippingPhone']))
-			$shipping_phone = $this->data['User'][0]['ShippingPhone'];
-		if (isset($this->data['User'][0]['UserPhone']) && !empty($this->data['User'][0]['UserPhone']))
-			$shipping_phone = $this->data['User'][0]['UserPhone'];
+		if (isset($this->data['User'][$index]['Address']['ShippingPhone']) && !empty($this->data['User'][$index]['Address']['ShippingPhone']))
+			$shipping_phone = $this->data['User'][$index]['Address']['ShippingPhone'];
+		if (isset($this->data['User'][$index]['ShippingPhone']) && !empty($this->data['User'][$index]['ShippingPhone']))
+			$shipping_phone = $this->data['User'][$index]['ShippingPhone'];
+		if (isset($this->data['User'][$index]['UserPhone']) && !empty($this->data['User'][$index]['UserPhone']))
+			$shipping_phone = $this->data['User'][$index]['UserPhone'];
 		$shipping_phone = substr(str_replace($forbidden_characters, ' ', $shipping_phone), 0, 16);
 
 		// Retrieve currency
@@ -117,11 +117,11 @@ class SellerManiaImportOrderController
 			$currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
 
 		// Refill data
-		$this->data['User'][0]['FirstName'] = substr($firstname, 0, 32);
-		$this->data['User'][0]['LastName'] = substr($lastname, 0, 32);
-		$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = '0100000000';
+		$this->data['User'][$index]['FirstName'] = substr($firstname, 0, 32);
+		$this->data['User'][$index]['LastName'] = substr($lastname, 0, 32);
+		$this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = '0100000000';
 		if (!empty($shipping_phone) && Validate::isPhoneNumber($shipping_phone))
-			$this->data['User'][0]['Address']['ShippingPhonePrestaShop'] = $shipping_phone;
+			$this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = $shipping_phone;
 		$this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
 
 		// Set currency sign
@@ -131,52 +131,62 @@ class SellerManiaImportOrderController
 
 		// Retrieve from cache
 		$country_key = 'FR';
-		if (isset($this->data['User'][0]['Address']['Country']))
+		if (isset($this->data['User'][$index]['Address']['Country']))
 		{
-			$country_key = $this->data['User'][0]['Address']['Country'];
+			$country_key = $this->data['User'][$index]['Address']['Country'];
 			if (isset($this->country_iso_match_cache[$country_key]))
-				$this->data['User'][0]['Address']['Country'] = $this->country_iso_match_cache[$country_key];
+				$this->data['User'][$index]['Address']['Country'] = $this->country_iso_match_cache[$country_key];
 			else
 			{
 				// Set match with exception reservations
 				$country_exceptionnal_iso_code = array('FX' => 'FR', 'FRA' => 'FR', 'France' => 'FR');
-				if (isset($country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']]))
-					$this->data['User'][0]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][0]['Address']['Country']];
+				if (isset($country_exceptionnal_iso_code[$this->data['User'][$index]['Address']['Country']]))
+					$this->data['User'][$index]['Address']['Country'] = $country_exceptionnal_iso_code[$this->data['User'][$index]['Address']['Country']];
 				else
 				{
 					// Check if there is a match with a country
-					$id_country = Country::getIdByName(null, $this->data['User'][0]['Address']['Country']);
+					$id_country = Country::getIdByName(null, $this->data['User'][$index]['Address']['Country']);
 					if ($id_country > 0)
-						$this->data['User'][0]['Address']['Country'] = Country::getIsoById($id_country);
+						$this->data['User'][$index]['Address']['Country'] = Country::getIsoById($id_country);
 
 					// If Iso is not known, we set FR
-					if (!Validate::isLanguageIsoCode($this->data['User'][0]['Address']['Country']) || Country::getByIso($this->data['User'][0]['Address']['Country']) < 1)
-						$this->data['User'][0]['Address']['Country'] = 'FR';
+					if (!Validate::isLanguageIsoCode($this->data['User'][$index]['Address']['Country']) || Country::getByIso($this->data['User'][$index]['Address']['Country']) < 1)
+						$this->data['User'][$index]['Address']['Country'] = 'FR';
 				}
 
 				// Set cache
-				$this->country_iso_match_cache[$country_key] = $this->data['User'][0]['Address']['Country'];
+				$this->country_iso_match_cache[$country_key] = $this->data['User'][$index]['Address']['Country'];
 			}
 		}
 
 
 		// Fix address
-		$this->data['User'][0]['Company'] = substr(str_replace($forbidden_characters, ' ', $this->data['User'][0]['Company']), 0, 32);
-		$this->data['User'][0]['Address']['Street1'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['Street1']);
-		$this->data['User'][0]['Address']['Street2'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['Street2']);
-		$this->data['User'][0]['Address']['City'] = str_replace($forbidden_characters, ' ', $this->data['User'][0]['Address']['City']);
-		if (empty($this->data['User'][0]['Address']['Street1']) && !empty($this->data['User'][0]['Address']['Street2']))
+		$this->data['User'][$index]['Company'] = substr(str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Company']), 0, 32);
+		$this->data['User'][$index]['Address']['Street1'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Address']['Street1']);
+		$this->data['User'][$index]['Address']['Street2'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Address']['Street2']);
+		$this->data['User'][$index]['Address']['City'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Address']['City']);
+		if (empty($this->data['User'][$index]['Address']['Street1']) && !empty($this->data['User'][$index]['Address']['Street2']))
 		{
-			$this->data['User'][0]['Address']['Street1'] = $this->data['User'][0]['Address']['Street2'];
-			$this->data['User'][0]['Address']['Street2'] = '';
+			$this->data['User'][$index]['Address']['Street1'] = $this->data['User'][$index]['Address']['Street2'];
+			$this->data['User'][$index]['Address']['Street2'] = '';
 		}
 		$checkNotProvided = array('Street1' => 'Not provided', 'ZipCode' => '00000', 'City' => 'Not provided', 'Country' => 'FR');
 		foreach ($checkNotProvided as $key => $value)
-			if (empty($this->data['User'][0]['Address'][$key]))
-				$this->data['User'][0]['Address'][$key] = $value;
-		if (!Validate::isPostCode($this->data['User'][0]['Address']['ZipCode']))
-			$this->data['User'][0]['Address']['ZipCode'] = '00000';
-		$this->data['User'][0]['Address']['ZipCode'] = substr($this->data['User'][0]['Address']['ZipCode'], 0, 12);
+			if (empty($this->data['User'][$index]['Address'][$key]))
+				$this->data['User'][$index]['Address'][$key] = $value;
+		if (!Validate::isPostCode($this->data['User'][$index]['Address']['ZipCode']))
+			$this->data['User'][$index]['Address']['ZipCode'] = '00000';
+		$this->data['User'][$index]['Address']['ZipCode'] = substr($this->data['User'][$index]['Address']['ZipCode'], 0, 12);
+    }
+
+    /**
+     * Preprocess data array
+     */
+    public function preprocessData()
+    {
+        // Preprocess User Data
+        $this->preprocessUserData(0);
+        $this->preprocessUserData(1);
 
 		// Fix data (when only one product, array is not the same)
 		if (!isset($this->data['OrderInfo']['Product'][0]))
@@ -558,6 +568,16 @@ class SellerManiaImportOrderController
 		$this->customer->lastname = $this->data['User'][0]['LastName'];
 		$this->customer->update();
 
+        // If two differents addresses and only one registered, we create the other address
+        if ($this->order->id_address_delivery == $this->order->id_address_invoice
+            && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1'])
+            && $this->data['User'][0]['Address']['Street1'] != $this->data['User'][1]['Address']['Street1'])
+        {
+            $id_address_invoice = $this->createAddress('Billing', $this->data['User'][1]);
+            $this->order->id_address_invoice = $id_address_invoice;
+            $this->order->update();
+        }
+
 		// Update delivery address
 		$this->address = new Address($this->order->id_address_delivery);
 		$this->address->company = $this->data['User'][0]['Company'];
@@ -571,6 +591,24 @@ class SellerManiaImportOrderController
 		$this->address->phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];
 		$this->address->update();
 
+        // If different, update billing address
+        if ($this->order->id_address_delivery != $this->order->id_address_invoice
+            && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1']))
+        {
+            $this->address = new Address($this->order->id_address_invoice);
+            $this->address->company = $this->data['User'][1]['Company'];
+            $this->address->firstname = $this->data['User'][1]['FirstName'];
+            $this->address->lastname = $this->data['User'][1]['LastName'];
+            $this->address->address1 = $this->data['User'][1]['Address']['Street1'];
+            $this->address->address2 = $this->data['User'][1]['Address']['Street2'];
+            $this->address->postcode = $this->data['User'][1]['Address']['ZipCode'];
+            $this->address->city = $this->data['User'][1]['Address']['City'];
+            $this->address->id_country = Country::getByIso($this->data['User'][1]['Address']['Country']);
+            $this->address->phone = $this->data['User'][1]['Address']['ShippingPhonePrestaShop'];
+            $this->address->update();
+        }
+
+        // Executing different actions depending on PS Version
 		if (version_compare(_PS_VERSION_, '1.5') >= 0)
 			$this->fixOrder15($fix_details);
 		else
