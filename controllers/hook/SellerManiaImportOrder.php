@@ -317,33 +317,48 @@ class SellerManiaImportOrderController
 	}
 
 
-	/**
-	 * Create Address
-	 */
-	public function createAddress()
-	{
-		// Create address
-		$this->address = new Address();
-		$this->address->alias = 'Sellermania';
-		$this->address->company = $this->data['User'][0]['Company'];
-		$this->address->firstname = $this->data['User'][0]['FirstName'];
-		$this->address->lastname = $this->data['User'][0]['LastName'];
-		$this->address->address1 = $this->data['User'][0]['Address']['Street1'];
-		$this->address->address2 = $this->data['User'][0]['Address']['Street2'];
-		$this->address->postcode = $this->data['User'][0]['Address']['ZipCode'];
-		$this->address->city = $this->data['User'][0]['Address']['City'];
-		$this->address->id_country = Country::getByIso($this->data['User'][0]['Address']['Country']);
-		$this->address->phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];
-		$this->address->id_customer = $this->customer->id;
-		$this->address->active = 1;
-		if (substr(_PS_VERSION_, 0, 3) == '1.4')
-		{
-			$return = $this->address->validateFields(false, true);
-			if ($return !== true)
-				throw new Exception('Error on address creation: '.$return);
-		}
-		$this->address->add();
-	}
+    /**
+     * Create Address
+     */
+    public function createAddress($type = 'Shipping', $data = array())
+    {
+        // If data is not set, we set it with shipping address
+        if (empty($data))
+            $data = $this->data['User'][0];
+
+        // Create address
+        $this->address = new Address();
+        $this->address->alias = 'Sellermania '.$type;
+        $this->address->company = $data['Company'];
+        $this->address->firstname = $data['FirstName'];
+        $this->address->lastname = $data['LastName'];
+        $this->address->address1 = $data['Address']['Street1'];
+        $this->address->address2 = $data['Address']['Street2'];
+        $this->address->postcode = $data['Address']['ZipCode'];
+        $this->address->city = $data['Address']['City'];
+        $this->address->id_country = Country::getByIso($data['Address']['Country']);
+        $this->address->phone = $data['Address']['ShippingPhonePrestaShop'];
+        $this->address->id_customer = $this->customer->id;
+        $this->address->active = 1;
+        if (substr(_PS_VERSION_, 0, 3) == '1.4')
+        {
+            $return = $this->address->validateFields(false, true);
+            if ($return !== true)
+                throw new Exception('Error on address creation: '.$return);
+        }
+
+        // Enable country if not active
+        $country = new Country($this->address->id_country);
+        if ($country->active != 1)
+        {
+            $country->active = 1;
+            $country->update();
+        }
+
+        // Then we create the address
+        $this->address->add();
+        return $this->address->id;
+    }
 
 
 	/**
