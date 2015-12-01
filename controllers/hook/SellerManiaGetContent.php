@@ -106,7 +106,10 @@ class SellerManiaGetContentController
 	{
 		// Init vars
 		$languages_list = Language::getLanguages();
-		$this->context->shop->setContext(1);
+
+        if (empty($this->context->shop->id))
+            $this->context->shop->setContext(1);
+
 		$module_web_path = Tools::getHttpHost(true).$this->context->shop->physical_uri.'modules/'.$this->module->name.'/';
 		$export_directory_writable = 0;
 		if (is_writable($this->dir_path.'/export/'))

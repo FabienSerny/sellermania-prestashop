@@ -57,10 +57,10 @@ class SellerManiaProduct
 			$where = ' AND p.`id_product` IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.implode(',', $categories).'))';
 		}
 
-		$shops = Shop::getShops();
-		$id_shops = array();
-		foreach ($shops as $shop)
-			$id_shops[] = (int)$shop['id_shop'];
+		//$shops = Shop::getShops();
+		//$id_shops = array();
+		//foreach ($shops as $shop)
+		//	$id_shops[] = (int)$shop['id_shop'];
 
 		// SQL request
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
@@ -78,7 +78,7 @@ class SellerManiaProduct
 				'.Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				WHERE product_shop.`id_shop` IN ('.implode(',', $id_shops).')
+				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 				AND product_shop.`visibility` IN ("both", "catalog")
 				AND (
 					p.`active` = 1 OR
