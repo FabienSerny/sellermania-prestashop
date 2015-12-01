@@ -96,8 +96,10 @@ $(document).ready(function() {
 
     // Replace status order selection
     sellermania_block_next_button_prev_next.html(sellermania_title);
-    sellermania_block_order_state.hide();
-    sellermania_block_order_state_button.hide();
+    if (!sellermania_order_edit_status) {
+        sellermania_block_order_state.hide();
+        sellermania_block_order_state_button.hide();
+    }
 
     // Replace customer block
     sellermania_block_customer.html(sellermania_customer);

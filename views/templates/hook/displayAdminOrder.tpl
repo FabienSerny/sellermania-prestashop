@@ -280,6 +280,13 @@
     var confirm_label = '{l s='Confirm' mod='sellermania'}';
     var cancel_label = '{l s='Cancel' mod='sellermania'}';
     var unknown_label = '{l s='Unknown' mod='sellermania'}';
+
+    {if isset($smarty.get.edit_status)}
+	    var sellermania_order_edit_status = true;
+    {else}
+	    var sellermania_order_edit_status = false;
+    {/if}
+
 </script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>

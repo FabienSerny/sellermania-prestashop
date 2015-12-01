@@ -105,8 +105,10 @@ $(document).ready(function() {
 
     // Replace status order selection
     sellermania_block_order_state.after(sellermania_title);
-    sellermania_block_order_state.hide();
-    sellermania_block_order_state_button.hide();
+    if (!sellermania_order_edit_status) {
+        sellermania_block_order_state.hide();
+        sellermania_block_order_state_button.hide();
+    }
 
     // Replace right column
     sellermania_right_column.html(sellermania_order_summary);
