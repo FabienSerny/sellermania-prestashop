@@ -42,6 +42,7 @@ class SellerManiaExportController
 		'name' => 'string', 'category_default' => 'string',
 		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
 		'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
+        'id_category_default' => 'int',
 	);
 
 	/**
