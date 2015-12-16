@@ -332,7 +332,7 @@ class SellerManiaDisplayAdminOrderController
         {
             // Check if there is at least one line as "Dispatched"
             foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-                if ($product['Status'] == )
+                if ($product['Status'] == $this->module->sellermania_order_states['PS_OS_SM_DISPATCHED']['sm_status'])
                     $new_order_state = Configuration::get('PS_OS_SM_DISPATCHED');
 
             // If yes, we check if others states are not different of "CANCEL" or "DISPATCH"
