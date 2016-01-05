@@ -128,4 +128,11 @@ $(document).ready(function() {
 
     // Legend
     sellermania_block_product_general_legend.hide();
+
+    // Reenable native refund system
+    if (sellermania_enable_native_refund_system == true)
+    {
+        $('.icon-print').parent().parent().show();
+        sellermania_block_order_actions.show();
+    }
 });

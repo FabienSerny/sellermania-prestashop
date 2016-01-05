@@ -282,9 +282,15 @@
     var unknown_label = '{l s='Unknown' mod='sellermania'}';
 
     {if isset($smarty.get.edit_status)}
-	    var sellermania_order_edit_status = true;
+        var sellermania_order_edit_status = true;
     {else}
-	    var sellermania_order_edit_status = false;
+        var sellermania_order_edit_status = false;
+    {/if}
+
+    {if $sellermania_enable_native_refund_system eq 1}
+        var sellermania_enable_native_refund_system = true;
+    {else}
+        var sellermania_enable_native_refund_system = false;
     {/if}
 
 </script>

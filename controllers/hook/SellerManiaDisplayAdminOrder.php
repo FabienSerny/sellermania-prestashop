@@ -449,6 +449,8 @@ class SellerManiaDisplayAdminOrderController
 		$this->context->smarty->assign('sellermania_status_update', $result_status_update);
 		$this->context->smarty->assign('sellermania_shipping_status_update', $result_shipping_status_update);
 
+		$this->context->smarty->assign('sellermania_enable_native_refund_system', (int)Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM'));
+
 		return $this->module->compliantDisplay('displayAdminOrder.tpl');
 	}
 }
