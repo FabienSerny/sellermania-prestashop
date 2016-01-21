@@ -98,6 +98,13 @@
                 {/foreach}
 			</p>
             {if $export_directory_writable ne 1}<p class="error"><strong>{l s='Beware, the following directory is not writable:' mod='sellermania'} {$script_path}/export/</strong></p>{/if}
+
+            <p>
+                <label>{l s='Enable export combination name' mod='sellermania'}</label>
+                <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_yes" value="yes" {if $sm_enable_export_comb_name eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+                <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_no" value="no" {if $sm_enable_export_comb_name eq 'no' || $sm_enable_export_comb_name eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+            </p><br clear="left" />
+
 		</div>
 
 		<br><p><input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="button" /></p>
@@ -175,6 +182,11 @@
                     <input type="text" name="sm_alert_missing_ref_mail" value="{$sm_alert_missing_ref_mail}" />
                 </p>
 
+                <p>
+                    <label>{l s='Enable native refund system' mod='sellermania'}</label>
+                    <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_yes" value="yes" {if $sm_enable_native_refund_system eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+                    <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_no" value="no" {if $sm_enable_native_refund_system eq 'no' || $sm_enable_native_refund_system eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+                </p><br clear="left" />
 
             </div>
             <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" class="button" /></label></p>
