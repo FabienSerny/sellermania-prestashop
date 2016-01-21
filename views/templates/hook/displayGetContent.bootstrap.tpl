@@ -122,8 +122,11 @@
                     <label for="sm_enable_export_comb_name_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
                     <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_no" value="no" {if $sm_enable_export_comb_name eq 'no' || $sm_enable_export_comb_name eq ''}checked="checked"{/if} />
                     <label for="sm_enable_export_comb_name_no">{l s='No' mod='sellermania'}</label>
-                </div>
-                <p>{l s='Natively this module will concatenate the attribute names with the product name in case of combination. You can disable this feature for merchants who create only one combination per product.' mod='sellermania'}</p>
+                </div><br clear="left" />
+                <p>
+                    {l s='Natively this module will concatenate the attribute names with the product name in case of combination.' mod='sellermania'}<br>
+                    {l s='You can disable this feature for merchants who create only one combination per product.' mod='sellermania'}
+                </p>
             </div>
 
         </div>
