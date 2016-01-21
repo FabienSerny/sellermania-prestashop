@@ -195,7 +195,7 @@ class SellerManiaExportController
 
 				// Disable combination concatenation if this advanced option is disabled
 				// Some merchants only fill one combination
-				if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == 1)
+				if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == 'yes')
 					$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
 
 				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
