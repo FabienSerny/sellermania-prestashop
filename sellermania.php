@@ -38,7 +38,7 @@ class SellerMania extends Module
 		$this->name = 'sellermania';
 		$this->tab = 'advertising_marketing';
 		$this->author = 'Froggy Commerce';
-		$this->version = '1.5.6';
+		$this->version = '1.5.7';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -117,6 +117,11 @@ class SellerMania extends Module
 		}
 		if (Configuration::get('SM_EXPORT_ALL') == '')
 			Configuration::updateValue('SM_EXPORT_ALL', 'yes');
+
+		if (Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM') == '')
+			Configuration::updateValue('SM_ENABLE_NATIVE_REFUND_SYSTEM', 'no');
+		if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == '')
+			Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');
 	}
 
 	/**
@@ -157,6 +162,9 @@ class SellerMania extends Module
 		Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/OrdersAPISFR_07_03_2014/OrderAPIS?wsdl');
 		Configuration::updateValue('SM_CONFIRM_ORDER_ENDPOINT', 'http://membres.sellermania.com/SellerFR/wsapi/wsdl/OrderConfirmation');
 		Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/InventoryAPISFR/InventoryAPIS?wsdl');
+
+		Configuration::updateValue('SM_ENABLE_NATIVE_REFUND_SYSTEM', 'no');
+		Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');
 
 		return true;
 	}
@@ -200,6 +208,7 @@ class SellerMania extends Module
 		Configuration::deleteByName('SM_ALERT_MISSING_REF_MAIL');
 
 		Configuration::deleteByName('SM_ENABLE_NATIVE_REFUND_SYSTEM');
+		Configuration::deleteByName('SM_ENABLE_EXPORT_COMB_NAME');
 
 		return parent::uninstall();
 	}

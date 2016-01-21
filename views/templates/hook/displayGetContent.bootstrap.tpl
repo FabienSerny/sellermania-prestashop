@@ -114,6 +114,18 @@
             {if $export_directory_writable ne 1}
                 <div class="alert alert-danger"><p class="error"><strong>{l s='Beware, the following directory is not writable:' mod='sellermania'} {$script_path}/export/</strong></p></div>
             {/if}
+
+            <div class="form-group clearfix">
+                <label class="col-lg-4">{l s='Enable export combination name' mod='sellermania'}</label>
+                <div class="col-lg-4">
+                    <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_yes" value="yes" {if $sm_enable_export_comb_name eq 'yes'}checked="checked"{/if} />
+                    <label for="sm_enable_export_comb_name_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                    <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_no" value="no" {if $sm_enable_export_comb_name eq 'no' || $sm_enable_export_comb_name eq ''}checked="checked"{/if} />
+                    <label for="sm_enable_export_comb_name_no">{l s='No' mod='sellermania'}</label>
+                </div>
+                <p>{l s='Natively this module will concatenate the attribute names with the product name in case of combination. You can disable this feature for merchants who create only one combination per product.' mod='sellermania'}</p>
+            </div>
+
         </div>
 
 
@@ -268,6 +280,16 @@
 								</div>
 							</div>
 
+
+                            <div class="form-group clearfix">
+                                <label class="col-lg-4">{l s='Enable native refund system' mod='sellermania'}</label>
+                                <div class="col-lg-4">
+                                    <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_yes" value="yes" {if $sm_enable_native_refund_system eq 'yes'}checked="checked"{/if} />
+                                    <label for="sm_enable_native_refund_system_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                                    <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_no" value="no" {if $sm_enable_native_refund_system eq 'no' || $sm_enable_native_refund_system eq ''}checked="checked"{/if} />
+                                    <label for="sm_enable_native_refund_system_no">{l s='No' mod='sellermania'}</label>
+                                </div>
+                            </div>
 
 
 

@@ -192,7 +192,12 @@ class SellerManiaExportController
 			{
 				$rowCopy = $row;
 				$rowCopy['id_product_attribute'] = $id_product_attribute;
-				$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
+
+				// Disable combination concatenation if this advanced option is disabled
+				// Some merchants only fill one combination
+				if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == 1)
+					$rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
+
 				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
 				$rowCopy['crossed_price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2, null, false, false);
 				if ($rowCopy['crossed_price'] == $rowCopy['price'])

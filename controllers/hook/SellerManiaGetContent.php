@@ -87,7 +87,8 @@ class SellerManiaGetContentController
 						'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
 						'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',
 						'sm_stock_sync_nb_char', 'sm_stock_sync_position',
-						'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail');
+						'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
+						'sm_enable_native_refund_system', 'sm_enable_export_comb_name');
 
 		foreach ($params as $p)
 			if (isset($_POST[$p]))
@@ -190,6 +191,9 @@ class SellerManiaGetContentController
 
 		$this->context->smarty->assign('sm_alert_missing_ref_option', Configuration::get('SM_ALERT_MISSING_REF_OPTION'));
 		$this->context->smarty->assign('sm_alert_missing_ref_mail', Configuration::get('SM_ALERT_MISSING_REF_MAIL'));
+
+		$this->context->smarty->assign('sm_enable_native_refund_system', Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM'));
+		$this->context->smarty->assign('sm_enable_export_comb_name', Configuration::get('SM_ENABLE_EXPORT_COMB_NAME'));
 
 		if ($this->context->language->iso_code == 'fr')
 		{
