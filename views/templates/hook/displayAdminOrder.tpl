@@ -287,7 +287,7 @@
         var sellermania_order_edit_status = false;
     {/if}
 
-    {if $sellermania_enable_native_refund_system eq 1}
+    {if $sellermania_enable_native_refund_system eq 'true'}
         var sellermania_enable_native_refund_system = true;
     {else}
         var sellermania_enable_native_refund_system = false;
