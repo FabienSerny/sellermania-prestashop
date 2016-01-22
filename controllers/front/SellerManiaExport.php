@@ -37,7 +37,7 @@ class SellerManiaExportController
 	 */
 	private $fields_to_export = array(
 		'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
-		'quantity' => 'int', 'price' => 'float', 'crossed_price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
+		'quantity' => 'int', 'price' => 'float', 'crossed_price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string', 'supplier_reference' => 'string',
 		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
 		'name' => 'string', 'category_default' => 'string',
 		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
@@ -211,6 +211,7 @@ class SellerManiaExportController
 				$rowCopy['attributes_values'] = $declination['attributes_values'];
 				if ($rowCopy['active'] != 1)
 					$rowCopy['quantity'] = 0;
+				$rowCopy['supplier_reference'] = $this->getSupplierReference($rowCopy);
 				$rows[] = $rowCopy;
 			}
 		}
@@ -222,6 +223,8 @@ class SellerManiaExportController
 			$row['crossed_price'] = Product::getPriceStatic($row['id_product'], true, null, 2, null, false, false);
 			if ($row['crossed_price'] == $row['price'])
 				unset($row['crossed_price']);
+			$rowCopy['id_product_attribute'] = 0;
+			$row['supplier_reference'] = $this->getSupplierReference($row);
 			$rows = array($row);
 		}
 
@@ -284,6 +287,25 @@ class SellerManiaExportController
 		}
 		else
 			echo $line;
+	}
+
+
+	public function getSupplierReference($row)
+	{
+		if (version_compare(_PS_VERSION_, '1.6.0') >= 0)
+		{
+			$suppliers = ProductSupplier::getSupplierCollection($row['id_product']);
+			foreach ($suppliers as $product_supplier)
+			{
+				$row['id_supplier'] = $product_supplier->id_supplier;
+				$id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier($row['id_product'], $row['id_product_attribute'], $row['id_supplier']);
+				$product_supplier = new ProductSupplier($id_product_supplier);
+				if (!empty($product_supplier->product_supplier_reference))
+					return $product_supplier->product_supplier_reference;
+			}
+
+		}
+		return '';
 	}
 
 
