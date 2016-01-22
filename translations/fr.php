@@ -87,6 +87,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_9f1aa175c291e3ad3
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_cef6871cec9155fbf00650a5ec69c321'] = 'Généré le';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_750d5520b95ffb9c56927a66d258b8aa'] = 'Fichier non généré pour le moment';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_7c231695492ff85c2b0df3fc9148f253'] = 'Attention, le répertoire suivant doit être posséder les droits en écriture';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f41630be486288cc9b3e25007b26cbf2'] = 'Activer le nom des déclinaisons avec attributs dans l\'export';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_3e6b31380c60798cbe8a48c759d35b5e'] = 'Nativement, ce module concatènera les noms des attributs avec le nom du produit dans le cas de déclinaisons.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_4a3827aac4ea4ce09923b321c2e59b32'] = 'Vous pouvez désactiver cette fonctionnalité pour les marchands ne créant qu\'une déclinaison par produit.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_5cd49ff2d02143d4f423d5b6512d9020'] = 'La configuration a été sauvegardée';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_5f5d68c7485311d3c6f499f237e6a9dd'] = 'Configuration Sellermania';
@@ -100,6 +103,8 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_052a082e01751049b
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_716424eda8e212234855dfd700a07a9e'] = 'Order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_e9d86eb28865fb19fd5b735c4eca7d66'] = 'Confirm order endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_fc9d3df613063ee57906c461320744e2'] = 'Note :';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_279a91d4f3f29e929c3b06c104c9566c'] = 'Ces identifiants sont fournis par Sellermania. Si vous ne les avez pas, veuillez contacter Sellermania.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation du stock par chainage (optionnel)';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_fd577a8bfd88959b13dfc6803c7ef6ce'] = 'Option 1';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f6e6e93c0de5c4044e1651383b4c450b'] = 'Cette fonctionnalité vous permet de ‘chaîner’ plusieurs références les unes aux autres, pour mettre à jour les stocks sur toutes les références chaînées en même temps.';
@@ -113,8 +118,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_7400a1a595f19cde4
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_8b04d5e3775d298e78455efc5ca404d5'] = 'premiers';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_98bd1c45684cf587ac2347a92dd7bb51'] = 'derniers';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_9fb29d86dba916df61cd93547763eff9'] = 'caractères de la référence produit.';
-$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_fc9d3df613063ee57906c461320744e2'] = 'Note :';
-$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par Sellermania, si vous ne les avez pas, veuillez contacter Sellermania afin qu\'il vous les communique.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_535a85f68151f9e49f96ca1be071b9e9'] = 'M\'alerter par e-mail quand une référence n\'est pas trouvée.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d554d9bf0cd8f79c215600eeb77825e8'] = 'Votre e-mail';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_fcf3b6e341b337d248a36e4e001f90ad'] = 'Activer le système de remboursement natif';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_4930a7655f859a031a7569d1fed96524'] = 'La prochaine importation de commandes n\'aura pas lieu avant :';
@@ -148,6 +154,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_9f1aa175c291e3ad33eb64e70e1
 $_MODULE['<{sellermania}prestashop>displaygetcontent_cef6871cec9155fbf00650a5ec69c321'] = 'Généré le';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_750d5520b95ffb9c56927a66d258b8aa'] = 'Fichier non généré pour le moment';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_7c231695492ff85c2b0df3fc9148f253'] = 'Attention, le répertoire suivant doit être posséder les droits en écriture';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_f41630be486288cc9b3e25007b26cbf2'] = 'Activer le nom des déclinaisons avec attributs dans l\'export';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_5cd49ff2d02143d4f423d5b6512d9020'] = 'La configuration a été sauvegardée';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_5f5d68c7485311d3c6f499f237e6a9dd'] = 'Configuration Sellermania';
@@ -176,6 +183,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_7400a1a595f19cde496a4d3cdf6
 $_MODULE['<{sellermania}prestashop>displaygetcontent_8b04d5e3775d298e78455efc5ca404d5'] = 'premiers';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_98bd1c45684cf587ac2347a92dd7bb51'] = 'derniers';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_9fb29d86dba916df61cd93547763eff9'] = 'caractères de la référence produit.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_535a85f68151f9e49f96ca1be071b9e9'] = 'M\'alerter par e-mail quand une référence n\'est pas trouvée.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_625f93a63da35ee7150341160460f31e'] = 'Votre e-mail';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_fcf3b6e341b337d248a36e4e001f90ad'] = 'Activer le système de remboursement natif';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_4930a7655f859a031a7569d1fed96524'] = 'La prochaine importation de commandes n\'aura pas lieu avant :';
