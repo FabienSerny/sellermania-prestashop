@@ -609,6 +609,18 @@ class SellerManiaImportOrderController
             $this->address->update();
         }
 
+		// Handle optionnal feature price (handling fees)
+		if (isset($this->data['OrderInfo']['OptionalFeaturePrice']) && $this->data['OrderInfo']['OptionalFeaturePrice'] > 0) {
+			$this->data['OrderInfo']['Product'][] = array(
+				'ItemName' => 'Frais de gestion',
+				'Sku' => 'Frais de gestion',
+				'QuantityPurchased' => 1,
+				'Amount' => array('Price' => $this->data['OrderInfo']['OptionalFeaturePrice']),
+				'VatRate' => 0,
+			);
+			$this->data['OrderInfo']['TotalProductsWithoutVAT'] += $this->data['OrderInfo']['OptionalFeaturePrice'];
+		}
+
         // Executing different actions depending on PS Version
 		if (version_compare(_PS_VERSION_, '1.5') >= 0)
 			$this->fixOrder15($fix_details);
