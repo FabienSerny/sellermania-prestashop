@@ -211,7 +211,7 @@ class SellerManiaImportOrderController
 				$vat_rate = 1;
 				if (isset($product['VatRate']))
 					$vat_rate = 1 + ($product['VatRate'] / 10000);
-				$product_tax = $product_price * ($vat_rate - 1);
+				$product_tax = ($product_price / $vat_rate) * ($vat_rate - 1);
 				$this->data['OrderInfo']['TotalProductsWithoutVAT'] += (($product_price / $vat_rate) * $product['QuantityPurchased']);
 				$this->data['OrderInfo']['TotalProductsWithVAT'] += ($product_price * $product['QuantityPurchased']);
 
