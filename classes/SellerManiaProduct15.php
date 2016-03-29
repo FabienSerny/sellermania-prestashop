@@ -245,6 +245,7 @@ class SellerManiaProduct
 				$image_link = str_replace('http://./', 'http://'.$context->shop->domain.'/'.$context->shop->physical_uri, $image_link);
 				$image_link = str_replace('http://html/', 'http://'.$context->shop->domain.'/'.$context->shop->physical_uri, $image_link);
 			}
+			$image_link = str_replace('/modules/', '/', $image_link);
 			if (!isset($existing_images[$image_link])) {
 				$images[] = $image_link;
 				$existing_images[$image_link] = true;
