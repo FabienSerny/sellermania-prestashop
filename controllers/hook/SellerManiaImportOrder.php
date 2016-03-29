@@ -76,6 +76,9 @@ class SellerManiaImportOrderController
 		$forbidden_characters = array('_', '/', '(', ')', '*', ';', ':', '=', ',', '!', '?', '.', '+', '*', '$', '%', '&', '#', '@');
 
 		// Fix name
+		if (!isset($this->data['User'][$index]['Name'])) {
+			$this->data['User'][$index]['Name'] = 'Not provided';
+		}
 		$this->data['User'][$index]['OriginalName'] = $this->data['User'][$index]['Name'];
 		$this->data['User'][$index]['Name'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Name']);
 		$this->data['User'][$index]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][$index]['Name']);
@@ -186,8 +189,7 @@ class SellerManiaImportOrderController
     {
         // Preprocess User Data
         $this->preprocessUserData(0);
-        if (isset($this->data['User'][1]['Name']) && !empty($this->data['User'][1]['Name']))
-            $this->preprocessUserData(1);
+        $this->preprocessUserData(1);
 
 		// Fix data (when only one product, array is not the same)
 		if (!isset($this->data['OrderInfo']['Product'][0]))
