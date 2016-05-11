@@ -201,6 +201,8 @@ class SellerManiaExportController
 
 				$rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
 				$rowCopy['crossed_price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2, null, false, false);
+				if ($declination['wholesale_price'] > 0)
+					$rowCopy['wholesale_price'] = $declination['wholesale_price'];
 				if ($rowCopy['crossed_price'] == $rowCopy['price'])
 					unset($rowCopy['crossed_price']);
 				$rowCopy['ecotax'] = $declination['ecotax'];
