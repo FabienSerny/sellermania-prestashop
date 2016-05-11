@@ -39,7 +39,7 @@ class SellerManiaExportController
 		'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
 		'quantity' => 'int', 'price' => 'float', 'crossed_price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string', 'supplier_reference' => 'string',
 		'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
-		'name' => 'string', 'category_default' => 'string',
+		'name' => 'string', 'category_default' => 'string', 'category_default_full_path' => 'string',
 		'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
 		'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
         'id_category_default' => 'int',
@@ -250,6 +250,16 @@ class SellerManiaExportController
 						$row[$field] = $row['id_product'].'-'.$row['id_product_attribute'];
 					else if ($field == 'product_url')
 						$row[$field] = $this->context->link->getProductLink($row['id_product'], null, null, null, Language::getIdByIso($iso_lang));
+					else if ($field == 'category_default_full_path')
+					{
+						$category = new Category((int)$row['id_category_default'], $this->context->language->id);
+						$full_path = $category->name;
+						while ($category->id_parent > 0) {
+							$category = new Category((int)$category->id_parent, $this->context->language->id);
+							$full_path = $category->name.' > '.$full_path;
+						}
+						$row[$field] = $full_path;
+					}
 					else if (!isset($row[$field]))
 						$row[$field] = '';
 					else if ($field_type == 'int')
