@@ -41,8 +41,13 @@ require_once(dirname(__FILE__).'/classes/SellermaniaOrder.php');
 require_once(dirname(__FILE__).'/classes/SellermaniaPaymentModule.php');
 
 // Load the Sellermania API Client
-if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-	require_once(dirname(__FILE__).'/lib/Sellermania.php');
+if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+	require_once(dirname(__FILE__).'/lib/sellermania/Sellermania.php');
+}
+
+if (!class_exists('TCPDF')) {
+	require_once(dirname(__FILE__).'/lib/tcpdf/tcpdf.php');
+}
 
 // Set time limit
 @set_time_limit(1200);
