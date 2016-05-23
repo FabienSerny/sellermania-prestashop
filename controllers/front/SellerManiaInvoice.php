@@ -51,10 +51,10 @@ class SellerManiaInvoiceController
         if (Configuration::get('SELLERMANIA_KEY') == '') {
             die('ERROR1');
         }
-        else if (Tools::getValue('k') == '' && $argument_key == '') {
+        else if (Tools::getValue('k') == '') {
             die('ERROR2');
         }
-        else if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY') || $argument_key == Configuration::get('SELLERMANIA_KEY'))  {
+        else if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY'))  {
             $this->generate(Tools::getValue('id_order'));
         }
         else {

@@ -24,7 +24,7 @@
 */
 
 // Construct path
-$config_path = dirname(__FILE__).'/../../../prestashop-1.6.0.6/config/config.inc.php';
+$config_path = dirname(__FILE__).'/../../config/config.inc.php';
 $module_path = dirname(__FILE__).'/sellermania.php';
 
 // Set _PS_ADMIN_DIR_ define
