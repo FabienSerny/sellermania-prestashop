@@ -45,3 +45,31 @@
 </table>
 
 
+<div style="font-size: 8pt; color: #444">
+
+    <table>
+        <tr><td>&nbsp;</td></tr>
+    </table>
+
+    <!-- ADDRESSES -->
+    <table style="width: 100%" border="0">
+        <tr>
+            <td style="width: 45%">
+<span style="font-weight: bold; font-size: 10pt; color: #9E9F9E">{$shop_name|escape:'html':'UTF-8'}</span><br />
+{if isset($shop_contact.PS_SHOP_ADDR1) && !empty($shop_contact.PS_SHOP_ADDR1)}{$shop_contact.PS_SHOP_ADDR1|escape:'html':'UTF-8'}<br>{/if}
+{if isset($shop_contact.PS_SHOP_ADDR2) && !empty($shop_contact.PS_SHOP_ADDR2)}{$shop_contact.PS_SHOP_ADDR2|escape:'html':'UTF-8'}<br>{/if}
+{if isset($shop_contact.PS_SHOP_CODE) && !empty($shop_contact.PS_SHOP_CODE)}{$shop_contact.PS_SHOP_CODE|escape:'html':'UTF-8'} {$shop_contact.PS_SHOP_CITY|escape:'html':'UTF-8'}<br>{/if}
+{if isset($shop_contact.PS_SHOP_COUNTRY_ID) && !empty($shop_contact.PS_SHOP_COUNTRY_ID)}{$shop_contact.PS_SHOP_COUNTRY->name|escape:'html':'UTF-8'}<br>{/if}
+{if isset($shop_contact.PS_SHOP_EMAIL) && !empty($shop_contact.PS_SHOP_EMAIL)}{l s='E-mail:' pdf='true'} {$shop_contact.PS_SHOP_EMAIL|escape:'html':'UTF-8'}<br>{/if}
+{if isset($shop_contact.PS_SHOP_PHONE) && !empty($shop_contact.PS_SHOP_PHONE)}{l s='Phone:' pdf='true'} {$shop_contact.PS_SHOP_PHONE|escape:'html':'UTF-8'}<br>{/if}
+            </td>
+            <td style="width: 10%">&nbsp;</td>
+            <td style="width: 45%">
+                <span style="font-weight: bold; font-size: 10pt; color: #9E9F9E">{l s='Delivery Address' pdf='true'}</span><br />
+            </td>
+        </tr>
+    </table>
+    <!-- / ADDRESSES -->
+
+    <div style="line-height: 1pt">&nbsp;</div>
+</div>

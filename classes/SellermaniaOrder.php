@@ -98,6 +98,21 @@ class SellermaniaOrder extends ObjectModel
      *     const TYPE_NOTHING = 7;
      */
 
+    /**
+     * Retrieve Sellermania Order object from id_order
+     * @param $id_order
+     */
+    public static function getSellermaniaOrderFromOrderId($id_order)
+    {
+        $id_sellermania_order = (int)Db::getInstance()->getValue('
+        SELECT `id_sellermania_order`
+        FROM `'._DB_PREFIX_.'sellermania_order`
+        WHERE `id_order` = '.(int)$id_order);
+        $sellermania_order = new SellermaniaOrder($id_sellermania_order);
+        $sellermania_order->info_decoded = json_decode($sellermania_order->info, true);
+        return $sellermania_order;
+    }
+
 
     /**
      * Check if order has already been imported

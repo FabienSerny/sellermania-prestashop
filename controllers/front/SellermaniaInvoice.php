@@ -72,11 +72,18 @@ class SellermaniaInvoiceController
 
         // Set data
         $logo_path = dirname(__FILE__).'/../../../../img/';
+        $shop_contact = ConfigurationCore::getMultiple(array(
+            'PS_SHOP_NAME', 'PS_SHOP_EMAIL', 'PS_SHOP_DETAILS', 'PS_SHOP_ADDR1', 'PS_SHOP_ADDR2',
+            'PS_SHOP_CODE', 'PS_SHOP_CITY', 'PS_SHOP_COUNTRY_ID', 'PS_SHOP_PHONE', 'PS_SHOP_FAX',
+        ), null, null, (int)$order->id_shop);
+        $shop_contact['PS_SHOP_COUNTRY'] = new Country((int)$shop_contact['PS_SHOP_COUNTRY_ID'], $id_lang);
         $data = array(
             'logo_path' => $logo_path.(version_compare(_PS_VERSION_, '1.5', '>') ?  Configuration::get('PS_LOGO') : __PS_BASE_URI__.'/img/logo.jpg'),
-            'shop_name' => Configuration::get('PS_SHOP_NAME', null, null, (int)$order->id_shop),
+            'shop_name' => $shop_contact['PS_SHOP_NAME'],
+            'shop_contact' => $shop_contact,
             'title' => $this->module->l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$order->id_shop).sprintf('%06d', $order_invoice->number),
             'date' => Tools::displayDate($order_invoice->date_add),
+            'sellermania_order' => SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order),
         );
 
         return $data;
@@ -106,14 +113,11 @@ class SellermaniaInvoiceController
         $pdf->SetFont('dejavusans', '', 10);
         $pdf->AddPage();
 
-        // Assign
         $this->context->smarty->assign($this->loadInvoiceData($id_order));
         $html = $this->module->compliantDisplay('../pdf/invoice.tpl');
 
-        // Output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        //Close and output PDF document
         $pdf->Output('invoice.pdf', 'I');
     }
 
