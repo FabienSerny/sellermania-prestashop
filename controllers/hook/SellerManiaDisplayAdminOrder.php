@@ -227,7 +227,7 @@ class SellerManiaDisplayAdminOrderController
 		}
 		catch (\Exception $e)
 		{
-			$this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
+			Context::getContext()->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
 			return false;
 		}
 	}
