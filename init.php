@@ -45,7 +45,7 @@ if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
 	require_once(dirname(__FILE__).'/lib/sellermania/Sellermania.php');
 }
 
-if (!class_exists('TCPDF')) {
+if (!class_exists('TCPDF') && !defined('_PS_TCPDF_PATH_')) {
 	require_once(dirname(__FILE__).'/lib/tcpdf/tcpdf.php');
 }
 
