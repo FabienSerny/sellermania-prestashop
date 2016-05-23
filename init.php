@@ -18,22 +18,24 @@
 * versions in the future.
 *
 *  @author Fabien Serny - Froggy Commerce <team@froggy-commerce.com>
-*  @copyright	2010-2015 Sellermania / Froggy Commerce / 23Prod SARL
-*  @version		1.0
-*  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @copyright      2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
+*  @version        1.0
+*  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
 
 if (!defined('_PS_VERSION_'))
-	exit;
+    exit;
 
 // Load Pear
-if (!class_exists('PEAR'))
-	require_once(dirname(__FILE__).'/../../tools/pear/PEAR.php');
+if (!class_exists('PEAR')) {
+    require_once(dirname(__FILE__).'/../../tools/pear/PEAR.php');
+}
 
 // Require Db requests class
 $db_requests_class_file = 'SellerManiaProduct15.php';
-if (version_compare(_PS_VERSION_, '1.5') < 0)
-	$db_requests_class_file = 'SellerManiaProduct14.php';
+if (version_compare(_PS_VERSION_, '1.5') < 0) {
+    $db_requests_class_file = 'SellerManiaProduct14.php';
+}
 require_once(dirname(__FILE__).'/classes/'.$db_requests_class_file);
 
 // Load ObjectModel and PaymentModule classes
@@ -42,15 +44,15 @@ require_once(dirname(__FILE__).'/classes/SellermaniaPaymentModule.php');
 
 // Load the Sellermania API Client
 if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-	require_once(dirname(__FILE__).'/lib/sellermania/Sellermania.php');
+    require_once(dirname(__FILE__).'/lib/sellermania/Sellermania.php');
 }
 
 if (!class_exists('TCPDF')) {
-	if (defined('_PS_TCPDF_PATH_')) {
-		require_once(_PS_TCPDF_PATH_.'/tcpdf.php');
-	} else {
-		require_once(dirname(__FILE__).'/lib/tcpdf/tcpdf.php');
-	}
+    if (defined('_PS_TCPDF_PATH_')) {
+        require_once(_PS_TCPDF_PATH_.'/tcpdf.php');
+    } else {
+        require_once(dirname(__FILE__).'/lib/tcpdf/tcpdf.php');
+    }
 }
 
 // Set time limit
@@ -58,8 +60,8 @@ if (!class_exists('TCPDF')) {
 @ini_set('memory_limit', '512M');
 
 // Debug Sellermania mode can be enabled only adding _SELLERMANIA_DEBUG_ define to your settings file
-if (defined('_SELLERMANIA_DEBUG_'))
-{
-	if (Tools::getValue('sellermania') == 'deleteOrders')
-		Db::getInstance()->execute('TRUNCATE `ps_sellermania_order`');
+if (defined('_SELLERMANIA_DEBUG_')) {
+    if (Tools::getValue('sellermania') == 'deleteOrders') {
+        Db::getInstance()->execute('TRUNCATE `ps_sellermania_order`');
+    }
 }
