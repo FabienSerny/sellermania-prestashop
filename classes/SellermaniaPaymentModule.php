@@ -27,7 +27,7 @@
  * Security
  */
 if (!defined('_PS_VERSION_')) {
-	exit;
+    exit;
 }
 
 class SellermaniaPaymentModule extends PaymentModule
