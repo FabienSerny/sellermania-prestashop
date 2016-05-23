@@ -440,6 +440,13 @@ class SellerMania extends Module
 		return $this->runController('front', 'Export');
 	}
 
+	/**
+	 * Invoice method
+	 */
+	public function invoice()
+	{
+		return $this->runController('front', 'Invoice');
+	}
 
 	/**
 	 * Log data
