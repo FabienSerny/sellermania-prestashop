@@ -31,9 +31,9 @@ if (!defined('_PS_VERSION_')) {
 }
 
 // Load ImportOrder Controller
-require_once(dirname(__FILE__).'/SellerManiaImportOrder.php');
+require_once(dirname(__FILE__).'/SellermaniaImportOrder.php');
 
-class SellerManiaDisplayAdminOrderController
+class SellermaniaDisplayAdminOrderController
 {
 	/**
 	 * @var private array conditions
@@ -253,7 +253,7 @@ class SellerManiaDisplayAdminOrderController
 			$result = $client->getOrderById($order_id);
 
 			// Preprocess data and fix order
-			$controller = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+			$controller = new SellermaniaImportOrderController($this->module, $this->dir_path, $this->web_path);
 			$controller->data = $result['SellermaniaWs']['GetOrderResponse']['Order'];
 			$controller->preprocessData();
 			$controller->order = new Order((int)Tools::getValue('id_order'));

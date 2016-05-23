@@ -31,15 +31,15 @@ if (!defined('_PS_VERSION_')) {
 }
 
 // Load ImportOrder Controller and DisplayAdminOrderController
-require_once(dirname(__FILE__).'/SellerManiaImportOrder.php');
-require_once(dirname(__FILE__).'/SellerManiaDisplayAdminOrder.php');
+require_once(dirname(__FILE__).'/SellermaniaImportOrder.php');
+require_once(dirname(__FILE__).'/SellermaniaDisplayAdminOrder.php');
 
 
 // Load ValidateOrder Controller
-require_once(dirname(__FILE__).'/SellerManiaActionValidateOrder.php');
+require_once(dirname(__FILE__).'/SellermaniaActionValidateOrder.php');
 
 
-class SellerManiaDisplayBackOfficeHeaderController
+class SellermaniaDisplayBackOfficeHeaderController
 {
 	/**
 	 * Controller constructor
@@ -55,7 +55,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 
 
 	/**
-	 * Import SellerMania orders
+	 * Import Sellermania orders
 	 */
 	public function importOrders()
 	{
@@ -104,7 +104,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 							{
 								try
 								{
-									$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+									$sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
 									$sdao->refreshOrderStatus($smo->id_order, $order);
 								}
 								catch (\Exception $e)
@@ -128,12 +128,12 @@ class SellerManiaDisplayBackOfficeHeaderController
 								Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', 1);
 
 								// Import order as PrestaShop order
-								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+								$import_order = new SellermaniaImportOrderController($this->module, $this->dir_path, $this->web_path);
 								$import_order->run($order);
 								$count_order++;
 
 								// Refresh order status immediately
-								$sdao = new SellerManiaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+								$sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
 								$sdao->refreshOrderStatus($import_order->order->id, $order);
 
 								// Restore config value
@@ -147,7 +147,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 							catch (\Exception $e)
 							{
 								// Import order as error
-								$import_order = new SellerManiaImportOrderController($this->module, $this->dir_path, $this->web_path);
+								$import_order = new SellermaniaImportOrderController($this->module, $this->dir_path, $this->web_path);
 								$import_order->data = $order;
 								$import_order->preprocessData();
 								if (!isset($import_order->order->id))
@@ -272,7 +272,7 @@ class SellerManiaDisplayBackOfficeHeaderController
 		// We synchronize the stock
 		$skus_quantities = array($sku_value => $difference);
 		$skus = array($sku_value);
-		$savo = new SellerManiaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
+		$savo = new SellermaniaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
 		$savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
 	}
 

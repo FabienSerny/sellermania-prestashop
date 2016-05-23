@@ -26,7 +26,7 @@
 // Include all class needed
 require_once(dirname(__FILE__).'/init.php');
 
-class SellerMania extends Module
+class Sellermania extends Module
 {
     public $sellermania_order_states;
 
@@ -155,7 +155,7 @@ class SellerMania extends Module
         // Install Product
         $this->installSellermaniaProduct();
 
-        // Gen SellerMania key
+        // Gen Sellermania key
         Configuration::updateValue('SM_VERSION', $this->version);
         Configuration::updateValue('SM_INSTALL_DATE', date('Y-m-d H:i:s'));
         Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
@@ -363,8 +363,8 @@ class SellerMania extends Module
     public function runController($controller_type, $controller_name, $params = array())
     {
         // Include the controller file
-        require_once(dirname(__FILE__).'/controllers/'.$controller_type.'/SellerMania'.$controller_name.'.php');
-        $controller_name = 'SellerMania'.$controller_name.'Controller';
+        require_once(dirname(__FILE__).'/controllers/'.$controller_type.'/Sellermania'.$controller_name.'.php');
+        $controller_name = 'Sellermania'.$controller_name.'Controller';
         $controller = new $controller_name($this, dirname(__FILE__), $this->_path);
         $controller->params = $params;
 

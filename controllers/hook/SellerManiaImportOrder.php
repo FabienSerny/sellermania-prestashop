@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class SellerManiaImportOrderController
+class SellermaniaImportOrderController
 {
 	public $data;
 
@@ -553,7 +553,7 @@ class SellerManiaImportOrderController
 					}
 				}
 
-		// If product unmatch, we return the default SellerMania product, method createOrderDetail will fix this
+		// If product unmatch, we return the default Sellermania product, method createOrderDetail will fix this
 		$product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
 		$product['id_product_attribute'] = 0;
 

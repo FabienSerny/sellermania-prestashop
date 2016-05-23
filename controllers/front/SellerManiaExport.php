@@ -34,7 +34,7 @@ if (!defined('_PS_VERSION_')) {
 if (!defined('_PS_BASE_URL_'))
     define('_PS_BASE_URL_', Tools::getShopDomain(true));
 
-class SellerManiaExportController
+class SellermaniaExportController
 {
     /**
      * @var array fields to export
@@ -142,13 +142,13 @@ class SellerManiaExportController
             $iso_lang = strtolower($language['iso_code']);
             $id_lang = Language::getIdByIso($iso_lang);
             $this->renderExportHeader($iso_lang, $output);
-            $result = SellerManiaProduct::getProductsRequest($id_lang, $start, $limit);
+            $result = SellermaniaProduct::getProductsRequest($id_lang, $start, $limit);
             while ($row = Db::getInstance()->nextRow($result))
             {
-                $row['tags'] = SellerManiaProduct::getProductTags($row['id_product'], $id_lang);
-                $row['features'] = SellerManiaProduct::getFeatures($row['id_product'], $id_lang);
-                $row['declinations'] = SellerManiaProduct::getProductDeclinations($row['id_product'], $id_lang);
-                $row['images'] = SellerManiaProduct::getImages($row['id_product']);
+                $row['tags'] = SellermaniaProduct::getProductTags($row['id_product'], $id_lang);
+                $row['features'] = SellermaniaProduct::getFeatures($row['id_product'], $id_lang);
+                $row['declinations'] = SellermaniaProduct::getProductDeclinations($row['id_product'], $id_lang);
+                $row['images'] = SellermaniaProduct::getImages($row['id_product']);
                 $this->renderExport($row, $iso_lang, $output);
             }
         }
@@ -344,7 +344,7 @@ class SellerManiaExportController
         if (empty($this->context->shop->id))
             $this->context->shop->setContext(4);
 
-        // Check if SellerMania key exists
+        // Check if Sellermania key exists
         if (Configuration::get('SELLERMANIA_KEY') == '')
             die('ERROR1');
         if (Tools::getValue('k') == '' && $argument_key == '')

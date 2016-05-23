@@ -36,9 +36,9 @@ if (!class_exists('PEAR')) {
 }
 
 // Require Db requests class
-$db_requests_class_file = 'SellerManiaProduct15.php';
+$db_requests_class_file = 'SellermaniaProduct15.php';
 if (version_compare(_PS_VERSION_, '1.5') < 0) {
-    $db_requests_class_file = 'SellerManiaProduct14.php';
+    $db_requests_class_file = 'SellermaniaProduct14.php';
 }
 require_once(dirname(__FILE__).'/classes/'.$db_requests_class_file);
 

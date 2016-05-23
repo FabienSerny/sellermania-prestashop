@@ -32,9 +32,9 @@ if (!defined('_PS_VERSION_')) {
 
 if (!class_exists('FroggyHelperTreeCategories'))
 	require_once(dirname(__FILE__).'/../../classes/FroggyHelperTreeCategories.php');
-require_once(dirname(__FILE__).'/../front/SellerManiaExport.php');
+require_once(dirname(__FILE__).'/../front/SellermaniaExport.php');
 
-class SellerManiaGetContentController
+class SellermaniaGetContentController
 {
 	/**
 	 * Controller constructor
@@ -128,7 +128,7 @@ class SellerManiaGetContentController
 			$sellermania_key = Configuration::get('SELLERMANIA_KEY');
 		}
 
-		$smec = new SellerManiaExportController();
+		$smec = new SellermaniaExportController();
 		$module_url = 'index.php?controller='.Tools::getValue('controller').'&tab='.Tools::getValue('tab').'&token='.Tools::getValue('token');
 		$module_url .= '&configure='.Tools::getValue('configure').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'';
 

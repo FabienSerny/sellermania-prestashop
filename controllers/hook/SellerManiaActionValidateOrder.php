@@ -31,10 +31,10 @@ if (!defined('_PS_VERSION_')) {
 }
 
 // Load ImportOrder Controller and DisplayAdminOrderController
-require_once(dirname(__FILE__).'/SellerManiaImportOrder.php');
-require_once(dirname(__FILE__).'/SellerManiaDisplayAdminOrder.php');
+require_once(dirname(__FILE__).'/SellermaniaImportOrder.php');
+require_once(dirname(__FILE__).'/SellermaniaDisplayAdminOrder.php');
 
-class SellerManiaActionValidateOrderController
+class SellermaniaActionValidateOrderController
 {
 	/**
 	 * Controller constructor

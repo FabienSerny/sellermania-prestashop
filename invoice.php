@@ -35,7 +35,7 @@ if (file_exists($config_path))
 {
     include($config_path);
     include($module_path);
-    $sellermania = new SellerMania();
+    $sellermania = new Sellermania();
     $sellermania->invoice();
 }
 else

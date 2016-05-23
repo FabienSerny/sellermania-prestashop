@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class SellerManiaProduct
+class SellermaniaProduct
 {
     /**
      * Make products MySQL request

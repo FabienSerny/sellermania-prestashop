@@ -35,10 +35,10 @@ if (!defined('_PS_BASE_URL_'))
     define('_PS_BASE_URL_', Tools::getShopDomain(true));
 
 
-class SellerManiaInvoiceController
+class SellermaniaInvoiceController
 {
     /**
-     * SellerManiaInvoiceController constructor.
+     * SellermaniaInvoiceController constructor.
      * @param object $module
      * @param string $dir_path
      * @param string $web_path
@@ -127,7 +127,7 @@ class SellerManiaInvoiceController
         if (!defined('_PS_ADMIN_DIR_'))
             define('_PS_ADMIN_DIR_', getcwd());
 
-        // Check if SellerMania key exists
+        // Check if Sellermania key exists
         if (Configuration::get('SELLERMANIA_KEY') == '') {
             die('ERROR1');
         }
