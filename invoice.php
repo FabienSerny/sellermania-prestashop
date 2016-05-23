@@ -17,8 +17,8 @@
 * Do not edit or add to this file if you wish to upgrade your module to newer
 * versions in the future.
 *
-*  @author Fabien Serny - Froggy Commerce <team@froggy-commerce.com>
-*  @copyright    2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
+*  @author         Froggy Commerce <team@froggy-commerce.com>
+*  @copyright      2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
 *  @version        1.0
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */

@@ -32,6 +32,6 @@ if (!defined('_PS_VERSION_')) {
 
 class SellermaniaPaymentModule extends PaymentModule
 {
-	// Fix for validateOrder
-	public $active = 1;
+    // Fix for validateOrder
+    public $active = 1;
 }

@@ -17,10 +17,10 @@
 * Do not edit or add to this file if you wish to upgrade your module to newer
 * versions in the future.
 *
-*  @author Fabien Serny - Froggy Commerce <team@froggy-commerce.com>
-*  @copyright	2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
-*  @version		1.0
-*  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author         Froggy Commerce <team@froggy-commerce.com>
+*  @copyright      2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
+*  @version        1.0
+*  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
 
 // Construct path
@@ -33,11 +33,11 @@ define('_PS_ADMIN_DIR_', getcwd());
 // Keep going if config script is found
 if (file_exists($config_path))
 {
-	include($config_path);
-	include($module_path);
-	$sellermania = new SellerMania();
-	$sellermania->export();
+    include($config_path);
+    include($module_path);
+    $sellermania = new SellerMania();
+    $sellermania->export();
 }
 else
-	die('ERROR');
+    die('ERROR');
 
