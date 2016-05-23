@@ -46,7 +46,11 @@ if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
 }
 
 if (!class_exists('TCPDF')) {
-	require_once(dirname(__FILE__).'/lib/tcpdf/tcpdf.php');
+	if (defined('_PS_TCPDF_PATH_')) {
+		require_once(_PS_TCPDF_PATH_.'/tcpdf.php');
+	} else {
+		require_once(dirname(__FILE__).'/lib/tcpdf/tcpdf.php');
+	}
 }
 
 // Set time limit

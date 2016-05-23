@@ -33,8 +33,84 @@ if (!defined('_PS_BASE_URL_'))
 
 class SellerManiaInvoiceController
 {
+    /**
+     * SellerManiaInvoiceController constructor.
+     * @param object $module
+     * @param string $dir_path
+     * @param string $web_path
+     */
+    public function __construct($module, $dir_path, $web_path)
+    {
+        $this->module = $module;
+        $this->web_path = $web_path;
+        $this->dir_path = $dir_path;
+        $this->context = Context::getContext();
+        $this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
+    }
+
+    public function loadInvoiceData($id_order)
+    {
+        // Init
+        $order_invoices = array();
+        $id_lang = $this->context->language->id;
+
+        // Retrieve invoice
+        $order = new Order($id_order);
+        $invoices_list = $order->getInvoicesCollection();
+        foreach ($invoices_list as $order_invoice) {
+            $order_invoices[] = $order_invoice;
+        }
+
+        // If more than one invoice, display warning (will fix this later)
+        if (count($order_invoices) > 1) {
+            die('Sellermania module does not handle multiple invoice yet');
+        }
+
+        // Set data
+        $logo_path = dirname(__FILE__).'/../../../../img/';
+        $data = array(
+            'logo_path' => $logo_path.(version_compare(_PS_VERSION_, '1.5', '>') ?  Configuration::get('PS_LOGO') : __PS_BASE_URI__.'/img/logo.jpg'),
+            'shop_name' => Configuration::get('PS_SHOP_NAME', null, null, (int)$order->id_shop),
+            'title' => $this->module->l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$order->id_shop).sprintf('%06d', $order_invoice->number),
+            'date' => Tools::displayDate($order_invoice->date_add),
+        );
+
+        return $data;
+    }
+
+    /**
+     * @param integer $id_order
+     */
     public function generate($id_order)
     {
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Sellermania');
+        $pdf->SetTitle('Invoice #'.$id_order);
+        $pdf->SetSubject('Invoice #'.$id_order);
+
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->SetFont('dejavusans', '', 10);
+        $pdf->AddPage();
+
+        // Assign
+        $this->context->smarty->assign($this->loadInvoiceData($id_order));
+        $html = $this->module->compliantDisplay('../pdf/invoice.tpl');
+
+        // Output the HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        //Close and output PDF document
+        $pdf->Output('invoice.pdf', 'I');
     }
 
 
