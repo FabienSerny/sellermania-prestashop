@@ -65,12 +65,21 @@ class SellermaniaImportController
             $this->context->shop->setContext(4);
 
         // Check if Sellermania key exists
-        if (Configuration::get('SELLERMANIA_KEY') == '')
+        if (Configuration::get('SELLERMANIA_KEY') == '') {
             die('ERROR1');
-        if (Tools::getValue('k') == '' && $argument_key == '')
+        }
+        if (Tools::getValue('k') == '' && $argument_key == '') {
             die('ERROR2');
-        if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY') || $argument_key == Configuration::get('SELLERMANIA_KEY'))
-        {
+        }
+
+        // Check if key is good
+        if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY') || $argument_key == Configuration::get('SELLERMANIA_KEY')) {
+
+            // Check import method
+            if (Configuration::get('SM_IMPORT_METHOD') != 'cron') {
+                die("Wrong method, you have to choose cron method importation in module configuration\n");
+            }
+
             // Up time and memory limit
             set_time_limit(600);
             ini_set('memory_limit', '256M');
@@ -80,8 +89,9 @@ class SellermaniaImportController
             $controller->verbose = true;
             $controller->importOrders();
         }
-        else
+        else {
             die('ERROR3');
+        }
     }
 }
 
