@@ -109,7 +109,7 @@ class SellermaniaOrder extends ObjectModel
         FROM `'._DB_PREFIX_.'sellermania_order`
         WHERE `id_order` = '.(int)$id_order);
         $sellermania_order = new SellermaniaOrder($id_sellermania_order);
-        $sellermania_order->info_decoded = json_decode($sellermania_order->info, true);
+        $sellermania_order->details = json_decode($sellermania_order->info, true);
         return $sellermania_order;
     }
 

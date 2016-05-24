@@ -29,6 +29,7 @@ require_once(dirname(__FILE__).'/init.php');
 class Sellermania extends Module
 {
     public $sellermania_order_states;
+    public $sellermania_conditions_list;
 
     /**
      * Module Constructor
@@ -55,6 +56,7 @@ class Sellermania extends Module
         $this->description = $this->l('Connect your PrestaShop with Sellermania webservices');
 
         $this->loadSellermaniaOrderStates();
+        $this->loadSellermaniaConditionsList();
         $this->upgrade();
     }
 
@@ -76,6 +78,25 @@ class Sellermania extends Module
 
             'PS_OS_SM_CANCEL_CUS' => array('sm_status' => 3, 'sm_prior' => 0, 'label' => array('en' => 'Cancel by customer', 'fr' => 'Annulée par client'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false, 'color' => '#98c3ff'),
             'PS_OS_SM_CANCEL_SEL' => array('sm_status' => 4, 'sm_prior' => 0, 'label' => array('en' => 'Cancel by seller', 'fr' => 'Annulée par vendeur'), 'logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false, 'color' => '#98c3ff'),
+        );
+    }
+
+    public function loadSellermaniaConditionsList()
+    {
+        $this->sellermania_conditions_list = array(
+            0 => $this->l('Unknown', 'sellermaniadisplayadminorder'),
+            1 => $this->l('Like new', 'sellermaniadisplayadminorder'),
+            2 => $this->l('Very good', 'sellermaniadisplayadminorder'),
+            3 => $this->l('Good', 'sellermaniadisplayadminorder'),
+            4 => $this->l('Acceptable', 'sellermaniadisplayadminorder'),
+            5 => $this->l('Collectible like new', 'sellermaniadisplayadminorder'),
+            6 => $this->l('Collectible very good', 'sellermaniadisplayadminorder'),
+            7 => $this->l('Collectible good', 'sellermaniadisplayadminorder'),
+            8 => $this->l('Collectible acceptable', 'sellermaniadisplayadminorder'),
+            10 => $this->l('Refurbished mint', 'sellermaniadisplayadminorder'),
+            11 => $this->l('New', 'sellermaniadisplayadminorder'),
+            12 => $this->l('New OEM', 'sellermaniadisplayadminorder'),
+            13 => $this->l('Used openbox', 'sellermaniadisplayadminorder'),
         );
     }
 

@@ -36,11 +36,6 @@ require_once(dirname(__FILE__).'/SellermaniaImportOrder.php');
 class SellermaniaDisplayAdminOrderController
 {
     /**
-     * @var private array conditions
-     */
-    private $conditions_list = array();
-
-    /**
      * @var private array status
      */
     private $status_list = array();
@@ -55,22 +50,6 @@ class SellermaniaDisplayAdminOrderController
         $this->dir_path = $dir_path;
         $this->context = Context::getContext();
         $this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
-
-        $this->conditions_list = array(
-            0 => $this->module->l('Unknown', 'sellermaniadisplayadminorder'),
-            1 => $this->module->l('Like new', 'sellermaniadisplayadminorder'),
-            2 => $this->module->l('Very good', 'sellermaniadisplayadminorder'),
-            3 => $this->module->l('Good', 'sellermaniadisplayadminorder'),
-            4 => $this->module->l('Acceptable', 'sellermaniadisplayadminorder'),
-            5 => $this->module->l('Collectible like new', 'sellermaniadisplayadminorder'),
-            6 => $this->module->l('Collectible very good', 'sellermaniadisplayadminorder'),
-            7 => $this->module->l('Collectible good', 'sellermaniadisplayadminorder'),
-            8 => $this->module->l('Collectible acceptable', 'sellermaniadisplayadminorder'),
-            10 => $this->module->l('Refurbished mint', 'sellermaniadisplayadminorder'),
-            11 => $this->module->l('New', 'sellermaniadisplayadminorder'),
-            12 => $this->module->l('New OEM', 'sellermaniadisplayadminorder'),
-            13 => $this->module->l('Used openbox', 'sellermaniadisplayadminorder'),
-        );
 
         $this->status_list = array(
             6 => $this->module->l('To be confirmed', 'sellermaniadisplayadminorder'),
@@ -448,7 +427,7 @@ class SellermaniaDisplayAdminOrderController
         $this->context->smarty->assign('sellermania_currency', $sellermania_currency);
         $this->context->smarty->assign('sellermania_module_path', $this->web_path);
         $this->context->smarty->assign('sellermania_status_list', $this->status_list);
-        $this->context->smarty->assign('sellermania_conditions_list', $this->conditions_list);
+        $this->context->smarty->assign('sellermania_conditions_list', $this->module->sellermania_conditions_list);
         $this->context->smarty->assign('sellermania_status_to_ship', $status_to_ship);
         $this->context->smarty->assign('sellermania_status_update', $result_status_update);
         $this->context->smarty->assign('sellermania_shipping_status_update', $result_shipping_status_update);
