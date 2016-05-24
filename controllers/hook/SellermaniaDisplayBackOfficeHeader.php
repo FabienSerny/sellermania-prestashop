@@ -230,12 +230,19 @@ class SellermaniaDisplayBackOfficeHeaderController
     public function handleOrderImportation()
     {
         // If ajax, we do not do anything
-        if (Tools::getValue('ajax') != '')
+        if (Tools::getValue('ajax') != '') {
             return '';
+        }
+
+        // Check import method, if cron, we disable automatic import to avoid multiple import
+        if (Configuration::get('SM_IMPORT_METHOD') == 'cron') {
+            return '';
+        }
 
         // Check if it's time to import
-        if ($this->timeToImportOrders())
+        if ($this->timeToImportOrders()) {
             $this->importOrders();
+        }
 
     }
 
