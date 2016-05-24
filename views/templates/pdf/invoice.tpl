@@ -152,4 +152,26 @@ SKU: {$product.Sku}<br>
         </tr>
     </table>
 
+    <p align="center"><b>Merci de votre commande</b>: N'oubliez pas de nous laisser une évaluation sur {$sellermania_order->marketplace}</p>
+    <p align="center"><b>AVANT TOUTE EVALUATION</b>, si votre commande présente une anomalie, notre SAV mettra tout en oeuvre pour vous satisfaire.</p>
+
 </div>
+
+
+<table>
+    <tr>
+        <td style="text-align: center; font-size: 6pt; color: #444">
+
+{$shop_name|escape:'html':'UTF-8'},
+{if isset($shop_contact.PS_SHOP_ADDR1) && !empty($shop_contact.PS_SHOP_ADDR1)}{$shop_contact.PS_SHOP_ADDR1|escape:'html':'UTF-8'} {/if}
+{if isset($shop_contact.PS_SHOP_ADDR2) && !empty($shop_contact.PS_SHOP_ADDR2)}{$shop_contact.PS_SHOP_ADDR2|escape:'html':'UTF-8'} {/if}
+{if isset($shop_contact.PS_SHOP_CODE) && !empty($shop_contact.PS_SHOP_CODE)}{$shop_contact.PS_SHOP_CODE|escape:'html':'UTF-8'} {$shop_contact.PS_SHOP_CITY|escape:'html':'UTF-8'} {/if}
+{if isset($shop_contact.PS_SHOP_COUNTRY_ID) && !empty($shop_contact.PS_SHOP_COUNTRY_ID)}{$shop_contact.PS_SHOP_COUNTRY->name|escape:'html':'UTF-8'} {/if}
+<br>
+{if isset($shop_contact.PS_SHOP_EMAIL) && !empty($shop_contact.PS_SHOP_EMAIL)}{l s='E-mail:' mod='sellermania'} {$shop_contact.PS_SHOP_EMAIL|escape:'html':'UTF-8'} {/if}
+{if isset($shop_contact.PS_SHOP_PHONE) && !empty($shop_contact.PS_SHOP_PHONE)}{l s='Phone:' mod='sellermania'} {$shop_contact.PS_SHOP_PHONE|escape:'html':'UTF-8'} {/if}
+<br>
+{if isset($shop_contact.PS_SHOP_DETAILS)}{$shop_contact.PS_SHOP_DETAILS|escape:'html':'UTF-8'}{/if}
+        </td>
+    </tr>
+</table>
