@@ -110,6 +110,21 @@ class SellermaniaOrder extends ObjectModel
         WHERE `id_order` = '.(int)$id_order);
         $sellermania_order = new SellermaniaOrder($id_sellermania_order);
         $sellermania_order->details = json_decode($sellermania_order->info, true);
+
+        $sellermania_order->details['SubtotalVAT'] = array();
+        foreach ($sellermania_order->details['OrderInfo']['Product'] as $kp => $product) {
+
+            // Calcul VAT percent
+            $product_vat_rate = (string)(($product['ProductVAT']['rate'] -  1) * 100);
+            $sellermania_order->details['OrderInfo']['Product'][$kp]['ProductVAT']['RatePercent'] = $product_vat_rate;
+
+            // Calcul amount for each VAT
+            if (!isset($sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_rate])) {
+                $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_rate] = 0;
+            }
+            $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_rate] += $product['ProductVAT']['total'];
+        }
+
         return $sellermania_order;
     }
 

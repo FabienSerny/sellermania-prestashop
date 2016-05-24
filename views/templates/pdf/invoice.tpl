@@ -78,14 +78,12 @@
     <table style="width: 100%" border="0" style="border:1px solid black; padding:5px">
         <tr>
             <td style="width: 45%" align="left">
-<p>
 <span style="font-weight: bold; font-size: 10pt; color: #9E9F9E">{l s='Order details:' mod='sellermania'}</span><br>
 {l s='Order date:' mod='sellermania'} {$sellermania_order->details.OrderInfo.Date}<br>
 {l s='Order reference:' mod='sellermania'} {$sellermania_order->ref_order}<br>
 {l s='Order placed on:' mod='sellermania'} {$sellermania_order->marketplace}<br>
 {l s='Delivery method:' mod='sellermania'} {$sellermania_order->details.OrderInfo.Transport.ShippingType}<br>
 {l s='Order date:' mod='sellermania'} {$date|escape:'html':'UTF-8'}
-</p>
             </td>
             <td style="width: 10%">&nbsp;</td>
             <td style="width: 45%" align="right">
@@ -102,6 +100,7 @@
         </tr>
     </table>
     <!-- /DETAILS -->
+
     <div style="line-height: 1pt">&nbsp;</div>
 
     <!-- PRODUCTS -->
@@ -122,14 +121,30 @@ Etat: {if isset($product.ItemCondition) && isset($sellermania_conditions_list[$p
 EAN13: {$product.Ean}<br>
 SKU: {$product.Sku}<br>
                 </td>
-                <td align="center">{$product.ProductVAT.total|round:2} {$currency_sign} ({($product.ProductVAT.rate - 1) * 100}%)</td>
-                <td align="center">{$product.Amount.Price} {$currency_sign}</td>
+                <td align="center">{$product.ProductVAT.total|round:2} {$product.Amount.Currency} ({$product.ProductVAT.RatePercent}%)</td>
+                <td align="center">{$product.Amount.Price} {$product.Amount.Currency}</td>
             </tr>
+            {if isset($product.ShippingFee.Amount.Price)}
+                <tr>
+                    <td align="center">{$product.QuantityPurchased}</td>
+                    <td align="left">{l s='Packing fees and delivery' mod='sellermania'}</td>
+                    <td align="center">&nbsp;</td>
+                    <td align="center">{$product.ShippingFee.Amount.Price} {$product.ShippingFee.Amount.Currency}</td>
+                </tr>
+            {/if}
         {/foreach}
+
+
         <tr>
             <td colspan="3" align="right">{l s='Total product without VAT' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.TotalProductsWithoutVAT|round:2} {$currency_sign}</td>
         </tr>
+        {foreach from=$sellermania_order->details.OrderInfo.SubtotalVAT key=vat_percent item=vat_value}
+            <tr>
+                <td colspan="3" align="right">{l s='VAT' mod='sellermania'} ({$vat_percent}%)</td>
+                <td align="center">{$vat_value|round:2} {$currency_sign}</td>
+            </tr>
+        {/foreach}
         <tr>
             <td colspan="3" align="right">{l s='Total product with VAT' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.TotalProductsWithVAT} {$currency_sign}</td>
