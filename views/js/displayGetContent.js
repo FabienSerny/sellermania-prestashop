@@ -1,5 +1,5 @@
 /*
- * 2010 - 2014 Sellermania / Froggy Commerce / 23Prod SARL
+ * 2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  * Do not edit or add to this file if you wish to upgrade your module to newer
  * versions in the future.
  *
- *  @author Fabien Serny - Froggy Commerce <team@froggy-commerce.com>
- *  @copyright	2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
- *  @version		1.0
- *  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  @author         Froggy Commerce <team@froggy-commerce.com>
+ *  @copyright      2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
+ *  @version        1.0
+ *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 $(document).ready(function() {
@@ -34,58 +34,58 @@ $(document).ready(function() {
         return true;
     }
 
-	$('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
-	$('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
-	displaySellermaniaCredentials();
+    $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
+    $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
+    displaySellermaniaCredentials();
 
-	function displaySellermaniaSyncOption()
-	{
-		if ($('#sm_stock_sync_option_yes').attr('checked') == 'checked' || $('#sm_stock_sync_option_yes').attr('checked') == true)
-			$('#sm_stock_sync_option_configuration').fadeIn();
-		else
-			$('#sm_stock_sync_option_configuration').fadeOut();
-		return true;
-	}
+    function displaySellermaniaSyncOption()
+    {
+        if ($('#sm_stock_sync_option_yes').attr('checked') == 'checked' || $('#sm_stock_sync_option_yes').attr('checked') == true)
+            $('#sm_stock_sync_option_configuration').fadeIn();
+        else
+            $('#sm_stock_sync_option_configuration').fadeOut();
+        return true;
+    }
 
     $('#sm_stock_sync_option_yes').click(function() { return displaySellermaniaSyncOption(); });
     $('#sm_stock_sync_option_no').click(function() { return displaySellermaniaSyncOption(); });
-	displaySellermaniaSyncOption();
+    displaySellermaniaSyncOption();
 
 
-	function displaySellermaniaAlertOption()
-	{
-		if ($('#sm_alert_missing_ref_option_yes').attr('checked') == 'checked' || $('#sm_alert_missing_ref_option_yes').attr('checked') == true)
-			$('#sm_alert_missing_ref_option_configuration').fadeIn();
-		else
-			$('#sm_alert_missing_ref_option_configuration').fadeOut();
-		return true;
-	}
+    function displaySellermaniaAlertOption()
+    {
+        if ($('#sm_alert_missing_ref_option_yes').attr('checked') == 'checked' || $('#sm_alert_missing_ref_option_yes').attr('checked') == true)
+            $('#sm_alert_missing_ref_option_configuration').fadeIn();
+        else
+            $('#sm_alert_missing_ref_option_configuration').fadeOut();
+        return true;
+    }
 
-	$('#sm_alert_missing_ref_option_yes').click(function() { return displaySellermaniaAlertOption(); });
-	$('#sm_alert_missing_ref_option_no').click(function() { return displaySellermaniaAlertOption(); });
-	displaySellermaniaAlertOption();
-
-
-	function displaySellermaniaExportOptions()
-	{
-		if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true)
-			$('#sm_export_all_configuration').fadeOut();
-		else
-			$('#sm_export_all_configuration').fadeIn();
-		return true;
-	}
-
-	$('#sm_export_all_yes').click(function() { return displaySellermaniaExportOptions(); });
-	$('#sm_export_all_no').click(function() { return displaySellermaniaExportOptions(); });
-	displaySellermaniaExportOptions();
+    $('#sm_alert_missing_ref_option_yes').click(function() { return displaySellermaniaAlertOption(); });
+    $('#sm_alert_missing_ref_option_no').click(function() { return displaySellermaniaAlertOption(); });
+    displaySellermaniaAlertOption();
 
 
-	$('#see-advanced-export').click(function() {
-		if ($('#advanced-export').is(':visible'))
-			$('#advanced-export').fadeOut();
-		else
-			$('#advanced-export').fadeIn();
-		return false;
-	});
+    function displaySellermaniaExportOptions()
+    {
+        if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true)
+            $('#sm_export_all_configuration').fadeOut();
+        else
+            $('#sm_export_all_configuration').fadeIn();
+        return true;
+    }
+
+    $('#sm_export_all_yes').click(function() { return displaySellermaniaExportOptions(); });
+    $('#sm_export_all_no').click(function() { return displaySellermaniaExportOptions(); });
+    displaySellermaniaExportOptions();
+
+
+    $('#see-advanced-export').click(function() {
+        if ($('#advanced-export').is(':visible'))
+            $('#advanced-export').fadeOut();
+        else
+            $('#advanced-export').fadeIn();
+        return false;
+    });
 
 });
