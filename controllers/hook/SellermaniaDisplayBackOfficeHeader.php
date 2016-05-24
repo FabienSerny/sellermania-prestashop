@@ -55,6 +55,10 @@ class SellermaniaDisplayBackOfficeHeaderController
         $this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
     }
 
+    /**
+     * Module can speak when verbose mode is enabled (for the moment only for orders importation via command line)
+     * @param $string
+     */
     public function speak($string)
     {
         if ($this->verbose) {
