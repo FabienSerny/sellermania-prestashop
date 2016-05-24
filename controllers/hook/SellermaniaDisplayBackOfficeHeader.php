@@ -41,6 +41,8 @@ require_once(dirname(__FILE__).'/SellermaniaActionValidateOrder.php');
 
 class SellermaniaDisplayBackOfficeHeaderController
 {
+    public $verbose = false;
+
     /**
      * Controller constructor
      */
@@ -53,6 +55,12 @@ class SellermaniaDisplayBackOfficeHeaderController
         $this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
     }
 
+    public function speak($string)
+    {
+        if ($this->verbose) {
+            echo $string."\n";
+        }
+    }
 
     /**
      * Import Sellermania orders
@@ -77,6 +85,9 @@ class SellermaniaDisplayBackOfficeHeaderController
 
         try
         {
+            // Verbose mode
+            $this->speak('Import orders from '.$date_start.' to '.$date_end.', please wait...');
+
             // Recovering dispatched orders for the last 30 days
             $result = $client->getOrderByDate(
                 new \DateTime($date_start),
@@ -90,14 +101,23 @@ class SellermaniaDisplayBackOfficeHeaderController
                 if (!isset($result['SellermaniaWs']['GetOrderResponse']['Order'][0]))
                     $result['SellermaniaWs']['GetOrderResponse']['Order'] = array($result['SellermaniaWs']['GetOrderResponse']['Order']);
 
+                // Verbose mode
+                $this->speak(count($result['SellermaniaWs']['GetOrderResponse']['Order']).' orders retrieved');
+
                 // Import order
                 foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
                     if (isset($order['OrderInfo']['OrderId']))
                     {
+                        // Verbose mode
+                        $this->speak('Import order #'.$order['OrderInfo']['OrderId'].' from '.$order['OrderInfo']['MarketPlace']);
+
                         // Check if order exists
                         $id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
                         if ($id_sellermania_order > 0)
                         {
+                            // Verbose mode
+                            $this->speak('Order exists, we update it');
+
                             // If do exist and associate to a PrestaShop order, we update order status
                             $smo = new SellermaniaOrder((int)$id_sellermania_order);
                             if ($smo->id_order > 0)
@@ -111,6 +131,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                                 {
                                     // Log error
                                     $log = '[UPDATE] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+                                    $this->speak('EXCEPTION: '.$log);
                                     $log .= var_export($order, true)."\n";
                                     file_put_contents(dirname(__FILE__).'/../../log/order-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
                                 }
@@ -118,6 +139,9 @@ class SellermaniaDisplayBackOfficeHeaderController
                         }
                         else
                         {
+                            // Verbose mode
+                            $this->speak('Order does not exist, we create it');
+
                             // If does not exist, we import the order
                             try
                             {
@@ -157,6 +181,7 @@ class SellermaniaDisplayBackOfficeHeaderController
 
                                 // Log error
                                 $log = '[INSERT] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+                                $this->speak('EXCEPTION: '.$log);
                                 $log .= var_export($order, true)."\n";
                                 file_put_contents(dirname(__FILE__).'/../../log/order-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
                             }
@@ -167,6 +192,7 @@ class SellermaniaDisplayBackOfficeHeaderController
         catch (\Exception $e)
         {
             $log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
+            $this->speak('EXCEPTION: '.$log);
             file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
         }
 

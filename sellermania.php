@@ -462,6 +462,15 @@ class Sellermania extends Module
     }
 
     /**
+     * Import method
+     * @return string $export
+     */
+    public function import()
+    {
+        return $this->runController('front', 'Import');
+    }
+
+    /**
      * Export method
      * @return string $export
      */
