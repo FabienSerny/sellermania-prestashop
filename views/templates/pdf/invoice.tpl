@@ -87,7 +87,7 @@
 {l s='Order date:' mod='sellermania'} {$date|escape:'html':'UTF-8'}
 </p>
             </td>
-            <td>&nbsp;</td>
+            <td style="width: 10%">&nbsp;</td>
             <td style="width: 45%" align="right">
 {if isset($sellermania_order->details.User[1].Name) && !empty($sellermania_order->details.User[1].Name)}{assign var="address_index" value="1"}{/if}
 <span style="font-weight: bold; font-size: 10pt; color: #9E9F9E">{l s='Invoice Address' mod='sellermania'}</span><br />

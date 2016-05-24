@@ -81,6 +81,9 @@ class Sellermania extends Module
         );
     }
 
+    /**
+     * Load Sellermania product conditions
+     */
     public function loadSellermaniaConditionsList()
     {
         $this->sellermania_conditions_list = array(
