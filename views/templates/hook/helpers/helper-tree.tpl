@@ -16,10 +16,10 @@
 * Do not edit or add to this file if you wish to upgrade your module to newer
 * versions in the future.
 *
-*  @author Fabien Serny - Froggy Commerce <team@froggy-commerce.com>
-*  @copyright	2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
-*  @version		1.0
-*  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author         Froggy Commerce <team@froggy-commerce.com>
+*  @copyright      2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
+*  @version        1.0
+*  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
 <input type="button" id="category-tree-select-all-{$categories_tree_id}" value="{l s='Select all' mod='sellermania'}" class="button" />
@@ -29,16 +29,16 @@
 
 {literal}
 <script>
-		$('#category-tree-select-all-{/literal}{$categories_tree_id}{literal}').click(function() {
-	$('.categories-tree-checkbox-{$categories_tree_id}').attr('checked', 'checked');
+        $('#category-tree-select-all-{/literal}{$categories_tree_id}{literal}').click(function() {
+    $('.categories-tree-checkbox-{$categories_tree_id}').attr('checked', 'checked');
 });
-		$('#category-tree-unselect-all-{/literal}{$categories_tree_id}{literal}').click(function() {
-	$('.categories-tree-checkbox-{$categories_tree_id}').removeAttr('checked');
+        $('#category-tree-unselect-all-{/literal}{$categories_tree_id}{literal}').click(function() {
+    $('.categories-tree-checkbox-{$categories_tree_id}').removeAttr('checked');
 });
 </script>
 
 <style>
-	.froggy-categories-tree { padding-left:15px }
-	.froggy-categories-tree li { list-style-type: none }
+    .froggy-categories-tree { padding-left:15px }
+    .froggy-categories-tree li { list-style-type: none }
 </style>
 {/literal}

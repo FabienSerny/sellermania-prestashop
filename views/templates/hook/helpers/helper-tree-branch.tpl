@@ -16,14 +16,14 @@
 * Do not edit or add to this file if you wish to upgrade your module to newer
 * versions in the future.
 *
-*  @author Fabien Serny - Froggy Commerce <team@froggy-commerce.com>
-*  @copyright	2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
-*  @version		1.0
-*  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author         Froggy Commerce <team@froggy-commerce.com>
+*  @copyright      2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
+*  @version        1.0
+*  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
 <ul class="froggy-categories-tree">
 {foreach from=$categories_tree_branches item=branch}
-	<li><input type="checkbox" class="categories-tree-checkbox-{$categories_tree_id}" name="{$categories_tree_attribute_name}[]" value="{$branch.id_category}"{if $branch.checked} checked{/if} /> {$branch.name}{$branch.children}</li>
+    <li><input type="checkbox" class="categories-tree-checkbox-{$categories_tree_id}" name="{$categories_tree_attribute_name}[]" value="{$branch.id_category}"{if $branch.checked} checked{/if} /> {$branch.name}{$branch.children}</li>
 {/foreach}
 </ul>

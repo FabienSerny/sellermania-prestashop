@@ -16,10 +16,10 @@
 * Do not edit or add to this file if you wish to upgrade your module to newer
 * versions in the future.
 *
-*  @author Fabien Serny - Froggy Commerce <team@froggy-commerce.com>
-*  @copyright	2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
-*  @version		1.0
-*  @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author         Froggy Commerce <team@froggy-commerce.com>
+*  @copyright      2010-2016 Sellermania / Froggy Commerce / 23Prod SARL
+*  @version        1.0
+*  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
 <h2>{l s='Sellermania' mod='sellermania'}</h2>
@@ -55,54 +55,54 @@
 {else}
 
 <div class="panel">
-	<div class="panel-heading">
-		<legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania help' mod='sellermania'}</legend>
-	</div>
-	<div class="margin-form">
-		<h4>{l s='You do not know how to configure the module? You don\'t know how it works?' mod='sellermania'}</h4>
-		<p><strong>{l s='Please look at the documentation by clicking on the button below.' mod='sellermania'}</strong></p>
-		<p><a href="http://www.froggy-commerce.com/docs/sellermania/{$documentation_iso_code}" class="btn btn-default" target="_blank">{l s='See the documentation' mod='sellermania'}</a></p>
-	</div>
+    <div class="panel-heading">
+        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania help' mod='sellermania'}</legend>
+    </div>
+    <div class="margin-form">
+        <h4>{l s='You do not know how to configure the module? You don\'t know how it works?' mod='sellermania'}</h4>
+        <p><strong>{l s='Please look at the documentation by clicking on the button below.' mod='sellermania'}</strong></p>
+        <p><a href="http://www.froggy-commerce.com/docs/sellermania/{$documentation_iso_code}" class="btn btn-default" target="_blank">{l s='See the documentation' mod='sellermania'}</a></p>
+    </div>
 </div>
 
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
-	<fieldset>
+    <fieldset>
 
 <div class="panel">
-	<div class="panel-heading">
-		<legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania export' mod='sellermania'}</legend>
-	</div>
-	<div class="margin-form">
+    <div class="panel-heading">
+        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Sellermania export' mod='sellermania'}</legend>
+    </div>
+    <div class="margin-form">
 
-		<div class="form-group">
-			<div class="clearfix">
-				<label class="col-lg-4">{l s='Do you want to export all your catalog to Sellermania?' mod='sellermania'}</label>
-				<div class="col-lg-8">
-					<input type="radio" name="sm_export_all" id="sm_export_all_yes" value="yes" {if $sm_export_all eq 'yes'}checked="checked"{/if} />
-					<label for="sm_export_all_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
-					<input type="radio" name="sm_export_all" id="sm_export_all_no" value="no" {if $sm_export_all eq 'no' || $sm_export_all eq ''}checked="checked"{/if} />
-					<label for="sm_export_all_no">{l s='No' mod='sellermania'}</label>
-				</div>
-			</div>
-			<div id="sm_export_all_configuration" class="clearfix">
-				<div class="form-group clearfix">
-					<label class="col-lg-4">{l s='Please select the categories you want to export:' mod='sellermania'}</label>
-					<div class="col-lg-8">{$category_tree}</div>
-				</div>
-			</div>
-		</div>
+        <div class="form-group">
+            <div class="clearfix">
+                <label class="col-lg-4">{l s='Do you want to export all your catalog to Sellermania?' mod='sellermania'}</label>
+                <div class="col-lg-8">
+                    <input type="radio" name="sm_export_all" id="sm_export_all_yes" value="yes" {if $sm_export_all eq 'yes'}checked="checked"{/if} />
+                    <label for="sm_export_all_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                    <input type="radio" name="sm_export_all" id="sm_export_all_no" value="no" {if $sm_export_all eq 'no' || $sm_export_all eq ''}checked="checked"{/if} />
+                    <label for="sm_export_all_no">{l s='No' mod='sellermania'}</label>
+                </div>
+            </div>
+            <div id="sm_export_all_configuration" class="clearfix">
+                <div class="form-group clearfix">
+                    <label class="col-lg-4">{l s='Please select the categories you want to export:' mod='sellermania'}</label>
+                    <div class="col-lg-8">{$category_tree}</div>
+                </div>
+            </div>
+        </div>
 
-		<p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
-		<p>
+        <p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
+        <p>
             {foreach from=$languages_list item=language}
-				<strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export.php?l={$language.iso_code|strtolower}&k={$sellermania_key} <br>
+                <strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export.php?l={$language.iso_code|strtolower}&k={$sellermania_key} <br>
             {/foreach}
-		</p>
+        </p>
 
         <br>
-		<p><a href="#" id="see-advanced-export" class="btn btn-default">{l s='Advanced configuration' mod='sellermania'}</a></p>
+        <p><a href="#" id="see-advanced-export" class="btn btn-default">{l s='Advanced configuration' mod='sellermania'}</a></p>
 
-		<div id="advanced-export">
+        <div id="advanced-export">
             <p><b>{l s='Set a cron task' mod='sellermania'}</b></p>
             <p>{l s='Script path:' mod='sellermania'} {$script_path}/export.php {$sellermania_key}</p>
             <p>{l s='Generated files will be available at these urls:' mod='sellermania'}</p>
@@ -133,9 +133,9 @@
 
 
 
-		<div class="panel-footer">
-			<input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
-		</div>
+        <div class="panel-footer">
+            <input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
+        </div>
         {if isset($sm_confirm_export_options)}<div class="alert alert-success"><p class="conf"><strong>{l s='Configuration has been saved' mod='sellermania'}</strong></p></div>{/if}
 
 
@@ -197,91 +197,91 @@
                                     <input type="text" name="sm_confirm_order_endpoint" value="{$sm_confirm_order_endpoint}" />
                                 </div>
                             </div>
-							<div class="form-group clearfix">
-								<label class="col-lg-4">{l s='Inventory endpoint' mod='sellermania'}</label>
-								<div class="col-lg-8">
-									<input type="text" name="sm_inventory_endpoint" value="{$sm_inventory_endpoint}" />
-								</div>
-							</div>
+                            <div class="form-group clearfix">
+                                <label class="col-lg-4">{l s='Inventory endpoint' mod='sellermania'}</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="sm_inventory_endpoint" value="{$sm_inventory_endpoint}" />
+                                </div>
+                            </div>
 
                             {if empty($sm_order_email)}
-								<div class="form-group clearfix">
-									<strong><u>{l s='Note:' mod='sellermania'}</u></strong>
+                                <div class="form-group clearfix">
+                                    <strong><u>{l s='Note:' mod='sellermania'}</u></strong>
                                     {l s='These credentials are provided by Sellermania, if you don\'t have them, please contact Sellermania.' mod='sellermania'}
-								</div>
+                                </div>
                             {/if}
 
-							<div class="form-group clearfix">
-								<label class="col-lg-4">{l s='Synchronization by reference (optional)' mod='sellermania'}</label>
-								<div class="col-lg-4">
-									<input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_yes" value="yes" {if $sm_stock_sync_option eq 'yes'}checked="checked"{/if} />
-									<label for="sm_stock_sync_option_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
-									<input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_no" value="no" {if $sm_stock_sync_option eq 'no' || $sm_stock_sync_option eq ''}checked="checked"{/if} />
-									<label for="sm_stock_sync_option_no">{l s='No' mod='sellermania'}</label>
+                            <div class="form-group clearfix">
+                                <label class="col-lg-4">{l s='Synchronization by reference (optional)' mod='sellermania'}</label>
+                                <div class="col-lg-4">
+                                    <input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_yes" value="yes" {if $sm_stock_sync_option eq 'yes'}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_option_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                                    <input type="radio" name="sm_stock_sync_option" id="sm_stock_sync_option_no" value="no" {if $sm_stock_sync_option eq 'no' || $sm_stock_sync_option eq ''}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_option_no">{l s='No' mod='sellermania'}</label>
                                 </div>
-							</div>
+                            </div>
                             <div class="form-group clearfix" id="sm_stock_sync_option_configuration">
 
-								<label class="col-lg-4" style="text-align:right"><b>{l s='Option 1' mod='sellermania'}</b></label>
-								<div class="col-lg-8">
-									<input type="radio" name="sm_stock_sync_option_1" id="sm_stock_sync_option_1_yes" value="yes" {if $sm_stock_sync_option_1 eq 'yes'}checked="checked"{/if} />
-									<label for="sm_stock_sync_option_1_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
-									<input type="radio" name="sm_stock_sync_option_1" id="sm_stock_sync_option_1_no" value="no" {if $sm_stock_sync_option_1 eq 'no' || $sm_stock_sync_option_1 eq ''}checked="checked"{/if} />
-									<label for="sm_stock_sync_option_1_no">{l s='No' mod='sellermania'}</label>
+                                <label class="col-lg-4" style="text-align:right"><b>{l s='Option 1' mod='sellermania'}</b></label>
+                                <div class="col-lg-8">
+                                    <input type="radio" name="sm_stock_sync_option_1" id="sm_stock_sync_option_1_yes" value="yes" {if $sm_stock_sync_option_1 eq 'yes'}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_option_1_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                                    <input type="radio" name="sm_stock_sync_option_1" id="sm_stock_sync_option_1_no" value="no" {if $sm_stock_sync_option_1 eq 'no' || $sm_stock_sync_option_1 eq ''}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_option_1_no">{l s='No' mod='sellermania'}</label>
                                     <p align="left">
                                         {l s='This feature allows you to "chain" some references to each other, which will permit to update the stock of all the chained references at the same time.' mod='sellermania'}<br>
                                         {l s='Eg: You choose to chain with the 5 first characters of the SKU. If the product\'s SKU of an imported order is "D6HSIQKZJD", all products with SKU begins with "D6HSI" will have their stock updated.' mod='sellermania'}
-									</p>
+                                    </p>
                                 </div>
 
-								<label class="col-lg-4" style="text-align:right"><b>{l s='Option 2' mod='sellermania'}</b></label>
-								<div class="col-lg-8">
-									<input type="radio" name="sm_stock_sync_option_2" id="sm_stock_sync_option_2_yes" value="yes" {if $sm_stock_sync_option_2 eq 'yes'}checked="checked"{/if} />
-									<label for="sm_stock_sync_option_2_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
-									<input type="radio" name="sm_stock_sync_option_2" id="sm_stock_sync_option_2_no" value="no" {if $sm_stock_sync_option_2 eq 'no' || $sm_stock_sync_option_2 eq ''}checked="checked"{/if} />
-									<label for="sm_stock_sync_option_2_no">{l s='No' mod='sellermania'}</label>
-									<p align="left">
+                                <label class="col-lg-4" style="text-align:right"><b>{l s='Option 2' mod='sellermania'}</b></label>
+                                <div class="col-lg-8">
+                                    <input type="radio" name="sm_stock_sync_option_2" id="sm_stock_sync_option_2_yes" value="yes" {if $sm_stock_sync_option_2 eq 'yes'}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_option_2_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                                    <input type="radio" name="sm_stock_sync_option_2" id="sm_stock_sync_option_2_no" value="no" {if $sm_stock_sync_option_2 eq 'no' || $sm_stock_sync_option_2 eq ''}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_option_2_no">{l s='No' mod='sellermania'}</label>
+                                    <p align="left">
                                         {l s='This feature allows you to match the reference of product\'s SKU of an imported order with one of your PrestaShop.' mod='sellermania'}<br>
                                         {l s='Eg: You choose to chain with the 5 first characters of the SKU. If the product\'s SKU of an imported order is "D6HSIQKZJD", PrestaShop will associated the product with the first one which SKU begins with "D6HSI".' mod='sellermania'}
-									</p>
-								</div>
+                                    </p>
+                                </div>
                                 <br>
-								<label class="col-lg-4" style="text-align:right"><b>{l s='Configuration' mod='sellermania'}</b></label>
-								<p>&nbsp;&nbsp;<b>{l s='Define how you want to chain the references, the X first or X last characters of the reference.' mod='sellermania'}</b></p>
-								<label class="col-lg-4">&nbsp;</label>
+                                <label class="col-lg-4" style="text-align:right"><b>{l s='Configuration' mod='sellermania'}</b></label>
+                                <p>&nbsp;&nbsp;<b>{l s='Define how you want to chain the references, the X first or X last characters of the reference.' mod='sellermania'}</b></p>
+                                <label class="col-lg-4">&nbsp;</label>
                                 <div class="col-lg-1">
                                     {l s='Use the' mod='sellermania'}
-								</div>
+                                </div>
                                 <div class="col-lg-2"><input type="text" name="sm_stock_sync_nb_char" value="{$sm_stock_sync_nb_char|intval}" /></div>
                                 <div class="col-lg-2">
-									<input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_first" value="first" {if $sm_stock_sync_position eq 'first'}checked="checked"{/if} />
-									<label for="sm_stock_sync_position_first">{l s='first' mod='sellermania'}</label>&nbsp;&nbsp;
-									<input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_last" value="last" {if $sm_stock_sync_position eq 'last' || $sm_stock_sync_position eq ''}checked="checked"{/if} />
-									<label for="sm_stock_sync_position_last">{l s='last' mod='sellermania'}</label>
+                                    <input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_first" value="first" {if $sm_stock_sync_position eq 'first'}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_position_first">{l s='first' mod='sellermania'}</label>&nbsp;&nbsp;
+                                    <input type="radio" name="sm_stock_sync_position" id="sm_stock_sync_position_last" value="last" {if $sm_stock_sync_position eq 'last' || $sm_stock_sync_position eq ''}checked="checked"{/if} />
+                                    <label for="sm_stock_sync_position_last">{l s='last' mod='sellermania'}</label>
                                 </div>
-								<div class="col-lg-2">
+                                <div class="col-lg-2">
                                     {l s='reference\'s characters.' mod='sellermania'}
                                 </div>
-							</div>
+                            </div>
 
 
 
 
-							<div class="form-group clearfix">
-								<label class="col-lg-4">{l s='Alert me by e-mail when a reference is not found' mod='sellermania'}</label>
-								<div class="col-lg-4">
-									<input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_yes" value="yes" {if $sm_alert_missing_ref_option eq 'yes'}checked="checked"{/if} />
-									<label for="sm_alert_missing_ref_option_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
-									<input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_no" value="no" {if $sm_alert_missing_ref_option eq 'no' || $sm_alert_missing_ref_option eq ''}checked="checked"{/if} />
-									<label for="sm_alert_missing_ref_option_no">{l s='No' mod='sellermania'}</label>
-								</div>
-							</div>
-							<div class="form-group clearfix" id="sm_alert_missing_ref_option_configuration">
-								<label class="col-lg-4">{l s='Your email' mod='sellermania'}</label>
-								<div class="col-lg-2">
-									<input type="text" name="sm_alert_missing_ref_mail" value="{$sm_alert_missing_ref_mail}" />
-								</div>
-							</div>
+                            <div class="form-group clearfix">
+                                <label class="col-lg-4">{l s='Alert me by e-mail when a reference is not found' mod='sellermania'}</label>
+                                <div class="col-lg-4">
+                                    <input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_yes" value="yes" {if $sm_alert_missing_ref_option eq 'yes'}checked="checked"{/if} />
+                                    <label for="sm_alert_missing_ref_option_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                                    <input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_no" value="no" {if $sm_alert_missing_ref_option eq 'no' || $sm_alert_missing_ref_option eq ''}checked="checked"{/if} />
+                                    <label for="sm_alert_missing_ref_option_no">{l s='No' mod='sellermania'}</label>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix" id="sm_alert_missing_ref_option_configuration">
+                                <label class="col-lg-4">{l s='Your email' mod='sellermania'}</label>
+                                <div class="col-lg-2">
+                                    <input type="text" name="sm_alert_missing_ref_mail" value="{$sm_alert_missing_ref_mail}" />
+                                </div>
+                            </div>
 
 
                             <div class="form-group clearfix">
@@ -314,7 +314,7 @@
                                 <h4>{l s='Importation errors:' mod='sellermania'}</h4>
                                 <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p>
                             {/if}
-							<p>{l s='Product ID used when no product is matched during an order importation:' mod='sellermania'} <strong>{$sm_default_product_id}</strong>{if $sm_default_product->id lt 1} <strong>({l s='WARNING: Product could not be found!' mod='sellermania'})</strong>{/if}</p>
+                            <p>{l s='Product ID used when no product is matched during an order importation:' mod='sellermania'} <strong>{$sm_default_product_id}</strong>{if $sm_default_product->id lt 1} <strong>({l s='WARNING: Product could not be found!' mod='sellermania'})</strong>{/if}</p>
                         </div>
                     {/if}
                 {/if}
