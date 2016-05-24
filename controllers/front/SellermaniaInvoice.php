@@ -78,6 +78,12 @@ class SellermaniaInvoiceController
         ), null, null, (int)$order->id_shop);
         $shop_contact['PS_SHOP_COUNTRY'] = new Country((int)$shop_contact['PS_SHOP_COUNTRY_ID'], $id_lang);
 
+        // Add debug tool
+        $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order);
+        if (Tools::getIsset('debug')) {
+            d($sellermania_order);
+        }
+
         // Assign data
         $data = array(
             'logo_path' => $logo_path.(version_compare(_PS_VERSION_, '1.5', '>') ?  Configuration::get('PS_LOGO') : __PS_BASE_URI__.'/img/logo.jpg'),
@@ -85,7 +91,7 @@ class SellermaniaInvoiceController
             'shop_contact' => $shop_contact,
             'title' => $this->module->l('Invoice number').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$order->id_shop).sprintf('%06d', $order_invoice->number),
             'date' => Tools::displayDate($order_invoice->date_add),
-            'sellermania_order' => SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order),
+            'sellermania_order' => $sellermania_order,
             'sellermania_conditions_list' => $this->module->sellermania_conditions_list,
         );
 
