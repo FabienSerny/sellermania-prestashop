@@ -402,10 +402,16 @@ class Sellermania extends Module
      */
     function getContent()
     {
-        if (Tools::getValue('export') == 'true')
+        if (Tools::getValue('export') == 'true') {
             die($this->export());
-        if (Tools::getValue('sellermania') == 'CreateProduct')
+        }
+        if (Tools::getValue('sellermania') == 'CreateProduct') {
             $this->installSellermaniaProduct();
+        }
+        if (Tools::getValue('display') == 'invoice') {
+            $this->invoice();
+            exit;
+        }
         return $this->runController('hook', 'GetContent');
     }
 
