@@ -104,6 +104,7 @@ class SellermaniaOrder extends ObjectModel
      */
     public static function getSellermaniaOrderFromOrderId($id_order)
     {
+        // Retrieve Sellermania order details
         $id_sellermania_order = (int)Db::getInstance()->getValue('
         SELECT `id_sellermania_order`
         FROM `'._DB_PREFIX_.'sellermania_order`
@@ -111,6 +112,7 @@ class SellermaniaOrder extends ObjectModel
         $sellermania_order = new SellermaniaOrder($id_sellermania_order);
         $sellermania_order->details = json_decode($sellermania_order->info, true);
 
+        // Calcul VAT
         $sellermania_order->details['SubtotalVAT'] = array();
         foreach ($sellermania_order->details['OrderInfo']['Product'] as $kp => $product) {
 

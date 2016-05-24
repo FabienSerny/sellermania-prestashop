@@ -121,15 +121,15 @@ Etat: {if isset($product.ItemCondition) && isset($sellermania_conditions_list[$p
 EAN13: {$product.Ean}<br>
 SKU: {$product.Sku}<br>
                 </td>
-                <td align="center">{$product.ProductVAT.total|round:2} {$product.Amount.Currency} ({$product.ProductVAT.RatePercent}%)</td>
-                <td align="center">{$product.Amount.Price} {$product.Amount.Currency}</td>
+                <td align="center">{$product.ProductVAT.total|round:2} {$currency_sign} ({$product.ProductVAT.RatePercent}%)</td>
+                <td align="center">{$product.Amount.Price} {$currency_sign}</td>
             </tr>
             {if isset($product.ShippingFee.Amount.Price)}
                 <tr>
                     <td align="center">{$product.QuantityPurchased}</td>
                     <td align="left">{l s='Packing fees and delivery' mod='sellermania'}</td>
                     <td align="center">&nbsp;</td>
-                    <td align="center">{$product.ShippingFee.Amount.Price} {$product.ShippingFee.Amount.Currency}</td>
+                    <td align="center">{$product.ShippingFee.Amount.Price} {$currency_sign}</td>
                 </tr>
             {/if}
         {/foreach}

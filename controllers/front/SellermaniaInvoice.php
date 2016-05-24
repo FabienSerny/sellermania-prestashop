@@ -78,6 +78,9 @@ class SellermaniaInvoiceController
         ), null, null, (int)$order->id_shop);
         $shop_contact['PS_SHOP_COUNTRY'] = new Country((int)$shop_contact['PS_SHOP_COUNTRY_ID'], $id_lang);
 
+        // Sellermania order
+        $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order);
+
         // Assign data
         $data = array(
             'logo_path' => $logo_path.(version_compare(_PS_VERSION_, '1.5', '>') ?  Configuration::get('PS_LOGO') : __PS_BASE_URI__.'/img/logo.jpg'),
@@ -85,7 +88,7 @@ class SellermaniaInvoiceController
             'shop_contact' => $shop_contact,
             'title' => $this->module->l('Invoice number').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$order->id_shop).sprintf('%06d', $order_invoice->number),
             'date' => Tools::displayDate($order_invoice->date_add),
-            'sellermania_order' => SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order),
+            'sellermania_order' => $sellermania_order,
             'sellermania_conditions_list' => $this->module->sellermania_conditions_list,
         );
 
@@ -134,19 +137,13 @@ class SellermaniaInvoiceController
         if (!defined('_PS_ADMIN_DIR_'))
             define('_PS_ADMIN_DIR_', getcwd());
 
-        // Check if Sellermania key exists
-        if (Configuration::get('SELLERMANIA_KEY') == '') {
-            die('ERROR1');
+        // Check if Order ID
+        if (Tools::getValue('id_order') < 1) {
+            die('ERROR: No Order ID');
         }
-        else if (Tools::getValue('k') == '') {
-            die('ERROR2');
-        }
-        else if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY'))  {
-            $this->generate(Tools::getValue('id_order'));
-        }
-        else {
-            die('ERROR3');
-        }
+
+        // Generate invoice
+        $this->generate(Tools::getValue('id_order'));
     }
 }
 
