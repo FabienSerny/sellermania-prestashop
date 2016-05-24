@@ -107,19 +107,21 @@
     {assign var="currency_sign" value=$sellermania_order->details.OrderInfo.Amount.CurrencySign}
     <table style="width: 100%" border="1" style="border:1px solid black; padding:5px">
         <tr align="center">
-            <td style="width:20%">{l s='Quantity' mod='sellermania'}</td>
-            <td>{l s='Product' mod='sellermania'}</td>
-            <td>{l s='VAT' mod='sellermania'}</td>
-            <td>{l s='Total with VAT' mod='sellermania'}</td>
+            <td style="width:10%">{l s='Quantity' mod='sellermania'}</td>
+            <td style="width:55%">{l s='Product' mod='sellermania'}</td>
+            <td style="width:15%">{l s='VAT' mod='sellermania'}</td>
+            <td style="width:20%">{l s='Total with VAT' mod='sellermania'}</td>
         </tr>
         {foreach from=$sellermania_order->details.OrderInfo.Product item=product}
             <tr>
                 <td align="center">{$product.QuantityPurchased}</td>
                 <td align="left">
 {$product.ItemName}<br><br>
-Etat: {if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]|addslashes}{/if}<br>
-EAN13: {$product.Ean}<br>
-SKU: {$product.Sku}<br>
+{if isset($product.OrderItemId) && !empty($product.OrderItemId)}{l s='Order item ID:' mod='sellermania'} {$product.OrderItemId}<br>{/if}
+{if isset($product.ItemCondition) && !empty($product.ItemCondition)}{l s='State:' mod='sellermania'} {if isset($product.ItemCondition) && isset($sellermania_conditions_list[$product.ItemCondition])}{$sellermania_conditions_list[$product.ItemCondition]|addslashes}{/if}<br>{/if}
+{if isset($product.Ean) && !empty($product.Ean)}EAN13: {$product.Ean}<br>{/if}
+{if isset($product.Sku) && !empty($product.Sku)}SKU: {$product.Sku}<br>{/if}
+{if isset($product.Upc) && !empty($product.Upc)}UPC: {$product.Upc}<br>{/if}
                 </td>
                 <td align="center">{$product.ProductVAT.total|round:2} {$currency_sign} ({$product.ProductVAT.RatePercent}%)</td>
                 <td align="center">{$product.Amount.Price} {$currency_sign}</td>
