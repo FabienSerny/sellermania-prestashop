@@ -211,6 +211,25 @@
                                 </div>
                             {/if}
 
+
+
+                            <div class="form-group clearfix">
+                                <label class="col-lg-4">{l s='Importation method' mod='sellermania'}</label>
+                                <div class="col-lg-4">
+                                    <input type="radio" name="sm_import_method" id="sm_import_method_cron" value="cron" {if $sm_import_method eq 'cron'}checked="checked"{/if} />
+                                    <label for="sm_import_method_cron">{l s='Cron' mod='sellermania'}</label>&nbsp;&nbsp;
+                                    <input type="radio" name="sm_import_method" id="sm_import_method_automatic" value="automatic" {if $sm_import_method eq 'automatic' || $sm_import_method eq ''}checked="checked"{/if} />
+                                    <label for="sm_import_method_automatic">{l s='Automatic' mod='sellermania'}</label>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix" id="sm_import_method_cron_configuration">
+                                <label class="col-lg-4">{l s='Cron script to call' mod='sellermania'}</label>
+                                <div class="col-lg-4">php -f {$script_path}/import.php {$sellermania_key}</div>
+                            </div>
+
+
+
+
                             <div class="form-group clearfix">
                                 <label class="col-lg-4">{l s='Synchronization by reference (optional)' mod='sellermania'}</label>
                                 <div class="col-lg-4">

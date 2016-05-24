@@ -52,6 +52,22 @@ $(document).ready(function() {
     displaySellermaniaSyncOption();
 
 
+    function displaySellermaniaImportConfiguration()
+    {
+        if ($('#sm_import_method_cron').attr('checked') == 'checked' || $('#sm_import_method_cron').attr('checked') == true)
+            $('#sm_import_method_cron_configuration').fadeIn();
+        else
+            $('#sm_import_method_cron_configuration').fadeOut();
+        return true;
+    }
+
+    $('#sm_import_method_cron').click(function() { return displaySellermaniaImportConfiguration(); });
+    $('#sm_import_method_automatic').click(function() { return displaySellermaniaImportConfiguration(); });
+    displaySellermaniaImportConfiguration();
+
+
+
+
     function displaySellermaniaAlertOption()
     {
         if ($('#sm_alert_missing_ref_option_yes').attr('checked') == 'checked' || $('#sm_alert_missing_ref_option_yes').attr('checked') == true)

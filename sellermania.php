@@ -146,6 +146,9 @@ class Sellermania extends Module
             Configuration::updateValue('SM_ENABLE_NATIVE_REFUND_SYSTEM', 'no');
         if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == '')
             Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');
+
+        if (Configuration::get('SM_IMPORT_METHOD') == '')
+            Configuration::updateValue('SM_IMPORT_METHOD', 'automatic');
     }
 
     /**
