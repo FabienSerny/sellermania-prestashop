@@ -27,6 +27,7 @@ $_MODULE['<{sellermania}prestashop>sellermaniadisplayadminorder_68794879fdc551dc
 $_MODULE['<{sellermania}prestashop>sellermaniadisplayadminorder_1dc32342b93380dcde24153204470406'] = 'En attente d\'expédition';
 $_MODULE['<{sellermania}prestashop>sellermaniadisplayadminorder_f75c37de7700f90c2e3256060397c229'] = 'Expédiée';
 $_MODULE['<{sellermania}prestashop>displayadminorder_eea7b46bcf53c64e426ca15a6168c645'] = 'Commande Sellermania provenant de la marketplace';
+$_MODULE['<{sellermania}prestashop>displayadminorder_7cdb0ef4b773dd542c53d87bb67c3c4a'] = 'Voir la facture';
 $_MODULE['<{sellermania}prestashop>displayadminorder_1d949d2235747b894bbaae35fbf44f1d'] = 'Information client';
 $_MODULE['<{sellermania}prestashop>displayadminorder_4e140ba723a03baa6948340bf90e2ef6'] = 'Nom :';
 $_MODULE['<{sellermania}prestashop>displayadminorder_df1555fe48479f594280a2e03f9a8186'] = 'E-mail :';
@@ -126,7 +127,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_9fb29d86dba916df6
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_535a85f68151f9e49f96ca1be071b9e9'] = 'M\'alerter par e-mail quand une référence n\'est pas trouvée.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d554d9bf0cd8f79c215600eeb77825e8'] = 'Votre e-mail';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_fcf3b6e341b337d248a36e4e001f90ad'] = 'Activer le système de remboursement natif';
-$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour lors des importations de commande';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_4930a7655f859a031a7569d1fed96524'] = 'La prochaine importation de commandes n\'aura pas lieu avant :';
@@ -176,6 +177,10 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_e9d86eb28865fb19fd5b735c4ec
 $_MODULE['<{sellermania}prestashop>displaygetcontent_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_fc9d3df613063ee57906c461320744e2'] = 'Note :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces quatre identifiants sont fournis par Sellermania, si vous ne les avez pas, veuillez contacter Sellermania afin qu\'il vous les communique.';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_ce03cf0e902373fb87b5ecb4a17832c7'] = 'Méthode d\'importation';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_1b793db6c00482d633b29701c7bcb08c'] = 'Cron';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_086247a9b57fde6eefee2a0c4752242d'] = 'Automatique';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_566f5d9e069603212c114438cb2a4891'] = 'Script cron à appeler';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_d09dadcb754c147ba2e025e888e2c30b'] = 'Synchronisation du stock par chainage (optionnel)';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_72252a9e447b2f1ce6aac87bac6d2794'] = 'Option 1 :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_f6e6e93c0de5c4044e1651383b4c450b'] = 'Cette fonctionnalité vous permet de ‘chaîner’ plusieurs références les unes aux autres, pour mettre à jour les stocks sur toutes les références chaînées en même temps.';
@@ -192,6 +197,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_9fb29d86dba916df61cd9354776
 $_MODULE['<{sellermania}prestashop>displaygetcontent_535a85f68151f9e49f96ca1be071b9e9'] = 'M\'alerter par e-mail quand une référence n\'est pas trouvée.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_625f93a63da35ee7150341160460f31e'] = 'Votre e-mail';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_fcf3b6e341b337d248a36e4e001f90ad'] = 'Activer le système de remboursement natif';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide.';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_4930a7655f859a031a7569d1fed96524'] = 'La prochaine importation de commandes n\'aura pas lieu avant :';
