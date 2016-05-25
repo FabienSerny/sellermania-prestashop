@@ -29,13 +29,25 @@ $(document).ready(function() {
     $('.order tr').each(function() {
 
         var column = 0;
+        var id_order = 0;
         var flag_sellermania = 0;
 
         $(this).find('td').each(function() {
-            if (column == 7 && $(this).text().trim().toLowerCase().indexOf("marketplace") >= 0)
+            if (column == 1) {
+                id_order = $(this).text();
+            }
+            if (column == 7 && $(this).text().trim().toLowerCase().indexOf("marketplace") >= 0) {
                 flag_sellermania = 1;
-            else if (column == 9 && flag_sellermania == 1)
-                $(this).html('&nbsp;');
+            }
+            else if (column == 9 && flag_sellermania == 1) {
+                $(this).find('span a').each(function() {
+                    if ($(this).attr('href').indexOf("generateInvoicePDF") >= 0) {
+                        $(this).attr('href', sellermania_invoice_url + '&id_order=' + id_order);
+                    } else {
+                        $(this).remove();
+                    }
+                });
+            }
             column++;
         });
 
