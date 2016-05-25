@@ -143,11 +143,13 @@
             <td align="center">{($sellermania_order->details.OrderInfo.TotalProductsWithoutVAT + $sellermania_order->details.OrderInfo.Transport.Amount.PriceWithoutVAT)|round:2} {$currency_sign}</td>
         </tr>
         {foreach from=$sellermania_order->details.OrderInfo.SubtotalVAT key=vat_percent item=vat_value}
+            {if $vat_percent gt 0}
             <tr>
                 <td colspan="2" align="right">{l s='VAT' mod='sellermania'}</td>
                 <td align="center">{$vat_percent}%</td>
                 <td align="center">{$vat_value|round:2} {$currency_sign}</td>
             </tr>
+            {/if}
         {/foreach}
         {if $sellermania_order->details.OrderInfo.TotalInsurance gt 0}
         <tr>
