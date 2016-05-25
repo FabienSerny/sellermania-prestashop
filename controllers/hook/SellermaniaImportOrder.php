@@ -383,7 +383,10 @@ class SellermaniaImportOrderController
     public function createCart()
     {
         // Retrieve a carrier
-        $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `active` = 1 AND `deleted` = 0');
+        $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `id_carrier` = '.(int)Configuration::get('SM_IMPORT_DEFAULT_CARRIER').' AND `active` = 1 AND `deleted` = 0');
+        if ($id_carrier < 1) {
+            $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `active` = 1 AND `deleted` = 0');
+        }
 
         // Create Cart
         $this->cart = new Cart();

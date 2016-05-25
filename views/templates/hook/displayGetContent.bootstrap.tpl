@@ -314,6 +314,15 @@
                             </div>
 
 
+                            <div class="form-group clearfix">
+                                <label class="col-lg-4">{l s='Default carrier for order importation' mod='sellermania'}</label>
+                                <div class="col-lg-4">
+                                    {foreach from=$carriers item=carrier}
+                                        <input type="radio" value="{$carrier.id_carrier}" name="sm_import_default_carrier" {if $sm_import_default_carrier eq $carrier.id_carrier}checked{/if} /> {$carrier.name}<br>
+                                    {/foreach}
+                                </div>
+                            </div>
+
 
                         </div>
                     </div>

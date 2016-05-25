@@ -91,7 +91,7 @@ class SellermaniaGetContentController
                         'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
                         'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',
                         'sm_stock_sync_nb_char', 'sm_stock_sync_position',
-                        'sm_import_method',
+                        'sm_import_method', 'sm_import_default_carrier',
                         'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
                         'sm_enable_native_refund_system', 'sm_enable_export_comb_name');
 
@@ -153,6 +153,9 @@ class SellermaniaGetContentController
                 $files_list[$iso_lang]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
         }
 
+        // Retrieve carriers
+        $carriers = CarrierCore::getCarriers($this->context->language->id, true);
+
         // Assign to Smarty
         if (version_compare(PHP_VERSION, '5.3.0') < 0)
         {
@@ -176,6 +179,8 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('files_list', $files_list);
         $this->context->smarty->assign('languages_list', $languages_list);
         $this->context->smarty->assign('sellermania_module_path', $this->web_path);
+
+        $this->context->smarty->assign('carriers', $carriers);
 
         $this->context->smarty->assign('category_tree', $this->renderCategoriesTree());
 
@@ -201,6 +206,8 @@ class SellermaniaGetContentController
 
         $this->context->smarty->assign('sm_enable_native_refund_system', Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM'));
         $this->context->smarty->assign('sm_enable_export_comb_name', Configuration::get('SM_ENABLE_EXPORT_COMB_NAME'));
+
+        $this->context->smarty->assign('sm_import_default_carrier', Configuration::get('SM_IMPORT_DEFAULT_CARRIER'));
 
         if ($this->context->language->iso_code == 'fr')
         {
