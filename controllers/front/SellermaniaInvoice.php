@@ -90,7 +90,7 @@ class SellermaniaInvoiceController
             'shop_name' => $shop_contact['PS_SHOP_NAME'],
             'shop_contact' => $shop_contact,
             'title' => $this->module->l('Invoice number').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$order->id_shop).sprintf('%06d', $order_invoice->number),
-            'date' => Tools::displayDate($order_invoice->date_add),
+            'date' => Tools::displayDate($order_invoice->date_add, $this->context->language->id),
             'sellermania_order' => $sellermania_order,
             'sellermania_conditions_list' => $this->module->sellermania_conditions_list,
         );

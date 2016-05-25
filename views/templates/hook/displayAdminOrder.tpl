@@ -30,7 +30,7 @@
     {************************************************}
     <div id="sellermania-template-title">
         <h2>{l s='Sellermania order from the marketplace' mod='sellermania'} {$sellermania_order.OrderInfo.MarketPlace}</h2>
-        <a target="_blank" href="{$sellermania_invoice_url}&id_order={$smarty.get.id_order}" class="btn btn-default"><i class="icon-file"></i> Voir la facture</a>
+        <a target="_blank" href="{$sellermania_invoice_url}&id_order={$smarty.get.id_order}" class="btn btn-default">{if $ps_version eq 16}<i class="icon-file"></i>{else}<img src="../img/admin/details.gif">{/if} {l s='Display invoice' mod='sellermania'}</a>
     </div>
 
 
