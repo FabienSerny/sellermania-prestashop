@@ -389,7 +389,7 @@ class SellermaniaImportOrderController
         }
 
         // Load currency in context
-        $this->context->currency = new Currency(Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']), $this->context->language->id);
+        $this->context->currency = new Currency(Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']));
 
         // Create Cart
         $this->cart = new Cart();
