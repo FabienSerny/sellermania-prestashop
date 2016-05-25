@@ -129,7 +129,7 @@
                 <input type="radio" name="sm_import_orders" id="sm_import_orders_yes" value="yes" {if $sm_import_orders eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
                 <input type="radio" name="sm_import_orders" id="sm_import_orders_no" value="no" {if $sm_import_orders eq 'no' || $sm_import_orders eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
             </div>
-            <div class="margin-form" style="padding-left:15px" id="sm_import_orders_credentials">
+            <p class="margin-form" style="padding-left:15px" id="sm_import_orders_credentials">
                 <p><b>{l s='Please fill up with the informations Sellermania provide you:' mod='sellermania'}</b></p>
                 <p><label>{l s='Sellermania e-mail' mod='sellermania'}</label> <input type="text" name="sm_order_email" value="{$sm_order_email}" /></p>
                 <p><label>{l s='Token webservices' mod='sellermania'}</label> <input type="text" name="sm_order_token" value="{$sm_order_token}" /></p><br>
@@ -139,6 +139,20 @@
                 {if empty($sm_order_email)}
                     <p><strong><u>{l s='Note:' mod='sellermania'}</u></strong> {l s='These four credentials are provided by Sellermania, if you don\'t have them, please contact Sellermania.' mod='sellermania'}</p>
                 {/if}
+
+
+            <p>
+                <label>{l s='Importation method' mod='sellermania'}</label>
+
+                    <input type="radio" name="sm_import_method" id="sm_import_method_cron" value="cron" {if $sm_import_method eq 'cron'}checked="checked"{/if} /> {l s='Cron' mod='sellermania'}&nbsp;&nbsp;
+                    <input type="radio" name="sm_import_method" id="sm_import_method_automatic" value="automatic" {if $sm_import_method eq 'automatic' || $sm_import_method eq ''}checked="checked"{/if} /> {l s='Automatic' mod='sellermania'}
+            </p>
+            <p id="sm_import_method_cron_configuration">
+                <label>{l s='Cron script to call' mod='sellermania'}</label>
+                php -f {$script_path}/import.php {$sellermania_key}
+            </p>
+
+
 
                 <p>
                     <label>{l s='Synchronization by reference (optional)' mod='sellermania'}</label>
@@ -188,7 +202,14 @@
                     <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_no" value="no" {if $sm_enable_native_refund_system eq 'no' || $sm_enable_native_refund_system eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
                 </p><br clear="left" />
 
-            </div>
+                <p>
+                    <label>{l s='Default carrier for order importation' mod='sellermania'}</label>
+                        {foreach from=$carriers item=carrier}
+                            <input type="radio" value="{$carrier.id_carrier}" name="sm_import_default_carrier" {if $sm_import_default_carrier eq $carrier.id_carrier}checked{/if} /> {$carrier.name}<br>
+                        {/foreach}
+                </p><br clear="left" />
+
+
             <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" class="button" /></label></p>
             {if isset($sm_error_credentials)}<br><br><p class="error"><strong>{$sm_error_credentials|strip_tags}</strong></p>{/if}
             {if isset($sm_confirm_credentials)}<br><br><p class="conf"><strong>{l s='Configuration is valid' mod='sellermania'}</strong></p>{/if}
