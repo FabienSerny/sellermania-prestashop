@@ -108,7 +108,8 @@
     <table style="width: 100%" border="1" style="border:1px solid black; padding:5px">
         <tr align="center">
             <td style="width:10%">{l s='Quantity' mod='sellermania'}</td>
-            <td style="width:55%">{l s='Product' mod='sellermania'}</td>
+            <td style="width:40%">{l s='Product' mod='sellermania'}</td>
+            <td style="width:15%">{l s='Total without VAT' mod='sellermania'}</td>
             <td style="width:15%">{l s='VAT' mod='sellermania'}</td>
             <td style="width:20%">{l s='Total with VAT' mod='sellermania'}</td>
         </tr>
@@ -123,14 +124,16 @@
 {if isset($product.Sku) && !empty($product.Sku)}SKU: {$product.Sku}<br>{/if}
 {if isset($product.Upc) && !empty($product.Upc)}UPC: {$product.Upc}<br>{/if}
                 </td>
-                <td align="center">{$product.ProductVAT.total|round:2} {$currency_sign} ({$product.ProductVAT.RatePercent}%)</td>
+                <td align="center">{$product.Amount.PriceWithoutVAT|round:2} {$currency_sign}</td>
+                <td align="center">{$product.ProductVAT.total|round:2} {$currency_sign} ({$product.ProductVAT.VATPercent}%)</td>
                 <td align="center">{$product.Amount.Price} {$currency_sign}</td>
             </tr>
             {if isset($product.ShippingFee.Amount.Price)}
                 <tr>
                     <td align="center">{$product.QuantityPurchased}</td>
                     <td align="left">{l s='Packing fees and delivery' mod='sellermania'}</td>
-                    <td align="center">&nbsp;</td>
+                    <td align="center">{$product.ShippingFee.Amount.PriceWithoutVAT} {$currency_sign}</td>
+                    <td align="center">{$product.ShippingFee.Amount.TotalVAT} {$currency_sign} ({$product.ShippingFee.Amount.VATPercent}%)</td>
                     <td align="center">{$product.ShippingFee.Amount.Price} {$currency_sign}</td>
                 </tr>
             {/if}
@@ -138,33 +141,41 @@
 
 
         <tr>
-            <td colspan="3" align="right">{l s='Total product without VAT' mod='sellermania'}</td>
+            <td colspan="4" align="right">{l s='Total product without VAT' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.TotalProductsWithoutVAT|round:2} {$currency_sign}</td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">{l s='Total shipping without VAT' mod='sellermania'}</td>
+            <td align="center">{$sellermania_order->details.OrderInfo.Transport.Amount.PriceWithoutVAT} {$currency_sign}</td>
         </tr>
         {foreach from=$sellermania_order->details.OrderInfo.SubtotalVAT key=vat_percent item=vat_value}
             <tr>
-                <td colspan="3" align="right">{l s='VAT' mod='sellermania'} ({$vat_percent}%)</td>
+                <td colspan="4" align="right">{l s='VAT' mod='sellermania'} ({$vat_percent}%)</td>
                 <td align="center">{$vat_value|round:2} {$currency_sign}</td>
             </tr>
         {/foreach}
         <tr>
-            <td colspan="3" align="right">{l s='Total product with VAT' mod='sellermania'}</td>
+            <td colspan="4" align="right">{l s='Total product with VAT' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.TotalProductsWithVAT} {$currency_sign}</td>
         </tr>
         <tr>
-            <td colspan="3" align="right">{l s='Total shipping' mod='sellermania'}</td>
+            <td colspan="4" align="right">{l s='Total shipping with VAT' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.Transport.Amount.Price} {$currency_sign}</td>
         </tr>
         <tr>
-            <td colspan="3" align="right">{l s='Total insurance' mod='sellermania'}</td>
+            <td colspan="4" align="right">{l s='Total insurance' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.TotalInsurance} {$currency_sign}</td>
         </tr>
         <tr>
-            <td colspan="3" align="right">{l s='Gestion fees' mod='sellermania'}</td>
+            <td colspan="4" align="right">{l s='Gestion fees' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.OptionalFeaturePrice} {$currency_sign}</td>
         </tr>
         <tr>
-            <td colspan="3" align="right">{l s='Total with VAT' mod='sellermania'}</td>
+            <td colspan="4" align="right">{l s='Total without VAT' mod='sellermania'}</td>
+            <td align="center">{$sellermania_order->details.OrderInfo.TotalAmount.Amount.Price} {$currency_sign}</td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">{l s='Total with VAT' mod='sellermania'}</td>
             <td align="center">{$sellermania_order->details.OrderInfo.TotalAmount.Amount.Price} {$currency_sign}</td>
         </tr>
     </table>
