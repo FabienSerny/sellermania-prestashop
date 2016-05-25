@@ -138,14 +138,9 @@
 
 
         <tr>
-            <td colspan="2" align="right">{l s='Total products without VAT' mod='sellermania'}</td>
+            <td colspan="2" align="right">{l s='Total without VAT' mod='sellermania'}</td>
             <td align="center">&nbsp;</td>
-            <td align="center">{$sellermania_order->details.OrderInfo.TotalProductsWithoutVAT|round:2} {$currency_sign}</td>
-        </tr>
-        <tr>
-            <td colspan="2" align="right">{l s='Total shipping without VAT' mod='sellermania'}</td>
-            <td align="center">&nbsp;</td>
-            <td align="center">{$sellermania_order->details.OrderInfo.Transport.Amount.PriceWithoutVAT|round:2} {$currency_sign}</td>
+            <td align="center">{($sellermania_order->details.OrderInfo.TotalProductsWithoutVAT + $sellermania_order->details.OrderInfo.Transport.Amount.PriceWithoutVAT)|round:2} {$currency_sign}</td>
         </tr>
         {foreach from=$sellermania_order->details.OrderInfo.SubtotalVAT key=vat_percent item=vat_value}
             <tr>
@@ -154,17 +149,20 @@
                 <td align="center">{$vat_value|round:2} {$currency_sign}</td>
             </tr>
         {/foreach}
+        {if $sellermania_order->details.OrderInfo.TotalInsurance gt 0}
         <tr>
             <td colspan="2" align="right">{l s='Total insurance' mod='sellermania'}</td>
             <td align="center">&nbsp;</td>
             <td align="center">{$sellermania_order->details.OrderInfo.TotalInsurance} {$currency_sign}</td>
         </tr>
+        {/if}
+        {if $sellermania_order->details.OrderInfo.OptionalFeaturePrice gt 0}
         <tr>
             <td colspan="2" align="right">{l s='Gestion fees' mod='sellermania'}</td>
             <td align="center">&nbsp;</td>
             <td align="center">{$sellermania_order->details.OrderInfo.OptionalFeaturePrice} {$currency_sign}</td>
         </tr>
-
+        {/if}
         <tr>
             <td colspan="2" align="right">{l s='Total with VAT' mod='sellermania'}</td>
             <td align="center">&nbsp;</td>
