@@ -388,6 +388,9 @@ class SellermaniaImportOrderController
             $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `active` = 1 AND `deleted` = 0');
         }
 
+        // Load currency in context
+        $this->context->currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
+
         // Create Cart
         $this->cart = new Cart();
         $this->cart->id_customer = $this->customer->id;
@@ -395,7 +398,7 @@ class SellermaniaImportOrderController
         $this->cart->id_address_delivery = $this->address->id;
         $this->cart->id_carrier = $id_carrier;
         $this->cart->id_lang = $this->id_lang;
-        $this->cart->id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
+        $this->cart->id_currency = $this->context->currency->id;
         $this->cart->recyclable = 0;
         $this->cart->gift = 0;
         $this->cart->add();
