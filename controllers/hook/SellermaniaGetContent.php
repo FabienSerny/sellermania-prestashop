@@ -154,7 +154,7 @@ class SellermaniaGetContentController
         }
 
         // Retrieve carriers
-        $carriers = CarrierCore::getCarriers($this->context->language->id, true);
+        $carriers = Carrier::getCarriers($this->context->language->id, true);
 
         // Assign to Smarty
         if (version_compare(PHP_VERSION, '5.3.0') < 0)
