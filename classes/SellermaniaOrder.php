@@ -114,7 +114,7 @@ class SellermaniaOrder extends ObjectModel
 
         // Calcul VAT
         $sellermania_order->details['OrderInfo']['SubtotalVAT'] = array();
-        $sellermania_order->details['OrderInfo']['Transport']['Amount']['PriceWithoutVAT'] = 0;
+        $sellermania_order->details['OrderInfo']['PackingShippingFee'] = array('PriceWithoutVAT' => 0, 'VATPercent' => 0, 'TotalVAT' => 0);
         foreach ($sellermania_order->details['OrderInfo']['Product'] as $kp => $product) {
 
             // Calcul VAT percent
@@ -123,11 +123,12 @@ class SellermaniaOrder extends ObjectModel
             $sellermania_order->details['OrderInfo']['Product'][$kp]['ProductVAT']['VATPercent'] = $product_vat_percent;
 
             // Calcul VAT for shipping
-            $shipping_vat_rate = 1 + ($shipping_vat_percent / 100);
-            $sellermania_order->details['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['PriceWithoutVAT'] = $product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate;
-            $sellermania_order->details['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['TotalVAT'] = $product['ShippingFee']['Amount']['Price'] - ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate);
-            $sellermania_order->details['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['VATPercent'] = $shipping_vat_percent;
-            $sellermania_order->details['OrderInfo']['Transport']['Amount']['PriceWithoutVAT'] += $sellermania_order->details['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['PriceWithoutVAT'];
+            if ($product['ShippingFee']['Amount']['Price'] > 0) {
+                $shipping_vat_rate = 1 + ($shipping_vat_percent / 100);
+                $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT'] += ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate);
+                $sellermania_order->details['OrderInfo']['PackingShippingFee']['TotalVAT'] += $product['ShippingFee']['Amount']['Price'] - ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate);
+                $sellermania_order->details['OrderInfo']['PackingShippingFee']['VATPercent'] = $shipping_vat_percent;
+            }
 
             // Calcul product price without VAT
             $sellermania_order->details['OrderInfo']['Product'][$kp]['Amount']['PriceWithoutVAT'] = $product['Amount']['Price'] - $product['ProductVAT']['total'];
@@ -137,13 +138,14 @@ class SellermaniaOrder extends ObjectModel
                 $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] = 0;
             }
             $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] += $product['ProductVAT']['total'];
-
-            // Calcul amount for each VAT from shipping
-            if (!isset($sellermania_order->details['OrderInfo']['SubtotalVAT'][$shipping_vat_percent])) {
-                $sellermania_order->details['OrderInfo']['SubtotalVAT'][$shipping_vat_percent] = 0;
-            }
-            $sellermania_order->details['OrderInfo']['SubtotalVAT'][$shipping_vat_percent] += $sellermania_order->details['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['TotalVAT'];
         }
+
+        // Calcul amount for each VAT from shipping
+        $shipping_vat_percent = $sellermania_order->details['OrderInfo']['PackingShippingFee']['VATPercent'];
+        if (!isset($sellermania_order->details['OrderInfo']['SubtotalVAT'][$shipping_vat_percent])) {
+            $sellermania_order->details['OrderInfo']['SubtotalVAT'][$shipping_vat_percent] = 0;
+        }
+        $sellermania_order->details['OrderInfo']['SubtotalVAT'][$shipping_vat_percent] += $sellermania_order->details['OrderInfo']['PackingShippingFee']['TotalVAT'];
 
         return $sellermania_order;
     }
