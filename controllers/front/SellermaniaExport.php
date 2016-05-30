@@ -213,6 +213,7 @@ class SellermaniaExportController
                 $rowCopy['quantity'] = $declination['quantity'];
                 $rowCopy['reference'] = (!empty($declination['reference']) ? $declination['reference'] : '');
                 $rowCopy['ean13'] = (!empty($declination['ean13']) ? $declination['ean13'] : '');
+                $rowCopy['upc'] = (!empty($declination['upc']) ? $declination['upc'] : '');
                 if (isset($declination['images']) && count($declination['images']) >= 1)
                     $rowCopy['images'] = $declination['images'];
                 $rowCopy['attributes_values'] = $declination['attributes_values'];

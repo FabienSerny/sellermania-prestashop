@@ -512,7 +512,7 @@ class SellermaniaImportOrderController
      */
     public function getProductIdentifier($product)
     {
-        $fields = array('reference' => 'Sku', 'ean13' => 'Ean');
+        $fields = array('reference' => 'Sku', 'upc' => 'Sku', 'ean13' => 'Ean');
         $tables = array('product_attribute', 'product');
 
         // Check fields sku and ean13 on table product_attribute and product

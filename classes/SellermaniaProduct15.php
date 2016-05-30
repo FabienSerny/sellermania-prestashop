@@ -108,7 +108,7 @@ class SellermaniaProduct
         $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
                     a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, pa.`id_product_attribute`,
                     IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, pa.`weight`,
-                    product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, product_attribute_shop.`unit_price_impact`,
+                    product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`upc`, product_attribute_shop.`unit_price_impact`,
                     product_attribute_shop.`wholesale_price`,
                     pa.`minimal_quantity`, pa.`available_date`, ag.`group_type`
                 FROM `'._DB_PREFIX_.'product_attribute` pa
@@ -159,6 +159,7 @@ class SellermaniaProduct
                 $combinations[$row['id_product_attribute']]['quantity'] = (int)$row['quantity'];
                 $combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
                 $combinations[$row['id_product_attribute']]['ean13'] = $row['ean13'];
+                $combinations[$row['id_product_attribute']]['upc'] = $row['upc'];
                 $combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
                 $combinations[$row['id_product_attribute']]['wholesale_price'] = $row['wholesale_price'];
                 if (isset($images[$row['id_product_attribute']]))
