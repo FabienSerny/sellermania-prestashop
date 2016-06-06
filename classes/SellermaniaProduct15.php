@@ -110,7 +110,7 @@ class SellermaniaProduct
                     IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, pa.`weight`,
                     product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`upc`, product_attribute_shop.`unit_price_impact`,
                     product_attribute_shop.`wholesale_price`,
-                    pa.`minimal_quantity`, pa.`available_date`, ag.`group_type`
+                    pa.`minimal_quantity`, pa.`available_date`, ag.`group_type`, pa.`location`
                 FROM `'._DB_PREFIX_.'product_attribute` pa
                 '.Shop::addSqlAssociation('product_attribute', 'pa').'
                 '.Product::sqlStock('pa', 'pa').'
@@ -162,6 +162,7 @@ class SellermaniaProduct
                 $combinations[$row['id_product_attribute']]['upc'] = $row['upc'];
                 $combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
                 $combinations[$row['id_product_attribute']]['wholesale_price'] = $row['wholesale_price'];
+                $combinations[$row['id_product_attribute']]['location'] = $row['location'];
                 if (isset($images[$row['id_product_attribute']]))
                     $combinations[$row['id_product_attribute']]['images'] = $images[$row['id_product_attribute']];
             }

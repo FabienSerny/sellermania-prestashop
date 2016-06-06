@@ -42,7 +42,7 @@ class SellermaniaExportController
     private $fields_to_export = array(
         'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
         'quantity' => 'int', 'price' => 'float', 'crossed_price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string', 'supplier_reference' => 'string',
-        'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float',
+        'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float', 'location' => 'string',
         'name' => 'string', 'category_default' => 'string', 'category_default_full_path' => 'string',
         'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
         'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
@@ -214,6 +214,7 @@ class SellermaniaExportController
                 $rowCopy['reference'] = (!empty($declination['reference']) ? $declination['reference'] : '');
                 $rowCopy['ean13'] = (!empty($declination['ean13']) ? $declination['ean13'] : '');
                 $rowCopy['upc'] = (!empty($declination['upc']) ? $declination['upc'] : '');
+                $rowCopy['location'] = (!empty($declination['location']) ? $declination['location'] : '');
                 if (isset($declination['images']) && count($declination['images']) >= 1)
                     $rowCopy['images'] = $declination['images'];
                 $rowCopy['attributes_values'] = $declination['attributes_values'];
