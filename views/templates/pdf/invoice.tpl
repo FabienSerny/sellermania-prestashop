@@ -161,13 +161,13 @@
             <td align="center">{$sellermania_order->details.OrderInfo.TotalInsurance} {$currency_sign}</td>
         </tr>
         {/if}
-        {if $sellermania_order->details.OrderInfo.OptionalFeaturePrice gt 0}
+        {*if $sellermania_order->details.OrderInfo.OptionalFeaturePrice gt 0}
         <tr>
             <td colspan="2" align="right">{l s='Gestion fees' mod='sellermania'}</td>
             <td align="center">&nbsp;</td>
             <td align="center">{$sellermania_order->details.OrderInfo.OptionalFeaturePrice} {$currency_sign}</td>
         </tr>
-        {/if}
+        {/if*}
         <tr>
             <td colspan="2" align="right">{l s='Total with VAT' mod='sellermania'}</td>
             <td align="center">&nbsp;</td>
