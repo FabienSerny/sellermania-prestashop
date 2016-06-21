@@ -270,5 +270,17 @@ class SellermaniaProduct
 
         return $images;
     }
+
+    /**
+     * Get product location
+     * @param $id_product
+     * @return string
+     */
+    public static function getLocation($id_product)
+    {
+        return Db::getInstance()->getValue('
+        SELECT `location` FROM `'._DB_PREFIX_.'warehouse_product_location`
+        WHERE `id_product` = '.(int)$id_product);
+    }
 }
 

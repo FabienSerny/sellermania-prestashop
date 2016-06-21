@@ -145,6 +145,7 @@ class SellermaniaExportController
             $result = SellermaniaProduct::getProductsRequest($id_lang, $start, $limit);
             while ($row = Db::getInstance()->nextRow($result))
             {
+                $row['location'] = SellermaniaProduct::getLocation($row['id_product'], $row['location']);
                 $row['tags'] = SellermaniaProduct::getProductTags($row['id_product'], $id_lang);
                 $row['features'] = SellermaniaProduct::getFeatures($row['id_product'], $id_lang);
                 $row['declinations'] = SellermaniaProduct::getProductDeclinations($row['id_product'], $id_lang);

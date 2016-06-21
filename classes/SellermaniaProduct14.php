@@ -229,5 +229,15 @@ class SellermaniaProduct
 
         return $images;
     }
+
+    /**
+     * Get product location
+     * @param $id_product
+     * @return string
+     */
+    public static function getLocation($id_product)
+    {
+        return '';
+    }
 }
 
