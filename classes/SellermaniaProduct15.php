@@ -172,6 +172,7 @@ class SellermaniaProduct
                         FROM `'._DB_PREFIX_.'warehouse_product_location`
                         WHERE `id_product` = '.(int)$id_product.'
                         AND `id_product_attribute` = '.(int)$row['id_product_attribute'].'
+                        AND `location` != \'\'
                     ');
                 }
             }
@@ -280,7 +281,8 @@ class SellermaniaProduct
     {
         return Db::getInstance()->getValue('
         SELECT `location` FROM `'._DB_PREFIX_.'warehouse_product_location`
-        WHERE `id_product` = '.(int)$id_product);
+        WHERE `id_product` = '.(int)$id_product.'
+        AND `location` != \'\'');
     }
 }
 
