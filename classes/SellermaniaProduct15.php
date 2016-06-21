@@ -165,6 +165,15 @@ class SellermaniaProduct
                 $combinations[$row['id_product_attribute']]['location'] = $row['location'];
                 if (isset($images[$row['id_product_attribute']]))
                     $combinations[$row['id_product_attribute']]['images'] = $images[$row['id_product_attribute']];
+
+                if (empty($combinations[$row['id_product_attribute']]['location'])) {
+                    $combinations[$row['id_product_attribute']]['location'] = Db::getInstance()->getValue('
+                        SELECT `location`
+                        FROM `'._DB_PREFIX_.'warehouse_product_location`
+                        WHERE `id_product` = '.(int)$id_product.'
+                        AND `id_product_attribute` = '.(int)$row['id_product_attribute'].'
+                    ');
+                }
             }
         }
         return $combinations;
