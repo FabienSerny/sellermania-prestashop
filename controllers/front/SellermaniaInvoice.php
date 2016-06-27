@@ -58,24 +58,51 @@ class SellermaniaInvoiceController
         $order_invoices = array();
         $id_lang = $this->context->language->id;
 
-        // Retrieve invoice
+        // Retrieve order
         $order = new Order($id_order);
-        $invoices_list = $order->getInvoicesCollection();
-        foreach ($invoices_list as $order_invoice) {
-            $order_invoices[] = $order_invoice;
-        }
 
-        // If more than one invoice, display warning (will fix this later)
-        if (count($order_invoices) > 1) {
-            die('Sellermania module does not handle multiple invoice yet');
+        // Retrieve invoices
+        if (version_compare(_PS_VERSION_, '1.5.0') >= 0) {
+
+            // Retrieve invoices
+            $invoices_list = $order->getInvoicesCollection();
+            foreach ($invoices_list as $order_invoice) {
+                $order_invoices[] = $order_invoice;
+            }
+
+            // If more than one invoice, display warning (will fix this later)
+            if (count($order_invoices) > 1) {
+                die('Sellermania module does not handle multiple invoice yet');
+            }
+
+            // Set invoice date and number
+            $order_invoice_date = $order_invoice->date_add;
+            $order_invoice_number = $order_invoice->number;
+
+            // Get configuration
+            $invoice_prefix = Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$order->id_shop);
+            $shop_contact = Configuration::getMultiple(array(
+                'PS_SHOP_NAME', 'PS_SHOP_EMAIL', 'PS_SHOP_DETAILS', 'PS_SHOP_ADDR1', 'PS_SHOP_ADDR2',
+                'PS_SHOP_CODE', 'PS_SHOP_CITY', 'PS_SHOP_COUNTRY_ID', 'PS_SHOP_PHONE', 'PS_SHOP_FAX',
+            ), null, null, (int)$order->id_shop);
+
+        } else {
+
+            // Set invoice date and number
+            $order_invoice_date = $order->invoice_date;
+            $order_invoice_number = $order->invoice_number;
+
+            // Get configuration
+            $invoice_prefix = Configuration::get('PS_INVOICE_PREFIX', $id_lang);
+            $shop_contact = Configuration::getMultiple(array(
+                'PS_SHOP_NAME', 'PS_SHOP_EMAIL', 'PS_SHOP_DETAILS', 'PS_SHOP_ADDR1', 'PS_SHOP_ADDR2',
+                'PS_SHOP_CODE', 'PS_SHOP_CITY', 'PS_COUNTRY_DEFAULT', 'PS_SHOP_PHONE', 'PS_SHOP_FAX',
+            ));
+            $shop_contact['PS_SHOP_COUNTRY_ID'] = $shop_contact['PS_COUNTRY_DEFAULT'];
         }
 
         // Retrieve data
         $logo_path = dirname(__FILE__).'/../../../../img/';
-        $shop_contact = ConfigurationCore::getMultiple(array(
-            'PS_SHOP_NAME', 'PS_SHOP_EMAIL', 'PS_SHOP_DETAILS', 'PS_SHOP_ADDR1', 'PS_SHOP_ADDR2',
-            'PS_SHOP_CODE', 'PS_SHOP_CITY', 'PS_SHOP_COUNTRY_ID', 'PS_SHOP_PHONE', 'PS_SHOP_FAX',
-        ), null, null, (int)$order->id_shop);
         $shop_contact['PS_SHOP_COUNTRY'] = new Country((int)$shop_contact['PS_SHOP_COUNTRY_ID'], $id_lang);
 
         // Add debug tool
@@ -89,8 +116,8 @@ class SellermaniaInvoiceController
             'logo_path' => $logo_path.(version_compare(_PS_VERSION_, '1.5', '>') ?  Configuration::get('PS_LOGO') : __PS_BASE_URI__.'/img/logo.jpg'),
             'shop_name' => $shop_contact['PS_SHOP_NAME'],
             'shop_contact' => $shop_contact,
-            'title' => $this->module->l('Invoice number').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$order->id_shop).sprintf('%06d', $order_invoice->number),
-            'date' => Tools::displayDate($order_invoice->date_add, $this->context->language->id),
+            'title' => $this->module->l('Invoice number').' #'.$invoice_prefix.sprintf('%06d', $order_invoice_number),
+            'date' => Tools::displayDate($order_invoice_date, $this->context->language->id),
             'sellermania_order' => $sellermania_order,
             'sellermania_conditions_list' => $this->module->sellermania_conditions_list,
         );
