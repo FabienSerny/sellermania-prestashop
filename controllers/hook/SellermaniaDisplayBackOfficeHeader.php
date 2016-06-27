@@ -332,7 +332,7 @@ class SellermaniaDisplayBackOfficeHeaderController
 
             $this->context->smarty->assign('ps_version', $this->ps_version);
             $this->context->smarty->assign('sellermania_module_path', $this->web_path);
-            $this->context->smarty->assign('sellermania_invoice_url', $this->context->link->getAdminLink('AdminModules').'&configure=sellermania&module_name=sellermania&display=invoice');
+            $this->context->smarty->assign('sellermania_invoice_url', FroggyLib::getAdminLink('AdminModules').'&configure=sellermania&module_name=sellermania&display=invoice');
 
             return $this->module->compliantDisplay('displayBackOfficeHeader.tpl');
         }

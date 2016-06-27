@@ -42,6 +42,9 @@ if (version_compare(_PS_VERSION_, '1.5') < 0) {
 }
 require_once(dirname(__FILE__).'/classes/'.$db_requests_class_file);
 
+// Request Froggy lib
+require_once(dirname(__FILE__).'/classes/FroggyLib.php');
+
 // Load ObjectModel and PaymentModule classes
 require_once(dirname(__FILE__).'/classes/SellermaniaOrder.php');
 require_once(dirname(__FILE__).'/classes/SellermaniaPaymentModule.php');
