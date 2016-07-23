@@ -46,8 +46,7 @@ class SellermaniaExportController
         'name' => 'string', 'category_default' => 'string', 'category_default_full_path' => 'string',
         'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
         'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
-        'id_category_default' => 'int',
-        'condition' => 'string',
+        'id_category_default' => 'int', 'condition' => 'string', 'date_add' => 'string', 'date_upd' => 'string',
     );
 
     /**
