@@ -39,7 +39,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.0.5';
+        $this->version = '2.0.6';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -277,7 +277,8 @@ class Sellermania extends Module
 
         foreach ($this->sellermania_order_states as $order_state_key => $order_state_array)
         {
-            if (Configuration::get($order_state_key) < 1)
+            $order_state = new OrderState(Configuration::get($order_state_key));
+            if ($order_state->id < 1)
             {
                 $order_state = new OrderState();
                 $order_state->send_email = false;
