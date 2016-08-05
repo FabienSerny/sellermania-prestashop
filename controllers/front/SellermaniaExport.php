@@ -124,10 +124,15 @@ class SellermaniaExportController
             $this->delete_export_files($iso_lang);
 
         // If output is displayed, we force format download
-        if ($output == 'display' && Tools::getValue('display') != 'inline')
+        if ($output == 'display' && Tools::getValue('display') != 'inline' && Tools::getValue('display') != 'debug')
         {
             header('Content-type: application/vnd.ms-excel');
             header('Content-disposition: attachment; filename="sellermania.csv"');
+        }
+
+        // If debug display is enabled
+        if (Tools::getValue('display') == 'debug') {
+            echo '<table border="1"><tr><td>';
         }
 
         // Init
@@ -307,8 +312,12 @@ class SellermaniaExportController
             $real_path_file = $this->get_export_filename($iso_lang);
             file_put_contents($real_path_file, $line, FILE_APPEND);
         }
-        else
+        else {
+            if (Tools::getValue('display') == 'debug') {
+                $line = str_replace(array(';', "\n"), array('</td><td>', '</td></tr><tr><td>'), html_entity_decode($line));
+            }
             echo $line;
+        }
     }
 
 
