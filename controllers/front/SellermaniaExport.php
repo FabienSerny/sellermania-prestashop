@@ -41,7 +41,8 @@ class SellermaniaExportController
      */
     private $fields_to_export = array(
         'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string', 'ean13' => 'string', 'upc' => 'string', 'ecotax' => 'float',
-        'quantity' => 'int', 'price' => 'float', 'crossed_price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string', 'supplier_reference' => 'string',
+        'quantity' => 'int', 'price' => 'float', 'crossed_price' => 'float', 'wholesale_price' => 'float', 'reference' => 'string',
+        'supplier' => 'string', 'supplier_reference' => 'string',
         'width' => 'float', 'height' => 'float', 'depth' => 'float', 'weight' => 'float', 'location' => 'string',
         'name' => 'string', 'category_default' => 'string', 'category_default_full_path' => 'string',
         'description' => 'string', 'description_short' => 'string', 'manufacturer_name' => 'string',
@@ -220,7 +221,8 @@ class SellermaniaExportController
                 $rowCopy['attributes_values'] = $declination['attributes_values'];
                 if ($rowCopy['active'] != 1)
                     $rowCopy['quantity'] = 0;
-                $rowCopy['supplier_reference'] = $this->getSupplierReference($rowCopy);
+                $rowCopy['supplier'] = $this->getSupplierData($rowCopy, 'name');
+                $rowCopy['supplier_reference'] = $this->getSupplierData($rowCopy, 'reference');
                 $rows[] = $rowCopy;
             }
         }
@@ -232,8 +234,9 @@ class SellermaniaExportController
             $row['crossed_price'] = Product::getPriceStatic($row['id_product'], true, null, 2, null, false, false);
             if ($row['crossed_price'] == $row['price'])
                 unset($row['crossed_price']);
-            $rowCopy['id_product_attribute'] = 0;
-            $row['supplier_reference'] = $this->getSupplierReference($row);
+            $row['id_product_attribute'] = 0;
+            $row['supplier'] = $this->getSupplierData($row, 'name');
+            $row['supplier_reference'] = $this->getSupplierData($row, 'reference');
             $rows = array($row);
         }
 
@@ -309,9 +312,9 @@ class SellermaniaExportController
     }
 
 
-    public function getSupplierReference($row)
+    public function getSupplierData($row, $variable)
     {
-        if (version_compare(_PS_VERSION_, '1.6.0') >= 0)
+        if (version_compare(_PS_VERSION_, '1.5.0') >= 0)
         {
             $suppliers = ProductSupplier::getSupplierCollection($row['id_product']);
             foreach ($suppliers as $product_supplier)
@@ -319,7 +322,11 @@ class SellermaniaExportController
                 $row['id_supplier'] = $product_supplier->id_supplier;
                 $id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier($row['id_product'], $row['id_product_attribute'], $row['id_supplier']);
                 $product_supplier = new ProductSupplier($id_product_supplier);
-                if (!empty($product_supplier->product_supplier_reference))
+
+                if ($variable == 'name' && !empty($product_supplier->product_supplier_reference))
+                    return (new Supplier($row['id_supplier']))->name;
+
+                if ($variable == 'reference' && !empty($product_supplier->product_supplier_reference))
                     return $product_supplier->product_supplier_reference;
             }
 
