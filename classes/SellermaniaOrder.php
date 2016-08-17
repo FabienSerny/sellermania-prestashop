@@ -125,8 +125,8 @@ class SellermaniaOrder extends ObjectModel
             // Calcul VAT for shipping
             if ($product['ShippingFee']['Amount']['Price'] > 0) {
                 $shipping_vat_rate = 1 + ($shipping_vat_percent / 100);
-                $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT'] += ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate);
-                $sellermania_order->details['OrderInfo']['PackingShippingFee']['TotalVAT'] += $product['ShippingFee']['Amount']['Price'] - ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate);
+                $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT'] += ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate) * $product['QuantityPurchased'];
+                $sellermania_order->details['OrderInfo']['PackingShippingFee']['TotalVAT'] += ($product['ShippingFee']['Amount']['Price'] - ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate)) * $product['QuantityPurchased'];
                 $sellermania_order->details['OrderInfo']['PackingShippingFee']['VATPercent'] = $shipping_vat_percent;
             }
 
@@ -137,7 +137,23 @@ class SellermaniaOrder extends ObjectModel
             if (!isset($sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent])) {
                 $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] = 0;
             }
-            $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] += $product['ProductVAT']['total'];
+            $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] += $product['ProductVAT']['total'] * $product['QuantityPurchased'];
+        }
+
+        // Check if shipping is good
+        if (isset($sellermania_order->details['OrderInfo']['Transport']['Amount']['Price'])) {
+
+            // In fact, we should use only the variable OrderInfo Transport Amount Price
+            // However, no shipping rate is communicated with this value, that's why we're additionning all VAT rate on our side
+            // Unfortunatly, it seems there is a problem of rounding value :-/
+            // The code below try to fix it, but it's a bit dirty
+            if (!isset($shipping_vat_percent)) {
+                $shipping_vat_rate = 1.20;
+            }
+            $total_shipping_without_tax = round($sellermania_order->details['OrderInfo']['Transport']['Amount']['Price'] / $shipping_vat_rate, 2);
+            if ($total_shipping_without_tax != $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT']) {
+                $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT'] = $total_shipping_without_tax;
+            }
         }
 
         // Calcul amount for each VAT from shipping

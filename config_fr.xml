@@ -2,7 +2,7 @@
 <module>
 	<name>sellermania</name>
 	<displayName><![CDATA[Sellermania]]></displayName>
-	<version><![CDATA[2.0.7]]></version>
+	<version><![CDATA[2.0.8]]></version>
 	<description><![CDATA[Connectez votre PrestaShop avec les webservices Sellermania]]></description>
 	<author><![CDATA[Froggy Commerce]]></author>
 	<tab><![CDATA[advertising_marketing]]></tab>
