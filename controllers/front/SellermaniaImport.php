@@ -54,8 +54,8 @@ class SellermaniaImportController
         // Init
         global $argv;
         $argument_key = '';
-        if (isset($argv[1]))
-            $argument_key = $argv[1];
+        if (isset($argv[0]))
+            $argument_key = Configuration::get('SELLERMANIA_KEY');
 
         // Set _PS_ADMIN_DIR_ define and set default Shop
         if (!defined('_PS_ADMIN_DIR_'))
