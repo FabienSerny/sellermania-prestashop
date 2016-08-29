@@ -237,7 +237,7 @@ class SellermaniaImportOrderController
                     $this->data['OrderInfo']['OptionalFeaturePrice'] += $product['OptionalFeaturePrice']['Amount']['Price'] * $product['QuantityPurchased'];
 
                 // Create order detail (only create order detail for unmatched product)
-                $this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('total' => $product_tax, 'rate' => $vat_rate);
+                $this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('unit' => $product_tax / $product['QuantityPurchased'], 'total' => $product_tax, 'rate' => $vat_rate);
             }
 
             // Fix Ean
@@ -251,6 +251,8 @@ class SellermaniaImportOrderController
             // Fix non existing variable
             if (!isset($this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total']))
                 $this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'] = 0;
+            if (!isset($this->data['OrderInfo']['Product'][$kp]['ProductVAT']['unit']))
+                $this->data['OrderInfo']['Product'][$kp]['ProductVAT']['unit'] = 0;
             if (!isset($this->data['OrderInfo']['Product'][$kp]['Amount']['Price']))
                 $this->data['OrderInfo']['Product'][$kp]['Amount']['Price'] = 0;
 
@@ -826,8 +828,8 @@ class SellermaniaImportOrderController
 
         $sql_data_tax = array(
             'id_tax' => 0,
-            'unit_amount' => (float)$product['ProductVAT']['total'],
-            'total_amount' => (float)((float)$product['ProductVAT']['total'] * (int)$product['QuantityPurchased']),
+            'unit_amount' => (float)$product['ProductVAT']['unit'],
+            'total_amount' => (float)$product['ProductVAT']['total'],
         );
 
         // We check if the product has a match

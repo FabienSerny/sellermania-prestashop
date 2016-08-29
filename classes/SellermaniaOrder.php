@@ -131,7 +131,7 @@ class SellermaniaOrder extends ObjectModel
             }
 
             // Calcul product price without VAT
-            $sellermania_order->details['OrderInfo']['Product'][$kp]['Amount']['PriceWithoutVAT'] = $product['Amount']['Price'] - $product['ProductVAT']['total'];
+            $sellermania_order->details['OrderInfo']['Product'][$kp]['Amount']['PriceWithoutVAT'] = $product['Amount']['Price'] - $product['ProductVAT']['unit'];
 
             // Calcul amount for each VAT from products
             if (!isset($sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent])) {
