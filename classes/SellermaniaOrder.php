@@ -126,7 +126,7 @@ class SellermaniaOrder extends ObjectModel
             if ($product['ShippingFee']['Amount']['Price'] > 0) {
                 $shipping_vat_rate = 1 + ($shipping_vat_percent / 100);
                 $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT'] += ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate) * $product['QuantityPurchased'];
-                $sellermania_order->details['OrderInfo']['PackingShippingFee']['TotalVAT'] += ($product['ShippingFee']['Amount']['Price'] - ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate)) * $product['QuantityPurchased'];
+                $sellermania_order->details['OrderInfo']['PackingShippingFee']['TotalVAT'] += ($product['ShippingFee']['Amount']['Price'] - ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate));
                 $sellermania_order->details['OrderInfo']['PackingShippingFee']['VATPercent'] = $shipping_vat_percent;
             }
 
@@ -137,7 +137,7 @@ class SellermaniaOrder extends ObjectModel
             if (!isset($sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent])) {
                 $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] = 0;
             }
-            $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] += $product['ProductVAT']['total'] * $product['QuantityPurchased'];
+            $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] += $product['ProductVAT']['unit'] * $product['QuantityPurchased'];
         }
 
         // Check if shipping is good
