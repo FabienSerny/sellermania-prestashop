@@ -332,8 +332,10 @@ class SellermaniaExportController
                 $id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier($row['id_product'], $row['id_product_attribute'], $row['id_supplier']);
                 $product_supplier = new ProductSupplier($id_product_supplier);
 
-                if ($variable == 'name' && !empty($product_supplier->product_supplier_reference))
-                    return (new Supplier($row['id_supplier']))->name;
+                if ($variable == 'name' && !empty($product_supplier->product_supplier_reference)) {
+                    $new_supplier = new Supplier($row['id_supplier']);
+                    return $new_supplier->name;
+                }
 
                 if ($variable == 'reference' && !empty($product_supplier->product_supplier_reference))
                     return $product_supplier->product_supplier_reference;
