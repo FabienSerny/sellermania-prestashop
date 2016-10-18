@@ -356,6 +356,7 @@ class SellermaniaImportOrderController
         $this->address->city = $data['Address']['City'];
         $this->address->id_country = Country::getByIso($data['Address']['Country']);
         $this->address->phone = $data['Address']['ShippingPhonePrestaShop'];
+        $this->address->phone_mobile = $data['Address']['ShippingPhonePrestaShop'];
         $this->address->id_customer = $this->customer->id;
         $this->address->active = 1;
         if (substr(_PS_VERSION_, 0, 3) == '1.4')
