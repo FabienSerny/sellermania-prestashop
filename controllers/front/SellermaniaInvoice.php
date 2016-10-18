@@ -86,9 +86,6 @@ class SellermaniaInvoiceController
                 'PS_SHOP_CODE', 'PS_SHOP_CITY', 'PS_SHOP_COUNTRY_ID', 'PS_SHOP_PHONE', 'PS_SHOP_FAX',
             ), null, null, (int)$order->id_shop);
 
-            // Logo path
-            $logo_path = dirname(__FILE__).'/../../../../img/';
-
         } else {
 
             // Set invoice date and number
@@ -102,9 +99,6 @@ class SellermaniaInvoiceController
                 'PS_SHOP_CODE', 'PS_SHOP_CITY', 'PS_COUNTRY_DEFAULT', 'PS_SHOP_PHONE', 'PS_SHOP_FAX',
             ));
             $shop_contact['PS_SHOP_COUNTRY_ID'] = $shop_contact['PS_COUNTRY_DEFAULT'];
-
-            // Logo path
-            $logo_path = dirname(__FILE__).'/../../../../';
 
             // Ob clean
             ob_clean();
@@ -120,8 +114,16 @@ class SellermaniaInvoiceController
         }
 
         // Assign data
+        $logo_path = dirname(__FILE__).'/../../../../img/';
+        $picture_logo_path = 'logo.jpg';
+        if (version_compare(_PS_VERSION_, '1.5', '>')) {
+            $picture_logo_path = Configuration::get('PS_LOGO');
+        }
+        if (!file_exists($logo_path.$picture_logo_path) && $logo_path.'logo.png') {
+            $picture_logo_path = 'logo.png';
+        }
         $data = array(
-            'logo_path' => $logo_path.(version_compare(_PS_VERSION_, '1.5', '>') ?  Configuration::get('PS_LOGO') : '/img/logo.jpg'),
+            'logo_path' => $logo_path.$picture_logo_path,
             'shop_name' => $shop_contact['PS_SHOP_NAME'],
             'shop_contact' => $shop_contact,
             'title' => $this->module->l('Invoice number').' #'.$invoice_prefix.sprintf('%06d', $order_invoice_number),
