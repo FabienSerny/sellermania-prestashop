@@ -265,10 +265,10 @@ class SellermaniaDisplayAdminOrderController
         // Check if there is a flag to dispatch
         $status_to_ship = 0;
         foreach ($sellermania_order['OrderInfo']['Product'] as $product)
-            if ($product['Status'] == 1)
+            if (isset($product['Status']) && $product['Status'] == 1)
                 $status_to_ship = 1;
         foreach ($sellermania_order['OrderInfo']['Product'] as $product)
-            if ($product['Status'] != 1 && $product['Status'] != 4)
+            if (isset($product['Status']) && $product['Status'] != 1 && $product['Status'] != 4)
                 $status_to_ship = 0;
         return $status_to_ship;
     }
@@ -295,7 +295,7 @@ class SellermaniaDisplayAdminOrderController
                 if ($os['sm_prior'] == 1)
                 {
                     foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-                        if ($product['Status'] == $os['sm_status'])
+                        if (isset($product['Status']) && $product['Status'] == $os['sm_status'])
                             $new_order_state = Configuration::get($kos);
                 }
 
@@ -305,7 +305,7 @@ class SellermaniaDisplayAdminOrderController
                 {
                     $new_order_state = Configuration::get($kos);
                     foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-                        if ($product['Status'] != $os['sm_status'])
+                        if (isset($product['Status']) && $product['Status'] != $os['sm_status'])
                             $new_order_state = false;
                 }
             }
