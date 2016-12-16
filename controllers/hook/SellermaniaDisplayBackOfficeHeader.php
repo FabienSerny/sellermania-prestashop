@@ -146,15 +146,15 @@ class SellermaniaDisplayBackOfficeHeaderController
                             // Verbose mode
                             $this->speak('Order does not exist, we create it');
 
+                            // Save config value
+                            $ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+                            Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
+                            $ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
+                            Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', 1);
+
                             // If does not exist, we import the order
                             try
                             {
-                                // Save config value
-                                $ps_guest_checkout_enabled = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
-                                Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', 1);
-                                $ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
-                                Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', 1);
-
                                 // Import order as PrestaShop order
                                 $import_order = new SellermaniaImportOrderController($this->module, $this->dir_path, $this->web_path);
                                 $import_order->run($order);
@@ -163,14 +163,6 @@ class SellermaniaDisplayBackOfficeHeaderController
                                 // Refresh order status immediately
                                 $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
                                 $sdao->refreshOrderStatus($import_order->order->id, $order);
-
-                                // Restore config value
-                                Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
-                                Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', $ps_order_out_of_stock);
-
-                                // Do not push it too hard
-                                if ($count_order > 100)
-                                    return true;
                             }
                             catch (\Exception $e)
                             {
@@ -189,6 +181,14 @@ class SellermaniaDisplayBackOfficeHeaderController
                                 $log .= var_export($order, true)."\n";
                                 file_put_contents(dirname(__FILE__).'/../../log/order-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
                             }
+
+                            // Restore config value
+                            Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
+                            Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', $ps_order_out_of_stock);
+
+                            // Do not push it too hard
+                            if ($count_order > 100)
+                                return true;
                         }
                     }
             }
