@@ -128,6 +128,10 @@ class SellermaniaDisplayBackOfficeHeaderController
                             {
                                 try
                                 {
+                                    // Import order as PrestaShop order
+                                    $import_order = new SellermaniaImportOrderController($this->module, $this->dir_path, $this->web_path);
+                                    $import_order->refreshOrder($smo, $order);
+
                                     $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
                                     $sdao->refreshOrderStatus($smo->id_order, $order);
                                 }
