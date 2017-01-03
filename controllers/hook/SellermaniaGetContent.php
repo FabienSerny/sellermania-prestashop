@@ -93,7 +93,7 @@ class SellermaniaGetContentController
                         'sm_stock_sync_nb_char', 'sm_stock_sync_position',
                         'sm_import_method', 'sm_import_default_carrier',
                         'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
-                        'sm_enable_native_refund_system', 'sm_enable_export_comb_name');
+                        'sm_enable_native_refund_system', 'sm_enable_export_comb_name', 'sm_order_state_display');
 
         foreach ($params as $p)
             if (isset($_POST[$p]))
@@ -208,6 +208,7 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('sm_enable_export_comb_name', Configuration::get('SM_ENABLE_EXPORT_COMB_NAME'));
 
         $this->context->smarty->assign('sm_import_default_carrier', Configuration::get('SM_IMPORT_DEFAULT_CARRIER'));
+        $this->context->smarty->assign('sm_order_state_display', (int) Configuration::get('SM_ORDER_STATE_DISPLAY'));
 
         if ($this->context->language->iso_code == 'fr')
         {
@@ -250,8 +251,9 @@ class SellermaniaGetContentController
      */
     public function run()
     {
-        if (Tools::getValue('see') != 'orders-error')
+        if (Tools::getValue('see') != 'orders-error') {
             $this->saveConfiguration();
+        }
         $this->assignData();
         return $this->module->compliantDisplay('displayGetContent'.(isset($this->module->bootstrap) ? '.bootstrap' : '').'.tpl');
     }

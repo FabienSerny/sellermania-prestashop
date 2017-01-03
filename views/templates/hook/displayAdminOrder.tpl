@@ -294,6 +294,8 @@
         var sellermania_enable_native_refund_system = false;
     {/if}
 
+    var sm_order_state_display = {$sm_order_state_display};
+
 </script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>

@@ -116,6 +116,18 @@
 <br />
 
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
+<fieldset>
+    <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Sellermania Order' mod='sellermania'}</legend>
+    <div class="margin-form" style="padding-left:15px">
+        <p><b>{l s='Do you want to change manually the order state?' mod='sellermania'}</b></p><br>
+        <input type="radio" name="sm_order_state_display" value="1" {if $sm_order_state_display}checked="checked"{/if}> {l s='Yes' mod='sellermania'}
+        <input type="radio" name="sm_order_state_display" value="0" {if !$sm_order_state_display}checked="checked"{/if}> {l s='No' mod='sellermania'}
+    </div>
+    <input type="submit" name="orderSettings" value="{l s='Update order settings' mod='sellermania'}">
+</fieldset>
+</form>
+
+<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
     <fieldset>
         <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Sellermania configuration' mod='sellermania'}</legend>
 
