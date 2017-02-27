@@ -194,9 +194,7 @@ class SellermaniaImportOrderController
         $this->preprocessUserData(0);
         $this->preprocessUserData(1);
 
-        // Fix data (when only one product, array is not the same)
-        if (!isset($this->data['OrderInfo']['Product'][0]))
-            $this->data['OrderInfo']['Product'] = array($this->data['OrderInfo']['Product']);
+        $this->initializeProductList();
 
         // Calcul total product without tax
         $existing_ref = array();
@@ -394,6 +392,10 @@ class SellermaniaImportOrderController
         // Load currency in context
         $this->context->currency = new Currency(Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']));
 
+        if (!ValidateCore::isLoadedObject($this->context->currency)) {
+            throw new Exception('Currency not found with iso code: '.$this->data['OrderInfo']['Amount']['Currency']);
+        }
+
         // Create Cart
         $this->cart = new Cart();
         $this->cart->id_customer = $this->customer->id;
@@ -513,7 +515,7 @@ class SellermaniaImportOrderController
      * @param array $product
      * @return array $product
      */
-    public function getProductIdentifier($product)
+    public function getProductIdentifier(&$product)
     {
         $fields = array('reference' => 'Sku', 'upc' => 'Sku', 'ean13' => 'Ean');
         $tables = array('product_attribute', 'product');
@@ -872,6 +874,118 @@ class SellermaniaImportOrderController
         }
     }
 
+    private function initializeProductList()
+    {
+        // Fix data (when only one product, array is not the same)
+        if (!isset($this->data['OrderInfo']['Product'][0])) {
+            $this->data['OrderInfo']['Product'] = array($this->data['OrderInfo']['Product']);
+        }
 
+        return $this;
+    }
+
+    /**
+     * @param SellermaniaOrder $sellermaniaOrder
+     * @param array $sellermaniaOrderInfo
+     */
+    public function refreshOrder(SellermaniaOrder $sellermaniaOrder, Array $sellermaniaOrderInfo)
+    {
+        $this->data = $sellermaniaOrderInfo;
+        $this->order = new Order($sellermaniaOrder->id_order);
+
+        // Prepare the products list / merge quantities
+        $this->preprocessData();
+
+        $psProducts = $this->order->getProducts();
+        foreach ($psProducts as $productIndex => $productDetail) {
+            // Remove all product called "Frais de gestion"
+            if ($productDetail['product_id'] == 0) {
+                unset($psProducts[$productIndex]);
+            }
+        }
+
+        foreach ($this->data['OrderInfo']['Product'] as &$sellermaniaProduct) {
+            $sellermaniaProduct = $this->getProductIdentifier($sellermaniaProduct);
+            $found = false;
+            foreach ($psProducts as $psProduct) {
+                $found = $sellermaniaProduct['id_product'] == $psProduct['product_id'] &&
+                    $sellermaniaProduct['id_product_attribute'] == $psProduct['product_attribute_id']
+                ;
+                if ($found) {
+                    if ($sellermaniaProduct['QuantityPurchased'] != $psProduct['product_quantity']) {
+                        $orderDetail = new OrderDetail($psProduct['id_order_detail']);
+                        $orderDetail->product_quantity = $sellermaniaProduct['QuantityPurchased'];
+                        $orderDetail->update();
+
+                        $quantity = -abs(($sellermaniaProduct['QuantityPurchased'] - $psProduct['product_quantity']));
+                        $this->handleProductStock($orderDetail, $quantity);
+                    }
+                    break;
+                }
+            }
+            // If the product has not been found, it's a new one
+            if (!$found) {
+                $orderDetail = $this->createOrderDetail($sellermaniaProduct);
+                $this->handleProductStock($orderDetail, -abs($orderDetail->product_quantity));
+            }
+        }
+
+        // Use directly this part to avoid 'Frais de gestion' creation
+        if (version_compare(_PS_VERSION_, '1.5') >= 0) {
+            $this->fixOrder15(true);
+        }
+        else {
+            $this->fixOrder14(true);
+        }
+    }
+
+    /**
+     * @param $sellermaniaProduct
+     * @return OrderDetail
+     */
+    private function createOrderDetail($sellermaniaProduct)
+    {
+        $orderDetail = new OrderDetail();
+        $orderDetail->id_order = $this->order->id;
+        $orderDetail->product_id = $sellermaniaProduct['id_product'];
+        $orderDetail->product_attribute_id = $sellermaniaProduct['id_product_attribute'];
+        $orderDetail->product_quantity = $sellermaniaProduct['QuantityPurchased'];
+        $orderDetail->product_ean13 = $sellermaniaProduct['Ean'];
+        $orderDetail->product_reference = $sellermaniaProduct['Sku'];
+        $orderDetail->product_name = $sellermaniaProduct['ItemName'];
+        $orderDetail->product_quantity_in_stock = 0;
+        $orderDetail->product_price = $sellermaniaProduct['Sku'];
+        $orderDetail->tax_rate = $sellermaniaProduct['VatRate'] / 100;
+        $orderDetail->tax_name = ($sellermaniaProduct['VatRate'] / 100).'%';
+
+        if (version_compare(_PS_VERSION_, '1.4', '>')) {
+            $orderDetail->id_warehouse = 0;
+            $orderDetail->id_shop = 1;
+        }
+
+        $orderDetail->add();
+
+        return $orderDetail;
+    }
+
+    /**
+     * @param OrderDetail $orderDetail
+     * @param $quantity
+     */
+    private function handleProductStock(OrderDetail $orderDetail, $quantity)
+    {
+        if ($orderDetail->product_id == Configuration::get('SM_DEFAULT_PRODUCT_ID')) {
+            return;
+        }
+
+        if (version_compare(_PS_VERSION_, '1.4', '>')) {
+            StockAvailable::updateQuantity($orderDetail->product_id, $orderDetail->product_attribute_id, $quantity);
+        } else {
+
+            // Handle product quantities
+            $productObj = new Product((int) $orderDetail->product_id, false, (int)_PS_LANG_DEFAULT_);
+            $productObj->addStockMvt($quantity, _STOCK_MOVEMENT_ORDER_REASON_, $orderDetail->product_attribute_id, $orderDetail->id_order, NULL);
+        }
+    }
 }
 
