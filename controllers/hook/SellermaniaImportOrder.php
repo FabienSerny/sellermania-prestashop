@@ -926,6 +926,7 @@ class SellermaniaImportOrderController
                     break;
                 }
             }
+
             // If the product has not been found, it's a new one
             if (!$found) {
                 $orderDetail = $this->createOrderDetail($sellermaniaProduct);
@@ -948,6 +949,11 @@ class SellermaniaImportOrderController
      */
     private function createOrderDetail($sellermaniaProduct)
     {
+        // Calcul price without tax
+        $product_price_with_tax = $product['Amount']['Price'];
+        $vat_rate = 1 + ($product['VatRate'] / 10000);
+        $product_price_without_tax = $product_price_with_tax / $vat_rate;
+
         $orderDetail = new OrderDetail();
         $orderDetail->id_order = $this->order->id;
         $orderDetail->product_id = $sellermaniaProduct['id_product'];
@@ -957,7 +963,7 @@ class SellermaniaImportOrderController
         $orderDetail->product_reference = $sellermaniaProduct['Sku'];
         $orderDetail->product_name = $sellermaniaProduct['ItemName'];
         $orderDetail->product_quantity_in_stock = 0;
-        $orderDetail->product_price = $sellermaniaProduct['Sku'];
+        $orderDetail->product_price = $product_price_without_tax;
         $orderDetail->tax_rate = $sellermaniaProduct['VatRate'] / 100;
         $orderDetail->tax_name = ($sellermaniaProduct['VatRate'] / 100).'%';
 
