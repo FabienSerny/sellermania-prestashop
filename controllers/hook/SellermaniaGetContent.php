@@ -168,6 +168,8 @@ class SellermaniaGetContentController
             $documentation_iso_code = $this->context->language->iso_code;
         $this->context->smarty->assign('documentation_iso_code', $documentation_iso_code);
 
+        $this->context->smarty->assign('templates_dir', dirname(__FILE__).'/../../views/templates/hook/');
+
         $this->context->smarty->assign('orders_in_error', $orders_in_error);
         $this->context->smarty->assign('nb_orders_in_error', $nb_orders_in_error);
 

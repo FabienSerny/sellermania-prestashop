@@ -36,3 +36,21 @@
     display:none;
     padding-top:5px;
 }
+
+#sellermania-admin-tab ul li {
+    float:left;
+    width:200px;
+    margin-right:10px;
+    padding:10px;
+    list-style: none;
+    border: 1px solid #e6e6e6;
+    cursor:pointer;
+    text-align: center;
+}
+
+#sellermania-admin-tab ul li a {
+    font-size: 16px;
+    line-height: inherit;
+    color: #333333;
+    text-transform: uppercase;
+}
