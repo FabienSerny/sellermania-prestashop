@@ -49,6 +49,7 @@ class SellermaniaTestAPI
         );
 
         // Calling the confirmOrder test
+        /*
         $order_items = array();
         $order_items[] = array(
             'orderId' => '1TEST1TEST1TEST1',
@@ -62,5 +63,6 @@ class SellermaniaTestAPI
         $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
         $client->setEndpoint(Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
         $result = $client->confirmOrder($order_items);
+        */
     }
 }
