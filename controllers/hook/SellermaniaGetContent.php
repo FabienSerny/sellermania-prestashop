@@ -94,6 +94,7 @@ class SellermaniaGetContentController
                         'sm_import_method', 'sm_import_default_carrier',
                         'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
                         'sm_enable_native_refund_system', 'sm_enable_export_comb_name',
+                        'sm_catch_all_mail_address',
                         'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
                         'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
                         'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
@@ -227,6 +228,7 @@ class SellermaniaGetContentController
 
         $this->context->smarty->assign('sm_import_default_carrier', Configuration::get('SM_IMPORT_DEFAULT_CARRIER'));
 
+        $this->context->smarty->assign('sm_catch_all_mail_address', Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS'));
         $this->context->smarty->assign('sm_order_states', $this->module->sellermania_order_states);
         $this->context->smarty->assign('ps_order_states', OrderState::getOrderStates($this->context->language->id));
 

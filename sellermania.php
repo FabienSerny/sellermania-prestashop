@@ -147,8 +147,13 @@ class Sellermania extends Module
         if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == '')
             Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');
 
-        if (Configuration::get('SM_IMPORT_METHOD') == '')
+        if (Configuration::get('SM_IMPORT_METHOD') == '') {
             Configuration::updateValue('SM_IMPORT_METHOD', 'automatic');
+        }
+
+        if (Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS') == '') {
+            Configuration::updateValue('SM_CATCH_ALL_MAIL_ADDRESS', Configuration::get('PS_SHOP_EMAIL'));
+        }
     }
 
     /**

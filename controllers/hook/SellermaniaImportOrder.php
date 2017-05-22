@@ -307,7 +307,7 @@ class SellermaniaImportOrderController
         $this->customer->id_gender = 9;
         $this->customer->firstname = $this->data['User'][0]['FirstName'];
         $this->customer->lastname = $this->data['User'][0]['LastName'];
-        $this->customer->email = Configuration::get('PS_SHOP_EMAIL');
+        $this->customer->email = Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS');
         $this->customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
         $this->customer->is_guest = 1;
         $this->customer->active = 1;

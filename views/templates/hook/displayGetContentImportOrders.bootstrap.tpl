@@ -217,6 +217,12 @@
                             </div>
                         </div>
 
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='E-mail associated to customer account created' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" />
+                            </div>
+                        </div>
 
                     </div>
                 </div>
