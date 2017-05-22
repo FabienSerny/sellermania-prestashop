@@ -28,42 +28,42 @@ $(document).ready(function() {
     function displaySellermaniaCredentials()
     {
         if ($('#sm_import_orders_yes').attr('checked') == 'checked' || $('#sm_import_orders_yes').attr('checked') == true)
-            $('#sm_import_orders_credentials').fadeIn();
+            $('#sm_import_orders_credentials').show();
         else
-            $('#sm_import_orders_credentials').fadeOut();
+            $('#sm_import_orders_credentials').hide();
         return true;
     }
 
     $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
     $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
-    setTimeout(function() { displaySellermaniaCredentials(); }, 500);
+    displaySellermaniaCredentials();
 
     function displaySellermaniaSyncOption()
     {
         if ($('#sm_stock_sync_option_yes').attr('checked') == 'checked' || $('#sm_stock_sync_option_yes').attr('checked') == true)
-            $('#sm_stock_sync_option_configuration').fadeIn();
+            $('#sm_stock_sync_option_configuration').show();
         else
-            $('#sm_stock_sync_option_configuration').fadeOut();
+            $('#sm_stock_sync_option_configuration').hide();
         return true;
     }
 
     $('#sm_stock_sync_option_yes').click(function() { return displaySellermaniaSyncOption(); });
     $('#sm_stock_sync_option_no').click(function() { return displaySellermaniaSyncOption(); });
-    setTimeout(function() { displaySellermaniaSyncOption(); }, 500);
+    displaySellermaniaSyncOption();
 
 
     function displaySellermaniaImportConfiguration()
     {
         if ($('#sm_import_method_cron').attr('checked') == 'checked' || $('#sm_import_method_cron').attr('checked') == true)
-            $('#sm_import_method_cron_configuration').fadeIn();
+            $('#sm_import_method_cron_configuration').show();
         else
-            $('#sm_import_method_cron_configuration').fadeOut();
+            $('#sm_import_method_cron_configuration').hide();
         return true;
     }
 
     $('#sm_import_method_cron').click(function() { return displaySellermaniaImportConfiguration(); });
     $('#sm_import_method_automatic').click(function() { return displaySellermaniaImportConfiguration(); });
-    setTimeout(function() { displaySellermaniaImportConfiguration(); }, 500);
+    displaySellermaniaImportConfiguration();
 
 
 
@@ -71,37 +71,37 @@ $(document).ready(function() {
     function displaySellermaniaAlertOption()
     {
         if ($('#sm_alert_missing_ref_option_yes').attr('checked') == 'checked' || $('#sm_alert_missing_ref_option_yes').attr('checked') == true)
-            $('#sm_alert_missing_ref_option_configuration').fadeIn();
+            $('#sm_alert_missing_ref_option_configuration').show();
         else
-            $('#sm_alert_missing_ref_option_configuration').fadeOut();
+            $('#sm_alert_missing_ref_option_configuration').hide();
         return true;
     }
 
     $('#sm_alert_missing_ref_option_yes').click(function() { return displaySellermaniaAlertOption(); });
     $('#sm_alert_missing_ref_option_no').click(function() { return displaySellermaniaAlertOption(); });
-    setTimeout(function() { displaySellermaniaAlertOption(); }, 500);
+    displaySellermaniaAlertOption();
 
 
     function displaySellermaniaExportOptions()
     {
         if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true) {
-            $('#sm_export_all_configuration').fadeOut();
+            $('#sm_export_all_configuration').hide();
         } else {
-            $('#sm_export_all_configuration').fadeIn();
+            $('#sm_export_all_configuration').show();
         }
         return true;
     }
 
     $('#sm_export_all_yes').click(function() { return displaySellermaniaExportOptions(); });
     $('#sm_export_all_no').click(function() { return displaySellermaniaExportOptions(); });
-    setTimeout(function() { displaySellermaniaExportOptions() }, 500);
+    displaySellermaniaExportOptions();
 
 
     $('#see-advanced-export').click(function() {
         if ($('#advanced-export').is(':visible'))
-            $('#advanced-export').fadeOut();
+            $('#advanced-export').hide();
         else
-            $('#advanced-export').fadeIn();
+            $('#advanced-export').show();
         return false;
     });
 
