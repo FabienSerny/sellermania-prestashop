@@ -117,6 +117,17 @@
                     {/foreach}
                 </p><br clear="left" />
 
+                <p><label>{l s='Sellermania order state configuration' mod='sellermania'}</label></p><br clear="left" />
+                <p>
+                    {foreach from=$sm_order_states key=sm_order_state_key item=sm_order_state}
+                    <label>{$sm_order_state.label[$documentation_iso_code]} :</label>
+                        <select name="{$sm_order_state_key}" id="{$sm_order_state_key}">
+                            {foreach from=$ps_order_states item=ps_order_state}
+                                <option value="{$ps_order_state.id_order_state}" {if $ps_order_state.id_order_state eq $sm_order_state.ps_conf_value}selected{/if}>{$ps_order_state.name}</option>
+                            {/foreach}
+                        </select><br>
+                    {/foreach}
+                </p>
 
                 <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" class="button" /></label></p>
                 {if isset($sm_error_credentials)}<br><br><p class="error"><strong>{$sm_error_credentials|strip_tags}</strong></p>{/if}
