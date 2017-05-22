@@ -36,7 +36,7 @@ $(document).ready(function() {
 
     $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
     $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
-    displaySellermaniaCredentials();
+    setTimeout(function() { displaySellermaniaCredentials(); }, 500);
 
     function displaySellermaniaSyncOption()
     {
@@ -49,7 +49,7 @@ $(document).ready(function() {
 
     $('#sm_stock_sync_option_yes').click(function() { return displaySellermaniaSyncOption(); });
     $('#sm_stock_sync_option_no').click(function() { return displaySellermaniaSyncOption(); });
-    displaySellermaniaSyncOption();
+    setTimeout(function() { displaySellermaniaSyncOption(); }, 500);
 
 
     function displaySellermaniaImportConfiguration()
@@ -63,7 +63,7 @@ $(document).ready(function() {
 
     $('#sm_import_method_cron').click(function() { return displaySellermaniaImportConfiguration(); });
     $('#sm_import_method_automatic').click(function() { return displaySellermaniaImportConfiguration(); });
-    displaySellermaniaImportConfiguration();
+    setTimeout(function() { displaySellermaniaImportConfiguration(); }, 500);
 
 
 
@@ -79,21 +79,22 @@ $(document).ready(function() {
 
     $('#sm_alert_missing_ref_option_yes').click(function() { return displaySellermaniaAlertOption(); });
     $('#sm_alert_missing_ref_option_no').click(function() { return displaySellermaniaAlertOption(); });
-    displaySellermaniaAlertOption();
+    setTimeout(function() { displaySellermaniaAlertOption(); }, 500);
 
 
     function displaySellermaniaExportOptions()
     {
-        if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true)
+        if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true) {
             $('#sm_export_all_configuration').fadeOut();
-        else
+        } else {
             $('#sm_export_all_configuration').fadeIn();
+        }
         return true;
     }
 
     $('#sm_export_all_yes').click(function() { return displaySellermaniaExportOptions(); });
     $('#sm_export_all_no').click(function() { return displaySellermaniaExportOptions(); });
-    displaySellermaniaExportOptions();
+    setTimeout(function() { displaySellermaniaExportOptions() }, 500);
 
 
     $('#see-advanced-export').click(function() {

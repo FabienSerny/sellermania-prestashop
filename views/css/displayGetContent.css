@@ -37,7 +37,7 @@
     padding-top:5px;
 }
 
-#sellermania-admin-tab ul li {
+#sellermania-admin-tab-ul li {
     float:left;
     width:200px;
     margin-right:10px;
@@ -48,7 +48,7 @@
     text-align: center;
 }
 
-#sellermania-admin-tab ul li a {
+#sellermania-admin-tab-ul li a {
     font-size: 16px;
     line-height: inherit;
     color: #333333;
