@@ -25,7 +25,7 @@
 
 <form action="" method="post">
     <fieldset>
-        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Sellermania configuration' mod='sellermania'}</legend>
+        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Import orders' mod='sellermania'}</legend>
 
         {if isset($no_namespace_compatibility) && $no_namespace_compatibility eq '1'}
             <p><strong>{l s='Your current PHP version is:' mod='sellermania'} {$php_version}</strong></p>

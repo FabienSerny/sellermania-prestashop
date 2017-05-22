@@ -25,7 +25,7 @@
 
 <form action="" method="post">
     <fieldset>
-        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Sellermania export' mod='sellermania'}</legend>
+        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Export catalog' mod='sellermania'}</legend>
         <div class="margin-form" style="padding-left:15px">
 
             <p><b>{l s='Do you want to export all your catalog to Sellermania?' mod='sellermania'}</b></p><br>
