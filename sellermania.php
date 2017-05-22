@@ -409,13 +409,15 @@ class Sellermania extends Module
         if (Tools::getValue('export') == 'true') {
             die($this->export());
         }
-        if (Tools::getValue('sellermania') == 'CreateProduct') {
-            $this->installSellermaniaProduct();
-        }
+
         if (Tools::getValue('display') == 'invoice') {
             $this->invoice();
             exit;
         }
+
+        // Will automatically recreate product if it was erased
+        $this->installSellermaniaProduct();
+
         return $this->runController('hook', 'GetContent');
     }
 
