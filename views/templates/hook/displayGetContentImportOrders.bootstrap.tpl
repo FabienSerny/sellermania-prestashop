@@ -201,6 +201,23 @@
                         </div>
 
 
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Sellermania order state configuration' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                {foreach from=$sm_order_states key=sm_order_state_key item=sm_order_state}
+                                    <label class="col-lg-4">{$sm_order_state.label[$documentation_iso_code]}</label>
+                                    <div class="col-lg-8">
+                                        <select name="{$sm_order_state_key}" id="{$sm_order_state_key}" style="width:100%">
+                                        {foreach from=$ps_order_states item=ps_order_state}
+                                            <option value="{$ps_order_state.id_order_state}" {if $ps_order_state.id_order_state eq $sm_order_state.ps_conf_value}selected{/if}>{$ps_order_state.name}</option>
+                                        {/foreach}
+                                        </select>
+                                    </div><br clear="left">
+                                {/foreach}
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="panel-footer">

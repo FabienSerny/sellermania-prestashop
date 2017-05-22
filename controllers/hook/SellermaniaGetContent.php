@@ -77,11 +77,11 @@ class SellermaniaGetContentController
         if (Tools::isSubmit('export_configuration'))
         {
             Configuration::updateValue('SM_EXPORT_CATEGORIES', '');
-            if (isset($_POST['categories_to_export']) && count($_POST['categories_to_export']) > 0)
-            {
+            if (isset($_POST['categories_to_export']) && count($_POST['categories_to_export']) > 0) {
                 $categories = $_POST['categories_to_export'];
-                foreach ($categories as $kc => $vc)
+                foreach ($categories as $kc => $vc) {
                     $categories[(int)$kc] = (int)$vc;
+                }
                 Configuration::updateValue('SM_EXPORT_CATEGORIES', json_encode($categories));
             }
             $this->context->smarty->assign('sm_confirm_export_options', 1);
@@ -93,15 +93,23 @@ class SellermaniaGetContentController
                         'sm_stock_sync_nb_char', 'sm_stock_sync_position',
                         'sm_import_method', 'sm_import_default_carrier',
                         'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
-                        'sm_enable_native_refund_system', 'sm_enable_export_comb_name');
+                        'sm_enable_native_refund_system', 'sm_enable_export_comb_name',
+                        'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
+                        'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
+                        'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
+        );
 
-        foreach ($params as $p)
-            if (isset($_POST[$p]))
+        foreach ($params as $p) {
+            if (isset($_POST[$p])) {
                 Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
+            }
+        }
 
-        if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-            if (Configuration::get('SM_IMPORT_ORDERS') == 'yes')
+        if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+            if (Configuration::get('SM_IMPORT_ORDERS') == 'yes') {
                 $this->testConfiguration();
+            }
+        }
     }
 
 
@@ -113,16 +121,19 @@ class SellermaniaGetContentController
         // Init vars
         $languages_list = Language::getLanguages();
 
-        if (empty($this->context->shop->id))
+        // If no context we set it
+        if (empty($this->context->shop->id)) {
             $this->context->shop->setContext(1);
+        }
 
+        // Multiple security check
         $module_web_path = Tools::getHttpHost(true).$this->context->shop->physical_uri.'modules/'.$this->module->name.'/';
         $export_directory_writable = 0;
-        if (is_writable($this->dir_path.'/export/'))
+        if (is_writable($this->dir_path.'/export/')) {
             $export_directory_writable = 1;
+        }
         $sellermania_key = Configuration::get('SELLERMANIA_KEY');
-        if (empty($sellermania_key) && version_compare(_PS_VERSION_, '1.5') >= 0)
-        {
+        if (empty($sellermania_key) && version_compare(_PS_VERSION_, '1.5') >= 0) {
             $sellermania_key_tmp = Configuration::get('SELLERMANIA_KEY', null, 1, 1);
             if (!empty($sellermania_key_tmp))
                 Configuration::updateValue('SELLERMANIA_KEY', $sellermania_key_tmp);
@@ -151,6 +162,11 @@ class SellermaniaGetContentController
             $files_list[$iso_lang]['file'] = $web_path_file;
             if (file_exists($real_path_file))
                 $files_list[$iso_lang]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
+        }
+
+        // Retrieve Sellermania Order States
+        foreach ($this->module->sellermania_order_states as $conf_key => $value) {
+            $this->module->sellermania_order_states[$conf_key]['ps_conf_value'] = Configuration::get($conf_key);
         }
 
         // Retrieve carriers
@@ -211,6 +227,9 @@ class SellermaniaGetContentController
 
         $this->context->smarty->assign('sm_import_default_carrier', Configuration::get('SM_IMPORT_DEFAULT_CARRIER'));
 
+        $this->context->smarty->assign('sm_order_states', $this->module->sellermania_order_states);
+        $this->context->smarty->assign('ps_order_states', OrderState::getOrderStates($this->context->language->id));
+
         if ($this->context->language->iso_code == 'fr')
         {
             $this->context->smarty->assign('sm_last_import', date('d/m/Y H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -15 minutes')));
@@ -252,8 +271,9 @@ class SellermaniaGetContentController
      */
     public function run()
     {
-        if (Tools::getValue('see') != 'orders-error')
+        if (Tools::getValue('see') != 'orders-error') {
             $this->saveConfiguration();
+        }
         $this->assignData();
         return $this->module->compliantDisplay('displayGetContent'.(isset($this->module->bootstrap) ? '.bootstrap' : '').'.tpl');
     }
