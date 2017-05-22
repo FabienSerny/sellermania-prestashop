@@ -54,3 +54,7 @@
     color: #333333;
     text-transform: uppercase;
 }
+
+.hidden {
+    display:none;
+}

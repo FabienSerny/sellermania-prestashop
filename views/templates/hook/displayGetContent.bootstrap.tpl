@@ -57,9 +57,7 @@
         </div>
     </div>
 
-
-
-<script type="text/javascript" src="{$sellermania_module_path}views/js/displayGetContent.js"></script>
-<link type="text/css" rel="stylesheet" href="{$sellermania_module_path}views/css/displayGetContent.css" />
+    <script type="text/javascript" src="{$sellermania_module_path}views/js/displayGetContent.js"></script>
+    <link type="text/css" rel="stylesheet" href="{$sellermania_module_path}views/css/displayGetContent.css" />
 
 {/if}
