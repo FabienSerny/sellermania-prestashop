@@ -458,7 +458,7 @@ class SellermaniaImportOrderController
             $amount_paid = (float)(Tools::ps_round((float)($this->cart->getOrderTotal(true, Cart::BOTH)), 2));
 
         // Create order
-        $payment_method = $this->data['OrderInfo']['MarketPlace'].' - '.$this->data['OrderInfo']['OrderId'];
+        $payment_method = $this->data['OrderInfo']['MarketPlace'];
         $payment_module = new SellermaniaPaymentModule();
         $payment_module->name = $this->module->name;
         $payment_module->validateOrder((int)$this->cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$this->cart->id_currency, false, $this->customer->secure_key);
