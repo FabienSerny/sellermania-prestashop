@@ -105,15 +105,20 @@ $(document).ready(function() {
     });
 
 
-    $('#sellermania-admin-tab ul li a').click(function() {
-
+    function switchSellermaniaTab(id) {
         $('#sellermania-module-help').addClass('hidden');
         $('#sellermania-module-export').addClass('hidden');
         $('#sellermania-module-import').addClass('hidden');
-
-        var id = $(this).attr('href');
         $(id).removeClass('hidden');
+    }
 
-        return false;
+    $('#sellermania-admin-tab ul li a').click(function() {
+        switchSellermaniaTab($(this).attr('href'));
     });
+    if (window.location.href.indexOf('#sellermania-module-export') >= 0) {
+        switchSellermaniaTab('#sellermania-module-export');
+    }
+    if (window.location.href.indexOf('#sellermania-module-import') >= 0) {
+        switchSellermaniaTab('#sellermania-module-import');
+    }
 });

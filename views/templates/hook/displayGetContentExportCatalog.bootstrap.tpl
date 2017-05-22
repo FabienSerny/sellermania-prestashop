@@ -27,7 +27,7 @@
     <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Export catalog' mod='sellermania'}</legend>
 </div>
 <div class="margin-form">
-    <form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
+    <form action="" method="post">
         <fieldset>
             <div class="form-group">
                 <div class="clearfix">
