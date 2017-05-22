@@ -34,6 +34,7 @@
             <li><a href="#sellermania-module-help"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Help' mod='sellermania'} </a></li>
             <li><a href="#sellermania-module-export"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Export catalog' mod='sellermania'} </a></li>
             <li><a href="#sellermania-module-import"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Import orders' mod='sellermania'} </a></li>
+            <li><a href="#sellermania-module-search"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Search orders' mod='sellermania'} </a></li>
         </ul>
         <br clear="left"><br>
 
@@ -54,6 +55,10 @@
 
         <div id="sellermania-module-import" class="panel hidden">
             {include file="$templates_dir/displayGetContentImportOrders.tpl"}
+        </div>
+
+        <div id="sellermania-module-search" class="panel hidden">
+            {include file="$templates_dir/displayGetContentSearchOrders.tpl"}
         </div>
     </div>
 

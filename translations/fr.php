@@ -68,6 +68,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_2e85cd9d755e0649b
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_6a26f548831e6a8c26bfbbd9f6ec61e0'] = 'Aide';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_cdaaf70bf4e764a63ecd28e0a04e3899'] = 'Export catalogue';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_4ed2cbb99dd730ccef9d12a72a075984'] = 'Import des commandes';
+$_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_3b5c949e5a7f93592ece65422e0496df'] = 'Recherche de commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_35c2f061c0fbdb1b22cce8e6c93590cc'] = 'Vous ne savez comment configurer le module ? Vous ne savez comment ce module fonctionne ?';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_14d3884b2c50798d60bc4d2d1951cf2a'] = 'Cette documentation en ligne devrait répondre à toutes vos questions !';
 $_MODULE['<{sellermania}prestashop>displaygetcontent.bootstrap_d6d1447a047b9538545a7ecae3f72606'] = 'Voir la documentation';
@@ -75,6 +76,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontent_2e85cd9d755e0649b73bd543937
 $_MODULE['<{sellermania}prestashop>displaygetcontent_6a26f548831e6a8c26bfbbd9f6ec61e0'] = 'Aide';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_cdaaf70bf4e764a63ecd28e0a04e3899'] = 'Export catalogue';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_4ed2cbb99dd730ccef9d12a72a075984'] = 'Import de commandes';
+$_MODULE['<{sellermania}prestashop>displaygetcontent_3b5c949e5a7f93592ece65422e0496df'] = 'Recherche de commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_35c2f061c0fbdb1b22cce8e6c93590cc'] = 'Vous ne savez comment configurer le module ? Vous ne savez comment ce module fonctionne ?';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_14d3884b2c50798d60bc4d2d1951cf2a'] = 'Cette documentation en ligne devrait répondre à toutes vos questions !';
 $_MODULE['<{sellermania}prestashop>displaygetcontent_d6d1447a047b9538545a7ecae3f72606'] = 'Voir la documentation';
@@ -149,6 +151,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_d554d
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_fcf3b6e341b337d248a36e4e001f90ad'] = 'Activer le système de remboursement natif';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_5d615930fa68541667c433e51c1cd320'] = 'Configuration des statuts Sellermania';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_dc9ae350c95c80fc508cd836f44497ba'] = 'E-mail associé aux comptes clients créés';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
@@ -195,6 +198,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_625f93a63da35ee
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_fcf3b6e341b337d248a36e4e001f90ad'] = 'Activer le système de remboursement natif';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_5d615930fa68541667c433e51c1cd320'] = 'Configuration des statuts Sellermania';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_dc9ae350c95c80fc508cd836f44497ba'] = 'E-mail associé aux comptes clients créés';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_6a95d5888404f75da1d9dd0a1b26315e'] = 'La configuration est valide';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_2fec5814407a0bbcdea18d4fbfc50d1f'] = 'La dernière importation de commandes a eu lieu le :';
@@ -218,6 +222,12 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentordersinerror_ec8803912680c6
 $_MODULE['<{sellermania}prestashop>displaygetcontentordersinerror_531ef383505e2734991a90a0089c1534'] = 'Tenter de réimporter toutes les commandes durant le prochain import';
 $_MODULE['<{sellermania}prestashop>displaygetcontentordersinerror_840f19ad548daaf3e5e0aae0323c594f'] = 'Le module essaiera de réimporter cette commande durant le prochain import.';
 $_MODULE['<{sellermania}prestashop>displaygetcontentordersinerror_988fd738de9c6d177440c5dcf69e73ce'] = 'Retour';
+$_MODULE['<{sellermania}prestashop>displaygetcontentsearchorders.bootstrap_3b5c949e5a7f93592ece65422e0496df'] = 'Recherche de commandes';
+$_MODULE['<{sellermania}prestashop>displaygetcontentsearchorders.bootstrap_456c367620fee711ff1cbedb58e00928'] = 'Recherche de commandes marketplace par leur référence';
+$_MODULE['<{sellermania}prestashop>displaygetcontentsearchorders.bootstrap_ad3d06d03d94223fa652babc913de686'] = 'Valider';
+$_MODULE['<{sellermania}prestashop>displaygetcontentsearchorders_cdaaf70bf4e764a63ecd28e0a04e3899'] = 'Recherche de commandes';
+$_MODULE['<{sellermania}prestashop>displaygetcontentsearchorders_456c367620fee711ff1cbedb58e00928'] = 'Recherche de commandes marketplace par leur référence';
+$_MODULE['<{sellermania}prestashop>displaygetcontentsearchorders_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>helper-tree.bootstrap_4c41e0bd957698b58100a5c687d757d9'] = 'Sélectionner tout';
 $_MODULE['<{sellermania}prestashop>helper-tree.bootstrap_237c7b6874386141a095e321c9fdfd38'] = 'Déselectionner tout';
 $_MODULE['<{sellermania}prestashop>helper-tree_4c41e0bd957698b58100a5c687d757d9'] = 'Sélectionner tout';
