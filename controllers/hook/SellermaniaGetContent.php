@@ -111,6 +111,11 @@ class SellermaniaGetContentController
                 $this->testConfiguration();
             }
         }
+
+        if (Tools::isSubmit('search_orders') && Tools::getValue('marketplace_order_reference') != '') {
+            $orders = SellermaniaOrder::searchSellermaniaOrdersByReference(Tools::getValue('marketplace_order_reference'));
+            $this->context->smarty->assign('sm_orders_found', $orders);
+        }
     }
 
 
@@ -231,6 +236,7 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('sm_catch_all_mail_address', Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS'));
         $this->context->smarty->assign('sm_order_states', $this->module->sellermania_order_states);
         $this->context->smarty->assign('ps_order_states', OrderState::getOrderStates($this->context->language->id));
+        $this->context->smarty->assign('order_token_tab', Tools::getAdminTokenLite('AdminOrders'));
 
         if ($this->context->language->iso_code == 'fr')
         {

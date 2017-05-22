@@ -37,9 +37,21 @@
             </div>
 
             <div class="panel-footer">
-                <input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
+                <input type="submit" name="search_orders" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
             </div>
-            {if isset($sm_confirm_export_options)}<div class="alert alert-success"><p class="conf"><strong>{l s='Configuration has been saved' mod='sellermania'}</strong></p></div>{/if}
+
+            {if isset($sm_orders_found)}
+                {if empty($sm_orders_found)}
+                    <p>{l s='No orders was found with an order reference containing' mod='sellermania'} <b>{$smarty.post.marketplace_order_reference}</b></p>
+                {else}
+                    <p><b>{$sm_orders_found|@count}</b> {l s='was/were found with an order reference containing' mod='sellermania'} <b>{$smarty.post.marketplace_order_reference}</b></p>
+                    <ul>
+                    {foreach from=$sm_orders_found item=sm_order}
+                        <li><b>{$sm_order.marketplace} - {$sm_order.ref_order}:</b> {$sm_order.customer_name} (<a target="_blank" href="index.php?controller=AdminOrders&id_order={$sm_order.id_order}&vieworder&token={$order_token_tab}">{l s='PrestaShop order' mod='sellermania'} <b>#{$sm_order.id_order}</b></a>)</li>
+                    {/foreach}
+                    </ul>
+                {/if}
+            {/if}
         </fieldset>
     </form>
 </div>

@@ -168,6 +168,17 @@ class SellermaniaOrder extends ObjectModel
 
 
     /**
+     * Search Sellermania orders by reference
+     * @param $order
+     */
+    public static function searchSellermaniaOrdersByReference($ref_order)
+    {
+        return Db::getInstance()->executeS('
+        SELECT * FROM `'._DB_PREFIX_.'sellermania_order`
+        WHERE `ref_order` LIKE \'%'.pSQL(trim($ref_order)).'%\'');
+    }
+
+    /**
      * Check if order has already been imported
      * @param $order
      */
