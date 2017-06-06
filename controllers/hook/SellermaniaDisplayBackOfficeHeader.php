@@ -102,15 +102,17 @@ class SellermaniaDisplayBackOfficeHeaderController
             if (isset($result['SellermaniaWs']['GetOrderResponse']['Order']))
             {
                 // Fix data (when only one order, array is not the same)
-                if (!isset($result['SellermaniaWs']['GetOrderResponse']['Order'][0]))
+                if (!isset($result['SellermaniaWs']['GetOrderResponse']['Order'][0])) {
                     $result['SellermaniaWs']['GetOrderResponse']['Order'] = array($result['SellermaniaWs']['GetOrderResponse']['Order']);
+                }
 
                 // Verbose mode
                 $this->speak(count($result['SellermaniaWs']['GetOrderResponse']['Order']).' orders retrieved');
 
                 // Import order
                 foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
-                    if (isset($order['OrderInfo']['OrderId']))
+                    if (isset($order['OrderInfo']['OrderId']) &&
+                        Configuration::get('SM_MARKETPLACE_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) != 'NO')
                     {
                         // Verbose mode
                         $this->speak('Import order #'.$order['OrderInfo']['OrderId'].' from '.$order['OrderInfo']['MarketPlace']);
