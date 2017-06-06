@@ -76,7 +76,7 @@
                         <label>{$sm_marketplace_name} :</label>
                         <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
                             <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import orders' mod='sellermania'}</option>
-                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import orders but do not auto confirm' mod='sellermania'}</option>
+                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import orders' mod='sellermania'}</option>
                             <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import orders and auto confirm' mod='sellermania'}</option>
                         </select><br>
                     {/foreach}
