@@ -120,12 +120,12 @@
                             <label class="col-lg-4">{l s='Sellermania marketplaces configuration' mod='sellermania'}</label>
                             <div class="col-lg-8">
                                 {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
-                                    <label class="col-lg-4">{$sm_marketplace_name}</label>
+                                    <label class="col-lg-4">{$sm_marketplace_name|replace:'_':'.'}</label>
                                     <div class="col-lg-8">
                                         <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
-                                            <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import orders' mod='sellermania'}</option>
-                                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import orders' mod='sellermania'}</option>
-                                            <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import orders and auto confirm' mod='sellermania'}</option>
+                                            <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import the orders' mod='sellermania'}</option>
+                                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import the orders' mod='sellermania'}</option>
+                                            <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import the orders and auto confirm them' mod='sellermania'}</option>
                                         </select>
                                     </div><br clear="left">
                                 {/foreach}
@@ -228,7 +228,7 @@
                         </div>
 
                         <br>
-                        <h2>4. {l s='Import default carrier and order states' mod='sellermania'}</h2>
+                        <h2>4. {l s='Default carrier and order states' mod='sellermania'}</h2>
                         <hr />
 
                         <div class="form-group clearfix">

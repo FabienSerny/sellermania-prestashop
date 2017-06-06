@@ -73,11 +73,11 @@
                 <p><label>{l s='Sellermania marketplaces configuration' mod='sellermania'}</label></p><br clear="left" />
                 <p>
                     {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
-                        <label>{$sm_marketplace_name} :</label>
+                        <label>{$sm_marketplace_name|replace:'_':'.'} :</label>
                         <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
-                            <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import orders' mod='sellermania'}</option>
-                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import orders' mod='sellermania'}</option>
-                            <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import orders and auto confirm' mod='sellermania'}</option>
+                            <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import the orders' mod='sellermania'}</option>
+                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import the orders' mod='sellermania'}</option>
+                            <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import the orders and auto confirm them' mod='sellermania'}</option>
                         </select><br>
                     {/foreach}
                 </p>
@@ -138,7 +138,7 @@
                 <p><label>{l s='E-mail associated to customer account created' mod='sellermania'}</label> <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" /></p>
 
                 <br>
-                <h2>4. {l s='Import default carrier and order states' mod='sellermania'}</h2>
+                <h2>4. {l s='Default carrier and order states' mod='sellermania'}</h2>
                 <hr />
 
                 <p>
