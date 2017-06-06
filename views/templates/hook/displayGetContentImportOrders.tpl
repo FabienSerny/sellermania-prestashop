@@ -38,6 +38,11 @@
                 <input type="radio" name="sm_import_orders" id="sm_import_orders_no" value="no" {if $sm_import_orders eq 'no' || $sm_import_orders eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
             </div>
             <div class="margin-form" style="padding-left:15px" id="sm_import_orders_credentials">
+
+                <br>
+                <h2>1. {l s='Settings' mod='sellermania'}</h2>
+                <hr />
+
                 <p><b>{l s='Please fill up with the informations Sellermania provide you:' mod='sellermania'}</b></p>
                 <p><label>{l s='Sellermania e-mail' mod='sellermania'}</label> <input type="text" name="sm_order_email" value="{$sm_order_email}" /></p>
                 <p><label>{l s='Token webservices' mod='sellermania'}</label> <input type="text" name="sm_order_token" value="{$sm_order_token}" /></p><br>
@@ -60,6 +65,26 @@
                     php -f {$script_path}/import.php {$sellermania_key}
                 </p>
 
+
+                <br>
+                <h2>2. {l s='Marketplaces' mod='sellermania'}</h2>
+                <hr />
+
+                <p><label>{l s='Sellermania marketplaces configuration' mod='sellermania'}</label></p><br clear="left" />
+                <p>
+                    {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
+                        <label>{$sm_marketplace_name} :</label>
+                        <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
+                            <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import orders' mod='sellermania'}</option>
+                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import orders but do not auto confirm' mod='sellermania'}</option>
+                            <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import orders and auto confirm' mod='sellermania'}</option>
+                        </select><br>
+                    {/foreach}
+                </p>
+
+                <br>
+                <h2>3. {l s='Options' mod='sellermania'}</h2>
+                <hr />
 
 
                 <p>
@@ -110,6 +135,12 @@
                     <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_no" value="no" {if $sm_enable_native_refund_system eq 'no' || $sm_enable_native_refund_system eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
                 </p><br clear="left" />
 
+                <p><label>{l s='E-mail associated to customer account created' mod='sellermania'}</label> <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" /></p>
+
+                <br>
+                <h2>4. {l s='Import default carrier and order states' mod='sellermania'}</h2>
+                <hr />
+
                 <p>
                     <label>{l s='Default carrier for order importation' mod='sellermania'}</label>
                     {foreach from=$carriers item=carrier}
@@ -129,7 +160,6 @@
                     {/foreach}
                 </p>
 
-                <p><label>{l s='E-mail associated to customer account created' mod='sellermania'}</label> <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" /></p>
 
                 <p><label><input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" class="button" /></label></p>
                 <br clear="left">

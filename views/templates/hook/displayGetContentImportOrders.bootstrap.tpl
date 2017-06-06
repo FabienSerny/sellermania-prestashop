@@ -47,9 +47,15 @@
                         </div>
                     </div>
                     <div id="sm_import_orders_credentials" class="clearfix">
+
+                        <br>
+                        <h2>1. {l s='Settings' mod='sellermania'}</h2>
+                        <hr />
+
                         <div class="form-group clearfix">
                             <label class="col-lg-12">{l s='Please fill up with the informations Sellermania provide you:' mod='sellermania'}</label>
                         </div>
+
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Sellermania e-mail' mod='sellermania'}</label>
                             <div class="col-lg-8">
@@ -105,6 +111,30 @@
                         </div>
 
 
+                        <br>
+                        <h2>2. {l s='Marketplaces' mod='sellermania'}</h2>
+                        <hr />
+
+
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Sellermania marketplaces configuration' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
+                                    <label class="col-lg-4">{$sm_marketplace_name}</label>
+                                    <div class="col-lg-8">
+                                        <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
+                                            <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import orders' mod='sellermania'}</option>
+                                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import orders but do not auto confirm' mod='sellermania'}</option>
+                                            <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import orders and auto confirm' mod='sellermania'}</option>
+                                        </select>
+                                    </div><br clear="left">
+                                {/foreach}
+                            </div>
+                        </div>
+
+                        <br>
+                        <h2>3. {l s='Options' mod='sellermania'}</h2>
+                        <hr />
 
 
                         <div class="form-group clearfix">
@@ -190,6 +220,16 @@
                             </div>
                         </div>
 
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='E-mail associated to customer account created' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" />
+                            </div>
+                        </div>
+
+                        <br>
+                        <h2>4. {l s='Import default carrier and order states' mod='sellermania'}</h2>
+                        <hr />
 
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Default carrier for order importation' mod='sellermania'}</label>
@@ -217,12 +257,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group clearfix">
-                            <label class="col-lg-4">{l s='E-mail associated to customer account created' mod='sellermania'}</label>
-                            <div class="col-lg-8">
-                                <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" />
-                            </div>
-                        </div>
 
                     </div>
                 </div>

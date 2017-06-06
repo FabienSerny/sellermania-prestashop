@@ -99,6 +99,9 @@ class SellermaniaGetContentController
                         'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
                         'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
         );
+        foreach ($this->module->sellermania_marketplaces as $marketplace) {
+            $params[] = 'SM_MARKETPLACE_'.str_replace('.', '_', $marketplace);
+        }
 
         foreach ($params as $p) {
             if (isset($_POST[$p])) {
@@ -175,6 +178,17 @@ class SellermaniaGetContentController
             $this->module->sellermania_order_states[$conf_key]['ps_conf_value'] = Configuration::get($conf_key);
         }
 
+        // Retrieve all marketplaces and value
+        $sm_marketplaces = array();
+        foreach ($this->module->sellermania_marketplaces as $marketplace) {
+            $marketplace = str_replace('.', '_', $marketplace);
+            $sm_marketplaces[$marketplace] = array('key' => 'SM_MARKETPLACE_'.$marketplace, 'value' => Configuration::get('SM_MARKETPLACE_'.$marketplace));
+            if (empty($sm_marketplaces[$marketplace]['value'])) {
+                $sm_marketplaces[$marketplace]['value'] = 'MANUAL';
+            }
+        }
+
+
         // Retrieve carriers
         $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 5);
 
@@ -236,6 +250,9 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('sm_catch_all_mail_address', Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS'));
         $this->context->smarty->assign('sm_order_states', $this->module->sellermania_order_states);
         $this->context->smarty->assign('ps_order_states', OrderState::getOrderStates($this->context->language->id));
+
+        $this->context->smarty->assign('sm_marketplaces', $sm_marketplaces);
+
         $this->context->smarty->assign('order_token_tab', Tools::getAdminTokenLite('AdminOrders'));
 
         if ($this->context->language->iso_code == 'fr')

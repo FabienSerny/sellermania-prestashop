@@ -30,6 +30,13 @@ class Sellermania extends Module
 {
     public $sellermania_order_states;
     public $sellermania_conditions_list;
+    public $sellermania_marketplaces = array(
+        'AMAZON.FR', 'AMAZON.COM', 'AMAZON.DE', 'AMAZON.UK', 'AMAZON.CA', 'AMAZON.IT', 'AMAZON.ES',
+        '2XMOINSCHER', 'FNAC.COM', 'PRICEMINISTER.FR',
+        'EBAY.FR', 'EBAY.DE', 'EBAY.UK',
+        'PIXMANIA.FR', 'PIXMANIA.UK', 'PIXMANIA.DE', 'PIXMANIA.IT', 'PIXMANIA.ES',
+        'RUEDUCOMMERCE.FR', 'CDISCOUNT.COM',
+    );
 
     /**
      * Module Constructor
@@ -39,7 +46,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.1.0';
+        $this->version = '2.1.1';
         $this->need_instance = 0;
 
         parent::__construct();
