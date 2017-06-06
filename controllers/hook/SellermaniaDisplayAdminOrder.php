@@ -96,31 +96,11 @@ class SellermaniaDisplayAdminOrderController
             }
 
         // Check if there order item status to change
-        if (empty($order_items))
+        if (empty($order_items)) {
             return false;
-
-        // Make API call
-        try
-        {
-            // Calling the confirmOrder service
-            $client = new Sellermania\OrderConfirmClient();
-            $client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
-            $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
-            $client->setEndpoint(Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
-            $result = $client->confirmOrder($order_items);
-
-            // Fix data (when only one result, array is not the same)
-            if (!isset($result['OrderItemConfirmationStatus'][0]))
-                $result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
-
-            // Return results
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            $this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
         }
 
+        return SellermaniaOrderConfirmation::confirmOrderItems($order_items);
     }
 
     /**

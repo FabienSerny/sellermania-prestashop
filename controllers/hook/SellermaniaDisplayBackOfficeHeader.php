@@ -42,6 +42,8 @@ require_once(dirname(__FILE__).'/SellermaniaActionValidateOrder.php');
 class SellermaniaDisplayBackOfficeHeaderController
 {
     public $verbose = false;
+    public $order_items_to_confirm = array();
+
 
     /**
      * Controller constructor
@@ -192,9 +194,13 @@ class SellermaniaDisplayBackOfficeHeaderController
                             Configuration::updateValue('PS_GUEST_CHECKOUT_ENABLED', $ps_guest_checkout_enabled);
                             Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', $ps_order_out_of_stock);
 
+                            // Register order that needs to be autoconfirm
+                            $this->order_items_to_confirm = SellermaniaOrderConfirmation::registerAutoConfirmProducts($this->order_items_to_confirm, $order, $this->module->sellermania_order_states['PS_OS_SM_CONFIRMED']['sm_status']);
+
                             // Do not push it too hard
-                            if ($count_order > 100)
+                            if ($count_order > 100) {
                                 return true;
+                            }
                         }
                     }
             }
@@ -205,7 +211,6 @@ class SellermaniaDisplayBackOfficeHeaderController
             $this->speak('EXCEPTION: '.$log);
             file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
         }
-
     }
 
 
@@ -248,6 +253,7 @@ class SellermaniaDisplayBackOfficeHeaderController
         // Check if it's time to import
         if ($this->timeToImportOrders()) {
             $this->importOrders();
+            SellermaniaOrderConfirmation::confirmOrderItems($this->order_items_to_confirm);
         }
 
     }

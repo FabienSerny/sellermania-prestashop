@@ -47,6 +47,7 @@ require_once(dirname(__FILE__).'/classes/FroggyLib.php');
 
 // Load ObjectModel and PaymentModule classes
 require_once(dirname(__FILE__).'/classes/SellermaniaOrder.php');
+require_once(dirname(__FILE__).'/classes/SellermaniaOrderConfirmation.php');
 require_once(dirname(__FILE__).'/classes/SellermaniaPaymentModule.php');
 
 // Load the Sellermania API Client
