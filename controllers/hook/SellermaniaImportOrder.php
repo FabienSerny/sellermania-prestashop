@@ -356,7 +356,7 @@ class SellermaniaImportOrderController
         $this->address->phone = $data['Address']['ShippingPhonePrestaShop'];
         $this->address->phone_mobile = $data['Address']['ShippingPhonePrestaShop'];
         $this->address->id_customer = $this->customer->id;
-        if ($type == 'Shipping') {
+        if ($type == 'Shipping' && isset($this->data['OrderInfo']['DeliveryInstructions'])) {
             $this->address->other = $this->data['OrderInfo']['DeliveryInstructions'];
         }
         $this->address->active = 1;

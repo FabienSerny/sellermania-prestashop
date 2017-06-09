@@ -73,7 +73,8 @@ class SellermaniaOrderConfirmation
         }
         catch (\Exception $e)
         {
-            $this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
+            echo strip_tags($e->getMessage())."\n";
+            //$this->context->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
         }
     }
 }
