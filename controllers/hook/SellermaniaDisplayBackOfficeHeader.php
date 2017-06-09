@@ -199,6 +199,7 @@ class SellermaniaDisplayBackOfficeHeaderController
 
                             // Do not push it too hard
                             if ($count_order > 100) {
+                                SellermaniaOrderConfirmation::confirmOrderItems($this->order_items_to_confirm);
                                 return true;
                             }
                         }
@@ -211,6 +212,7 @@ class SellermaniaDisplayBackOfficeHeaderController
             $this->speak('EXCEPTION: '.$log);
             file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
         }
+        SellermaniaOrderConfirmation::confirmOrderItems($this->order_items_to_confirm);
     }
 
 
@@ -253,7 +255,6 @@ class SellermaniaDisplayBackOfficeHeaderController
         // Check if it's time to import
         if ($this->timeToImportOrders()) {
             $this->importOrders();
-            SellermaniaOrderConfirmation::confirmOrderItems($this->order_items_to_confirm);
         }
 
     }
