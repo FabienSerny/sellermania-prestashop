@@ -55,7 +55,7 @@
                     {if isset($sellermania_order.User[0].Company) && !empty($sellermania_order.User[0].Company)}{$sellermania_order.User[0].Company}<br>{/if}
 
                     {if isset($sellermania_order.User[0].Address.Street1) && !empty($sellermania_order.User[0].Address.Street1) && $sellermania_order.User[0].Address.Street1 ne 'Not provided'}{$sellermania_order.User[0].Address.Street1}<br>{/if}
-                    {if isset($sellermania_order.User[0].Address.Street2) && !empty($sellermania_order.User[0].Address.Street2)}{$sellermania_order.User[0].Address.Street2}<br>{/if}
+                    {if isset($sellermania_order.User[0].Address.Street2) && !empty($sellermania_order.User[0].Address.Street2) && $sellermania_order.User[0].Address.Street2 ne 'Not provided'}{$sellermania_order.User[0].Address.Street2}<br>{/if}
 
                     {if isset($sellermania_order.User[0].Address.ZipCode) && !empty($sellermania_order.User[0].Address.ZipCode) && $sellermania_order.User[0].Address.ZipCode ne '00000'}{$sellermania_order.User[0].Address.ZipCode} {/if}
                     {if isset($sellermania_order.User[0].Address.City) && !empty($sellermania_order.User[0].Address.City) && $sellermania_order.User[0].Address.City ne 'Not provided'}{$sellermania_order.User[0].Address.City}<br>{/if}
