@@ -31,11 +31,13 @@ class Sellermania extends Module
     public $sellermania_order_states;
     public $sellermania_conditions_list;
     public $sellermania_marketplaces = array(
-        'AMAZON.FR', 'AMAZON.COM', 'AMAZON.DE', 'AMAZON.UK', 'AMAZON.CA', 'AMAZON.IT', 'AMAZON.ES',
-        '2XMOINSCHER', 'FNAC.COM', 'PRICEMINISTER.FR',
-        'EBAY.FR', 'EBAY.DE', 'EBAY.UK',
-        'PIXMANIA.FR', 'PIXMANIA.UK', 'PIXMANIA.DE', 'PIXMANIA.IT', 'PIXMANIA.ES',
-        'RUEDUCOMMERCE.FR', 'CDISCOUNT.COM',
+        'AMAZON.DE', 'AMAZON.ES', 'AMAZON.FR', 'AMAZON.IT', 'AMAZON.UK',
+        'ATLAS4MEN.FR', 'AUCHAN.FR', 'BOULANGER.FR', 'CDISCOUNT.COM', 'COMPTOIRSANTE.FR', 'DARTY.FR',
+        'DELAMAISON.FR', 'DOCTIPHARMA.FR', 'EBAY.FR', 'ELCORTEINGLES.FR', 'EPRICE.IT',
+        'FNAC.COM', 'GALLERIESLAFAYETTE.FR', 'GAME.FR', 'LEQUIPE.FR', 'MACWAY.COM', 'MENLOOK.FR', 'NATUREETDECOUVERTE.FR',
+        'PIXMANIA.DE', 'PIXMANIA.ES', 'PIXMANIA.FR', 'PIXMANIA.IT', 'PIXMANIA.UK',
+        'PRICEMINISTER.FR', 'PRIVALIA.FR', 'RETIF.FR', 'RUEDUCOMMERCE.FR', 'SAINTGOBAIN.COM',
+        'THEBEAUTISTE.FR', 'TRUFFAUT.FR',
     );
 
     /**
