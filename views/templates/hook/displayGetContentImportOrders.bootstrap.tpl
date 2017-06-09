@@ -227,6 +227,13 @@
                             </div>
                         </div>
 
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Starting date for orders importation' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                <input type="text" name="sm_install_date" value="{$sm_install_date}" />
+                            </div>
+                        </div>
+
                         <br>
                         <h2>4. {l s='Default carrier and order states' mod='sellermania'}</h2>
                         <hr />

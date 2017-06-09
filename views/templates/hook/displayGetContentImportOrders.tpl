@@ -136,6 +136,7 @@
                 </p><br clear="left" />
 
                 <p><label>{l s='E-mail associated to customer account created' mod='sellermania'}</label> <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" /></p>
+                <p><label>{l s='Starting date for orders importation' mod='sellermania'}</label> <input type="text" name="sm_install_date" value="{$sm_install_date}" /></p>
 
                 <br>
                 <h2>4. {l s='Default carrier and order states' mod='sellermania'}</h2>
