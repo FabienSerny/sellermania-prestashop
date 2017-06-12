@@ -35,17 +35,17 @@ class SellermaniaOrderConfirmation
     public static function registerAutoConfirmProducts($order_items_to_confirm, $order, $sm_status)
     {
         if (Configuration::get('SM_MARKETPLACE_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) == 'AUTO') {
-            $order_items_to_confirm = SellermaniaOrderConfirmation::registerProducts($order_items_to_confirm, $order, $sm_status, \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED);
+            $order_items_to_confirm = SellermaniaOrderConfirmation::registerUpdatedProducts($order_items_to_confirm, $order, $sm_status, \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED);
         }
         return $order_items_to_confirm;
     }
 
     public static function registerBulkConfirmProducts($order_items_to_confirm, $order, $sm_status)
     {
-        return SellermaniaOrderConfirmation::registerProducts($order_items_to_confirm, $order, $sm_status, \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED);
+        return SellermaniaOrderConfirmation::registerUpdatedProducts($order_items_to_confirm, $order, $sm_status, \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED);
     }
 
-    public static function registerProducts($order_items_to_confirm, $order, $sm_status, $current_sm_status, $tracking_number = '', $shipping_carrier = '')
+    public static function registerUpdatedProducts($order_items_to_confirm, $order, $sm_status, $current_sm_status, $tracking_number = '', $shipping_carrier = '')
     {
         foreach ($order['OrderInfo']['Product'] as $kp => $product) {
             if ($order['OrderInfo']['Product'][$kp]['Status'] == $current_sm_status) {
