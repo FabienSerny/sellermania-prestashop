@@ -199,7 +199,7 @@ class SellermaniaDisplayBackOfficeHeaderController
 
                             // Do not push it too hard
                             if ($count_order > 100) {
-                                SellermaniaOrderConfirmation::confirmOrderItems($this->order_items_to_confirm);
+                                SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
                                 return true;
                             }
                         }
@@ -338,17 +338,27 @@ class SellermaniaDisplayBackOfficeHeaderController
             Tools::getIsset('sellermania_selected_orders'))
         {
             $return = array('result' => 'KO');
+            $selected_orders = json_decode(Tools::getValue('sellermania_selected_orders'), true);
+            $return['orders'] = $selected_orders;
 
             if (Tools::getValue('sellermania_bulk_action') == 'bulk-confirm-orders') {
+
+                $order_items_to_confirm = array();
+
+                foreach ($selected_orders as $id_order) {
+                    $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order);
+                    $sellermania_order_info = json_decode($sellermania_order->info, true);
+                    $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkConfirmProducts($order_items_to_confirm, $sellermania_order_info, $this->module->sellermania_order_states['PS_OS_SM_CONFIRMED']['sm_status']);
+                }
+
+                SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
                 $return['result'] = 'OK';
                 $return['action'] = 'bulk-confirm-orders';
-                $return['orders'] = json_decode(Tools::getValue('sellermania_selected_orders'), true);
             }
 
             if (Tools::getValue('sellermania_bulk_action') == 'bulk-send-orders') {
                 $return['result'] = 'KO';
                 $return['action'] = 'bulk-send-orders';
-                $return['orders'] = json_decode(Tools::getValue('sellermania_selected_orders'), true);
             }
 
             die(json_encode($return));
