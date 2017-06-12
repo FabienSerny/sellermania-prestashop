@@ -212,7 +212,7 @@ class SellermaniaDisplayBackOfficeHeaderController
             $this->speak('EXCEPTION: '.$log);
             file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
         }
-        SellermaniaOrderConfirmation::confirmOrderItems($this->order_items_to_confirm);
+        SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
     }
 
 
@@ -337,13 +337,13 @@ class SellermaniaDisplayBackOfficeHeaderController
             Tools::getIsset('sellermania_bulk_action') &&
             Tools::getIsset('sellermania_selected_orders'))
         {
-            $return = array('result' => 'KO');
+            $order_items_to_confirm = array();
             $selected_orders = json_decode(Tools::getValue('sellermania_selected_orders'), true);
+
+            $return = array('result' => 'KO');
             $return['orders'] = $selected_orders;
 
             if (Tools::getValue('sellermania_bulk_action') == 'bulk-confirm-orders') {
-
-                $order_items_to_confirm = array();
 
                 foreach ($selected_orders as $id_order) {
                     $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order);
@@ -351,7 +351,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                     $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkConfirmProducts($order_items_to_confirm, $sellermania_order_info, $this->module->sellermania_order_states['PS_OS_SM_CONFIRMED']['sm_status']);
                 }
 
-                SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
+                SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
                 $return['result'] = 'OK';
                 $return['action'] = 'bulk-confirm-orders';
             }
