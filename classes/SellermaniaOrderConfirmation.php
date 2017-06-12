@@ -58,6 +58,11 @@ class SellermaniaOrderConfirmation
 
     public static function registerUpdatedProducts($order_items_to_confirm, $order, $current_sm_status, $new_sm_status, $shipping_carrier = '', $tracking_number = '')
     {
+        // Fix data (when only one product, array is not the same)
+        if (!isset($order['OrderInfo']['Product'][0])) {
+            $order['OrderInfo']['Product'] = array($order['OrderInfo']['Product']);
+        }
+
         foreach ($order['OrderInfo']['Product'] as $kp => $product) {
             if ($order['OrderInfo']['Product'][$kp]['Status'] == $current_sm_status) {
                 $order_items_to_confirm[] = array(
