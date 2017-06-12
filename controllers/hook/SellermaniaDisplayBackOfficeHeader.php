@@ -350,13 +350,21 @@ class SellermaniaDisplayBackOfficeHeaderController
                     $sellermania_order_info = json_decode($sellermania_order->info, true);
                     $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkConfirmProducts($order_items_to_confirm, $sellermania_order_info);
                 }
-
                 SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
+
                 $return['result'] = 'OK';
                 $return['action'] = 'bulk-confirm-orders';
             }
 
             if (Tools::getValue('sellermania_bulk_action') == 'bulk-send-orders') {
+
+                foreach ($selected_orders as $id_order) {
+                    $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order);
+                    $sellermania_order_info = json_decode($sellermania_order->info, true);
+                    $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkSendProducts($order_items_to_confirm, $sellermania_order_info, Tools::getValue('sellermania_carrier'));
+                }
+                SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
+
                 $return['result'] = 'KO';
                 $return['action'] = 'bulk-send-orders';
             }

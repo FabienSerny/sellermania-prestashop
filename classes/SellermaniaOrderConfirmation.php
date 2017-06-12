@@ -35,9 +35,8 @@ class SellermaniaOrderConfirmation
     public static function registerAutoConfirmProducts($order_items_to_confirm, $order)
     {
         if (Configuration::get('SM_MARKETPLACE_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) == 'AUTO') {
-            $sellermania = new Sellermania();
-            $new_sm_status = $sellermania->sellermania_order_states['PS_OS_SM_CONFIRMED']['sm_status'];
             $current_sm_status = \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED;
+            $new_sm_status = \Sellermania\OrderConfirmClient::STATUS_CONFIRMED;
             $order_items_to_confirm = SellermaniaOrderConfirmation::registerUpdatedProducts($order_items_to_confirm, $order, $current_sm_status, $new_sm_status);
         }
         return $order_items_to_confirm;
@@ -45,13 +44,19 @@ class SellermaniaOrderConfirmation
 
     public static function registerBulkConfirmProducts($order_items_to_confirm, $order)
     {
-        $sellermania = new Sellermania();
-        $new_sm_status = $sellermania->sellermania_order_states['PS_OS_SM_CONFIRMED']['sm_status'];
         $current_sm_status = \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED;
+        $new_sm_status = \Sellermania\OrderConfirmClient::STATUS_CONFIRMED;
         return SellermaniaOrderConfirmation::registerUpdatedProducts($order_items_to_confirm, $order, $current_sm_status, $new_sm_status);
     }
 
-    public static function registerUpdatedProducts($order_items_to_confirm, $order, $current_sm_status, $new_sm_status, $tracking_number = '', $shipping_carrier = '')
+    public static function registerBulkSendProducts($order_items_to_confirm, $order, $carrier_name)
+    {
+        $current_sm_status = \Sellermania\OrderConfirmClient::STATUS_TO_DISPATCH;
+        $new_sm_status = \Sellermania\OrderConfirmClient::STATUS_DISPATCHED;
+        return SellermaniaOrderConfirmation::registerUpdatedProducts($order_items_to_confirm, $order, $current_sm_status, $new_sm_status, $carrier_name);
+    }
+
+    public static function registerUpdatedProducts($order_items_to_confirm, $order, $current_sm_status, $new_sm_status, $shipping_carrier = '', $tracking_number = '')
     {
         foreach ($order['OrderInfo']['Product'] as $kp => $product) {
             if ($order['OrderInfo']['Product'][$kp]['Status'] == $current_sm_status) {
