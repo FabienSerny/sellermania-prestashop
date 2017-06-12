@@ -328,6 +328,36 @@ class SellermaniaDisplayBackOfficeHeaderController
 
 
     /**
+     * Handle order bulk actions
+     */
+    public function handleOrderBulkActionsUpdate()
+    {
+        // Retrieve SKU and quantity depending of PS version
+        if (Tools::getValue('controller') == 'AdminOrders' &&
+            Tools::getIsset('sellermania_bulk_action') &&
+            Tools::getIsset('sellermania_selected_orders'))
+        {
+            $return = array('result' => 'KO');
+
+            if (Tools::getValue('sellermania_bulk_action') == 'bulk-confirm-orders') {
+                $return['result'] = 'OK';
+                $return['action'] = 'bulk-confirm-orders';
+                $return['orders'] = json_decode(Tools::getValue('sellermania_selected_orders'), true);
+            }
+
+            if (Tools::getValue('sellermania_bulk_action') == 'bulk-send-orders') {
+                $return['result'] = 'KO';
+                $return['action'] = 'bulk-send-orders';
+                $return['orders'] = json_decode(Tools::getValue('sellermania_selected_orders'), true);
+            }
+
+            die(json_encode($return));
+        }
+    }
+
+
+
+    /**
      * Handle Sellermania order display
      */
     public function handleSellermaniaOrderDisplay()
@@ -346,6 +376,14 @@ class SellermaniaDisplayBackOfficeHeaderController
             $this->context->smarty->assign('ps_version', $this->ps_version);
             $this->context->smarty->assign('sellermania_module_path', $this->web_path);
             $this->context->smarty->assign('sellermania_invoice_url', FroggyLib::getAdminLink('AdminModules').'&configure=sellermania&module_name=sellermania&display=invoice');
+            $this->context->smarty->assign('sellermania_admin_orders_url', FroggyLib::getAdminLink('AdminOrders'));
+
+            $carrier_name = '';
+            $carrier = new Carrier((int)Configuration::get('SM_IMPORT_DEFAULT_CARRIER'));
+            if (Validate::isLoadedObject($carrier)) {
+                $carrier_name = $carrier->name;
+            }
+            $this->context->smarty->assign('sellermania_default_carrier', $carrier_name);
 
             return $this->module->compliantDisplay('displayBackOfficeHeader.tpl');
         }
@@ -365,6 +403,7 @@ class SellermaniaDisplayBackOfficeHeaderController
         // Handle order actions
         $this->handleOrderImportation();
         $this->handleProductQuantityUpdate();
+        $this->handleOrderBulkActionsUpdate();
         return $this->handleSellermaniaOrderDisplay();
     }
 }

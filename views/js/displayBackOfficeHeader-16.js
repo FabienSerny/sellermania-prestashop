@@ -60,7 +60,71 @@ $(document).ready(function() {
     }
 
 
-	if (nb_sellermania_orders_in_error > 0)
-		$('#order').before('<p align="center" style="border: 1px solid #cc0000;color: #d8000c;background-color:#ffbaba;padding:5px"><b>' + nb_sellermania_orders_in_error + '</b> ' + txt_sellermania_orders_in_error + '</p>');
+	if (nb_sellermania_orders_in_error > 0) {
+        $('#order').before('<p align="center" style="border: 1px solid #cc0000;color: #d8000c;background-color:#ffbaba;padding:5px"><b>' + nb_sellermania_orders_in_error + '</b> ' + txt_sellermania_orders_in_error + '</p>');
+    }
+
+
+    /**
+     * Handle Orders Bulk Action
+     */
+
+    html_bulk_actions = '<li class="divider"></li>';
+
+    html_bulk_actions += '<li><a href="#" id="sellermania-bulk-confirm-orders">';
+    html_bulk_actions += '<i class="icon-ok-circle"></i>&nbsp;' + txt_sellermania_confirm_orders;
+    html_bulk_actions += '</a></li>';
+
+    html_bulk_actions += '<li><a href="#" id="sellermania-bulk-send-orders">';
+    html_bulk_actions += '<i class="icon-paper-plane"></i>&nbsp;' + txt_sellermania_send_orders;
+    html_bulk_actions += '</a></li>';
+
+    $('.bulk-actions .dropdown-menu').append(html_bulk_actions);
+
+    $('#sellermania-bulk-confirm-orders').click(function() {
+        handleOrdersBulkAction($(this), 'bulk-confirm-orders');
+    });
+
+    $('#sellermania-bulk-send-orders').click(function() {
+        handleOrdersBulkAction($(this), 'bulk-send-orders');
+    });
+
+    function handleOrdersBulkAction(self, sellermania_action)
+    {
+        // Retrieve selected orders
+        var selected_orders = getSelectedOrders(self.closest('form').get(0), 'orderBox[]', true);
+        if (selected_orders.length < 1) {
+            alert(txt_sellermania_select_at_least_one_order);
+            return false;
+        }
+
+        // Retrieve carrier
+        var carrier = '';
+        if (sellermania_action == 'bulk-send-orders') {
+            var carrier = window.prompt(txt_sellermania_carrier_selection, sellermania_default_carrier);
+        }
+
+        // Post values
+        var post_values = { sellermania_bulk_action: sellermania_action, sellermania_selected_orders: JSON.stringify(selected_orders), sellermania_carrier: carrier};
+        $.post(sellermania_admin_orders_url, post_values).done(function(data) {
+            var result = JSON.parse(data);
+            if (result.result == 'OK') {
+                window.location.href = window.location.href;
+            } else {
+                alert(txt_sellermania_error_occured);
+            }
+        });
+    }
+
+    function getSelectedOrders(pForm, boxName, parent)
+    {
+        var boxes = [];
+        for (i = 0; i < pForm.elements.length; i++) {
+            if (pForm.elements[i].name == boxName && pForm.elements[i].checked == true) {
+                boxes.push(pForm.elements[i].value);
+            }
+        }
+        return boxes;
+    }
 
 });
