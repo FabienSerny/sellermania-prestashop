@@ -111,7 +111,7 @@ $(document).ready(function() {
         $.post(sellermania_admin_orders_url, post_values).done(function(data) {
             var result = JSON.parse(data);
             if (result.result == 'OK') {
-                window.location.href = window.location.href;
+                alert(txt_sellermania_orders_updated);
             } else {
                 alert(txt_sellermania_error_occured);
             }

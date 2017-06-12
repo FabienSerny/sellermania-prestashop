@@ -365,7 +365,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                 }
                 SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
 
-                $return['result'] = 'KO';
+                $return['result'] = 'OK';
                 $return['action'] = 'bulk-send-orders';
             }
 

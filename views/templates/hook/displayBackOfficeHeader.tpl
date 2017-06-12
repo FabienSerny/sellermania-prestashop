@@ -34,5 +34,6 @@
     var txt_sellermania_select_at_least_one_order = "{l s='You have to select at least one order' mod='sellermania'}";
     var txt_sellermania_error_occured = "{l s='An error occured' mod='sellermania'}";
     var txt_sellermania_carrier_selection = "{l s='Which carrier do you want to use?' mod='sellermania'}";
+    var txt_sellermania_orders_updated = "{l s='Orders were successfully updated' mod='sellermania'}";
 </script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayBackOfficeHeader-{$ps_version}.js"></script>
