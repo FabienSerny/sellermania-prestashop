@@ -34,7 +34,7 @@ class SellermaniaOrderConfirmation
 {
     public static function registerAutoConfirmProducts($order_items_to_confirm, $order)
     {
-        if (Configuration::get('SM_MARKETPLACE_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) == 'AUTO') {
+        if (Configuration::get('SM_MKP_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) == 'AUTO') {
             $current_sm_status = \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED;
             $new_sm_status = \Sellermania\OrderConfirmClient::STATUS_CONFIRMED;
             $order_items_to_confirm = SellermaniaOrderConfirmation::registerUpdatedProducts($order_items_to_confirm, $order, $current_sm_status, $new_sm_status);

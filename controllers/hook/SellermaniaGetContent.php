@@ -100,7 +100,7 @@ class SellermaniaGetContentController
                         'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
         );
         foreach ($this->module->sellermania_marketplaces as $marketplace) {
-            $params[] = 'SM_MARKETPLACE_'.str_replace('.', '_', $marketplace);
+            $params[] = 'SM_MKP_'.str_replace('.', '_', $marketplace);
         }
 
         foreach ($params as $p) {
@@ -120,7 +120,6 @@ class SellermaniaGetContentController
             $this->context->smarty->assign('sm_orders_found', $orders);
         }
     }
-
 
     /**
      * Assign data to Smarty
@@ -182,7 +181,7 @@ class SellermaniaGetContentController
         $sm_marketplaces = array();
         foreach ($this->module->sellermania_marketplaces as $marketplace) {
             $marketplace = str_replace('.', '_', $marketplace);
-            $sm_marketplaces[$marketplace] = array('key' => 'SM_MARKETPLACE_'.$marketplace, 'value' => Configuration::get('SM_MARKETPLACE_'.$marketplace));
+            $sm_marketplaces[$marketplace] = array('key' => 'SM_MKP_'.$marketplace, 'value' => Configuration::get('SM_MKP_'.$marketplace));
             if (empty($sm_marketplaces[$marketplace]['value'])) {
                 $sm_marketplaces[$marketplace]['value'] = 'MANUAL';
             }

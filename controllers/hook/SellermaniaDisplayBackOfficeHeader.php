@@ -114,7 +114,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                 // Import order
                 foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
                     if (isset($order['OrderInfo']['OrderId']) &&
-                        Configuration::get('SM_MARKETPLACE_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) != 'NO')
+                        Configuration::get('SM_MKP_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) != 'NO')
                     {
                         // Verbose mode
                         $this->speak('Import order #'.$order['OrderInfo']['OrderId'].' from '.$order['OrderInfo']['MarketPlace']);
