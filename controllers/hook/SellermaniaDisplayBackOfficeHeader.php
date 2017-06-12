@@ -195,7 +195,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                             Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', $ps_order_out_of_stock);
 
                             // Register order that needs to be autoconfirm
-                            $this->order_items_to_confirm = SellermaniaOrderConfirmation::registerAutoConfirmProducts($this->order_items_to_confirm, $order, $this->module->sellermania_order_states['PS_OS_SM_CONFIRMED']['sm_status']);
+                            $this->order_items_to_confirm = SellermaniaOrderConfirmation::registerAutoConfirmProducts($this->order_items_to_confirm, $order);
 
                             // Do not push it too hard
                             if ($count_order > 100) {
@@ -348,7 +348,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                 foreach ($selected_orders as $id_order) {
                     $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order);
                     $sellermania_order_info = json_decode($sellermania_order->info, true);
-                    $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkConfirmProducts($order_items_to_confirm, $sellermania_order_info, $this->module->sellermania_order_states['PS_OS_SM_CONFIRMED']['sm_status']);
+                    $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkConfirmProducts($order_items_to_confirm, $sellermania_order_info);
                 }
 
                 SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
