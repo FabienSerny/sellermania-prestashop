@@ -83,10 +83,12 @@ $(document).ready(function() {
 
     $('#sellermania-bulk-confirm-orders').click(function() {
         handleOrdersBulkAction($(this), 'bulk-confirm-orders');
+        return false;
     });
 
     $('#sellermania-bulk-send-orders').click(function() {
         handleOrdersBulkAction($(this), 'bulk-send-orders');
+        return false;
     });
 
     function handleOrdersBulkAction(self, sellermania_action)
