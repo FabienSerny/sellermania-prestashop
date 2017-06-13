@@ -82,13 +82,13 @@ $(document).ready(function() {
     $('.bulk-actions .dropdown-menu').append(html_bulk_actions);
 
     $('#sellermania-bulk-confirm-orders').click(function() {
-        var selected_orders = getSelectedOrders($(this).closest('form').get(0), 'orderBox[]', true);
+        var selected_orders = getSelectedOrders16($(this).closest('form').get(0), 'orderBox[]', true);
         handleOrdersBulkAction(selected_orders, 'bulk-confirm-orders');
         return false;
     });
 
     $('#sellermania-bulk-send-orders').click(function() {
-        var selected_orders = getSelectedOrders($(this).closest('form').get(0), 'orderBox[]', true);
+        var selected_orders = getSelectedOrders16($(this).closest('form').get(0), 'orderBox[]', true);
         handleOrdersBulkAction(selected_orders, 'bulk-send-orders');
         return false;
     });

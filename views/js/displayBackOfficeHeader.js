@@ -63,7 +63,7 @@ function handleOrdersBulkAction(selected_orders, sellermania_action)
     });
 }
 
-function getSelectedOrders(pForm, boxName, parent)
+function getSelectedOrders16(pForm, boxName, parent)
 {
     var boxes = [];
     for (i = 0; i < pForm.elements.length; i++) {
@@ -71,5 +71,16 @@ function getSelectedOrders(pForm, boxName, parent)
             boxes.push(pForm.elements[i].value);
         }
     }
+    return boxes;
+}
+
+function getSelectedOrders()
+{
+    var boxes = [];
+    $('.order-selector').each(function() {
+        if ($(this).prop('checked')) {
+            boxes.push($(this).val());
+        }
+    });
     return boxes;
 }

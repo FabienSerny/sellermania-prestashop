@@ -34,7 +34,9 @@ $(document).ready(function() {
 
         $(this).find('td').each(function() {
             if (column == 1) {
-                id_order = $(this).text();
+                id_order = $(this).text().trim();
+                $(this).html('<input type="checkbox" name="orderBox[]" class="order-selector" value="' + id_order + '">' + id_order);
+                $(this).attr('onclick','').unbind('click');
             }
             if (column == 7 && $(this).text().trim().toLowerCase().indexOf("marketplace") >= 0) {
                 flag_sellermania = 1;
@@ -54,7 +56,36 @@ $(document).ready(function() {
         row++;
     });
 
-	if (nb_sellermania_orders_in_error > 0)
-		$('.toolbar-placeholder').after('<p align="center" style="border: 1px solid #cc0000;color: #d8000c;background-color:#ffbaba;padding:5px"><b>' + nb_sellermania_orders_in_error + '</b> ' + txt_sellermania_orders_in_error + '</p>');
+	if (nb_sellermania_orders_in_error > 0) {
+        $('.toolbar-placeholder').after('<p align="center" style="border: 1px solid #cc0000;color: #d8000c;background-color:#ffbaba;padding:5px"><b>' + nb_sellermania_orders_in_error + '</b> ' + txt_sellermania_orders_in_error + '</p>');
+    }
 
+    /**
+     * Handle Orders Bulk Action
+     */
+
+    html_bulk_actions = '<input type="button" class="button" value="' + txt_sellermania_select_all + '" id="select-all-orders">';
+    html_bulk_actions += '<input type="button" class="button" value="' + txt_sellermania_unselect_all + '" id="unselect-all-orders">';
+    html_bulk_actions += '<input type="button" class="button" value="' + txt_sellermania_confirm_orders + '" id="sellermania-bulk-confirm-orders">';
+    html_bulk_actions += '<input type="button" class="button" value="' + txt_sellermania_send_orders + '" id="sellermania-bulk-send-orders">';
+    $('.order').after(html_bulk_actions);
+
+    $('#select-all-orders').click(function() {
+        $('.order-selector').prop('checked', 'checked');
+    });
+    $('#unselect-all-orders').click(function() {
+        $('.order-selector').prop('checked', '');
+    });
+
+    $('#sellermania-bulk-confirm-orders').click(function() {
+        var selected_orders = getSelectedOrders();
+        handleOrdersBulkAction(selected_orders, 'bulk-confirm-orders');
+        return false;
+    });
+
+    $('#sellermania-bulk-send-orders').click(function() {
+        var selected_orders = getSelectedOrders();
+        handleOrdersBulkAction(selected_orders, 'bulk-send-orders');
+        return false;
+    });
 });
