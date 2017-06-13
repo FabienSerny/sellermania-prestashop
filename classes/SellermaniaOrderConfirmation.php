@@ -94,6 +94,16 @@ class SellermaniaOrderConfirmation
                 $result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
             }
 
+            // Get PrestaShop Order ID
+            foreach ($result['OrderItemConfirmationStatus'] as $k => $v) {
+                $id_order_prestashop = '';
+                $orders_found = SellermaniaOrder::searchSellermaniaOrdersByReference($v['orderId']);
+                if (isset($orders_found[0]['id_order'])) {
+                    $id_order_prestashop = $orders_found[0]['id_order'];
+                }
+                $result['OrderItemConfirmationStatus'][$k]['id_order_prestashop'] = $id_order_prestashop;
+            }
+
             // Return results
             return $result;
         }

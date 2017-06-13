@@ -111,7 +111,17 @@ $(document).ready(function() {
         $.post(sellermania_admin_orders_url, post_values).done(function(data) {
             var result = JSON.parse(data);
             if (result.result == 'OK') {
-                alert(txt_sellermania_orders_updated);
+                var confirmation_message = txt_sellermania_orders_updated;
+                for (var i in result.result_details.OrderItemConfirmationStatus) {
+                    var conf_status = result.result_details.OrderItemConfirmationStatus[i];
+                    confirmation_message += "\n#" + conf_status.id_order_prestashop + ' (sku: ' + conf_status.sku + ') : ';
+                    if (conf_status.Status == 'ERROR') {
+                        confirmation_message += conf_status.Message;
+                    } else {
+                        confirmation_message += conf_status.Status;
+                    }
+                }
+                alert(confirmation_message);
             } else {
                 alert(txt_sellermania_error_occured);
             }

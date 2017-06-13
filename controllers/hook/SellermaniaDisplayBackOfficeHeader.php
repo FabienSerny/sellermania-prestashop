@@ -350,10 +350,11 @@ class SellermaniaDisplayBackOfficeHeaderController
                     $sellermania_order_info = json_decode($sellermania_order->info, true);
                     $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkConfirmProducts($order_items_to_confirm, $sellermania_order_info);
                 }
-                SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
+                $result_details = SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
 
                 $return['result'] = 'OK';
                 $return['action'] = 'bulk-confirm-orders';
+                $return['result_details'] = $result_details;
             }
 
             if (Tools::getValue('sellermania_bulk_action') == 'bulk-send-orders') {
@@ -363,10 +364,11 @@ class SellermaniaDisplayBackOfficeHeaderController
                     $sellermania_order_info = json_decode($sellermania_order->info, true);
                     $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkSendProducts($order_items_to_confirm, $sellermania_order_info, Tools::getValue('sellermania_carrier'));
                 }
-                SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
+                $result_details = SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
 
                 $return['result'] = 'OK';
                 $return['action'] = 'bulk-send-orders';
+                $return['result_details'] = $result_details;
             }
 
             die(json_encode($return));
