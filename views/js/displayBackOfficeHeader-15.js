@@ -35,7 +35,7 @@ $(document).ready(function() {
         $(this).find('td').each(function() {
             if (column == 1) {
                 id_order = $(this).text().trim();
-                $(this).html('<input type="checkbox" name="orderBox[]" class="order-selector" value="' + id_order + '">' + id_order);
+                $(this).html('<input type="checkbox" name="orderBox[]" class="order-selector" value="' + id_order + '"><br>' + id_order);
                 $(this).attr('onclick','').unbind('click');
             }
             if (column == 7 && $(this).text().trim().toLowerCase().indexOf("marketplace") >= 0) {
