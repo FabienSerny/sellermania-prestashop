@@ -56,8 +56,20 @@ class SellermaniaActionOrderStatusUpdateController
         }
 
         if ($this->params['newOrderStatus']->id == Configuration::get('PS_OS_SM_DISPATCHED')) {
+
+            $prestashop_order = new Order($this->params['id_order']);
             $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($this->params['id_order']);
-            if (Validate::isLoadedObject($sellermania_order)) {
+
+            if (Validate::isLoadedObject($sellermania_order) && Validate::isLoadedObject($prestashop_order)) {
+
+                // Retrieve tracking number
+                if (version_compare(_PS_VERSION_, '1.5') < 0) {
+                    $tracking_number = $prestashop_order->shipping_number;
+                } else {
+                    $id_order_carrier = $prestashop_order->getIdOrderCarrier();
+                    $order_carrier = new OrderCarrier($id_order_carrier);
+                    $tracking_number = $order_carrier->tracking_number;
+                }
 
                 // Retrieve sleeping orders updates
                 $order_items_to_confirm = array();
@@ -75,7 +87,9 @@ class SellermaniaActionOrderStatusUpdateController
 
                 // Retrieve products from order
                 $sellermania_order_info = json_decode($sellermania_order->info, true);
-                $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkSendProducts($order_items_to_confirm, $sellermania_order_info, $carrier_name);
+                $current_sm_status = \Sellermania\OrderConfirmClient::STATUS_TO_DISPATCH;
+                $new_sm_status = \Sellermania\OrderConfirmClient::STATUS_DISPATCHED;
+                $order_items_to_confirm = SellermaniaOrderConfirmation::registerUpdatedProducts($order_items_to_confirm, $sellermania_order_info, $current_sm_status, $new_sm_status, $carrier_name, $tracking_number);
 
                 // Save sleeping orders updates
                 Configuration::updateValue('SM_SLEEPING_ORDERS_UPDATES', json_encode($order_items_to_confirm));
