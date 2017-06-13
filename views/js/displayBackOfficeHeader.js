@@ -40,7 +40,7 @@ function handleOrdersBulkAction(selected_orders, sellermania_action)
     var post_values = { sellermania_bulk_action: sellermania_action, sellermania_selected_orders: JSON.stringify(selected_orders), sellermania_carrier: carrier};
     $.post(sellermania_admin_orders_url, post_values).done(function(data) {
 
-
+        // Check timeout
         try {
             var json = $.parseJSON(data);
         } catch(err) {
@@ -48,7 +48,7 @@ function handleOrdersBulkAction(selected_orders, sellermania_action)
             return false;
         }
 
-
+        // Parse JSON
         var result = JSON.parse(data);
         if (result.result == 'OK') {
 
