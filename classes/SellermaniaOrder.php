@@ -150,6 +150,9 @@ class SellermaniaOrder extends ObjectModel
             if (!isset($shipping_vat_percent)) {
                 $shipping_vat_rate = 1.20;
             }
+            if (empty($shipping_vat_rate)) {
+                $shipping_vat_rate = 1;
+            }
             $total_shipping_without_tax = round($sellermania_order->details['OrderInfo']['Transport']['Amount']['Price'] / $shipping_vat_rate, 2);
             if ($total_shipping_without_tax != $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT']) {
                 $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT'] = $total_shipping_without_tax;
