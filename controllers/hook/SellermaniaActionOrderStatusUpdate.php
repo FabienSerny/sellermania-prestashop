@@ -55,7 +55,32 @@ class SellermaniaActionOrderStatusUpdateController
             return '';
         }
 
-        d($this->params);
+        if ($this->params['newOrderStatus']->id == Configuration::get('PS_OS_SM_DISPATCHED')) {
+            $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($this->params['id_order']);
+            if (Validate::isLoadedObject($sellermania_order)) {
+
+                // Retrieve sleeping orders updates
+                $order_items_to_confirm = array();
+                $data = Configuration::get('SM_SLEEPING_ORDERS_UPDATES');
+                if (!empty($data)) {
+                    $order_items_to_confirm = json_decode($data, true);
+                }
+
+                // Retrieve default carrier
+                $carrier_name = '';
+                $carrier = new Carrier((int)Configuration::get('SM_IMPORT_DEFAULT_CARRIER'));
+                if (Validate::isLoadedObject($carrier)) {
+                    $carrier_name = $carrier->name;
+                }
+
+                // Retrieve products from order
+                $sellermania_order_info = json_decode($sellermania_order->info, true);
+                $order_items_to_confirm = SellermaniaOrderConfirmation::registerBulkSendProducts($order_items_to_confirm, $sellermania_order_info, $carrier_name);
+
+                // Save sleeping orders updates
+                Configuration::updateValue('SM_SLEEPING_ORDERS_UPDATES', json_encode($order_items_to_confirm));
+            }
+        }
     }
 }
 
