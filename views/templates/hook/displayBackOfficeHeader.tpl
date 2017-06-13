@@ -37,6 +37,7 @@
     var txt_sellermania_orders_updated = "{l s='Orders were successfully updated' mod='sellermania'}";
     var txt_sellermania_select_all = "{l s='Select all orders' mod='sellermania'}";
     var txt_sellermania_unselect_all = "{l s='Unselect all orders' mod='sellermania'}";
+    var txt_sellermania_timeout_exception = "{l s='Sellermania rejected the request (too many requests has been made), please wait a few seconds and try again.'}";
 </script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayBackOfficeHeader.js"></script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayBackOfficeHeader-{$ps_version}.js"></script>

@@ -44,7 +44,7 @@ function handleOrdersBulkAction(selected_orders, sellermania_action)
         try {
             var json = $.parseJSON(data);
         } catch(err) {
-            alert('Sellermania webservice has timeout');
+            alert(txt_sellermania_timeout_exception);
             return false;
         }
 
