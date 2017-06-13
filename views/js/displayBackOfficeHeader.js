@@ -43,10 +43,9 @@ function handleOrdersBulkAction(selected_orders, sellermania_action)
         if (result.result == 'OK') {
 
             var confirmation_message = txt_sellermania_orders_updated;
-
-            if (sellermania_action == 'bulk-confirm-orders') {
-                for (var i in result.result_details.OrderItemConfirmationStatus) {
-                    var conf_status = result.result_details.OrderItemConfirmationStatus[i];
+            for (var i in result.result_details.OrderItemConfirmationStatus) {
+                var conf_status = result.result_details.OrderItemConfirmationStatus[i];
+                if (typeof conf_status.Status != 'undefined') {
                     confirmation_message += "\n\n#" + conf_status.id_order_prestashop + ' (sku: ' + conf_status.sku + ') : ';
                     if (conf_status.Status == 'ERROR') {
                         confirmation_message += conf_status.Message;
