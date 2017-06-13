@@ -79,6 +79,10 @@ class SellermaniaOrderConfirmation
 
     public static function updateOrderItems($order_items)
     {
+        if (empty($order_items)) {
+            return array();
+        }
+
         // Make API call
         try
         {
