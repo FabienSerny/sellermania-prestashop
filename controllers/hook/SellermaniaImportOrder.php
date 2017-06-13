@@ -832,8 +832,15 @@ class SellermaniaImportOrderController
             'original_product_price' => (float)$product_price_without_tax,
         );
 
+        $id_tax = 0;
+        $id_tax_sql = Db::getInstance()->getValue('
+        SELECT `id_tax` FROM `'._DB_PREFIX_.'tax`
+        WHERE `rate` = \''.((float)($product['VatRate'] / 100)).'\' AND active = 1');
+        if ($id_tax_sql > 0) {
+            $id_tax = $id_tax_sql;
+        }
         $sql_data_tax = array(
-            'id_tax' => 0,
+            'id_tax' => $id_tax,
             'unit_amount' => (float)$product['ProductVAT']['unit'],
             'total_amount' => (float)$product['ProductVAT']['total'],
         );
