@@ -48,7 +48,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.1.5';
+        $this->version = '2.1.6';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -118,10 +118,9 @@ class Sellermania extends Module
     public function upgrade()
     {
         $version_registered = Configuration::get('SM_VERSION');
-        if ($version_registered == '' || version_compare($version_registered, '1.0.0', '<'))
-        {
-            if ((int)Configuration::get('PS_OS_SM_SEND') > 0)
-            {
+
+        if ($version_registered == '' || version_compare($version_registered, '1.0.0', '<')) {
+            if ((int)Configuration::get('PS_OS_SM_SEND') > 0) {
                 // Change configuration name
                 Configuration::updateValue('PS_OS_SM_TO_DISPATCH', Configuration::get('PS_OS_SM_SEND'));
                 Configuration::updateValue('PS_OS_SM_DISPATCHED', Configuration::get('PS_OS_SM_SENT'));
@@ -137,31 +136,42 @@ class Sellermania extends Module
             // Set module version
             Configuration::updateValue('SM_VERSION', $this->version);
         }
-        if (version_compare($version_registered, '1.1.0', '<'))
-        {
+
+        if (version_compare($version_registered, '1.1.0', '<')) {
+
             // Register new hook
-            if (version_compare(_PS_VERSION_, '1.5') >= 0)
+            if (version_compare(_PS_VERSION_, '1.5') >= 0) {
                 $this->registerHook('actionValidateOrder');
-            else
+            } else {
                 $this->registerHook('newOrder');
+            }
 
             // Set module version
             Configuration::updateValue('SM_VERSION', $this->version);
         }
-        if (Configuration::get('SM_EXPORT_ALL') == '')
+
+        if (Configuration::get('SM_EXPORT_ALL') == '') {
             Configuration::updateValue('SM_EXPORT_ALL', 'yes');
-
-        if (Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM') == '')
+        }
+        if (Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM') == '') {
             Configuration::updateValue('SM_ENABLE_NATIVE_REFUND_SYSTEM', 'no');
-        if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == '')
+        }
+        if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == '') {
             Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');
-
+        }
         if (Configuration::get('SM_IMPORT_METHOD') == '') {
             Configuration::updateValue('SM_IMPORT_METHOD', 'automatic');
         }
-
         if (Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS') == '') {
             Configuration::updateValue('SM_CATCH_ALL_MAIL_ADDRESS', Configuration::get('PS_SHOP_EMAIL'));
+        }
+
+        if (version_compare($version_registered, '2.1.6', '<')) {
+            if (version_compare(_PS_VERSION_, '1.5') >= 0) {
+                $this->registerHook('actionOrderStatusUpdate');
+            } else {
+                $this->registerHook('updateOrderStatus');
+            }
         }
     }
 
@@ -180,13 +190,13 @@ class Sellermania extends Module
         if (version_compare(_PS_VERSION_, '1.5') >= 0)
         {
             if (!parent::install() || !$this->registerHook('displayAdminOrder') ||
-                !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder'))
+                !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder') || !$this->registerHook('actionOrderStatusUpdate'))
                 return false;
         }
         else
         {
             if (!parent::install() || !$this->registerHook('adminOrder') ||
-                !$this->registerHook('backOfficeHeader') || !$this->registerHook('newOrder'))
+                !$this->registerHook('backOfficeHeader') || !$this->registerHook('newOrder') || !$this->registerHook('updateOrderStatus'))
                 return false;
         }
 
@@ -467,7 +477,7 @@ class Sellermania extends Module
     }
 
     /**
-     * Display Admin Order
+     * Refresh quantity on orders importation
      * @return string $html
      */
     public function hookActionValidateOrder($params)
@@ -479,6 +489,19 @@ class Sellermania extends Module
     public function hookNewOrder($params)
     {
         return $this->hookActionValidateOrder($params);
+    }
+
+    /**
+     * Send new order status to Sellermania
+     * @return string $html
+     */
+    public function hookActionOrderStatusUpdate($params)
+    {
+        return $this->runController('hook', 'ActionOrderStatusUpdate', $params);
+    }
+    public function hookUpdateOrderStatus($params)
+    {
+        return $this->hookActionOrderStatusUpdate($params);
     }
 
     /**
