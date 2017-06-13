@@ -82,56 +82,16 @@ $(document).ready(function() {
     $('.bulk-actions .dropdown-menu').append(html_bulk_actions);
 
     $('#sellermania-bulk-confirm-orders').click(function() {
-        handleOrdersBulkAction($(this), 'bulk-confirm-orders');
+        var selected_orders = getSelectedOrders($(this).closest('form').get(0), 'orderBox[]', true);
+        handleOrdersBulkAction(selected_orders, 'bulk-confirm-orders');
         return false;
     });
 
     $('#sellermania-bulk-send-orders').click(function() {
-        handleOrdersBulkAction($(this), 'bulk-send-orders');
+        var selected_orders = getSelectedOrders($(this).closest('form').get(0), 'orderBox[]', true);
+        handleOrdersBulkAction(selected_orders, 'bulk-send-orders');
         return false;
     });
-
-    function handleOrdersBulkAction(self, sellermania_action)
-    {
-        // Retrieve selected orders
-        var selected_orders = getSelectedOrders(self.closest('form').get(0), 'orderBox[]', true);
-        if (selected_orders.length < 1) {
-            alert(txt_sellermania_select_at_least_one_order);
-            return false;
-        }
-
-        // Retrieve carrier
-        var carrier = '';
-        if (sellermania_action == 'bulk-send-orders') {
-            var carrier = window.prompt(txt_sellermania_carrier_selection, sellermania_default_carrier);
-        }
-
-        // Post values
-        var post_values = { sellermania_bulk_action: sellermania_action, sellermania_selected_orders: JSON.stringify(selected_orders), sellermania_carrier: carrier};
-        $.post(sellermania_admin_orders_url, post_values).done(function(data) {
-            var result = JSON.parse(data);
-            if (result.result == 'OK') {
-
-                var confirmation_message = txt_sellermania_orders_updated;
-
-                if (sellermania_action == 'bulk-confirm-orders') {
-                    for (var i in result.result_details.OrderItemConfirmationStatus) {
-                        var conf_status = result.result_details.OrderItemConfirmationStatus[i];
-                        confirmation_message += "\n\n#" + conf_status.id_order_prestashop + ' (sku: ' + conf_status.sku + ') : ';
-                        if (conf_status.Status == 'ERROR') {
-                            confirmation_message += conf_status.Message;
-                        } else {
-                            confirmation_message += conf_status.Status;
-                        }
-                    }
-                }
-
-                alert(confirmation_message);
-            } else {
-                alert(txt_sellermania_error_occured);
-            }
-        });
-    }
 
     function getSelectedOrders(pForm, boxName, parent)
     {
