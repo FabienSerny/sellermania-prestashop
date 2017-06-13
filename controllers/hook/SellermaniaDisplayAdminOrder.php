@@ -100,7 +100,7 @@ class SellermaniaDisplayAdminOrderController
             return false;
         }
 
-        return SellermaniaOrderConfirmation::confirmOrderItems($order_items);
+        return SellermaniaOrderConfirmation::updateOrderItems($order_items);
     }
 
     /**
