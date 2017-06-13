@@ -376,6 +376,16 @@ class SellermaniaDisplayBackOfficeHeaderController
     }
 
 
+    public function handleSleepingOrdersUpdates()
+    {
+        $data = Configuration::get('SM_SLEEPING_ORDERS_UPDATES');
+        if (!empty($data)) {
+            Configuration::updateValue('SM_SLEEPING_ORDERS_UPDATES', '');
+            $order_items_to_confirm = json_decode($data, true);
+            $result_details = SellermaniaOrderConfirmation::updateOrderItems($order_items_to_confirm);
+        }
+    }
+
 
     /**
      * Handle Sellermania order display
@@ -423,6 +433,7 @@ class SellermaniaDisplayBackOfficeHeaderController
         // Handle order actions
         $this->handleOrderImportation();
         $this->handleProductQuantityUpdate();
+        $this->handleSleepingOrdersUpdates();
         $this->handleOrderBulkActionsUpdate();
         return $this->handleSellermaniaOrderDisplay();
     }
