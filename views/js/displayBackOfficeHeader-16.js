@@ -93,15 +93,4 @@ $(document).ready(function() {
         return false;
     });
 
-    function getSelectedOrders(pForm, boxName, parent)
-    {
-        var boxes = [];
-        for (i = 0; i < pForm.elements.length; i++) {
-            if (pForm.elements[i].name == boxName && pForm.elements[i].checked == true) {
-                boxes.push(pForm.elements[i].value);
-            }
-        }
-        return boxes;
-    }
-
 });
