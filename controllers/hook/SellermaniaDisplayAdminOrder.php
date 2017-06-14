@@ -325,33 +325,9 @@ class SellermaniaDisplayAdminOrderController
         $order = new Order((int)$id_order);
 
         // If order does not exists anymore we stop status update
-        if ($order->id < 1)
+        if ($order->id < 1) {
             return false;
-
-
-        // *** Orders Export Compliancy *** //
-        // If the new state is TO DISPATCH or DISPATCHED
-        if (in_array((int)$new_order_state, array(Configuration::get('PS_OS_SM_TO_DISPATCH'), Configuration::get('PS_OS_SM_DISPATCHED'))))
-        {
-            // Retrieve order history
-            $order_history_ids = array();
-            $order_history = $order->getHistory($this->context->cookie->id_lang);
-            foreach ($order_history as $oh)
-                $order_history_ids[] = $oh['id_order_state'];
-
-            // If PAYMENT STATE is not in order history
-            if (!in_array((int)Configuration::get('PS_OS_PAYMENT'), $order_history_ids))
-            {
-                // We add the payment state
-                $history = new OrderHistory();
-                $history->id_order = $order->id;
-                $history->id_employee = (int)$this->context->employee->id;
-                $history->id_order_state = (int)Configuration::get('PS_OS_PAYMENT');
-                $history->changeIdOrderState((int)Configuration::get('PS_OS_PAYMENT'), $order->id);
-                $history->add();
-            }
         }
-
 
         // Create new OrderHistory
         $history = new OrderHistory();
