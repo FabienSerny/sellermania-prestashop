@@ -567,6 +567,23 @@ class SellermaniaImportOrderController
                     }
                 }
 
+        // check if Sku is id_unique
+        $ps_ids = explode('-', $product['Sku']);
+        if (count($ps_ids) == 2) {
+
+            $id_product = Db::getInstance()->getValue('
+            SELECT `id_product`
+            FROM `'._DB_PREFIX_.'product`
+            WHERE `id_product` = '.(int)$ps_ids[0].'
+            AND `id_product_attribute` = '.(int)$ps_ids[1]);
+
+            if ($id_product > 0) {
+                $product['id_product'] = (int)$ps_ids[0];
+                $product['id_product_attribute'] = (int)$ps_ids[1];
+                return $product;
+            }
+        }
+
         // If product unmatch, we return the default Sellermania product, method createOrderDetail will fix this
         $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
         $product['id_product_attribute'] = 0;
