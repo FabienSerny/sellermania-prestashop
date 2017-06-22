@@ -571,15 +571,30 @@ class SellermaniaImportOrderController
         $ps_ids = explode('-', $product['Sku']);
         if (count($ps_ids) == 2) {
 
-            $id_product = Db::getInstance()->getValue('
-            SELECT `id_product`
-            FROM `'._DB_PREFIX_.'product`
-            WHERE `id_product` = '.(int)$ps_ids[0].'
-            AND `id_product_attribute` = '.(int)$ps_ids[1]);
+            $idp = (int)$ps_ids[0];
+            $idpa = (int)$ps_ids[1];
 
-            if ($id_product > 0) {
-                $product['id_product'] = (int)$ps_ids[0];
-                $product['id_product_attribute'] = (int)$ps_ids[1];
+            // Search for product attribute
+            $row = Db::getInstance()->getRow('
+            SELECT `id_product`, `id_product_attribute`, `reference`, `ean13`
+            FROM `'._DB_PREFIX_.'product_attribute`
+            WHERE `id_product` = '.(int)$idp.'
+            AND `id_product_attribute` = '.(int)$idpa);
+
+            // If not found, search for product
+            if ($row['id_product_attribute'] < 1) {
+                $row = Db::getInstance()->getRow('
+                SELECT `id_product`, `reference`, `ean13`
+                FROM `'._DB_PREFIX_.'product`
+                WHERE `id_product` = '.(int)$idp);
+            }
+
+            // If found we set ids and SKU and reference
+            if ($row['id_product'] > 0) {
+                $product['id_product'] = (int)$idp;
+                $product['id_product_attribute'] = (int)$idpa;
+                $product['Sku'] = $row['reference'];
+                $product['ean'] = $row['ean13'];
                 return $product;
             }
         }
