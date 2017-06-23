@@ -567,6 +567,38 @@ class SellermaniaImportOrderController
                     }
                 }
 
+        // check if Sku is id_unique
+        $ps_ids = explode('-', $product['Sku']);
+        if (count($ps_ids) == 2) {
+
+            $idp = (int)$ps_ids[0];
+            $idpa = (int)$ps_ids[1];
+
+            // Search for product attribute
+            $row = Db::getInstance()->getRow('
+            SELECT `id_product`, `id_product_attribute`, `reference`, `ean13`
+            FROM `'._DB_PREFIX_.'product_attribute`
+            WHERE `id_product` = '.(int)$idp.'
+            AND `id_product_attribute` = '.(int)$idpa);
+
+            // If not found, search for product
+            if ($row['id_product_attribute'] < 1) {
+                $row = Db::getInstance()->getRow('
+                SELECT `id_product`, `reference`, `ean13`
+                FROM `'._DB_PREFIX_.'product`
+                WHERE `id_product` = '.(int)$idp);
+            }
+
+            // If found we set ids and SKU and reference
+            if ($row['id_product'] > 0) {
+                $product['id_product'] = (int)$idp;
+                $product['id_product_attribute'] = (int)$idpa;
+                $product['Sku'] = $row['reference'];
+                $product['ean'] = $row['ean13'];
+                return $product;
+            }
+        }
+
         // If product unmatch, we return the default Sellermania product, method createOrderDetail will fix this
         $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
         $product['id_product_attribute'] = 0;

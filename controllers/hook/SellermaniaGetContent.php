@@ -188,7 +188,7 @@ class SellermaniaGetContentController
         }
 
 
-        // Retrieve carriers
+        // Retrieve carriers (last parameter "5" means "All carriers")
         $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 5);
 
         // Assign to Smarty
