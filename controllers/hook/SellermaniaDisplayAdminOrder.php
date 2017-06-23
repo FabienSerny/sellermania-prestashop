@@ -388,6 +388,10 @@ class SellermaniaDisplayAdminOrderController
         $this->context->smarty->assign('sellermania_status_update', $result_status_update);
         $this->context->smarty->assign('sellermania_shipping_status_update', $result_shipping_status_update);
 
+		// Modif YB : variable pour admin par défaut
+        $this->context->smarty->assign('sellermania_display_default_admin', Configuration::get('SM_ENABLE_DEFAULT_ADMIN'));
+		// Fin Modif YB : variable pour admin par défaut
+		
         $this->context->smarty->assign('sellermania_enable_native_refund_system', Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM'));
 
         return $this->module->compliantDisplay('displayAdminOrder.tpl');

@@ -46,6 +46,20 @@
                             <label for="sm_import_orders_no">{l s='No' mod='sellermania'}</label>
                         </div>
                     </div>
+
+
+					{* Modif YB : utiliser l'admin par défaut *}
+                    <div class="clearfix">
+                        <label class="col-lg-4">{l s='Do you want to use default prestashop order admin ?' mod='sellermania'}</label>
+                        <div class="col-lg-8">
+                            <input type="radio" name="sm_enable_default_admin" id="sm_enable_default_admin_yes" value="yes" {if $sm_enable_default_admin eq 'yes'}checked="checked"{/if} />
+                            <label for="sm_enable_default_admin_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                            <input type="radio" name="sm_enable_default_admin" id="sm_enable_default_admin_no" value="no" {if $sm_enable_default_admin eq 'no' || $sm_enable_default_admin eq ''}checked="checked"{/if} />
+                            <label for="sm_enable_default_admin_no">{l s='No' mod='sellermania'}</label>
+                        </div>
+                    </div>
+					{* Fin Modif YB : utiliser l'admin par défaut *}
+
                     <div id="sm_import_orders_credentials" class="clearfix">
 
                         <br>

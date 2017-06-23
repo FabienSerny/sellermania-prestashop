@@ -37,6 +37,18 @@
                 <input type="radio" name="sm_import_orders" id="sm_import_orders_yes" value="yes" {if $sm_import_orders eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
                 <input type="radio" name="sm_import_orders" id="sm_import_orders_no" value="no" {if $sm_import_orders eq 'no' || $sm_import_orders eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
             </div>
+
+
+			{* Modif YB : utiliser l'admin par défaut *}
+            <div class="margin-form" style="padding-left:15px">
+                <p><b>{l s='Do you want to use default prestashop order admin ?' mod='sellermania'} ({$sm_enable_default_admin})</b></p><br>
+                <input type="radio" name="sm_enable_default_admin" id="sm_enable_default_admin_yes" value="yes" {if $sm_enable_default_admin eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+                <input type="radio" name="sm_enable_default_admin" id="sm_enable_default_admin_no" value="no" {if $sm_enable_default_admin eq 'no' || $sm_enable_default_admin eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+            </div>
+			{* Fin Modif YB : utiliser l'admin par défaut *}
+
+
+
             <div class="margin-form" style="padding-left:15px" id="sm_import_orders_credentials">
 
                 <br>

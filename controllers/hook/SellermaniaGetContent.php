@@ -98,6 +98,7 @@ class SellermaniaGetContentController
                         'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
                         'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
                         'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
+			"sm_enable_default_admin", // Modif YB : ajout de paramétrage pour interface par défaut des commandes
         );
         foreach ($this->module->sellermania_marketplaces as $marketplace) {
             $params[] = 'SM_MKP_'.str_replace('.', '_', $marketplace);
@@ -188,7 +189,7 @@ class SellermaniaGetContentController
         }
 
 
-        // Retrieve carriers
+        // Retrieve carriers (last parameter "5" means "All carriers")
         $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 5);
 
         // Assign to Smarty
@@ -225,6 +226,7 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('sm_default_product_id', Configuration::get('SM_DEFAULT_PRODUCT_ID'));
         $this->context->smarty->assign('sm_export_all', Configuration::get('SM_EXPORT_ALL'));
         $this->context->smarty->assign('sm_import_orders', Configuration::get('SM_IMPORT_ORDERS'));
+        $this->context->smarty->assign('sm_enable_default_admin', Configuration::get('SM_ENABLE_DEFAULT_ADMIN')); // Modif YB : interface par défaut des commandes
         $this->context->smarty->assign('sm_order_email', Configuration::get('SM_ORDER_EMAIL'));
         $this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
         $this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));

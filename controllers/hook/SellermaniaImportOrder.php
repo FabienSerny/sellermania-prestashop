@@ -204,6 +204,12 @@ class SellermaniaImportOrderController
         $this->data['OrderInfo']['RefundedAmount'] = 0;
         $this->data['OrderInfo']['OptionalFeaturePrice'] = 0;
         $this->data['OrderInfo']['TotalPromotionDiscount'] = 0;
+
+		// Modif YB : do unset after loop
+		// while inside a loop one should not do an unset on the looped array
+		$kpArrayToUnset=array();
+		// Fin Modif YB : do unset after loop
+		
         foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
         {
             // If it's not a cancelled product
@@ -255,7 +261,11 @@ class SellermaniaImportOrderController
                 $this->data['OrderInfo']['Product'][$kp]['Amount']['Price'] = 0;
 
             // Get Product Identifiers
-            $this->data['OrderInfo']['Product'][$kp] = $this->getProductIdentifier($this->data['OrderInfo']['Product'][$kp]);
+            // Modif YB : data sent by reference
+			// the data has been sent by reference, it should not be returned, this is redundant
+			// $this->data['OrderInfo']['Product'][$kp] = $this->getProductIdentifier($this->data['OrderInfo']['Product'][$kp]);
+			$this->getProductIdentifier($this->data['OrderInfo']['Product'][$kp]);
+			// Modif YB : data sent by reference�
 
             // If reference is not found
             $alert_email = Configuration::get('SM_ALERT_MISSING_REF_MAIL');
@@ -283,11 +293,24 @@ class SellermaniaImportOrderController
                 $this->data['OrderInfo']['Product'][$pointer]['QuantityPurchased'] += $this->data['OrderInfo']['Product'][$kp]['QuantityPurchased'];
                 $this->data['OrderInfo']['Product'][$pointer]['ShippingFee']['Amount']['Price'] += $this->data['OrderInfo']['Product'][$kp]['ShippingFee']['Amount']['Price'];
                 $this->data['OrderInfo']['Product'][$pointer]['ProductVAT']['total'] += $this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'];
-                unset($this->data['OrderInfo']['Product'][$kp]);
+                // Modif YB : do unset after loop
+				$kpArrayToUnset[]=$kp;
+				//unset($this->data['OrderInfo']['Product'][$kp]);
+                // Modif YB : do unset after loop
             }
             else
                 $existing_ref[$sku.'-'.$ean] = $kp;
         }
+
+		// Modif YB : do unset after loop
+		if(is_array($kpArrayToUnset) && count($kpArrayToUnset))
+		{
+			foreach($kpArrayToUnset as $kp) 
+			{
+				unset($this->data['OrderInfo']['Product'][$kp]);
+			}
+		}
+		// Modif YB : do unset after loop
 
         // Fix paiement date
         if (!isset($this->data['Paiement']['Date']))
@@ -567,6 +590,20 @@ class SellermaniaImportOrderController
                     }
                 }
 
+				
+		/*
+		 * Patch YB pour retrouver les ID produit selon des références doubles, ex idproduct_idattribut
+		 */
+		//*
+		$found=self::SearchNotFoundReference($product);
+		if($found) return $product;
+		//*/
+		/*
+		 * Fin Patch YB pour retrouver les ID produit selon des références doubles, ex idproduct_idattribut
+		 */
+		
+		
+
         // If product unmatch, we return the default Sellermania product, method createOrderDetail will fix this
         $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
         $product['id_product_attribute'] = 0;
@@ -574,6 +611,74 @@ class SellermaniaImportOrderController
         return $product;
     }
 
+
+	/*
+	 * Patch YB pour retrouver les ID produit selon des références doubles, ex idproduct_idattribut
+	 */
+
+	public static function SearchNotFoundReference(&$product)
+	{
+
+		$nb=0;
+		// Function to search a product ID if no Sku or ean found
+		// Important note : the sellermania module MUST consider that
+		// a lot of different modules may have synchronised products with marketplaces
+		// and thus there may have been several ways to identify a product and his attribute
+		// separators mays vary, sometimes -, sometimes _ etc
+		// hence, several separators are considered to split the code
+		$arrAttributsProduits=preg_split("/[\s,;#_\-\/|]+/",$product["Sku"]); // Découpage en deux selon de nombreux séparateurs possibles
+		$found=false;
+
+		// No separator : only the product ID is expected
+		if(count($arrAttributsProduits)==1 && intval($arrAttributsProduits[0])>0)
+		{
+			// Test produit seul
+			$reference=""; $ean13="";
+			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS("SELECT reference,ean13 FROM "._DB_PREFIX_."product WHERE id_product=".intval($arrAttributsProduits[0]) );
+			if(is_array($res) && count($res))
+			{
+				$reference=$res[0]["reference"];
+				$ean13=$res[0]["ean13"];
+			}
+			// You HAVE to consider the case the product id is not found or the reference does not existe
+			if($reference!="")
+			{
+				$product['id_product']=intval($arrAttributsProduits[0]);
+        $product['id_product_attribute'] = 0;
+				$product['Sku'] = $reference;
+				$product['ean'] = $ean13;
+				return true;
+			}
+		}
+
+		// There was a separator, but only one separator is accepted
+		if(count($arrAttributsProduits)==2 && intval($arrAttributsProduits[0])>0 && intval($arrAttributsProduits[1])>0)
+		{
+
+			// Test produit seul
+			$reference=""; $ean13="";
+			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS("SELECT reference,ean13 FROM "._DB_PREFIX_."product_attribute WHERE id_product=".intval($arrAttributsProduits[0])." AND id_product_attribute=".intval($arrAttributsProduits[1])."" );
+			if(is_array($res) && count($res))
+			{
+				$reference=$res[0]["reference"];
+				$ean13=$res[0]["ean13"];
+			}
+			// There has to be this specific product / attribute, else we return false
+			if($reference!="")
+			{
+				$product['id_product']=intval($arrAttributsProduits[0]);
+				$product['id_product_attribute'] = intval($arrAttributsProduits[1]);
+				$product['Sku'] = $reference;
+				$product['ean'] = $ean13;
+				return true;
+			}
+		}
+		return false;
+    }
+
+	/*
+	 * Fin Patch YB pour retrouver les ID produit selon des références doubles, ex idproduct_idattribut
+	 */
 
     /************** FIX ORDER **************/
 
@@ -745,6 +850,15 @@ class SellermaniaImportOrderController
             foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
                 $this->fixOrderDetail15($this->order->id, $product);
 
+		// Begin Modif YB pour TVA sur frais de port
+		$total_shipping_tax_incl=(float)$this->data['OrderInfo']['Transport']['Amount']['Price'];
+		$total_shipping_tax_excl=(float)$this->data['OrderInfo']['Transport']['Amount']['Price'];
+		if(isset($this->order->carrier_tax_rate) && !is_null($this->order->carrier_tax_rate) && (float)$this->order->carrier_tax_rate>0)
+		{
+			$total_shipping_tax_excl=round(100*$total_shipping_tax_excl/((100+(float)$this->order->carrier_tax_rate)),6);
+		}
+		// End Modif YB pour tva sur frais de port
+		
         // Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
         $update = array(
             'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
@@ -754,8 +868,8 @@ class SellermaniaImportOrderController
             'total_products' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'],
             'total_products_wt' => (float)$this->data['OrderInfo']['TotalProductsWithVAT'],
             'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'total_shipping_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+            'total_shipping_tax_incl' => $total_shipping_tax_incl, // Modif YB pour TVA sur frais de port
+            'total_shipping_tax_excl' => $total_shipping_tax_excl, // Modif YB pour TVA sur frais de port
             'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
         );
         Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$this->order->id);
@@ -771,8 +885,8 @@ class SellermaniaImportOrderController
 
         // Fix carrier
         $carrier_update = array(
-            'shipping_cost_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'shipping_cost_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+            'shipping_cost_tax_incl' => $total_shipping_tax_incl, // Modif YB pour TVA sur frais de port
+            'shipping_cost_tax_excl' => $total_shipping_tax_excl, // Modif YB pour TVA sur frais de port
         );
         $where = '`id_order` = \''.pSQL($this->order->id).'\'';
         Db::getInstance()->update('order_carrier', $carrier_update, $where);
@@ -915,7 +1029,11 @@ class SellermaniaImportOrderController
         }
 
         foreach ($this->data['OrderInfo']['Product'] as &$sellermaniaProduct) {
-            $sellermaniaProduct = $this->getProductIdentifier($sellermaniaProduct);
+            // Modif YB : already sent by reference
+			// Data has already been sent by reference, it should not be returned
+			// $sellermaniaProduct = $this->getProductIdentifier($sellermaniaProduct);
+			$this->getProductIdentifier($sellermaniaProduct);
+			/* End Modif YB : already sent by reference */
             $found = false;
             foreach ($psProducts as $psProduct) {
                 $found = $sellermaniaProduct['id_product'] == $psProduct['product_id'] &&

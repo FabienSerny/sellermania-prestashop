@@ -23,7 +23,9 @@
 *}
 
 <div id="sellermania-template">
-
+{* Modif YB : affichage commande standard *}
+{if $sellermania_display_default_admin!="oui" && $sellermania_display_default_admin!="yes"}
+{* Fin Modif YB : affichage commande standard *}
 
     {************************************************}
     {*************** TITLE TEMPLATE *****************}
@@ -88,6 +90,9 @@
         </table>
     </div>
 
+{* Modif YB : affichage commande standard *}
+{/if}
+{* Fin Modif YB : affichage commande standard *}
 
     {********************************************************}
     {*************** ORDER SUMMARY TEMPLATE *****************}
@@ -295,5 +300,11 @@
     {/if}
 
 </script>
+{* Modif YB : affichage commande standard *}
+{if $sellermania_display_default_admin!="oui" && $sellermania_display_default_admin!="yes"}
+{* Fin Modif YB : affichage commande standard *}
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>
+{* Modif YB : affichage commande standard *}
+{/if}
+{* Fin Modif YB : affichage commande standard *}
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>
