@@ -63,7 +63,7 @@ class SellermaniaActionOrderStatusUpdateController
             if (Validate::isLoadedObject($sellermania_order) && Validate::isLoadedObject($prestashop_order)) {
 
                 // Retrieve tracking number
-                if (version_compare(_PS_VERSION_, '1.5') < 0) {
+                if (version_compare(_PS_VERSION_, '1.5') < 0 || !method_exists($prestashop_order, 'getIdOrderCarrier')) {
                     $tracking_number = $prestashop_order->shipping_number;
                 } else {
                     $id_order_carrier = $prestashop_order->getIdOrderCarrier();
