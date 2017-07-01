@@ -567,8 +567,8 @@ class SellermaniaImportOrderController
                     }
                 }
 
-        // check if Sku is id_unique
-        $ps_ids = explode('-', $product['Sku']);
+        // Check if Sku is id_unique
+        $ps_ids = preg_split("/[\s,;#_\-\/|]+/", $product['Sku']);
         if (count($ps_ids) == 2) {
 
             $idp = (int)$ps_ids[0];
