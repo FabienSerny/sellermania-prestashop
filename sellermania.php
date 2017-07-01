@@ -43,7 +43,7 @@ class Sellermania extends Module
     /**
      * Module Constructor
      */
-    function __construct()
+    public function __construct()
     {
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
@@ -428,7 +428,7 @@ class Sellermania extends Module
      * Configuration method
      * @return string $html
      */
-    function getContent()
+    public function getContent()
     {
         if (Tools::getValue('export') == 'true') {
             die($this->export());
@@ -545,7 +545,8 @@ class Sellermania extends Module
      */
     public function debugLog($string)
     {
-        if (Tools::getValue('debug') == 'import')
+        if (Tools::getValue('debug') == 'import') {
             echo '<!-- '.date('Y-m-d H:i:s').' '.$string.' -->'."\n";
+        }
     }
 }
