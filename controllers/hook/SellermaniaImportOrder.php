@@ -777,6 +777,13 @@ class SellermaniaImportOrderController
             foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
                 $this->fixOrderDetail15($this->order->id, $product);
 
+        // Calcul shipping without tax
+        $total_shipping_tax_incl = (float)$this->data['OrderInfo']['Transport']['Amount']['Price'];
+        $total_shipping_tax_excl = (float)$this->data['OrderInfo']['Transport']['Amount']['Price'];
+        if (isset($this->order->carrier_tax_rate) && !is_null($this->order->carrier_tax_rate) && (float)$this->order->carrier_tax_rate > 0) {
+            $total_shipping_tax_excl = round(100 * $total_shipping_tax_excl / ((100 + (float)$this->order->carrier_tax_rate)), 6);
+        }
+
         // Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
         $update = array(
             'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
@@ -786,12 +793,11 @@ class SellermaniaImportOrderController
             'total_products' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'],
             'total_products_wt' => (float)$this->data['OrderInfo']['TotalProductsWithVAT'],
             'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'total_shipping_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'total_shipping_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+            'total_shipping_tax_incl' => (float)$total_shipping_tax_incl,
+            'total_shipping_tax_excl' => (float)$total_shipping_tax_excl,
             'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
         );
         Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$this->order->id);
-
 
         // Fix payment
         $updateTab = array(
