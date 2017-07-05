@@ -74,32 +74,38 @@ $(document).ready(function() {
 
     // Replace status order selection
     sellermania_block_order_state.after(sellermania_title);
-    if (!sellermania_order_edit_status) {
+    if (!sellermania_order_edit_status && !sellermania_enable_native_order_interface) {
         sellermania_block_order_state.hide();
         sellermania_block_order_state_button.hide();
     }
 
     // Replace customer block
-    sellermania_block_customer.html(sellermania_customer);
+    if (!sellermania_enable_native_order_interface) {
+        sellermania_block_customer.html(sellermania_customer);
+    } else {
+        sellermania_block_customer.after(sellermania_customer);
+    }
 
     // Replace right column
     var order_buttons = '<div class="button-command-prev-next">' + sellermania_block_button_prev_next.html() + '</div><div class="clear"></div>';
     sellermania_block_parent_button_prev_next.html(order_buttons + sellermania_order_summary);
 
     // Hide address block, "Add product" button, discount block, message thread customer block and general legend
-    sellermania_block_address.hide();
-    sellermania_block_add_product.hide();
-    sellermania_block_discount.hide();
-    sellermania_block_customer_thread.hide();
-    sellermania_block_product_general_legend.hide();
-    sellermania_block_partial_refund.hide();
-    sellermania_block_order_toolbar.hide();
-    sellermania_block_warn.hide();
+    if (!sellermania_enable_native_order_interface) {
+        sellermania_block_address.hide();
+        sellermania_block_add_product.hide();
+        sellermania_block_discount.hide();
+        sellermania_block_customer_thread.hide();
+        sellermania_block_product_general_legend.hide();
+        sellermania_block_partial_refund.hide();
+        sellermania_block_order_toolbar.hide();
+        sellermania_block_warn.hide();
 
-    // Hide product action
-    $('.product_action').hide();
-    $('.partial_refund_fields').next().hide();
+        // Hide product action
+        $('.product_action').hide();
+        $('.partial_refund_fields').next().hide();
 
-    // Hide total at the bottom of the screen
-    $('#total_products').parent().parent().hide();
+        // Hide total at the bottom of the screen
+        $('#total_products').parent().parent().hide();
+    }
 });
