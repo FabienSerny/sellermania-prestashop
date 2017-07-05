@@ -64,6 +64,11 @@
                     <label>{l s='Cron script to call' mod='sellermania'}</label>
                     php -f {$script_path}/import.php {$sellermania_key}
                 </p>
+                <p>
+                    <b><u>{l s='Note:' mod='sellermania'}</u></b><br>
+                    - {l s='Automatic importation is easier to configure (you have nothing to do), but it can cause some issues (slow down back office during importation, import some orders in double if two people are working on the back office, or stock issues if nobody is using the back office during the day).' mod='sellermania'}<br>
+                    - {l s='So, if you have the possibility, use cron importation (just contact your hosting provider, he should be able to help you).' mod='sellermania'}
+                </p>
 
 
                 <br>
@@ -133,7 +138,17 @@
                     <label>{l s='Enable native refund system' mod='sellermania'}</label>
                     <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_yes" value="yes" {if $sm_enable_native_refund_system eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
                     <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_no" value="no" {if $sm_enable_native_refund_system eq 'no' || $sm_enable_native_refund_system eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
-                </p><br clear="left" />
+                </p>
+                <p><b><u>{l s='BEWARE:' mod='sellermania'}</u></b> {l s='Some of the native order actions can send e-mails to customers. You can be blacklist by marketplace if you do not proceed carefully.' mod='sellermania'}</p>
+                <br clear="left" />
+
+                <p>
+                    <label>{l s='Enable native order interface' mod='sellermania'}</label>
+                    <input type="radio" name="sm_enable_native_order_interface" id="sm_enable_native_order_interface_yes" value="yes" {if $sm_enable_native_order_interface eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+                    <input type="radio" name="sm_enable_native_order_interface" id="sm_enable_native_order_interface_no" value="no" {if $sm_enable_native_order_interface eq 'no' || $sm_enable_native_order_interface eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+                </p>
+                <p><b><u>{l s='BEWARE:' mod='sellermania'}</u></b> {l s='Some of the native order actions can send e-mails to customers. You can be blacklist by marketplace if you do not proceed carefully.' mod='sellermania'}</p>
+                <br clear="left" />
 
                 <p><label>{l s='E-mail associated to customer account created' mod='sellermania'}</label> <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" /></p>
                 <p><label>{l s='Starting date for orders importation' mod='sellermania'}</label> <input type="text" name="sm_install_date" value="{$sm_install_date}" /></p>
@@ -150,6 +165,10 @@
                 </p><br clear="left" />
 
                 <p><label>{l s='Sellermania order state configuration' mod='sellermania'}</label></p><br clear="left" />
+                <p>
+                    <label><b><u>{l s='Sellermania order state' mod='sellermania'}</u></b></label>
+                    <label><b><u>{l s='PrestaShop order state' mod='sellermania'}</u></b></label>
+                </p>
                 <p>
                     {foreach from=$sm_order_states key=sm_order_state_key item=sm_order_state}
                     <label>{$sm_order_state.label[$documentation_iso_code]} :</label>

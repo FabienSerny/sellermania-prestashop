@@ -294,6 +294,15 @@
         var sellermania_enable_native_refund_system = false;
     {/if}
 
+    {if $sellermania_enable_native_order_interface == 'yes'}
+        var sellermania_enable_native_order_interface = true;
+    {else}
+        var sellermania_enable_native_order_interface = false;
+    {/if}
+
+
+
+
 </script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>

@@ -103,6 +103,11 @@
                                 <label for="sm_import_method_cron">{l s='Cron' mod='sellermania'}</label>&nbsp;&nbsp;
                                 <input type="radio" name="sm_import_method" id="sm_import_method_automatic" value="automatic" {if $sm_import_method eq 'automatic' || $sm_import_method eq ''}checked="checked"{/if} />
                                 <label for="sm_import_method_automatic">{l s='Automatic' mod='sellermania'}</label>
+                                <p>
+                                    <b><u>{l s='Note:' mod='sellermania'}</u></b><br>
+                                    - {l s='Automatic importation is easier to configure (you have nothing to do), but it can cause some issues (slow down back office during importation, import some orders in double if two people are working on the back office, or stock issues if nobody is using the back office during the day).' mod='sellermania'}<br>
+                                    - {l s='So, if you have the possibility, use cron importation (just contact your hosting provider, he should be able to help you).' mod='sellermania'}
+                                </p>
                             </div>
                         </div>
                         <div class="form-group clearfix" id="sm_import_method_cron_configuration">
@@ -217,6 +222,18 @@
                                 <label for="sm_enable_native_refund_system_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
                                 <input type="radio" name="sm_enable_native_refund_system" id="sm_enable_native_refund_system_no" value="no" {if $sm_enable_native_refund_system eq 'no' || $sm_enable_native_refund_system eq ''}checked="checked"{/if} />
                                 <label for="sm_enable_native_refund_system_no">{l s='No' mod='sellermania'}</label>
+                                <p><b><u>{l s='BEWARE:' mod='sellermania'}</u></b> {l s='Some of the native order actions can send e-mails to customers. You can be blacklist by marketplace if you do not proceed carefully.' mod='sellermania'}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Enable native order interface' mod='sellermania'}</label>
+                            <div class="col-lg-4">
+                                <input type="radio" name="sm_enable_native_order_interface" id="sm_enable_native_order_interface_yes" value="yes" {if $sm_enable_native_order_interface eq 'yes'}checked="checked"{/if} />
+                                <label for="sm_enable_native_order_interface_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                                <input type="radio" name="sm_enable_native_order_interface" id="sm_enable_native_order_interface_no" value="no" {if $sm_enable_native_order_interface eq 'no' || $sm_enable_native_order_interface eq ''}checked="checked"{/if} />
+                                <label for="sm_enable_native_order_interface_no">{l s='No' mod='sellermania'}</label>
+                                <p><b><u>{l s='BEWARE:' mod='sellermania'}</u></b> {l s='Some of the native order actions can send e-mails to customers. You can be blacklist by marketplace if you do not proceed carefully.' mod='sellermania'}</p>
                             </div>
                         </div>
 
@@ -251,6 +268,11 @@
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Sellermania order state configuration' mod='sellermania'}</label>
                             <div class="col-lg-8">
+
+                                <div class="col-lg-4"><b><u>{l s='Sellermania order state' mod='sellermania'}</u></b></div>
+                                <div class="col-lg-8"><b><u>{l s='PrestaShop order state' mod='sellermania'}</u></b></div>
+                                <br clear="left"><br>
+
                                 {foreach from=$sm_order_states key=sm_order_state_key item=sm_order_state}
                                     <label class="col-lg-4">{$sm_order_state.label[$documentation_iso_code]}</label>
                                     <div class="col-lg-8">

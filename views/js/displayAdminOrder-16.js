@@ -90,7 +90,9 @@ $(document).ready(function() {
         if (sellermania_block_product_general_legend.parent().hasClass('standard_refund_fields'))
             sellermania_block_product_general_legend = $('#orderProducts').parent().next().next().find('div:first');
 
-        $('#messages').parent().hide();
+        if (!sellermania_enable_native_order_interface) {
+            $('#messages').parent().hide();
+        }
     }
 
 	// Fix for 1.6.0.11
@@ -105,32 +107,40 @@ $(document).ready(function() {
 
     // Replace status order selection
     sellermania_block_order_state.after(sellermania_title);
-    if (!sellermania_order_edit_status) {
+    if (!sellermania_order_edit_status && !sellermania_enable_native_order_interface) {
         sellermania_block_order_state.hide();
         sellermania_block_order_state_button.hide();
     }
 
     // Replace right column
-    sellermania_right_column.html(sellermania_order_summary);
-    sellermania_block_shipping.html(sellermania_customer);
+    if (!sellermania_enable_native_order_interface) {
+        sellermania_right_column.html(sellermania_order_summary);
+        sellermania_block_shipping.html(sellermania_customer);
+    } else {
+        sellermania_right_column.first().after(sellermania_order_summary);
+    }
 
     // Hide order actions
-    sellermania_block_order_actions.hide();
-    sellermania_block_shipping_title.hide();
-    sellermania_block_payment.hide();
-    sellermania_block_documents.hide();
-    sellermania_add_voucher.hide();
-    sellermania_add_product.hide();
-    sellermania_panel_voucher.hide();
-    sellermania_panel_total.hide();
-    sellermania_toolbar.hide();
-    $('.product_action').hide();
+    if (!sellermania_enable_native_order_interface) {
+        sellermania_block_order_actions.hide();
+        sellermania_block_shipping_title.hide();
+        sellermania_block_payment.hide();
+        sellermania_block_documents.hide();
+        sellermania_add_voucher.hide();
+        sellermania_add_product.hide();
+        sellermania_panel_voucher.hide();
+        sellermania_panel_total.hide();
+        sellermania_toolbar.hide();
+        $('.product_action').hide();
+    }
 
     // Legend
-    sellermania_block_product_general_legend.hide();
+    if (!sellermania_enable_native_order_interface) {
+        sellermania_block_product_general_legend.hide();
+    }
 
     // Reenable native refund system
-    if (sellermania_enable_native_refund_system == true)
+    if (sellermania_enable_native_refund_system == true || sellermania_enable_native_order_interface == true)
     {
         $('.icon-print').parent().parent().show();
         sellermania_block_order_actions.show();
