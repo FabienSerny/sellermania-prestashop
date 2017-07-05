@@ -36,6 +36,8 @@ require_once(dirname(__FILE__).'/../front/SellermaniaExport.php');
 
 class SellermaniaGetContentController
 {
+    public $params;
+
     /**
      * Controller constructor
      */
@@ -47,6 +49,25 @@ class SellermaniaGetContentController
         $this->context = Context::getContext();
     }
 
+    public function initParams()
+    {
+        $this->params = array('sm_export_all', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint',
+            'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
+            'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',
+            'sm_stock_sync_nb_char', 'sm_stock_sync_position',
+            'sm_import_method', 'sm_import_default_carrier',
+            'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
+            'sm_enable_native_refund_system', 'sm_enable_native_order_interface',
+            'sm_enable_export_comb_name',
+            'sm_catch_all_mail_address', 'sm_install_date',
+            'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
+            'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
+            'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
+        );
+        foreach ($this->module->sellermania_marketplaces as $marketplace) {
+            $this->params[] = 'SM_MKP_'.str_replace('.', '_', $marketplace);
+        }
+    }
 
     /**
      * Test configuration
@@ -87,23 +108,8 @@ class SellermaniaGetContentController
             $this->context->smarty->assign('sm_confirm_export_options', 1);
         }
 
-        $params = array('sm_export_all', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint',
-                        'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
-                        'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',
-                        'sm_stock_sync_nb_char', 'sm_stock_sync_position',
-                        'sm_import_method', 'sm_import_default_carrier',
-                        'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
-                        'sm_enable_native_refund_system', 'sm_enable_export_comb_name',
-                        'sm_catch_all_mail_address', 'sm_install_date',
-                        'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
-                        'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
-                        'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
-        );
-        foreach ($this->module->sellermania_marketplaces as $marketplace) {
-            $params[] = 'SM_MKP_'.str_replace('.', '_', $marketplace);
-        }
 
-        foreach ($params as $p) {
+        foreach ($this->params as $p) {
             if (isset($_POST[$p])) {
                 Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
             }
@@ -220,38 +226,15 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('carriers', $carriers);
 
         $this->context->smarty->assign('category_tree', $this->renderCategoriesTree());
-
         $this->context->smarty->assign('sm_default_product', new Product(Configuration::get('SM_DEFAULT_PRODUCT_ID')));
         $this->context->smarty->assign('sm_default_product_id', Configuration::get('SM_DEFAULT_PRODUCT_ID'));
-        $this->context->smarty->assign('sm_export_all', Configuration::get('SM_EXPORT_ALL'));
-        $this->context->smarty->assign('sm_import_orders', Configuration::get('SM_IMPORT_ORDERS'));
-        $this->context->smarty->assign('sm_order_email', Configuration::get('SM_ORDER_EMAIL'));
-        $this->context->smarty->assign('sm_order_token', Configuration::get('SM_ORDER_TOKEN'));
-        $this->context->smarty->assign('sm_order_endpoint', Configuration::get('SM_ORDER_ENDPOINT'));
-        $this->context->smarty->assign('sm_confirm_order_endpoint', Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
-        $this->context->smarty->assign('sm_inventory_endpoint', Configuration::get('SM_INVENTORY_ENDPOINT'));
-        $this->context->smarty->assign('sm_stock_sync_option', Configuration::get('SM_STOCK_SYNC_OPTION'));
-        $this->context->smarty->assign('sm_stock_sync_option_1', Configuration::get('SM_STOCK_SYNC_OPTION_1'));
-        $this->context->smarty->assign('sm_stock_sync_option_2', Configuration::get('SM_STOCK_SYNC_OPTION_2'));
-        $this->context->smarty->assign('sm_stock_sync_nb_char', Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
-        $this->context->smarty->assign('sm_stock_sync_position', Configuration::get('SM_STOCK_SYNC_POSITION'));
 
-        $this->context->smarty->assign('sm_import_method', Configuration::get('SM_IMPORT_METHOD'));
-
-        $this->context->smarty->assign('sm_alert_missing_ref_option', Configuration::get('SM_ALERT_MISSING_REF_OPTION'));
-        $this->context->smarty->assign('sm_alert_missing_ref_mail', Configuration::get('SM_ALERT_MISSING_REF_MAIL'));
-
-        $this->context->smarty->assign('sm_enable_native_refund_system', Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM'));
-        $this->context->smarty->assign('sm_enable_export_comb_name', Configuration::get('SM_ENABLE_EXPORT_COMB_NAME'));
-
-        $this->context->smarty->assign('sm_import_default_carrier', Configuration::get('SM_IMPORT_DEFAULT_CARRIER'));
-
-        $this->context->smarty->assign('sm_catch_all_mail_address', Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS'));
-        $this->context->smarty->assign('sm_install_date', Configuration::get('SM_INSTALL_DATE'));
+        foreach ($this->params as $param) {
+            $this->context->smarty->assign(strtolower($param), Configuration::get(strtoupper($param)));
+        }
 
         $this->context->smarty->assign('sm_order_states', $this->module->sellermania_order_states);
         $this->context->smarty->assign('ps_order_states', OrderState::getOrderStates($this->context->language->id));
-
         $this->context->smarty->assign('sm_marketplaces', $sm_marketplaces);
 
         $this->context->smarty->assign('order_token_tab', Tools::getAdminTokenLite('AdminOrders'));
@@ -297,6 +280,7 @@ class SellermaniaGetContentController
      */
     public function run()
     {
+        $this->initParams();
         if (Tools::getValue('see') != 'orders-error') {
             $this->saveConfiguration();
         }
