@@ -96,7 +96,7 @@ $(document).ready(function() {
 
     // Replace status order selection
     sellermania_block_next_button_prev_next.html(sellermania_title);
-    if (!sellermania_order_edit_status) {
+    if (!sellermania_order_edit_status && !sellermania_enable_native_order_interface) {
         sellermania_block_order_state.hide();
         sellermania_block_order_state_button.hide();
     }
@@ -108,15 +108,17 @@ $(document).ready(function() {
     sellemernia_right_column.html(sellermania_order_summary);
     sellemernia_right_column.css('width', '42%');
 
-    // Hide address block, "Add product" button, discount block, message thread customer block and general legend
-    sellermania_block_address1.hide();
-    sellermania_block_address2.hide();
-    sellermania_block_discount.hide();
-    sellermania_block_customer_thread.hide();
-    sellermania_block_product_general_legend.hide();
-    sellermania_block_cancel_button.hide();
+    if (!sellermania_enable_native_order_interface) {
+        // Hide address block, "Add product" button, discount block, message thread customer block and general legend
+        sellermania_block_address1.hide();
+        sellermania_block_address2.hide();
+        sellermania_block_discount.hide();
+        sellermania_block_customer_thread.hide();
+        sellermania_block_product_general_legend.hide();
+        sellermania_block_cancel_button.hide();
 
-    // Hide column products
-    sellermania_cancel_check.html(' ');
-    sellermania_cancel_quantity.html(' ');
+        // Hide column products
+        sellermania_cancel_check.html(' ');
+        sellermania_cancel_quantity.html(' ');
+    }
 });
