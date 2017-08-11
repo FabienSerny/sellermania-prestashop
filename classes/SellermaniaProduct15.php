@@ -262,6 +262,12 @@ class SellermaniaProduct
                 $image_link = str_replace('http://./', 'http://'.$context->shop->domain.'/'.$context->shop->physical_uri, $image_link);
                 $image_link = str_replace('http://html/', 'http://'.$context->shop->domain.'/'.$context->shop->physical_uri, $image_link);
             }
+
+            if (Configuration::get('PS_SSL_ENABLED')) {
+                $image_link = str_replace('http://', 'https://', $image_link);
+            }
+            $image_link = str_replace(dirname(dirname(dirname(__FILE__))), '', $image_link);
+
             $image_link = str_replace('/modules/', '/', $image_link);
             if (!isset($existing_images[$image_link])) {
                 $images[] = $image_link;
