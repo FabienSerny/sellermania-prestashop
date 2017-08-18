@@ -802,7 +802,7 @@ class SellermaniaImportOrderController
         // Fix payment
         $updateTab = array(
             'amount' => $update['total_paid_real'],
-            'payment_method' => $this->data['OrderInfo']['MarketPlace'].' '.$this->data['OrderInfo']['OrderId'],
+            'payment_method' => $this->data['OrderInfo']['MarketPlace'],
         );
         $where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
         Db::getInstance()->update('order_payment', $updateTab, $where);
