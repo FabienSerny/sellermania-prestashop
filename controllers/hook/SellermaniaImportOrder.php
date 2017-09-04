@@ -246,6 +246,10 @@ class SellermaniaImportOrderController
             if (!isset($this->data['OrderInfo']['Product'][$kp]['Sku']))
                 $this->data['OrderInfo']['Product'][$kp]['Sku'] = '';
 
+            // Fix name
+            $search = array('(', ')');
+            $this->data['OrderInfo']['Product'][$kp]['ItemName'] = str_replace($search, '', $this->data['OrderInfo']['Product'][$kp]['ItemName']);
+
             // Fix non existing variable
             if (!isset($this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total']))
                 $this->data['OrderInfo']['Product'][$kp]['ProductVAT']['total'] = 0;
