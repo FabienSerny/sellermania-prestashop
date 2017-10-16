@@ -43,6 +43,7 @@
         <b>{l s='E-mail:' mod='sellermania'}</b> <a href="mailto:{$sellermania_order.User[0].Email}">{$sellermania_order.User[0].Email}</a><br>
         {if isset($sellermania_order.User[0].ShippingPhone) && !empty($sellermania_order.User[0].ShippingPhone)}<b>{l s='Shipping phone:' mod='sellermania'}</b> {$sellermania_order.User[0].ShippingPhone}<br>{/if}
         {if isset($sellermania_order.User[0].UserPhone) && !empty($sellermania_order.User[0].UserPhone)}<b>{l s='User phone:' mod='sellermania'}</b> {$sellermania_order.User[0].UserPhone}<br>{/if}
+        {if isset($sellermania_order.User[0].Phone2) && !empty($sellermania_order.User[0].Phone2)}<b>{l s='User phone 2:' mod='sellermania'}</b> {$sellermania_order.User[0].Phone2}<br>{/if}
         <br>
         <table width="100%">
             <tr>
