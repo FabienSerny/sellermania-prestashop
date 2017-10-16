@@ -42,7 +42,7 @@ $(document).ready(function() {
         row++;
     });
 
-	if (nb_sellermania_orders_in_error > 0) {
+	if (nb_sellermania_orders_in_error > 0 && $('#sellermania-template').length < 1) {
 		$('.path_bar').after('<p align="center" style="border: 1px solid #cc0000;color: #d8000c;background-color:#ffbaba;padding:5px"><b>' + nb_sellermania_orders_in_error + '</b> ' + txt_sellermania_orders_in_error + '</p>');
     }
 
