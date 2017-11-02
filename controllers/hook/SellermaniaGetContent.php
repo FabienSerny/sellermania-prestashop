@@ -55,7 +55,7 @@ class SellermaniaGetContentController
             'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
             'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',
             'sm_stock_sync_nb_char', 'sm_stock_sync_position',
-            'sm_import_method', 'sm_import_default_carrier',
+            'sm_import_method', 'sm_import_default_customer_group', 'sm_import_default_carrier',
             'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
             'sm_enable_native_refund_system', 'sm_enable_native_order_interface',
             'sm_enable_export_comb_name',
@@ -194,6 +194,9 @@ class SellermaniaGetContentController
         }
 
 
+        // Retrieve customer groups
+        $customer_groups = Group::getGroups($this->context->language->id);
+
         // Retrieve carriers (last parameter "5" means "All carriers")
         $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 5);
 
@@ -222,6 +225,8 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('files_list', $files_list);
         $this->context->smarty->assign('languages_list', $languages_list);
         $this->context->smarty->assign('sellermania_module_path', $this->web_path);
+
+        $this->context->smarty->assign('customer_groups', $customer_groups);
 
         $this->context->smarty->assign('carriers', $carriers);
 

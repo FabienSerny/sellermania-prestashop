@@ -154,8 +154,15 @@
                 <p><label>{l s='Starting date for orders importation' mod='sellermania'}</label> <input type="text" name="sm_install_date" value="{$sm_install_date}" /></p>
 
                 <br>
-                <h2>4. {l s='Default carrier and order states' mod='sellermania'}</h2>
+                <h2>4. {l s='Default customer group, carrier and order states' mod='sellermania'}</h2>
                 <hr />
+
+                <p>
+                    <label>{l s='Default customer group for order importation' mod='sellermania'}</label>
+                    {foreach from=$customer_groups item=customer_group}
+                        <input type="radio" value="{$customer_group.id_group}" name="sm_import_default_customer_group" {if $sm_import_default_customer_group eq $customer_group.id_group}checked{/if} /> {$customer_group.name}<br>
+                    {/foreach}
+                </p><br clear="left" />
 
                 <p>
                     <label>{l s='Default carrier for order importation' mod='sellermania'}</label>
