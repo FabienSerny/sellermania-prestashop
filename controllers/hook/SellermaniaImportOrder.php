@@ -1039,13 +1039,12 @@ class SellermaniaImportOrderController
             return;
         }
 
-        if (version_compare(_PS_VERSION_, '1.4', '>')) {
-            StockAvailable::updateQuantity($orderDetail->product_id, $orderDetail->product_attribute_id, $quantity);
-        } else {
-
+        if (substr(_PS_VERSION_, 0, 3) == '1.4') {
             // Handle product quantities
             $productObj = new Product((int) $orderDetail->product_id, false, (int)_PS_LANG_DEFAULT_);
             $productObj->addStockMvt($quantity, _STOCK_MOVEMENT_ORDER_REASON_, $orderDetail->product_attribute_id, $orderDetail->id_order, NULL);
+        } else {
+            StockAvailable::updateQuantity($orderDetail->product_id, $orderDetail->product_attribute_id, $quantity);
         }
     }
 }
