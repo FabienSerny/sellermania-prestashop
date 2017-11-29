@@ -248,6 +248,7 @@ class SellermaniaImportOrderController
 
             // Fix name
             $search = array('(', ')');
+            $this->data['OrderInfo']['Product'][$kp]['ItemName'] = html_entity_decode($this->data['OrderInfo']['Product'][$kp]['ItemName']);
             $this->data['OrderInfo']['Product'][$kp]['ItemName'] = str_replace($search, '', $this->data['OrderInfo']['Product'][$kp]['ItemName']);
 
             // Fix non existing variable
@@ -970,6 +971,7 @@ class SellermaniaImportOrderController
                     if ($sellermaniaProduct['QuantityPurchased'] != $psProduct['product_quantity']) {
                         $orderDetail = new OrderDetail($psProduct['id_order_detail']);
                         $orderDetail->product_quantity = $sellermaniaProduct['QuantityPurchased'];
+                        $orderDetail->product_name = $sellermaniaProduct['ItemName'];
                         $orderDetail->update();
 
                         $quantity = -abs(($sellermaniaProduct['QuantityPurchased'] - $psProduct['product_quantity']));
