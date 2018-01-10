@@ -346,12 +346,19 @@ class SellermaniaDisplayAdminOrderController
     public function run()
     {
         // Retrieve order data
-        $sellermania_order = Db::getInstance()->getValue('SELECT `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
+        $data = Db::getInstance()->getRow('SELECT `ref_order`, `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
+        $ref_order = $data['ref_order'];
+        sellermania_order = $data['info'];
         if (empty($sellermania_order))
             return '';
 
         // Decode order data
         $sellermania_order = json_decode($sellermania_order, true);
+
+        // If an error occured and Sellermania Reference was lost, we reset it
+        if (!isset($sellermania_order['OrderInfo']['OrderId']) || empty($sellermania_order['OrderInfo']['OrderId'])) {
+            $sellermania_order['OrderInfo']['OrderId'] = $ref_order;
+        }
 
         // Save order line status
         $result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId'], $sellermania_order);
