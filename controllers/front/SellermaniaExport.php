@@ -119,6 +119,11 @@ class SellermaniaExportController
      */
     public function export($output, $iso_lang = '', $start = 0, $limit = 0)
     {
+        // Check if context is set, if not we set it
+        if (!isset($this->context) || empty($this->context)) {
+            $this->context = Context::getContext();
+        }
+
         // If output is file, we delete old export files
         if ($output == 'file')
             $this->delete_export_files($iso_lang);
