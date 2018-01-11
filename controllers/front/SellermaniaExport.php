@@ -153,7 +153,7 @@ class SellermaniaExportController
             $id_lang = Language::getIdByIso($iso_lang);
             $this->renderExportHeader($iso_lang, $output);
 
-            $start_export = $stat;
+            $start_export = $start;
             $limit_export = $limit;
             if ($start_export == 0 || $limit_export = 0) {
                 $start_export = 1;
