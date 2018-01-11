@@ -152,15 +152,27 @@ class SellermaniaExportController
             $iso_lang = strtolower($language['iso_code']);
             $id_lang = Language::getIdByIso($iso_lang);
             $this->renderExportHeader($iso_lang, $output);
-            $result = SellermaniaProduct::getProductsRequest($id_lang, $start, $limit);
-            while ($row = Db::getInstance()->nextRow($result))
-            {
-                $row['location'] = SellermaniaProduct::getLocation($row['id_product'], $row['location']);
-                $row['tags'] = SellermaniaProduct::getProductTags($row['id_product'], $id_lang);
-                $row['features'] = SellermaniaProduct::getFeatures($row['id_product'], $id_lang);
-                $row['declinations'] = SellermaniaProduct::getProductDeclinations($row['id_product'], $id_lang);
-                $row['images'] = SellermaniaProduct::getImages($row['id_product']);
-                $this->renderExport($row, $iso_lang, $output);
+
+            $start_export = $stat;
+            $limit_export = $limit;
+            if ($start_export == 0 || $limit_export = 0) {
+                $start_export = 1;
+                $limit_export = 10;
+            }
+
+            $result = true;
+            while ($result) {
+                $result = SellermaniaProduct::getProductsRequest($id_lang, $start_export, $limit_export);
+                while ($row = Db::getInstance()->nextRow($result))
+                {
+                    $row['location'] = SellermaniaProduct::getLocation($row['id_product'], $row['location']);
+                    $row['tags'] = SellermaniaProduct::getProductTags($row['id_product'], $id_lang);
+                    $row['features'] = SellermaniaProduct::getFeatures($row['id_product'], $id_lang);
+                    $row['declinations'] = SellermaniaProduct::getProductDeclinations($row['id_product'], $id_lang);
+                    $row['images'] = SellermaniaProduct::getImages($row['id_product']);
+                    $this->renderExport($row, $iso_lang, $output);
+                }
+                $start_export = $start_export + 10;
             }
         }
     }
