@@ -158,7 +158,7 @@ class SellermaniaExportController
             if ($start == 0 || $limit = 0) {
                 $page = 1;
                 $items_per_page = 10;
-                $offset = ($page - 1) * $items_per_page;
+                $offset = (($page - 1) * $items_per_page) + 1;
             }
 
             $result = SellermaniaProduct::getProductsRequest($id_lang, $offset, $items_per_page);
@@ -176,7 +176,7 @@ class SellermaniaExportController
 
                 if ($start == 0 || $limit = 0) {
                     $page++;
-                    $offset = ($page - 1) * $items_per_page;
+                    $offset = (($page - 1) * $items_per_page) + 1;
                 }
 
                 $result = SellermaniaProduct::getProductsRequest($id_lang, $offset, $items_per_page);
