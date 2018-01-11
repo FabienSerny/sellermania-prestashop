@@ -348,7 +348,7 @@ class SellermaniaDisplayAdminOrderController
         // Retrieve order data
         $data = Db::getInstance()->getRow('SELECT `ref_order`, `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
         $ref_order = $data['ref_order'];
-        sellermania_order = $data['info'];
+        $sellermania_order = $data['info'];
         if (empty($sellermania_order))
             return '';
 
