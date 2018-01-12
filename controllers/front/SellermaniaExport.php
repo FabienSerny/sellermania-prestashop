@@ -167,6 +167,7 @@ class SellermaniaExportController
             $result = SellermaniaProduct::getProductsRequest($id_lang, $offset, $items_per_page);
             while ($result) {
 
+                $nb_rows = 0;
                 while ($row = Db::getInstance()->nextRow($result))
                 {
                     $row['location'] = SellermaniaProduct::getLocation($row['id_product'], $row['location']);
@@ -175,6 +176,7 @@ class SellermaniaExportController
                     $row['declinations'] = SellermaniaProduct::getProductDeclinations($row['id_product'], $id_lang);
                     $row['images'] = SellermaniaProduct::getImages($row['id_product']);
                     $this->renderExport($row, $iso_lang, $output);
+                    $nb_rows++;
                 }
 
                 if ($start == 0 || $limit = 0) {
@@ -182,7 +184,11 @@ class SellermaniaExportController
                     $offset = (($page - 1) * $items_per_page) + 1;
                 }
 
-                $result = SellermaniaProduct::getProductsRequest($id_lang, $offset, $items_per_page);
+                if ($nb_rows > 0) {
+                    $result = SellermaniaProduct::getProductsRequest($id_lang, $offset, $items_per_page);
+                } else {
+                    $result = false;
+                }
             }
         }
     }
