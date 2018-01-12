@@ -123,6 +123,9 @@ class SellermaniaExportController
         if (!isset($this->context) || empty($this->context)) {
             $this->context = Context::getContext();
         }
+        if (!isset($this->context->language)) {
+            $this->context->language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        }
 
         // If output is file, we delete old export files
         if ($output == 'file')
