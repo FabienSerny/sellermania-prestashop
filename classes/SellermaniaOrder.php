@@ -213,10 +213,20 @@ class SellermaniaOrder extends ObjectModel
      */
     public static function getSellermaniaOrdersInError()
     {
-        return Db::getInstance()->ExecuteS('
+        $not_imported_orders = Db::getInstance()->ExecuteS('
         SELECT * FROM `'._DB_PREFIX_.'sellermania_order`
         WHERE `id_order` = 0
         AND `date_add` > \''.pSQL(date("Y-m-d H:i:s", strtotime('-15 days'))).'\'');
+
+        $orders = array();
+        foreach ($not_imported_orders as $order) {
+            $order['info'] = json_decode($order['info'], true);
+            if ($order['info']['OrderInfo']['TotalAmount']['Amount']['Price'] > 0) {
+                $orders[] = $order;
+            }
+        }
+
+        return $orders;
     }
 
     /**

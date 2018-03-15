@@ -307,12 +307,12 @@
                     <br>
                     <div class="margin-form">
                         <p>{l s='The last order importation was done:' mod='sellermania'} <b>{$sm_last_import}</b></p>
-                        {if $nb_orders_in_error gt 0}
-                            <br>
-                            <h4>{l s='Importation errors:' mod='sellermania'}</h4>
-                            <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p>
-                        {/if}
                     </div>
+                {/if}
+                {if $nb_orders_in_error gt 0}
+                    <br>
+                    <h4>{l s='Importation errors:' mod='sellermania'}</h4>
+                    <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p>
                 {/if}
             {/if}
         </fieldset>
