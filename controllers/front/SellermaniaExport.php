@@ -201,21 +201,25 @@ class SellermaniaExportController
     public function renderExportHeader($iso_lang, $output)
     {
         $line = '';
-        foreach ($this->fields_to_export as $field => $field_type)
+        foreach ($this->fields_to_export as $field => $field_type) {
             $line .= '"'.$field.'";';
-        for ($i = 1; $i <= 5; $i++)
-            $line .= '"tag '.$i.'";';
-        for ($i = 1; $i <= 12; $i++)
-        {
-            if ($i == 1)
-                $line .= '"images";';
-            else
-                $line .= '"image '.$i.'";';
         }
-        foreach ($this->attribute_groups as $id_attribute_group => $group_name)
+        for ($i = 1; $i <= 5; $i++) {
+            $line .= '"tag '.$i.'";';
+        }
+        for ($i = 1; $i <= 12; $i++) {
+            if ($i == 1) {
+                $line .= '"images";';
+            } else {
+                $line .= '"image '.$i.'";';
+            }
+        }
+        foreach ($this->attribute_groups as $id_attribute_group => $group_name) {
             $line .= '"Attr '.$id_attribute_group.' - '.$group_name.'";';
-        foreach ($this->features as $id_feature => $name)
+        }
+        foreach ($this->features as $id_feature => $name) {
             $line .= '"Feature '.$id_feature.' - '.$name.'";';
+        }
         $line .= "\n";
         $this->renderLine($line, $iso_lang, $output);
     }
