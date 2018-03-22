@@ -233,36 +233,41 @@ class SellermaniaExportController
     public function renderExport($row, $iso_lang, $output)
     {
         // If declination duplicate row for each declination
-        if ($row['declinations'] && is_array($row['declinations']))
-        {
+        if ($row['declinations'] && is_array($row['declinations'])) {
+
             $rows = array();
-            foreach ($row['declinations'] as $id_product_attribute => $declination)
-            {
+            foreach ($row['declinations'] as $id_product_attribute => $declination) {
+
                 $rowCopy = $row;
                 $rowCopy['id_product_attribute'] = $id_product_attribute;
 
                 // Disable combination concatenation if this advanced option is disabled
                 // Some merchants only fill one combination
-                if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == 'yes')
+                if (Configuration::get('SM_ENABLE_EXPORT_COMB_NAME') == 'yes') {
                     $rowCopy['name'] = $rowCopy['name'].' '.implode(' ', $declination['attributes_values']);
+                }
 
                 $rowCopy['price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2);
                 $rowCopy['crossed_price'] = Product::getPriceStatic($rowCopy['id_product'], true, $id_product_attribute, 2, null, false, false);
-                if ($declination['wholesale_price'] > 0)
+                if ($declination['wholesale_price'] > 0) {
                     $rowCopy['wholesale_price'] = $declination['wholesale_price'];
-                if ($rowCopy['crossed_price'] == $rowCopy['price'])
+                }
+                if ($rowCopy['crossed_price'] == $rowCopy['price']) {
                     unset($rowCopy['crossed_price']);
+                }
                 $rowCopy['ecotax'] = $declination['ecotax'];
                 $rowCopy['quantity'] = $declination['quantity'];
                 $rowCopy['reference'] = (!empty($declination['reference']) ? $declination['reference'] : '');
                 $rowCopy['ean13'] = (!empty($declination['ean13']) ? $declination['ean13'] : '');
                 $rowCopy['upc'] = (!empty($declination['upc']) ? $declination['upc'] : '');
                 $rowCopy['location'] = (!empty($declination['location']) ? $declination['location'] : '');
-                if (isset($declination['images']) && count($declination['images']) >= 1)
+                if (isset($declination['images']) && count($declination['images']) >= 1) {
                     $rowCopy['images'] = $declination['images'];
+                }
                 $rowCopy['attributes_values'] = $declination['attributes_values'];
-                if ($rowCopy['active'] != 1)
+                if ($rowCopy['active'] != 1) {
                     $rowCopy['quantity'] = 0;
+                }
                 $rowCopy['supplier'] = $this->getSupplierData($rowCopy, 'name');
                 $rowCopy['supplier_reference'] = $this->getSupplierData($rowCopy, 'reference');
                 $rows[] = $rowCopy;
@@ -270,12 +275,14 @@ class SellermaniaExportController
         }
         else
         {
-            if ($row['active'] != 1)
+            if ($row['active'] != 1) {
                 $row['quantity'] = 0;
+            }
             $row['price'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['crossed_price'] = Product::getPriceStatic($row['id_product'], true, null, 2, null, false, false);
-            if ($row['crossed_price'] == $row['price'])
+            if ($row['crossed_price'] == $row['price']) {
                 unset($row['crossed_price']);
+            }
             $row['id_product_attribute'] = 0;
             $row['supplier'] = $this->getSupplierData($row, 'name');
             $row['supplier_reference'] = $this->getSupplierData($row, 'reference');
@@ -283,26 +290,29 @@ class SellermaniaExportController
         }
 
         // Filter ref without EAN13
-        if (Tools::getValue('filter') == 'without_ean13')
-            foreach ($rows as $krow => $row)
-                if (empty($row['ean13']))
+        if (Tools::getValue('filter') == 'without_ean13') {
+            foreach ($rows as $krow => $row) {
+                if (empty($row['ean13'])) {
                     unset($rows[$krow]);
-        if (empty($rows))
+                }
+            }
+        }
+        if (empty($rows)) {
             return false;
+        }
 
         // Begin rendering
         $line = '';
-        foreach ($rows as $row)
-            if ($row['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID') && $row['name'] != '')
-            {
-                foreach ($this->fields_to_export as $field => $field_type)
-                {
-                    if ($field == 'id_unique')
-                        $row[$field] = $row['id_product'].'-'.$row['id_product_attribute'];
-                    else if ($field == 'product_url')
+        foreach ($rows as $row) {
+            if ($row['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID') && $row['name'] != '') {
+
+                foreach ($this->fields_to_export as $field => $field_type) {
+
+                    if ($field == 'id_unique') {
+                        $row[$field] = $row['id_product'] . '-' . $row['id_product_attribute'];
+                    } else if ($field == 'product_url') {
                         $row[$field] = $this->context->link->getProductLink($row['id_product'], null, null, null, Language::getIdByIso($iso_lang));
-                    else if ($field == 'category_default_full_path')
-                    {
+                    } else if ($field == 'category_default_full_path') {
                         $category = new Category((int)$row['id_category_default'], $this->context->language->id);
                         $full_path = $category->name;
                         while ($category->id_parent > 0) {
@@ -310,25 +320,30 @@ class SellermaniaExportController
                             $full_path = $category->name.' > '.$full_path;
                         }
                         $row[$field] = $full_path;
-                    }
-                    else if (!isset($row[$field]))
+                    } else if (!isset($row[$field])) {
                         $row[$field] = '';
-                    else if ($field_type == 'int')
+                    } else if ($field_type == 'int') {
                         $row[$field] = (int)$row[$field];
-                    else if ($field_type == 'float')
+                    } else if ($field_type == 'float') {
                         $row[$field] = number_format($row[$field], 2, '.', '');
+                    }
                     $line .= '"'.str_replace(array("\r\n", "\n", '"'), '', $row[$field]).'";';
                 }
-                for ($i = 1; $i <= 5; $i++)
+                for ($i = 1; $i <= 5; $i++) {
                     $line .= '"'.(isset($row['tags'][$i - 1]) ? $row['tags'][$i - 1] : '').'";';
-                for ($i = 1; $i <= 12; $i++)
+                }
+                for ($i = 1; $i <= 12; $i++) {
                     $line .= '"'.(isset($row['images'][$i - 1]) ? $row['images'][$i - 1] : '').'";';
-                foreach ($this->attribute_groups as $id_attribute_group => $group_name)
+                }
+                foreach ($this->attribute_groups as $id_attribute_group => $group_name) {
                     $line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
-                foreach ($this->features as $id_feature => $name)
+                }
+                foreach ($this->features as $id_feature => $name) {
                     $line .= '"'.(isset($row['features'][$id_feature]) ? $row['features'][$id_feature] : '').'";';
+                }
                 $line .= "\n";
             }
+        }
 
         // Free memory
         $row = null;
