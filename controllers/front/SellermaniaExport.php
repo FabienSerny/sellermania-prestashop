@@ -217,6 +217,7 @@ class SellermaniaExportController
         foreach ($this->attribute_groups as $id_attribute_group => $group_name) {
             $line .= '"Attr '.$id_attribute_group.' - '.$group_name.'";';
         }
+        $line .= '"Attributes compiled";';
         foreach ($this->features as $id_feature => $name) {
             $line .= '"Feature '.$id_feature.' - '.$name.'";';
         }
@@ -338,6 +339,11 @@ class SellermaniaExportController
                 foreach ($this->attribute_groups as $id_attribute_group => $group_name) {
                     $line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
                 }
+                $line .= '"';
+                foreach ($this->attribute_groups as $id_attribute_group => $group_name) {
+                    $line .= (isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').' ';
+                }
+                $line .= '";';
                 foreach ($this->features as $id_feature => $name) {
                     $line .= '"'.(isset($row['features'][$id_feature]) ? $row['features'][$id_feature] : '').'";';
                 }
