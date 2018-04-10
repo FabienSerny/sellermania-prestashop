@@ -109,7 +109,14 @@ class SellermaniaOrder extends ObjectModel
         SELECT `id_sellermania_order`
         FROM `'._DB_PREFIX_.'sellermania_order`
         WHERE `id_order` = '.(int)$id_order);
+
+        // Load Sellermania order
         $sellermania_order = new SellermaniaOrder($id_sellermania_order);
+        if (!ValidateCore::isLoadedObject($sellermania_order)) {
+            return $sellermania_order;
+        }
+
+        // Load order details
         $sellermania_order->details = json_decode($sellermania_order->info, true);
 
         // Calcul VAT
