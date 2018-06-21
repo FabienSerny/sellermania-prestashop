@@ -618,9 +618,9 @@ class SellermaniaImportOrderController
     /************** FIX ORDER **************/
 
     /**
-     * Fix order on PrestaShop
+     * Fix customer on PrestaShop
      */
-    public function fixOrder($fix_details = true)
+    public function fixCustomerAddress()
     {
         // Update customer
         $this->customer = new Customer($this->order->id_customer);
@@ -631,8 +631,8 @@ class SellermaniaImportOrderController
         // If two differents addresses and only one registered, we create the other address
         if ($this->order->id_address_delivery == $this->order->id_address_invoice
             && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1'])
-            && $this->data['User'][0]['Address']['Street1'] != $this->data['User'][1]['Address']['Street1'])
-        {
+            && $this->data['User'][0]['Address']['Street1'] != $this->data['User'][1]['Address']['Street1']
+        ) {
             $id_address_invoice = $this->createAddress('Billing', $this->data['User'][1]);
             $this->order->id_address_invoice = $id_address_invoice;
             $this->order->update();
@@ -653,8 +653,8 @@ class SellermaniaImportOrderController
 
         // If different, update billing address
         if ($this->order->id_address_delivery != $this->order->id_address_invoice
-            && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1']))
-        {
+            && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1'])
+        ) {
             $this->address = new Address($this->order->id_address_invoice);
             $this->address->company = $this->data['User'][1]['Company'];
             $this->address->firstname = $this->data['User'][1]['FirstName'];
@@ -667,6 +667,14 @@ class SellermaniaImportOrderController
             $this->address->phone = $this->data['User'][1]['Address']['ShippingPhonePrestaShop'];
             $this->address->update();
         }
+    }
+
+    /**
+     * Fix order on PrestaShop
+     */
+    public function fixOrder($fix_details = true)
+    {
+        $this->fixCustomerAddress();
 
         // Handle optionnal feature price (handling fees)
         if (isset($this->data['OrderInfo']['OptionalFeaturePrice']) && $this->data['OrderInfo']['OptionalFeaturePrice'] > 0) {
@@ -989,6 +997,7 @@ class SellermaniaImportOrderController
         }
 
         // Use directly this part to avoid 'Frais de gestion' creation
+        $this->fixCustomerAddress();
         if (version_compare(_PS_VERSION_, '1.5') >= 0) {
             $this->fixOrder15(true);
         }
