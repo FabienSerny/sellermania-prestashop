@@ -956,6 +956,9 @@ class SellermaniaImportOrderController
     {
         $this->data = $sellermaniaOrderInfo;
         $this->order = new Order($sellermaniaOrder->id_order);
+        if (!Validate::isLoadedObject($this->order)) {
+            return false;
+        }
 
         // Prepare the products list / merge quantities
         $this->preprocessData();
