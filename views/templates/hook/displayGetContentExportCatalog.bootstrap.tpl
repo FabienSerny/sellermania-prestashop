@@ -39,6 +39,19 @@
                         <label for="sm_export_all_no">{l s='No' mod='sellermania'}</label>
                     </div>
                 </div>
+
+
+                <div class="clearfix">
+                    <label class="col-lg-4">{l s='Do you want to export products that have "Visibility" set to "Nowhere" to Sellermania?' mod='sellermania'}</label>
+                    <div class="col-lg-8">
+                        <input type="radio" name="sm_export_invisible" id="sm_export_invisible_yes" value="yes" {if $sm_export_invisible eq 'yes'}checked="checked"{/if} />
+                        <label for="sm_export_invisible_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                        <input type="radio" name="sm_export_invisible" id="sm_export_invisible_no" value="no" {if $sm_export_invisible eq 'no' || $sm_export_invisible eq ''}checked="checked"{/if} />
+                        <label for="sm_export_invisible_no">{l s='No' mod='sellermania'}</label>
+                    </div>
+                </div>
+
+
                 <div id="sm_export_all_configuration" class="clearfix">
                     <div class="form-group clearfix">
                         <label class="col-lg-4">{l s='Please select the categories you want to export:' mod='sellermania'}</label>

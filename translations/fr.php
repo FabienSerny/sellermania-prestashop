@@ -93,6 +93,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_cdaa
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_485e86066665815dcbb6188912316673'] = 'Souhaitez vous exporter l\'intégralité de votre catalogue vers Sellermania ?';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_2d5d877e9113af851b825485495e0b53'] = 'Souhaitez vous exporter les produits ayant \"Visibilité\" configuré à \"Nulle part\" vers Sellermania ?';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_9b449ef77949b9f150d87312d3be514e'] = 'Veuillez sélectionner les catégories que vous souhaitez exporter :';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_6ff1e7f0514def87527ed4a9ced5c13b'] = 'Envoyez ces liens à Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_119dd5a342e981b13bf0024d5c6a6933'] = 'Configuration avancée';
@@ -172,7 +173,6 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_09d42
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_27ec484752cd4b25cf0f55c85d4c11d9'] = 'Activer l\'interface des commandes natives';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_dc9ae350c95c80fc508cd836f44497ba'] = 'E-mail associé aux comptes clients créés';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_61513647d36f190548b6587f071b81ab'] = 'Date de début d\'importation des commandes';
-$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_d9e9ddf12b75fb2a2c2d7c235618c3f6'] = 'Transporteur par défaut et status des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_5d615930fa68541667c433e51c1cd320'] = 'Configuration des statuts Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_a812bae6c47f77d3ff1b5f24f0dfd938'] = 'Statuts des commandes Sellermania';
@@ -232,7 +232,6 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_09d42b499d70a90
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_27ec484752cd4b25cf0f55c85d4c11d9'] = 'Activer l\'interface des commandes natives';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_dc9ae350c95c80fc508cd836f44497ba'] = 'E-mail associé aux comptes clients créés';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_61513647d36f190548b6587f071b81ab'] = 'Date de début d\'importation des commandes';
-$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_d9e9ddf12b75fb2a2c2d7c235618c3f6'] = 'Transporteur par défaut et statuts des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_5d615930fa68541667c433e51c1cd320'] = 'Configuration des statuts Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_a812bae6c47f77d3ff1b5f24f0dfd938'] = 'Statuts des commandes Sellermania';

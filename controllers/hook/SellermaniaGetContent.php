@@ -51,7 +51,7 @@ class SellermaniaGetContentController
 
     public function initParams()
     {
-        $this->params = array('sm_export_all', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint',
+        $this->params = array('sm_export_all', 'sm_export_invisible', 'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint',
             'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
             'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',
             'sm_stock_sync_nb_char', 'sm_stock_sync_position',
@@ -168,8 +168,7 @@ class SellermaniaGetContentController
 
         // Check if file exists and retrieve the creation date
         $files_list = array();
-        foreach ($languages_list as $language)
-        {
+        foreach ($languages_list as $language) {
             $iso_lang = strtolower($language['iso_code']);
             $web_path_file = $module_web_path.$smec->get_export_filename($iso_lang, true);
             $real_path_file = $smec->get_export_filename($iso_lang);
