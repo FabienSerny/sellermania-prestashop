@@ -835,6 +835,7 @@ class SellermaniaImportOrderController
         unset($update['total_paid']);
         unset($update['total_paid_real']);
         unset($update['total_shipping']);
+        unset($update['date_add']);
         $where = '`id_order` = '.(int)$this->order->id;
         Db::getInstance()->update('order_invoice', $update, $where);
 
