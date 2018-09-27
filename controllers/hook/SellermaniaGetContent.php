@@ -60,6 +60,7 @@ class SellermaniaGetContentController
             'sm_enable_native_refund_system', 'sm_enable_native_order_interface',
             'sm_enable_export_comb_name',
             'sm_catch_all_mail_address', 'sm_install_date',
+            'sm_order_import_past_days', 'sm_order_import_limit',
             'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
             'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
             'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',

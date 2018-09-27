@@ -113,6 +113,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_485e8606666581
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_9b449ef77949b9f150d87312d3be514e'] = 'Veuillez sélectionner les catégories que vous souhaitez exporter :';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_2d5d877e9113af851b825485495e0b53'] = 'Souhaitez vous exporter vers Sellermania les produits ayant la visibilité configurée à \"Nulle part\" ?';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_6ff1e7f0514def87527ed4a9ced5c13b'] = 'Envoyez ces liens à Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_119dd5a342e981b13bf0024d5c6a6933'] = 'Configuration avancée';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_b984240384dfae4038b9f5d4a8e46238'] = 'Mettre en place une tâche automatisée (tâche cron)';
@@ -140,6 +141,8 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_e9d86
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_fc9d3df613063ee57906c461320744e2'] = 'Note :';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_279a91d4f3f29e929c3b06c104c9566c'] = 'Ces identifiants sont fournis par Sellermania. Si vous ne les avez pas, veuillez contacter Sellermania.';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_692b7b9c82eaef4c0247cee2791f16f4'] = 'Importer les commandes des X derniers jours';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_f5a5ebbc8a50184a018832ef3c8d2385'] = 'Importer X commandes durant un import';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_ce03cf0e902373fb87b5ecb4a17832c7'] = 'Méthode d\'importation';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_1b793db6c00482d633b29701c7bcb08c'] = 'Tâche cron';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_086247a9b57fde6eefee2a0c4752242d'] = 'Automatique';
@@ -199,6 +202,8 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_e9d86eb28865fb1
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_5151a85f50264168c66e9793b8d5dd48'] = 'Inventory endpoint';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_fc9d3df613063ee57906c461320744e2'] = 'Note :';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_f9e37dadeb96b5b926e43d97da89da79'] = 'Ces identifiants sont fournis par Sellermania. Si vous ne les avez pas, veuillez contacter Sellermania.';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_692b7b9c82eaef4c0247cee2791f16f4'] = 'Importer les commandes des X derniers jours';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_f5a5ebbc8a50184a018832ef3c8d2385'] = 'Importer X commandes durant un import';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_ce03cf0e902373fb87b5ecb4a17832c7'] = 'Méthode d\'importation';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_1b793db6c00482d633b29701c7bcb08c'] = 'Tâche cron';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_086247a9b57fde6eefee2a0c4752242d'] = 'Automatique';

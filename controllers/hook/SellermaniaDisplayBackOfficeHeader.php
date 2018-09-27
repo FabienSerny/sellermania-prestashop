@@ -84,7 +84,7 @@ class SellermaniaDisplayBackOfficeHeaderController
 
         // Set dates limit
         $count_order = 0;
-        $date_start = date("Y-m-d H:i:s", strtotime('-30 days'));
+        $date_start = date("Y-m-d H:i:s", strtotime('-'.((int)Configuration::get('SM_ORDER_IMPORT_PAST_DAYS')).' days'));
         $date_end = date('Y-m-d H:i:s');
         if ($date_start < Configuration::get('SM_INSTALL_DATE'))
             $date_start = Configuration::get('SM_INSTALL_DATE');
@@ -198,7 +198,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                             $this->order_items_to_confirm = SellermaniaOrderConfirmation::registerAutoConfirmProducts($this->order_items_to_confirm, $order);
 
                             // Do not push it too hard
-                            if ($count_order > 100) {
+                            if ($count_order > (int)Configuration::get('SM_ORDER_IMPORT_LIMIT')) {
                                 SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
                                 return true;
                             }

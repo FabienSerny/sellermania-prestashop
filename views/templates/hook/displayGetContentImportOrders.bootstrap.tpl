@@ -95,6 +95,20 @@
                         {/if}
 
 
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Import order of last X days' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                <input type="text" name="sm_order_import_past_days" value="{$sm_order_import_past_days}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Import X orders during an importation request' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                <input type="text" name="sm_order_import_limit" value="{$sm_order_import_limit}" />
+                            </div>
+                        </div>
+
 
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Importation method' mod='sellermania'}</label>

@@ -53,6 +53,8 @@
                     <p><strong><u>{l s='Note:' mod='sellermania'}</u></strong> {l s='These four credentials are provided by Sellermania, if you don\'t have them, please contact Sellermania.' mod='sellermania'}</p>
                 {/if}
 
+                <p><label>{l s='Import order of last X days' mod='sellermania'}</label> <input type="text" name="sm_order_import_past_days" value="{$sm_order_import_past_days}" /></p>
+                <p><label>{l s='Import X orders during an importation request' mod='sellermania'}</label> <input type="text" name="sm_order_import_limit" value="{$sm_order_import_limit}" /></p>
 
                 <p>
                     <label>{l s='Importation method' mod='sellermania'}</label>

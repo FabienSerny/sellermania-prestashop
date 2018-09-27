@@ -48,7 +48,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.2.5';
+        $this->version = '2.2.6';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -164,6 +164,12 @@ class Sellermania extends Module
         }
         if (Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS') == '') {
             Configuration::updateValue('SM_CATCH_ALL_MAIL_ADDRESS', Configuration::get('PS_SHOP_EMAIL'));
+        }
+        if (Configuration::get('SM_ORDER_IMPORT_PAST_DAYS') == '' || Configuration::get('SM_ORDER_IMPORT_PAST_DAYS') < 1 || Configuration::get('SM_ORDER_IMPORT_PAST_DAYS') > 30) {
+            Configuration::updateValue('SM_ORDER_IMPORT_PAST_DAYS', 30);
+        }
+        if (Configuration::get('SM_ORDER_IMPORT_LIMIT') == '' || Configuration::get('SM_ORDER_IMPORT_LIMIT') < 1 || Configuration::get('SM_ORDER_IMPORT_LIMIT') > 2000) {
+            Configuration::updateValue('SM_ORDER_IMPORT_LIMIT', 100);
         }
 
         if (version_compare($version_registered, '2.1.6', '<')) {
