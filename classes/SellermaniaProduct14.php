@@ -78,7 +78,8 @@ class SellermaniaProduct
         WHERE (
             p.`active` = 1 OR
             p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-7 days'))).'\'
-        ) '.$where;
+        ) '.$where.'
+        ORDER BY p.`id_product`';
 
         // Return query
         return Db::getInstance()->Execute($sql);
