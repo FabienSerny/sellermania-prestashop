@@ -60,6 +60,18 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <div class="clearfix">
+                    <label class="col-lg-4">{l s='Enable checksum on image files (needed for La Redoute)?' mod='sellermania'}</label>
+                    <div class="col-lg-8">
+                        <input type="radio" name="sm_images_checksum" id="sm_images_checksum_yes" value="yes" {if $sm_images_checksum eq 'yes'}checked="checked"{/if} />
+                        <label for="sm_images_checksum_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                        <input type="radio" name="sm_images_checksum" id="sm_images_checksum_no" value="no" {if $sm_images_checksum eq 'no' || $sm_images_checksum eq ''}checked="checked"{/if} />
+                        <label for="sm_images_checksum_no">{l s='No' mod='sellermania'}</label>
+                    </div>
+                </div>
+            </div>
+
             <p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
             <p>
                 {foreach from=$languages_list item=language}

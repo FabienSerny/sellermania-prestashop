@@ -48,7 +48,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.2.6.1';
+        $this->version = '2.3.0.0';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -218,7 +218,7 @@ class Sellermania extends Module
         Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
         Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/OrdersAPISFR_07_03_2014/OrderAPIS?wsdl');
         Configuration::updateValue('SM_CONFIRM_ORDER_ENDPOINT', 'http://membres.sellermania.com/wsapi/wsdl/OrderConfirmation');
-        Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/InventoryAPISFR/InventoryAPIS?wsdl');
+        Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/InventoryAPISFR_11_12_2017/InventoryAPIS?wsdl');
 
         Configuration::updateValue('SM_ENABLE_NATIVE_REFUND_SYSTEM', 'no');
         Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');

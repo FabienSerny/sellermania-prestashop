@@ -108,6 +108,8 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_3e6b
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_4a3827aac4ea4ce09923b321c2e59b32'] = 'Vous pouvez désactiver cette fonctionnalité pour les marchands ne créant qu\'une déclinaison par produit.';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_5cd49ff2d02143d4f423d5b6512d9020'] = 'La configuration a été sauvegardée';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_3795de2269976e30548dbf64e104155e'] = 'Activer le checksum pour les images ? (nécessaire pour La Redoute)';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_3795de2269976e30548dbf64e104155e'] = 'Activer le checksum des images ?  (nécessaire pour La Redoute) ';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_cdaaf70bf4e764a63ecd28e0a04e3899'] = 'Export catalogue';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_485e86066665815dcbb6188912316673'] = 'Souhaitez vous exporter l\'intégralité de votre catalogue vers Sellermania ?';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';

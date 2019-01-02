@@ -88,8 +88,8 @@ class SellermaniaProduct
                     p.`active` = 1 OR
                     p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-7 days'))).'\'
                 ) '.$where.'
-                GROUP BY product_shop.id_product '.$limitSQL.'
-                ORDER BY product_shop.id_product';
+                GROUP BY product_shop.id_product
+                ORDER BY product_shop.id_product '.$limitSQL;
 
         // Return query
         return Db::getInstance()->query($sql);

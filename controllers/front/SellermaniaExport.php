@@ -218,6 +218,9 @@ class SellermaniaExportController
             } else {
                 $line .= '"image '.$i.'";';
             }
+            if (Configuration::get('SM_IMAGES_CHECKSUM') == 'yes') {
+                $line .= '"image '.$i.' checksum";';
+            }
         }
         foreach ($this->attribute_groups as $id_attribute_group => $group_name) {
             $line .= '"Attr '.$id_attribute_group.' - '.$group_name.'";';
@@ -340,6 +343,9 @@ class SellermaniaExportController
                 }
                 for ($i = 1; $i <= 12; $i++) {
                     $line .= '"'.(isset($row['images'][$i - 1]) ? $row['images'][$i - 1] : '').'";';
+                    if (Configuration::get('SM_IMAGES_CHECKSUM') == 'yes') {
+                        $line .= '"' . (isset($row['images'][$i - 1]) ? md5_file($row['images'][$i - 1]) : '') . '";';
+                    }
                 }
                 foreach ($this->attribute_groups as $id_attribute_group => $group_name) {
                     $line .= '"'.(isset($row['attributes_values'][$id_attribute_group]) ? $row['attributes_values'][$id_attribute_group] : '').'";';
