@@ -166,6 +166,18 @@ class SellermaniaImportOrderController
         }
 
 
+        // Create field if not exists
+        if (!isset($this->data['User'][$index]['Company'])) {
+            $this->data['User'][$index]['Company'] = '';
+        }
+        $fields = array('Street1', 'Street2', 'City', 'ZipCode');
+        foreach ($fields as $field) {
+            if (!isset($this->data['User'][$index]['Address'][$field])) {
+                $this->data['User'][$index]['Address'][$field] = '';
+            }
+        }
+
+
         // Fix address
         $this->data['User'][$index]['Company'] = substr(str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Company']), 0, 32);
         $this->data['User'][$index]['Address']['Street1'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Address']['Street1']);

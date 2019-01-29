@@ -48,7 +48,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.3.0.0';
+        $this->version = '2.3.1';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -97,18 +97,24 @@ class Sellermania extends Module
     {
         $this->sellermania_conditions_list = array(
             0 => $this->l('Unknown', 'sellermaniadisplayadminorder'),
-            1 => $this->l('Like new', 'sellermaniadisplayadminorder'),
-            2 => $this->l('Very good', 'sellermaniadisplayadminorder'),
-            3 => $this->l('Good', 'sellermaniadisplayadminorder'),
-            4 => $this->l('Acceptable', 'sellermaniadisplayadminorder'),
-            5 => $this->l('Collectible like new', 'sellermaniadisplayadminorder'),
-            6 => $this->l('Collectible very good', 'sellermaniadisplayadminorder'),
-            7 => $this->l('Collectible good', 'sellermaniadisplayadminorder'),
-            8 => $this->l('Collectible acceptable', 'sellermaniadisplayadminorder'),
-            10 => $this->l('Refurbished mint', 'sellermaniadisplayadminorder'),
+            1 => $this->l('Used - Mint', 'sellermaniadisplayadminorder'),
+            2 => $this->l('Used - Very good', 'sellermaniadisplayadminorder'),
+            3 => $this->l('Used - Good', 'sellermaniadisplayadminorder'),
+            4 => $this->l('Used - Acceptable', 'sellermaniadisplayadminorder'),
+            5 => $this->l('Collectible - Mint', 'sellermaniadisplayadminorder'),
+            6 => $this->l('Collectible - Very good', 'sellermaniadisplayadminorder'),
+            7 => $this->l('Collectible - Good', 'sellermaniadisplayadminorder'),
+            8 => $this->l('Collectible - Acceptable', 'sellermaniadisplayadminorder'),
+            9 => $this->l('Collectible - New', 'sellermaniadisplayadminorder'),
+            10 => $this->l('Refurbished - New', 'sellermaniadisplayadminorder'),
             11 => $this->l('New', 'sellermaniadisplayadminorder'),
             12 => $this->l('New OEM', 'sellermaniadisplayadminorder'),
-            13 => $this->l('Used openbox', 'sellermaniadisplayadminorder'),
+            13 => $this->l('Used - Openbox', 'sellermaniadisplayadminorder'),
+            14 => $this->l('Refurbished - Mint', 'sellermaniadisplayadminorder'),
+            15 => $this->l('Refurbished - Very good', 'sellermaniadisplayadminorder'),
+            16 => $this->l('Used - Poor', 'sellermaniadisplayadminorder'),
+            17 => $this->l('Refurbished - Good', 'sellermaniadisplayadminorder'),
+            18 => $this->l('Refurbished - Acceptable', 'sellermaniadisplayadminorder'),
         );
     }
 
