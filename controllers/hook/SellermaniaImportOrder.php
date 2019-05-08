@@ -320,10 +320,10 @@ class SellermaniaImportOrderController
     public function checkValidity()
     {
         if (!Validate::isName($this->data['User'][0]['FirstName'])) {
-            throw \Exception('Firstname is not valid : '.$this->data['User'][0]['FirstName']);
+            throw new \Exception('Firstname is not valid : '.$this->data['User'][0]['FirstName']);
         }
         if (!Validate::isName($this->data['User'][0]['LastName'])) {
-            throw \Exception('Firstname is not valid : '.$this->data['User'][0]['LastName']);
+            throw new \Exception('Firstname is not valid : '.$this->data['User'][0]['LastName']);
         }
     }
 
