@@ -62,6 +62,7 @@ class SellermaniaImportOrderController
     {
         $this->data = $data;
         $this->preprocessData();
+        $this->checkValidity();
         $this->createCustomer();
         $this->createAddress();
         $this->createCart();
@@ -313,6 +314,18 @@ class SellermaniaImportOrderController
         $this->data['OrderInfo']['Date'] = substr($this->data['OrderInfo']['Date'], 0, 19);
     }
 
+    /**
+     * Check validity and throw exception (mostly for PS 1.4 that do not use Exception)
+     */
+    public function checkValidity()
+    {
+        if (!Validate::isName($this->data['User'][0]['FirstName'])) {
+            throw \Exception('Firstname is not valid : '.$this->data['User'][0]['FirstName']);
+        }
+        if (!Validate::isName($this->data['User'][0]['LastName'])) {
+            throw \Exception('Firstname is not valid : '.$this->data['User'][0]['LastName']);
+        }
+    }
 
     /**
      * Create customer
