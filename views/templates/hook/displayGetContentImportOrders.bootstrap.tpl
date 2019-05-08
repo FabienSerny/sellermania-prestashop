@@ -126,7 +126,10 @@
                         </div>
                         <div class="form-group clearfix" id="sm_import_method_cron_configuration">
                             <label class="col-lg-4">{l s='Cron script to call' mod='sellermania'}</label>
-                            <div class="col-lg-4">php -f {$script_path}/import.php {$sellermania_key}</div>
+                            <div class="col-lg-8">
+                                <u>{l s='Via command line (classic cron)' mod='sellermania'} :</u> php -f {$script_path}/import.php<br><br>
+                                <u>{l s='Via url (webcron)' mod='sellermania'} :</u> <a href="http://{$smarty.server.SERVER_NAME}/modules/sellermania/import.php?k={$sellermania_key}" target="_blank">http://{$smarty.server.SERVER_NAME}/modules/sellermania/import.php?k={$sellermania_key}</a>
+                            </div>
                         </div>
 
 

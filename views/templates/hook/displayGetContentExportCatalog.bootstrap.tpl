@@ -84,7 +84,7 @@
 
             <div id="advanced-export">
                 <p><b>{l s='Set a cron task' mod='sellermania'}</b></p>
-                <p>{l s='Script path:' mod='sellermania'} {$script_path}/export.php {$sellermania_key}</p>
+                <p>{l s='Script path:' mod='sellermania'} {$script_path}/export.php</p>
                 <p>{l s='Generated files will be available at these urls:' mod='sellermania'}</p>
                 <p>
                     {foreach from=$files_list item=file key=iso_code}
