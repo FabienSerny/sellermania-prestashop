@@ -37,7 +37,7 @@ class Sellermania extends Module
         'FNAC.COM', 'GALLERIESLAFAYETTE.FR', 'GAME.FR', 'LEQUIPE.FR', 'MACWAY.COM', 'MENLOOK.FR', 'NATUREETDECOUVERTE.FR',
         'PIXMANIA.DE', 'PIXMANIA.ES', 'PIXMANIA.FR', 'PIXMANIA.IT', 'PIXMANIA.UK',
         'PRICEMINISTER.FR', 'PRIVALIA.FR', 'RETIF.FR', 'RUEDUCOMMERCE.FR', 'SAINTGOBAIN.COM',
-        'THEBEAUTISTE.FR', 'TRUFFAUT.FR',
+        'THEBEAUTISTE.FR', 'TRUFFAUT.FR', 'GOSPORT.FR',
     );
 
     /**
@@ -48,7 +48,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.3.2';
+        $this->version = '2.3.3';
         $this->need_instance = 0;
 
         parent::__construct();
