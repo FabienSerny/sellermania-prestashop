@@ -85,7 +85,7 @@ class SellermaniaProduct
                 WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
                 '.(Configuration::get('SM_EXPORT_INVISIBLE') != 'yes' ? 'AND product_shop.`visibility` IN ("both", "catalog")' : '').'
                 AND (
-                    p.`active` = 1 OR
+                    (p.`active` = 1 AND product_shop.`active` = 1) OR
                     p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-7 days'))).'\'
                 ) '.$where.'
                 GROUP BY product_shop.id_product
