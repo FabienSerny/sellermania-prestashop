@@ -22,7 +22,7 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-<h2 align="center">{l s='Sellermania' mod='sellermania'}</h2>
+<h2 align="center"><img src="{$sellermania_module_path}views/img/sellermania-logo.png" style="max-width:100%" alt="{l s='Sellermania' mod='sellermania'}" /></h2>
 
 {if isset($smarty.get.see) && $smarty.get.see eq 'orders-error'}
     {include file="$templates_dir/displayGetContentOrdersInError.bootstrap.tpl"}
@@ -31,10 +31,10 @@
     <div id="sellermania-admin-tab">
 
         <ul id="sellermania-admin-tab-ul">
-            <li><a href="#sellermania-module-help"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Help' mod='sellermania'} </a></li>
-            <li><a href="#sellermania-module-export"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Export catalog' mod='sellermania'} </a></li>
-            <li><a href="#sellermania-module-import"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Import orders' mod='sellermania'} </a></li>
-            <li><a href="#sellermania-module-search"> <img src="/modules/sellermania/logo.gif" alt="" title=""> {l s='Search orders' mod='sellermania'} </a></li>
+            <li><a href="#sellermania-module-help"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Help' mod='sellermania'} </a></li>
+            <li><a href="#sellermania-module-export"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Export catalog' mod='sellermania'} </a></li>
+            <li><a href="#sellermania-module-import"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Import orders' mod='sellermania'} </a></li>
+            <li><a href="#sellermania-module-search"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Search orders' mod='sellermania'} </a></li>
         </ul>
         <br clear="left"><br>
 

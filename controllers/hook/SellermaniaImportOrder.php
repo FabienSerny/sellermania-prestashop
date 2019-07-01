@@ -307,7 +307,7 @@ class SellermaniaImportOrderController
                 $existing_ref[$sku.'-'.$ean] = $kp;
         }
 
-        // Fix paiement date
+        // Fix payment date
         if (!isset($this->data['Paiement']['Date']))
             $this->data['Paiement']['Date'] = date('Y-m-d H:i:s');
         $this->data['Paiement']['Date'] = substr($this->data['Paiement']['Date'], 0, 19);
@@ -479,7 +479,7 @@ class SellermaniaImportOrderController
     {
         // Remove customer e-mail to avoid email sending
         $customer_email = $this->context->customer->email;
-        Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-SM'), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
+        $this->update('customer', array('email' => 'NOSEND-SM'),  '`id_customer` = '.(int)$this->customer->id);
         $this->context->customer->email = 'NOSEND-SM';
         $this->context->customer->clearCache();
 
@@ -499,7 +499,7 @@ class SellermaniaImportOrderController
         $this->order = new Order((int)$id_order);
 
         // Restore customer e-mail
-        Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($customer_email)), 'UPDATE', '`id_customer` = '.(int)$this->customer->id);
+        $this->update('customer', array('email' => pSQL($customer_email)), '`id_customer` = '.(int)$this->customer->id);
         $this->context->customer->email = $customer_email;
         $this->context->customer->clearCache();
 
@@ -709,6 +709,13 @@ class SellermaniaImportOrderController
                 'QuantityPurchased' => 1,
                 'Amount' => array('Price' => $this->data['OrderInfo']['OptionalFeaturePrice']),
                 'VatRate' => 0,
+                'id_product' => 0,
+                'id_product_attribute' => 0,
+                'ProductVAT' => [ 'unit' => 0, 'total' => 0 ],
+                'Ean' => '',
+                'ShippingFee' => 0,
+                'VatRateShipping' => 0,
+                'Status' => 0,
             );
             $this->data['OrderInfo']['TotalProductsWithoutVAT'] += $this->data['OrderInfo']['OptionalFeaturePrice'];
         }
@@ -733,7 +740,7 @@ class SellermaniaImportOrderController
             foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
                 $this->fixOrderDetail14($this->order->id, $product);
 
-        // Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
+        // Fix on order
         $update = array(
             'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
             'total_paid_real' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
@@ -742,7 +749,7 @@ class SellermaniaImportOrderController
             'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
             'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
         );
-        Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $update, 'UPDATE', '`id_order` = '.(int)$this->order->id);
+        $this->update(_DB_PREFIX_.'orders', $update, '`id_order` = '.(int)$this->order->id);
     }
 
     /**
@@ -794,11 +801,11 @@ class SellermaniaImportOrderController
         if ($id_order_detail > 0)
         {
             $where = '`id_order` = '.(int)$id_order.' AND `id_order_detail` = '.(int)$id_order_detail;
-            Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', $sql_data, 'UPDATE', $where);
+            $this->update('order_detail', $sql_data, $where);
         }
         else
         {
-            Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', $sql_data, 'INSERT');
+            $this->insert('order_detail', $sql_data);
             $id_order_detail = Db::getInstance()->Insert_ID();
         }
     }
@@ -825,7 +832,7 @@ class SellermaniaImportOrderController
             $total_shipping_tax_excl = round(100 * $total_shipping_tax_excl / ((100 + (float)$this->order->carrier_tax_rate)), 6);
         }
 
-        // Fix on order (use of autoExecute instead of Insert to be compliant PS 1.4)
+        // Fix on order
         $update = array(
             'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
             'total_paid_tax_incl' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
@@ -838,7 +845,7 @@ class SellermaniaImportOrderController
             'total_shipping_tax_excl' => (float)$total_shipping_tax_excl,
             'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
         );
-        Db::getInstance()->update('orders', $update, '`id_order` = '.(int)$this->order->id);
+        $this->update('orders', $update, '`id_order` = '.(int)$this->order->id);
 
         // Fix payment
         $updateTab = array(
@@ -846,7 +853,7 @@ class SellermaniaImportOrderController
             'payment_method' => $this->data['OrderInfo']['MarketPlace'],
         );
         $where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
-        Db::getInstance()->update('order_payment', $updateTab, $where);
+        $this->update('order_payment', $updateTab, $where);
 
         // Fix carrier
         $carrier_update = array(
@@ -854,7 +861,7 @@ class SellermaniaImportOrderController
             'shipping_cost_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
         );
         $where = '`id_order` = \''.pSQL($this->order->id).'\'';
-        Db::getInstance()->update('order_carrier', $carrier_update, $where);
+        $this->update('order_carrier', $carrier_update, $where);
 
         // Fix invoice
         unset($update['total_paid']);
@@ -862,10 +869,10 @@ class SellermaniaImportOrderController
         unset($update['total_shipping']);
         unset($update['date_add']);
         $where = '`id_order` = '.(int)$this->order->id;
-        Db::getInstance()->update('order_invoice', $update, $where);
+        $this->update('order_invoice', $update, $where);
 
         // Update Sellermania default product quantity
-        Db::getInstance()->update('stock_available', array('quantity' => 0), '`id_product` = '.Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+        $this->update('stock_available', array('quantity' => 0), '`id_product` = '.Configuration::get('SM_DEFAULT_PRODUCT_ID'));
     }
 
 
@@ -949,10 +956,10 @@ class SellermaniaImportOrderController
         if ($id_order_detail > 0)
         {
             $where = '`id_order` = '.(int)$id_order.' AND `id_order_detail` = '.(int)$id_order_detail;
-            Db::getInstance()->update('order_detail', $sql_data, $where);
+            $this->update('order_detail', $sql_data, $where);
 
             $where = '`id_order_detail` = '.(int)$id_order_detail;
-            Db::getInstance()->update('order_detail_tax', $sql_data_tax, $where);
+            $this->update('order_detail_tax', $sql_data_tax, $where);
         }
         else
         {
@@ -960,7 +967,7 @@ class SellermaniaImportOrderController
             $id_order_detail = Db::getInstance()->Insert_ID();
 
             $sql_data_tax['id_order_detail'] = (int)$id_order_detail;
-            Db::getInstance()->insert('order_detail_tax', $sql_data_tax);
+            $this->insert('order_detail_tax', $sql_data_tax);
         }
     }
 
@@ -1085,6 +1092,27 @@ class SellermaniaImportOrderController
             $productObj->addStockMvt($quantity, _STOCK_MOVEMENT_ORDER_REASON_, $orderDetail->product_attribute_id, $orderDetail->id_order, NULL);
         } else {
             StockAvailable::updateQuantity($orderDetail->product_id, $orderDetail->product_attribute_id, $quantity);
+        }
+    }
+
+
+    public function update($table, $sql_data, $where)
+    {
+        // If PS 1.6 or greater, we use update instead of autoexecute
+        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
+            Db::getInstance()->update($table, $sql_data, $where);
+        } else {
+            Db::getInstance()->autoExecute(_DB_PREFIX_.$table, $sql_data, 'UPDATE', $where);
+        }
+    }
+
+    public function insert($table, $sql_data)
+    {
+        // If PS 1.6 or greater, we use update instead of autoexecute
+        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
+            Db::getInstance()->insert($table, $sql_data);
+        } else {
+            Db::getInstance()->autoExecute(_DB_PREFIX_.$table, $sql_data, 'INSERT');
         }
     }
 }

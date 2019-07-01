@@ -305,5 +305,8 @@
 
 
 </script>
+{if $ps_version == '17'}
+    {assign var="ps_version" value="16"}
+{/if}
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>

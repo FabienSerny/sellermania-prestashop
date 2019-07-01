@@ -106,6 +106,11 @@ class SellermaniaProduct
         if (!Combination::isFeatureActive())
             return false;
 
+        $image_size = 'thickbox_default';
+        if (version_compare(_PS_VERSION_, '1.7.0') >= 0) {
+            $image_size = 'large_default';
+        }
+
         $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
                     a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, pa.`id_product_attribute`,
                     IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, pa.`weight`,
@@ -148,7 +153,7 @@ class SellermaniaProduct
             WHERE pai.`id_product_attribute` IN ('.implode(', ', $ids).') ORDER by i.`position`');
             foreach ($result as $row)
                 if ($row['id_image'] > 0)
-                    $images[$row['id_product_attribute']][] = $context->link->getImageLink('product', $row['id_image'], 'thickbox_default');
+                    $images[$row['id_product_attribute']][] = $context->link->getImageLink('product', $row['id_image'], $image_size);
 
             // Retrieve infos for each declination
             foreach ($attributes_groups as $k => $row)
@@ -245,6 +250,12 @@ class SellermaniaProduct
         if (!isset($context->link))
             $context->link = new Link();
 
+        // Get image size
+        $image_size = 'thickbox_default';
+        if (version_compare(_PS_VERSION_, '1.7.0') >= 0) {
+            $image_size = 'large_default';
+        }
+
         // Retrieves images
         $existing_images = array();
         $images = array();
@@ -257,7 +268,7 @@ class SellermaniaProduct
 
         foreach ($result as $row)
         {
-            $image_link = $context->link->getImageLink('product', $row['id_image'], 'thickbox_default');
+            $image_link = $context->link->getImageLink('product', $row['id_image'], $image_size);
             if (Tools::getHttpHost() == '')
             {
                 $image_link = str_replace('http://./', 'http://'.$context->shop->domain.'/'.$context->shop->physical_uri, $image_link);

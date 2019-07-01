@@ -54,6 +54,23 @@ class SellermaniaInvoiceController
 
     public function loadInvoiceData($id_order)
     {
+        // Display Sellermania invoice
+        $sellermania_order = SellermaniaOrder::getSellermaniaOrderFromOrderId($id_order);
+        if (isset($sellermania_order->details) && ($sellermania_order->details['User'][0]['InvoiceUrl'] || $sellermania_order->details['User'][1]['InvoiceUrl'])) {
+            $invoice_url = '';
+            if (isset($sellermania_order->details['User'][0]['InvoiceUrl'])) {
+                $invoice_url = $sellermania_order->details['User'][0]['InvoiceUrl'];
+            }
+            if (isset($sellermania_order->details['User'][1]['InvoiceUrl'])) {
+                $invoice_url = $sellermania_order->details['User'][1]['InvoiceUrl'];
+            }
+            if (!empty($invoice_url)) {
+                header('location:'.$invoice_url);
+                exit;
+            }
+        }
+        die('No invoice available yet');
+
         // Init
         $order_invoices = array();
         $id_lang = $this->context->language->id;
