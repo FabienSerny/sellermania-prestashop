@@ -164,17 +164,17 @@ class SellermaniaExportController
                 $offset = (($page - 1) * $items_per_page) + 1;
             }
 
-			$id = 0;
+            $id = 0;
             $result = SellermaniaProduct::getProductsRequest($id_lang, $offset, $items_per_page);
             while ($result) {
 
                 $nb_rows = 0;
                 while ($row = Db::getInstance()->nextRow($result))
                 {
-	                if ($row['id_product'] < $id) {
-		                return false;
-	                }
-	                $id = $row['id_product'];
+                    if ($row['id_product'] < $id) {
+                        return false;
+                    }
+                    $id = $row['id_product'];
                     $row['location'] = SellermaniaProduct::getLocation($row['id_product'], $row['location']);
                     $row['tags'] = SellermaniaProduct::getProductTags($row['id_product'], $id_lang);
                     $row['features'] = SellermaniaProduct::getFeatures($row['id_product'], $id_lang);
@@ -279,7 +279,10 @@ class SellermaniaExportController
                 }
                 $rowCopy['supplier'] = $this->getSupplierData($rowCopy, 'name');
                 $rowCopy['supplier_reference'] = $this->getSupplierData($rowCopy, 'reference');
-                $rows[] = $rowCopy;
+
+                if ($rowCopy['quantity'] > 0 || $rowCopy['date_upd'] > date('Y-m-d', strtotime('-7 days'))) {
+                    $rows[] = $rowCopy;
+                }
             }
         }
         else
@@ -295,7 +298,9 @@ class SellermaniaExportController
             $row['id_product_attribute'] = 0;
             $row['supplier'] = $this->getSupplierData($row, 'name');
             $row['supplier_reference'] = $this->getSupplierData($row, 'reference');
-            $rows = array($row);
+            if ($row['quantity'] > 0 || $row['date_upd'] > date('Y-m-d', strtotime('-7 days'))) {
+                $rows = array($row);
+            }
         }
 
         // Filter ref without EAN13
