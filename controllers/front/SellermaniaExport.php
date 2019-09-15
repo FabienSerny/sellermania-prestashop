@@ -158,7 +158,7 @@ class SellermaniaExportController
 
             $offset = $start;
             $items_per_page = $limit;
-            if ($start == 0 || $limit = 0) {
+            if ($start == 0 || $limit == 0) {
                 $page = 1;
                 $items_per_page = 10;
                 $offset = (($page - 1) * $items_per_page) + 1;
@@ -184,7 +184,7 @@ class SellermaniaExportController
                     $nb_rows++;
                 }
 
-                if ($start == 0 || $limit = 0) {
+                if ($start == 0 || $limit == 0) {
                     $page++;
                     $offset = (($page - 1) * $items_per_page) + 1;
                 }
@@ -280,7 +280,7 @@ class SellermaniaExportController
                 $rowCopy['supplier'] = $this->getSupplierData($rowCopy, 'name');
                 $rowCopy['supplier_reference'] = $this->getSupplierData($rowCopy, 'reference');
 
-                if ($rowCopy['quantity'] > 0 || $rowCopy['date_upd'] > date('Y-m-d', strtotime('-7 days'))) {
+                if ($rowCopy['quantity'] > 0 || $rowCopy['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))) {
                     $rows[] = $rowCopy;
                 }
             }
@@ -298,7 +298,7 @@ class SellermaniaExportController
             $row['id_product_attribute'] = 0;
             $row['supplier'] = $this->getSupplierData($row, 'name');
             $row['supplier_reference'] = $this->getSupplierData($row, 'reference');
-            if ($row['quantity'] > 0 || $row['date_upd'] > date('Y-m-d', strtotime('-7 days'))) {
+            if ($row['quantity'] > 0 || $row['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))) {
                 $rows = array($row);
             }
         }

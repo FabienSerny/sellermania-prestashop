@@ -48,7 +48,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.4.0';
+        $this->version = '2.4.1';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -177,6 +177,9 @@ class Sellermania extends Module
         if (Configuration::get('SM_ORDER_IMPORT_LIMIT') == '' || Configuration::get('SM_ORDER_IMPORT_LIMIT') < 1 || Configuration::get('SM_ORDER_IMPORT_LIMIT') > 2000) {
             Configuration::updateValue('SM_ORDER_IMPORT_LIMIT', 100);
         }
+        if (Configuration::get('SM_EXPORT_STAY_NB_DAYS') == '' || Configuration::get('SM_EXPORT_STAY_NB_DAYS') < 1) {
+            Configuration::updateValue('SM_EXPORT_STAY_NB_DAYS', 7);
+        }
 
         if (version_compare($version_registered, '2.1.6', '<')) {
             if (version_compare(_PS_VERSION_, '1.5') >= 0) {
@@ -272,6 +275,8 @@ class Sellermania extends Module
 
         Configuration::deleteByName('SM_ENABLE_NATIVE_REFUND_SYSTEM');
         Configuration::deleteByName('SM_ENABLE_EXPORT_COMB_NAME');
+
+        Configuration::deleteByName('SM_EXPORT_STAY_NB_DAYS');
 
         return parent::uninstall();
     }

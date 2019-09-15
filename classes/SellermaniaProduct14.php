@@ -77,7 +77,7 @@ class SellermaniaProduct
         LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
         WHERE (
             p.`active` = 1 OR
-            p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-7 days'))).'\'
+            p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))).'\'
         ) '.$where.'
         ORDER BY p.`id_product`';
 
