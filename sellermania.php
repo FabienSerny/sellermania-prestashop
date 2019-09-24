@@ -48,7 +48,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.4.1';
+        $this->version = '2.4.2';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -186,6 +186,13 @@ class Sellermania extends Module
                 $this->registerHook('actionOrderStatusUpdate');
             } else {
                 $this->registerHook('updateOrderStatus');
+            }
+        }
+
+
+        if (version_compare(_PS_VERSION_, '1.7') >= 0) {
+            if (!Hook::isModuleRegisteredOnHook($this, 'actionUpdateQuantity', Context::getContext()->shop->id)) {
+                $this->registerHook('actionUpdateQuantity');
             }
         }
     }
@@ -519,6 +526,15 @@ class Sellermania extends Module
     public function hookUpdateOrderStatus($params)
     {
         return $this->hookActionOrderStatusUpdate($params);
+    }
+
+    /**
+     * Update quantity
+     * @return bool
+     */
+    public function hookActionUpdateQuantity($params)
+    {
+        return $this->runController('hook', 'ActionUpdateQuantity', $params);
     }
 
     /**
