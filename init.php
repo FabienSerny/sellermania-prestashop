@@ -30,11 +30,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-// Load Pear
-if (!class_exists('PEAR')) {
-    require_once(dirname(__FILE__).'/../../tools/pear/PEAR.php');
-}
-
 // Require Db requests class
 $db_requests_class_file = 'SellermaniaProduct15.php';
 if (version_compare(_PS_VERSION_, '1.5') < 0) {

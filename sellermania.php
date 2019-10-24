@@ -92,6 +92,11 @@ class Sellermania extends Module
         $this->loadSellermaniaOrderStates();
         $this->loadSellermaniaConditionsList();
         $this->upgrade();
+
+        // Load Pear
+        if (!class_exists('PEAR')) {
+            require_once(dirname(__FILE__).'/../../tools/pear/PEAR.php');
+        }
     }
 
 
