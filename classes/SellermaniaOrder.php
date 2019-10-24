@@ -181,6 +181,20 @@ class SellermaniaOrder extends ObjectModel
      * Search Sellermania orders by reference
      * @param $order
      */
+    public static function getOrderIdBySellermaniaOrderReference($marketplace, $ref_order)
+    {
+        return (int)Db::getInstance()->getValue('
+        SELECT `id_order`
+        FROM `'._DB_PREFIX_.'sellermania_order`
+        WHERE `marketplace` = \''.pSQL(trim($marketplace)).'\'
+        AND `ref_order` = \''.pSQL(trim($ref_order)).'\'');
+    }
+
+
+    /**
+     * Search Sellermania orders by reference
+     * @param $order
+     */
     public static function searchSellermaniaOrdersByReference($ref_order)
     {
         return Db::getInstance()->executeS('

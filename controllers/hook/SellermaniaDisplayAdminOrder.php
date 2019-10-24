@@ -84,13 +84,18 @@ class SellermaniaDisplayAdminOrderController
                     if ($product['Sku'] == Tools::getValue('sku_status_'.$i) &&
                         $sellermania_order['OrderInfo']['Product'][$kp]['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
                     {
-                        $order_items[] = array(
+                        $oi = array(
                             'orderId' => pSQL($order_id),
                             'sku' => pSQL(Tools::getValue('sku_status_'.$i)),
                             'orderStatusId' => Tools::getValue('status_'.$i),
                             'trackingNumber' => '',
                             'shippingCarrier' => '',
                         );
+                        if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
+                            $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
+                        }
+                        $order_items[] = $oi;
+
                         $sellermania_order['OrderInfo']['Product'][$kp]['Status'] = Tools::getValue('status_'.$i);
                     }
             }
@@ -156,15 +161,21 @@ class SellermaniaDisplayAdminOrderController
                 if ($status_to_ship == 1)
                 {
                     // Preprocess data
-                    foreach ($sellermania_order['OrderInfo']['Product'] as $product)
-                        if ($product['Status'] == 1)
-                            $order_items[] = array(
+                    foreach ($sellermania_order['OrderInfo']['Product'] as $product) {
+                        if ($product['Status'] == 1) {
+                            $oi = array(
                                 'orderId' => pSQL($sellermania_order['OrderInfo']['OrderId']),
                                 'sku' => pSQL($product['Sku']),
                                 'orderStatusId' => \Sellermania\OrderConfirmClient::STATUS_DISPATCHED,
                                 'trackingNumber' => pSQL($order['tracking_number']),
                                 'shippingCarrier' => pSQL($order['shipping_name']),
                             );
+                            if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
+                                $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
+                            }
+                            $order_items[] = $oi;
+                        }
+                    }
                 }
             }
         }

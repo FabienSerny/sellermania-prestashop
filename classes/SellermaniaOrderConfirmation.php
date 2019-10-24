@@ -65,13 +65,17 @@ class SellermaniaOrderConfirmation
 
         foreach ($order['OrderInfo']['Product'] as $kp => $product) {
             if ($order['OrderInfo']['Product'][$kp]['Status'] == $current_sm_status) {
-                $order_items_to_confirm[] = array(
+                $oitc = array(
                     'orderId' => pSQL($order['OrderInfo']['OrderId']),
                     'sku' => pSQL($product['Sku']),
                     'orderStatusId' => $new_sm_status,
                     'trackingNumber' => $tracking_number,
                     'shippingCarrier' => $shipping_carrier,
                 );
+                if ($order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
+                    $oitc['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+                }
+                $order_items_to_confirm[] = $oitc;
             }
         }
         return $order_items_to_confirm;
