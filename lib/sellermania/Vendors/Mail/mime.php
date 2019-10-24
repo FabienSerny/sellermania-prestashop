@@ -63,8 +63,7 @@
  *
  * This package depends on PEAR to raise errors.
  */
-if (!class_exists('Pear'))
-	require_once 'PEAR.php';
+require_once 'PEAR.php';
 
 /**
  * require Mail_mimePart

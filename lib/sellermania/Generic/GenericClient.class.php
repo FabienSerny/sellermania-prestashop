@@ -20,6 +20,7 @@ namespace Sellermania;
 abstract class GenericClient
 {
 
+   const SEPARATOR = "||";
    protected $endpoint;
    protected $email;
    protected $token;
@@ -93,6 +94,25 @@ abstract class GenericClient
       return $this->email;
    }
 
+
+
+
+   /**
+    * Concat the customerUniqueHashId with email
+    *
+    * @access public
+    * @param string $customerUniqueHashId
+    * @return \Sellermania\GenericClient
+    */
+   public function setCustomerUniqueHashId($customerUniqueHashId)
+   {
+      if($customerUniqueHashId != null && !empty($customerUniqueHashId)) $this->email = $this->email . GenericClient::SEPARATOR. $customerUniqueHashId;
+      return $this;
+   }
+
+
+
+
    /**
     * Set your authentification token.
     *
@@ -126,6 +146,107 @@ abstract class GenericClient
    }
 
    /**
+    * From the "User Manual API Client" documentation :
+    *
+    * When a service call can contain a collection of elements (such as, a list of products,
+    * a list of orders, etc.), you need to take care about the 3 following cases:
+    *
+    * -	The list is empty
+    * -	The list contains 1 element
+    * -	The list contains several elements
+    *
+    * The array format may vary in those 3 cases: typically:
+    *
+    * -	When a list is empty, the whole Response key is missing.
+    *
+    * -	When a list contains 1 element, one scope is missing (there is no array with only 1 element,
+    *        but the element itself is behind the parent key).
+    *
+    * -	When a list contains several elements, you get a 3D array: a parent key, an array that you should
+    *        iterate to access elements, and the elements themselves.
+    *
+    * This static method help you get a collection of elements, whatever if
+    * the element is missing, unique or multiple.
+    *
+    * Usage example:
+    *
+    * As of 2014-03-20, the GetSkuQuantity service returns the following response :
+    *
+    * array(1) {
+    *   ["SellermaniaWs"]=>
+    *   array(2) {
+    *     ["Header"]=>
+    *     array(2) {
+    *       ["Status"]=>
+    *       string(7) "SUCCESS"
+    *       ["MessageId"]=>
+    *       string(3) "100"
+    *     }
+    *     ["Results"]=>
+    *     array(1) {
+    *       ["GetSkuQuantityResponse"]=>
+    *       array(1) {
+    *         ["Sku"]=>
+    *         array(7) {
+    *           [0]=>
+    *           array(3) {
+    *             ["Status"]=>
+    *             string(6) "FAILED"
+    *             ["Id"]=>
+    *             string(22) "this-one-do-not-exists"
+    *             ["Message"]=>
+    *             string(13) "Sku not found"
+    *           }
+    *           [1]=>
+    *           array(3) {
+    *             ["Status"]=>
+    *             string(6) "FAILED"
+    *             ["Id"]=>
+    *             string(6) "some-other-sku"
+    *             ["Message"]=>
+    *             string(13) "Sku not found"
+    *           }
+    *           (...)
+    *         }
+    *       }
+    *     }
+    *   }
+    * }
+    *
+    * If no sku were given, the GetSkuQuantityResponse key would be missing on the Results array.
+    * If one sku were given, the GetSkuQuantityResponse key would contain a single element, with Status, Id and Message keys.
+    * And if several skus were given (as above), the GetSkuQuantityResponse would contain an array of elements.
+    *
+    * If you're using $client->returnAsList($response['SellermaniaWs']['Results']['GetSkuQuantityResponse'], 'Sku') instead of
+    * $response['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Results']['GetSkuQuantityResponse']['Sku'], you'll always
+    * get an array() of elements, even empty.
+    *
+    * @param array $array
+    * @param string $key
+    * @return array
+    */
+   static public function returnAsList(array &$array, $key)
+   {
+      // The list is empty
+      if (!array_key_exists($key, $array))
+      {
+         return array ();
+      }
+
+      // The list contains only 1 element
+      else if (!is_numeric(key($array[$key])))
+      {
+         return array ($array[$key]);
+      }
+
+      // The list contains several elements
+      else
+      {
+         return $array[$key];
+      }
+   }
+
+   /**
     * This method, used by specific clients, does an operation to the current endpoint.
     * The operation returns an array on success, and throws an exception on failure.
     *
@@ -135,10 +256,10 @@ abstract class GenericClient
     * @return array
     * @throws \Exception
     */
-   protected function operation($operation, array $params = array())
+   protected function operation($operation, array $params = array ())
    {
       ini_set('default_socket_timeout', 18000);
-      $this->client = new MTOMSoapClient($this->endpoint, array(
+      $this->client = new MTOMSoapClient($this->endpoint, array (
               'trace' => true,
       ));
       $this->client->__setSoapHeaders($this->_getWSSecuritySoapHeader());
@@ -274,10 +395,10 @@ abstract class GenericClient
     */
    private function _convertObjectToArray($object)
    {
-      $array = array();
+      $array = array ();
       if (!($object instanceof \stdClass) && (!is_array($object)))
       {
-         throw new Exception("Invalid argument given to convertObjectToArray, expected array or \stdClass instance.");
+         throw new Exception("Invalid argument given to convertObjectToArray, expected array or stdClass instance.");
       }
       foreach ($object as $property => $value)
       {
