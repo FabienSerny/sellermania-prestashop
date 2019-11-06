@@ -73,7 +73,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.5.0';
+        $this->version = '2.5.1';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -583,6 +583,15 @@ class Sellermania extends Module
     public function export()
     {
         return $this->runController('front', 'Export');
+    }
+
+    /**
+     * Export method
+     * @return string $export
+     */
+    public function debug()
+    {
+        return $this->runController('front', 'Debug');
     }
 
     /**
