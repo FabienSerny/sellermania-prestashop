@@ -73,7 +73,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.5.2.2';
+        $this->version = '2.5.3.0';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -214,9 +214,8 @@ class Sellermania extends Module
             }
         }
 
-
-        if (version_compare(_PS_VERSION_, '1.7') >= 0) {
-            if (!Hook::isModuleRegisteredOnHook($this, 'actionUpdateQuantity', Context::getContext()->shop->id)) {
+        if (version_compare(_PS_VERSION_, '1.6') >= 0) {
+            if (!$this->isModuleRegisteredOnHook($this, 'actionUpdateQuantity', Context::getContext()->shop->id)) {
                 $this->registerHook('actionUpdateQuantity');
             }
         }
@@ -313,6 +312,22 @@ class Sellermania extends Module
         return parent::uninstall();
     }
 
+    public function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
+    {
+        $prefix = _DB_PREFIX_;
+        $id_hook = (int)Hook::getIdByName($hook_name);
+        $id_shop = (int) $id_shop;
+        $id_module = (int) $module_instance->id;
+
+        $sql = "SELECT * FROM {$prefix}hook_module
+                  WHERE `id_hook` = {$id_hook}
+                  AND `id_module` = {$id_module}
+                  AND `id_shop` = {$id_shop}";
+
+        $rows = Db::getInstance()->executeS($sql);
+
+        return !empty($rows);
+    }
 
     /**
      * Load SQL file

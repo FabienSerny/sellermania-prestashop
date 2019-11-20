@@ -72,6 +72,11 @@ class SellermaniaActionUpdateQuantityController
         $skus = array($sku_value);
         $savo = new SellermaniaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
         $savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
+
+        // Update product date upd for compliancy with some modules
+        if (Configuration::get('SM_UPDATE_PRODUCT_DATE_UPD') == 'yes') {
+            Db::getInstance()->update('product', [ 'date_upd' => date('Y-m-d H:i:s') ], '`id_product` = '.(int)$id_product);
+        }
     }
 }
 
