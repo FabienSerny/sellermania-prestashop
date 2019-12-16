@@ -161,7 +161,7 @@ class SellermaniaExportController
             if ($start == 0 || $limit == 0) {
                 $page = 1;
                 $items_per_page = 10;
-                $offset = (($page - 1) * $items_per_page) + 1;
+                $offset = (($page - 1) * $items_per_page);
             }
 
             $id = 0;
@@ -186,7 +186,7 @@ class SellermaniaExportController
 
                 if ($start == 0 || $limit == 0) {
                     $page++;
-                    $offset = (($page - 1) * $items_per_page) + 1;
+                    $offset = (($page - 1) * $items_per_page);
                 }
 
                 if ($nb_rows > 0) {
