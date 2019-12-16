@@ -576,7 +576,7 @@ class SellermaniaImportOrderController
                             $pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table.'` WHERE `'.$field_ps.'` LIKE \''.pSQL($search_filter).'\'');
 
                             // Alter Sku if matched
-                            if (isset($pr['id_product']) && $pr['id_product'] > 0)
+                            if (isset($pr['id_product']) && $pr['id_product'] > 0 && $fields_sm != 'Sku')
                                 $product[$fields_sm] = $pr[$field_ps];
                         }
 
