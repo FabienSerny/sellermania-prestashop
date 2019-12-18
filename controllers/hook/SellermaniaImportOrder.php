@@ -749,7 +749,7 @@ class SellermaniaImportOrderController
             'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
             'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
         );
-        $this->update(_DB_PREFIX_.'orders', $update, '`id_order` = '.(int)$this->order->id);
+        $this->update('orders', $update, '`id_order` = '.(int)$this->order->id);
     }
 
     /**
