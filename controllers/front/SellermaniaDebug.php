@@ -158,6 +158,13 @@ class SellermaniaDebugController
             OR pa.`ean13` = \''.pSQL(Tools::getValue('reference')).'\' 
             OR pa.`upc`  = \''.pSQL(Tools::getValue('reference')).'\'');
 
+            if (isset($products[0][0]['id_product'])) {
+                $products[] = Db::getInstance()->executeS('
+				SELECT `id_product`, `date_upd`
+    	        FROM `'._DB_PREFIX_.'product_shop`
+	            WHERE `id_product` = '.(int)$products[0][0]['id_product']);
+            }
+
             $this->d($products);
         }
     }
