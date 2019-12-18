@@ -76,6 +76,9 @@ class SellermaniaActionUpdateQuantityController
         // Update product date upd for compliancy with some modules
         if (Configuration::get('SM_UPDATE_PRODUCT_DATE_UPD') == 'yes') {
             Db::getInstance()->update('product', [ 'date_upd' => date('Y-m-d H:i:s') ], '`id_product` = '.(int)$id_product);
+            if (version_compare(_PS_VERSION_, '1.5') >= 0) {
+                Db::getInstance()->update('product_shop', [ 'date_upd' => date('Y-m-d H:i:s') ], '`id_product` = '.(int)$id_product);
+            }
         }
     }
 }
