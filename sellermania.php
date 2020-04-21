@@ -31,24 +31,32 @@ class Sellermania extends Module
     public $sellermania_order_states;
     public $sellermania_conditions_list;
     public $sellermania_marketplaces = array(
+        'AMAZON.CA',
+        'AMAZON.COM',
         'AMAZON.DE',
         'AMAZON.ES',
         'AMAZON.FR',
         'AMAZON.IT',
         'AMAZON.UK',
+        'AMAZON.NL',
         'ATLAS4MEN.FR',
         'AUCHAN.FR',
         'BOULANGER.FR',
         'CDISCOUNT.COM',
+        'COMPTOIRSANTE.FR',
         'DARTY.FR',
+        'DELAMAISON.FR',
         'DOCTIPHARMA.FR',
+        'EBAY.DE',
         'EBAY.FR',
+        'EBAY.UK',
         'ELCORTEINGLES.FR',
         'EPRICE.IT',
         'FNAC.COM',
         'GALLERIESLAFAYETTE.FR',
         'GAME.FR',
         'GOSPORT.FR',
+        'LEQUIPE.FR',
         'MACWAY.COM',
         'MENLOOK.FR',
         'NATUREETDECOUVERTE.FR',
@@ -56,13 +64,16 @@ class Sellermania extends Module
         'PRIVALIA.FR',
         'RETIF.FR',
         'RUEDUCOMMERCE.FR',
+        'THEBEAUTISTE.FR',
         'OUTIZ.COM',
         'TRUFFAUT.FR',
         'MANOMANO.FR',
         'BACKMARKET.FR',
         'INTERMARCHE.COM',
         'CONFORAMA.FR',
+        'LAREDOUTE.FR',
         'SHOPPINGACTIONS.FR',
+        'UBALDI.FR',
     );
 
     /**
@@ -73,7 +84,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.5.3.4';
+        $this->version = '2.5.3.5';
         $this->need_instance = 0;
 
         parent::__construct();
