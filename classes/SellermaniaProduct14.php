@@ -140,6 +140,7 @@ class SellermaniaProduct
                 $combinations[$row['id_product_attribute']]['weight'] = (float)($row['weight']);
                 $combinations[$row['id_product_attribute']]['quantity'] = (int)($row['quantity']);
                 $combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
+                $combinations[$row['id_product_attribute']]['supplier_reference'] = $row['supplier_reference'];
                 $combinations[$row['id_product_attribute']]['ean13'] = $row['ean13'];
                 $combinations[$row['id_product_attribute']]['upc'] = $row['upc'];
                 $combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];

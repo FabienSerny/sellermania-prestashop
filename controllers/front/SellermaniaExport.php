@@ -248,6 +248,7 @@ class SellermaniaExportController
             foreach ($row['declinations'] as $id_product_attribute => $declination) {
 
                 $rowCopy = $row;
+                unset($rowCopy['declinations']);
                 $rowCopy['id_product_attribute'] = $id_product_attribute;
 
                 // Disable combination concatenation if this advanced option is disabled
@@ -270,6 +271,9 @@ class SellermaniaExportController
                 $rowCopy['ean13'] = (!empty($declination['ean13']) ? $declination['ean13'] : '');
                 $rowCopy['upc'] = (!empty($declination['upc']) ? $declination['upc'] : '');
                 $rowCopy['location'] = (!empty($declination['location']) ? $declination['location'] : '');
+                if (isset($declination['supplier_reference'])) {
+                    $rowCopy['supplier_reference'] = (!empty($declination['supplier_reference']) ? $declination['supplier_reference'] : '');
+                }
                 if (isset($declination['images']) && count($declination['images']) >= 1) {
                     $rowCopy['images'] = $declination['images'];
                 }
@@ -279,7 +283,6 @@ class SellermaniaExportController
                 }
                 $rowCopy['supplier'] = $this->getSupplierData($rowCopy, 'name');
                 $rowCopy['supplier_reference'] = $this->getSupplierData($rowCopy, 'reference');
-
                 if ($rowCopy['quantity'] > 0 || $rowCopy['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))) {
                     $rows[] = $rowCopy;
                 }
@@ -415,6 +418,14 @@ class SellermaniaExportController
                     return $product_supplier->product_supplier_reference;
             }
 
+        } else {
+            if ($variable == 'name') {
+                $supplier = new Supplier($row['id_supplier']);
+                return $supplier->name;
+            }
+            if ($variable == 'reference') {
+                return $row['supplier_reference'];
+            }
         }
         return '';
     }
