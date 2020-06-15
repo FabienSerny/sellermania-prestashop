@@ -201,7 +201,7 @@ class SellermaniaActionValidateOrderController
             // Log error
             $this->addSleepingUpdates($skus, $skus_quantities);
             $log = '['.$type.' '.$id.'] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
-            @file_put_contents(dirname(__FILE__).'/../../log/inventory-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+            $this->module->logger('inventory-error', $log);
         }
     }
 
@@ -237,6 +237,10 @@ class SellermaniaActionValidateOrderController
     {
         $sleeping_updates = array('skus' => $skus, 'skus_quantities' => $skus_quantities);
         Configuration::updateValue('SM_SLEEPING_UPDATES', json_encode($sleeping_updates));
+
+        $log = '[SleepingUpdates] - '.date('Y-m-d H:i:s').': '.count($sleeping_updates)." sleeping updates\n";
+        $log .= var_export($sleeping_updates, true)."\n";
+        $this->module->logger('inventory', $log);
     }
 }
 

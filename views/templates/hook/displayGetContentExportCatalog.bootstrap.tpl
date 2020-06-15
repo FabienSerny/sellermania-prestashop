@@ -72,6 +72,18 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <div class="clearfix">
+                    <label class="col-lg-4">{l s='Enable log on stock synchronization (use for debug purpose only)?' mod='sellermania'}</label>
+                    <div class="col-lg-8">
+                        <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_yes" value="yes" {if $sm_stock_sync_log eq 'yes'}checked="checked"{/if} />
+                        <label for="sm_stock_sync_log_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                        <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_no" value="no" {if $sm_stock_sync_log eq 'no' || $sm_stock_sync_log eq ''}checked="checked"{/if} />
+                        <label for="sm_stock_sync_log_no">{l s='No' mod='sellermania'}</label>
+                    </div>
+                </div>
+            </div>
+
             <p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
             <p>
                 {foreach from=$languages_list item=language}

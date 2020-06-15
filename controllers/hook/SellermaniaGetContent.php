@@ -51,7 +51,8 @@ class SellermaniaGetContentController
 
     public function initParams()
     {
-        $this->params = array('sm_export_all', 'sm_export_invisible', 'sm_images_checksum',
+        $this->params = array('sm_export_all', 'sm_export_invisible',
+            'sm_images_checksum', 'sm_stock_sync_log',
             'sm_import_orders', 'sm_order_email', 'sm_order_token', 'sm_order_endpoint',
             'sm_confirm_order_endpoint', 'sm_inventory_endpoint',
             'sm_stock_sync_option', 'sm_stock_sync_option_1', 'sm_stock_sync_option_2',

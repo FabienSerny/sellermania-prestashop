@@ -84,7 +84,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.5.3.6';
+        $this->version = '2.5.3.7';
         $this->need_instance = 0;
 
         parent::__construct();
@@ -627,9 +627,11 @@ class Sellermania extends Module
      * Log data
      * @param $string
      */
-    public function log($string)
+    public function logger($type, $log)
     {
-        file_put_contents(dirname(__FILE__).'/log/log.txt', $string."\n", FILE_APPEND);
+        if (Configuration::get('SM_STOCK_SYNC_LOG') == 'yes') {
+            file_put_contents(dirname(__FILE__).'/log/'.$type.'-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log."\n", FILE_APPEND);
+        }
     }
 
     /**

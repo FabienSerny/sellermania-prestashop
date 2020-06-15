@@ -53,6 +53,12 @@
                 <input type="radio" name="sm_images_checksum" id="sm_images_checksum_no" value="no" {if $sm_images_checksum eq 'no' || $sm_images_checksum eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
             </div>
 
+            <p><b>{l s='Enable log on stock synchronization (use for debug purpose only)?' mod='sellermania'}</b></p><br>
+            <div class="margin-form" style="padding-left:15px">
+                <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_yes" value="yes" {if $sm_stock_sync_log eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
+                <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_no" value="no" {if $sm_stock_sync_log eq 'no' || $sm_stock_sync_log eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+            </div>
+
             <p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
             <p>
                 {foreach from=$languages_list item=language}

@@ -145,7 +145,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                                     $log = '[UPDATE] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
                                     $this->speak('EXCEPTION: '.$log);
                                     $log .= var_export($order, true)."\n";
-                                    file_put_contents(dirname(__FILE__).'/../../log/order-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+                                    $this->module->logger('order-error', $log);
                                 }
                             }
                         }
@@ -187,7 +187,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                                 $log = '[INSERT] - '.date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
                                 $this->speak('EXCEPTION: '.$log);
                                 $log .= var_export($order, true)."\n";
-                                file_put_contents(dirname(__FILE__).'/../../log/order-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+                                $this->module->logger('order-error', $log);
                             }
 
                             // Restore config value
@@ -210,7 +210,7 @@ class SellermaniaDisplayBackOfficeHeaderController
         {
             $log = date('Y-m-d H:i:s').': '.$e->getMessage()."\n";
             $this->speak('EXCEPTION: '.$log);
-            file_put_contents(dirname(__FILE__).'/../../log/webservice-error-'.Configuration::get('SELLERMANIA_KEY').'.txt', $log, FILE_APPEND);
+            $this->module->logger('webservice-error', $log);
         }
         SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
     }
