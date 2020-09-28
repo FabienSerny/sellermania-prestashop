@@ -337,7 +337,11 @@ class SellermaniaImportOrderController
         $this->customer->id_gender = 9;
         $this->customer->firstname = $this->data['User'][0]['FirstName'];
         $this->customer->lastname = $this->data['User'][0]['LastName'];
-        $this->customer->email = Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS');
+        if (Configuration::get('SM_IMPORT_ORDERS_WITH_CLIENT_EMAIL') == 'on' && isset($this->data['User'][0]['Email']) && Validate::isEmail($this->data['User'][0]['Email'])) {
+            $this->customer->email = $this->data['User'][0]['Email'];
+        } else {
+            $this->customer->email = Configuration::get('SM_CATCH_ALL_MAIL_ADDRESS');
+        }
         $this->customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
         $this->customer->is_guest = 1;
         $this->customer->active = 1;
@@ -786,7 +790,10 @@ class SellermaniaImportOrderController
         SELECT `id_order_detail`
         FROM `'._DB_PREFIX_.'order_detail`
         WHERE `id_order` = '.(int)$id_order.'
-        AND `product_reference` = \''.pSQL($product['Sku']).'\'');
+        AND (
+            `product_reference` = \''.pSQL($product['Sku']).'\' OR
+            (`product_ean13` = \''.pSQL($product['Ean']).'\' AND `product_ean13` != \'\')
+        )');
 
         // We check if a default Sellermania product is in Order Detail
         // If yes, we update it, if not, we create a new Order Detail

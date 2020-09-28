@@ -268,6 +268,16 @@
                             </div>
                         </div>
 
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Import orders with client e-mail' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                <input type="checkbox" id="sm_import_orders_with_client_email" name="sm_import_orders_with_client_email" {if $sm_import_orders_with_client_email == 'on'}checked{/if} />
+                            </div>
+                        </div>
+                        <script>
+                            var sm_import_orders_with_client_email_label = "{l s='Are you sure to enable this feature ? This can cause marketplace blacklist. Please contact Sellermania support if you\'re not sure.' mod='sellermania'}";
+                        </script>
+
                         <br>
                         <h2>4. {l s='Default customer group, carrier and order states' mod='sellermania'}</h2>
                         <hr />

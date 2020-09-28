@@ -126,4 +126,12 @@ $(document).ready(function() {
     if (window.location.href.indexOf('#sellermania-module-search') >= 0) {
         switchSellermaniaTab('#sellermania-module-search');
     }
+
+    $('#sm_import_orders_with_client_email').change(function() {
+        if ($(this).is(':checked')) {
+            if (!confirm(sm_import_orders_with_client_email_label)) {
+                $(this).prop("checked", false);
+            }
+        }
+    });
 });

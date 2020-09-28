@@ -60,9 +60,14 @@ class SellermaniaProduct
             $where = ' AND p.`id_product` IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.implode(',', $categories).'))';
         }
 
+        $extra_select = '';
+        $extra_join = '';
+        SellermaniaExportExtraFields::getSQLSelectors($extra_select, $extra_join);
+
         // SQL request
         $sql = 'SELECT p.*, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`, cl.`name` AS category_default,
             (p.`price` * IF(t.`rate`,((100 + (t.`rate`))/100),1)) AS orderprice, p.`active`, p.`id_category_default`
+            '.$extra_select.'
         FROM `'._DB_PREFIX_.'product` p
         LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND default_on = 1)
         LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)($id_lang).')
@@ -75,6 +80,7 @@ class SellermaniaProduct
         LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
         LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')
         LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+        '.$extra_join.'
         WHERE (
             p.`active` = 1 OR
             p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))).'\'

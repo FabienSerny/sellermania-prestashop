@@ -156,6 +156,14 @@
                 <p><label>{l s='E-mail associated to customer account created' mod='sellermania'}</label> <input type="text" name="sm_catch_all_mail_address" value="{$sm_catch_all_mail_address}" /></p>
                 <p><label>{l s='Starting date for orders importation' mod='sellermania'}</label> <input type="text" name="sm_install_date" value="{$sm_install_date}" /></p>
 
+
+                <p><label>{l s='Import orders with client e-mail' mod='sellermania'}</label> <input type="checkbox" id="sm_import_orders_with_client_email" name="sm_import_orders_with_client_email" {if $sm_import_orders_with_client_email == 'on'}checked{/if} /></p>
+                <script>
+                    var sm_import_orders_with_client_email_label = "{l s='Are you sure to enable this feature ? This can cause marketplace blacklist. Please contact Sellermania support if you\'re not sure.' mod='sellermania'}";
+                </script>
+
+
+
                 <br>
                 <h2>4. {l s='Default customer group, carrier and order states' mod='sellermania'}</h2>
                 <hr />

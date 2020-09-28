@@ -41,6 +41,7 @@ if (version_compare(_PS_VERSION_, '1.5') < 0) {
     $db_requests_class_file = 'SellermaniaProduct14.php';
 }
 require_once(dirname(__FILE__).'/classes/'.$db_requests_class_file);
+require_once(dirname(__FILE__).'/classes/SellermaniaExportExtraFields.php');
 
 // Request Froggy lib
 require_once(dirname(__FILE__).'/classes/FroggyLib.php');

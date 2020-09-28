@@ -85,6 +85,14 @@
                     <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_no" value="no" {if $sm_enable_export_comb_name eq 'no' || $sm_enable_export_comb_name eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
                 </p><br clear="left" />
 
+
+                <p>
+                    <label class="col-lg-4">{l s='Export extra fields' mod='sellermania'}</label>
+                    <input type="text" name="sm_export_extra_fields" id="sm_export_extra_fields" value="{if $sm_export_extra_fields}{$sm_export_extra_fields}{/if}" />
+                </p>
+                <p>{l s='Do not use instead you know what are you doing!.' mod='sellermania'}</p>
+
+
             </div>
 
             <br><p><input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="button" /></p>

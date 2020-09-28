@@ -76,6 +76,8 @@ class SellermaniaExportController
         $tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'feature_lang` WHERE `id_lang` = '.(int)$id_lang.' ORDER BY `id_feature`');
         foreach ($tmp as $t)
             $this->features[$t['id_feature']] = $t['name'];
+
+        $this->fields_to_export = SellermaniaExportExtraFields::getNewFields($this->fields_to_export);
     }
 
     /**

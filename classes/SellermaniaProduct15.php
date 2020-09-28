@@ -65,12 +65,17 @@ class SellermaniaProduct
         //foreach ($shops as $shop)
         //    $id_shops[] = (int)$shop['id_shop'];
 
+        $extra_select = '';
+        $extra_join = '';
+        SellermaniaExportExtraFields::getSQLSelectors($extra_select, $extra_join);
+
         // SQL request
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
                        product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
                        pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
                        il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default, product_shop.price AS orderprice, product_shop.`active`,
                        product_shop.id_category_default
+                       '.$extra_select.'
                 FROM `'._DB_PREFIX_.'product` p
                 '.Shop::addSqlAssociation('product', 'p').'
                 LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
@@ -82,6 +87,7 @@ class SellermaniaProduct
                 '.Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
                 LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
                 LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+                '.$extra_join.'
                 WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
                 '.(Configuration::get('SM_EXPORT_INVISIBLE') != 'yes' ? 'AND product_shop.`visibility` IN ("both", "catalog")' : '').'
                 AND (
