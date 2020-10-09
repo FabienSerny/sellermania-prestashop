@@ -94,23 +94,19 @@ abstract class GenericClient
       return $this->email;
    }
 
-
-
-
-   /**
-    * Concat the customerUniqueHashId with email
-    *
-    * @access public
-    * @param string $customerUniqueHashId
-    * @return \Sellermania\GenericClient
-    */
-   public function setCustomerUniqueHashId($customerUniqueHashId)
-   {
-      if($customerUniqueHashId != null && !empty($customerUniqueHashId)) $this->email = $this->email . GenericClient::SEPARATOR. $customerUniqueHashId;
-      return $this;
-   }
-
-
+   
+    /**
+     * Concat the customerUniqueHashId with email
+     *
+     * @access public
+     * @param string $customerUniqueHashId
+     * @return \Sellermania\GenericClient
+     */
+    public function setCustomerUniqueHashId($customerUniqueHashId)
+    {
+        if($customerUniqueHashId != null && !empty($customerUniqueHashId)) $this->email = $this->email . GenericClient::SEPARATOR. $customerUniqueHashId;
+        return $this;
+    }
 
 
    /**

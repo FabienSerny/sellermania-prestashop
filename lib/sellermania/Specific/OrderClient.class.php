@@ -29,47 +29,47 @@ class OrderClient extends GenericClient
     const STATUS_AZ_PENDING_ORDER = 19;
 
     // MARKETPLACES ALLOWED
-    const MKP_AMAZON_CA = "AMAZON.CA";
-    const MKP_AMAZON_COM = "AMAZON.COM";
-    const MKP_AMAZON_DE = "AMAZON.DE";
-    const MKP_AMAZON_ES = "AMAZON.ES";
     const MKP_AMAZON_FR = "AMAZON.FR";
-    const MKP_AMAZON_IN = "AMAZON.IN";
+    const MKP_AMAZON_DE = "AMAZON.DE";
+    const MKP_AMAZON_GB = "AMAZON.GB";
     const MKP_AMAZON_IT = "AMAZON.IT";
-    const MKP_AMAZON_UK = "AMAZON.UK";
+    const MKP_AMAZON_ES = "AMAZON.ES";
+    const MKP_AMAZON_NL = "AMAZON.NL";
     const MKP_ATLAS4MEN_FR = "ATLAS4MEN.FR";
     const MKP_AUCHAN_FR = "AUCHAN.FR";
+    const MKP_BACKMARKET_FR = "BACKMARKET.FR";
     const MKP_BOULANGER_FR = "BOULANGER.FR";
-    const MKP_CDISCOUNT_COM = "CDISCOUNT.COM";
+    const MKP_CDISCOUNT_FR = "CDISCOUNT.FR";
     const MKP_COMPTOIRSANTE_FR = "COMPTOIRSANTE.FR";
+    const MKP_CONFORAMA_FR = "CONFORAMA.FR";
     const MKP_DARTY_FR = "DARTY.FR";
     const MKP_DELAMAISON_FR = "DELAMAISON.FR";
     const MKP_DOCTIPHARMA_FR = "DOCTIPHARMA.FR";
-    const MKP_EBAY_DE = "EBAY.DE";
     const MKP_EBAY_FR = "EBAY.FR";
-    const MKP_EBAY_UK = "EBAY.UK";
-    const MKP_ELCORTEINGLES_FR = "ELCORTEINGLES.FR";
+    const MKP_ELCORTEINGLES_ES = "ELCORTEINGLES.ES";
     const MKP_EPRICE_IT = "EPRICE.IT";
-    const MKP_FNAC_COM = "FNAC.COM";
-    const MKP_GALLERIESLAFAYETTE_FR = "GALLERIESLAFAYETTE.FR";
-    const MKP_GAME_FR = "GAME.FR";
+    const MKP_FNAC_FR = "FNAC.FR";
+    const MKP_GALERIESLAFAYETTE_FR = "GALERIESLAFAYETTE.FR";
+    const MKP_GAME_GB = "GAME.GB";
     const MKP_GOSPORT_FR = "GOSPORT.FR";
+    const MKP_INTERMARCHE_FR = "INTERMARCHE.FR";
+    const MKP_LAREDOUTE_FR = "LAREDOUTE.FR";
     const MKP_LEQUIPE_FR = "LEQUIPE.FR";
-    const MKP_MACWAY_COM = "MACWAY.COM";
+    const MKP_MACWAY_FR = "MACWAY.FR";
+    const MKP_MANOMANO_FR = "MANOMANO.FR";
+    const MKP_MATY_FR = "MATY.FR";
     const MKP_MENLOOK_FR = "MENLOOK.FR";
+    const MKP_METRO_FR = "METRO.FR";
     const MKP_NATUREETDECOUVERTE_FR = "NATUREETDECOUVERTE.FR";
-    const MKP_PRICEMINISTER_FR = "PRICEMINISTER.FR";
+    const MKP_OUTIZ_FR = "OUTIZ.FR";
     const MKP_PRIVALIA_FR = "PRIVALIA.FR";
+    const MKP_RAKUTEN_FR = "RAKUTEN.FR";
     const MKP_RETIF_FR = "RETIF.FR";
     const MKP_RUEDUCOMMERCE_FR = "RUEDUCOMMERCE.FR";
-    const MKP_THEBEAUTISTE_FR = "THEBEAUTISTE.FR";
-    const MKP_TRUFFAUT_FR = "TRUFFAUT.FR";
-    const MKP_MANOMANO_FR = "MANOMANO.FR";
-    const MKP_BACKMARKET_FR = "BACKMARKET.FR";
-    const MKP_INTERMARCHE_COM = "INTERMARCHE.COM";
-    const MKP_CONFORAMA_FR = "CONFORAMA.FR";
-    const MKP_LAREDOUTE_FR = "LAREDOUTE.FR";
     const MKP_SHOPPINGACTIONS_FR = "SHOPPINGACTIONS.FR";
+    const MKP_THEBEAUTIST_FR = "THEBEAUTIST.FR";
+    const MKP_TRUFFAUT_FR = "TRUFFAUT.FR";
+    const MKP_UBALDI_FR = "UBALDI.FR";
 
     /**
      * This method let you get your orders between 2 dates. Dates are given as
@@ -197,8 +197,8 @@ class OrderClient extends GenericClient
      * If not set both cases will be fetched
      *
      * @param $invoiceAvailable
-     * @throws Exception
      * @return boolean
+     * @throws Exception
      */
     private function isValidInvoiceavailableValue($invoiceAvailable)
     {
@@ -255,47 +255,47 @@ class OrderClient extends GenericClient
     {
         return in_array($marketplace,
             array(
-                self::MKP_AMAZON_CA,
-                self::MKP_AMAZON_COM,
-                self::MKP_AMAZON_DE,
-                self::MKP_AMAZON_ES,
                 self::MKP_AMAZON_FR,
-                self::MKP_AMAZON_IN,
+                self::MKP_AMAZON_DE,
+                self::MKP_AMAZON_GB,
                 self::MKP_AMAZON_IT,
-                self::MKP_AMAZON_UK,
+                self::MKP_AMAZON_ES,
+                self::MKP_AMAZON_NL,
                 self::MKP_ATLAS4MEN_FR,
                 self::MKP_AUCHAN_FR,
+                self::MKP_BACKMARKET_FR,
                 self::MKP_BOULANGER_FR,
-                self::MKP_CDISCOUNT_COM,
+                self::MKP_CDISCOUNT_FR,
                 self::MKP_COMPTOIRSANTE_FR,
+                self::MKP_CONFORAMA_FR,
                 self::MKP_DARTY_FR,
                 self::MKP_DELAMAISON_FR,
                 self::MKP_DOCTIPHARMA_FR,
-                self::MKP_EBAY_DE,
                 self::MKP_EBAY_FR,
-                self::MKP_EBAY_UK,
-                self::MKP_ELCORTEINGLES_FR,
+                self::MKP_ELCORTEINGLES_ES,
                 self::MKP_EPRICE_IT,
-                self::MKP_FNAC_COM,
-                self::MKP_GALLERIESLAFAYETTE_FR,
-                self::MKP_GAME_FR,
+                self::MKP_FNAC_FR,
+                self::MKP_GALERIESLAFAYETTE_FR,
+                self::MKP_GAME_GB,
                 self::MKP_GOSPORT_FR,
+                self::MKP_INTERMARCHE_FR,
+                self::MKP_LAREDOUTE_FR,
                 self::MKP_LEQUIPE_FR,
-                self::MKP_MACWAY_COM,
+                self::MKP_MACWAY_FR,
+                self::MKP_MANOMANO_FR,
+                self::MKP_MATY_FR,
                 self::MKP_MENLOOK_FR,
+                self::MKP_METRO_FR,
                 self::MKP_NATUREETDECOUVERTE_FR,
-                self::MKP_PRICEMINISTER_FR,
+                self::MKP_OUTIZ_FR,
                 self::MKP_PRIVALIA_FR,
+                self::MKP_RAKUTEN_FR,
                 self::MKP_RETIF_FR,
                 self::MKP_RUEDUCOMMERCE_FR,
-                self::MKP_THEBEAUTISTE_FR,
-                self::MKP_TRUFFAUT_FR,
-                self::MKP_MANOMANO_FR,
-                self::MKP_BACKMARKET_FR,
-                self::MKP_INTERMARCHE_COM,
-                self::MKP_CONFORAMA_FR,
-                self::MKP_LAREDOUTE_FR,
                 self::MKP_SHOPPINGACTIONS_FR,
+                self::MKP_THEBEAUTIST_FR,
+                self::MKP_TRUFFAUT_FR,
+                self::MKP_UBALDI_FR
             ));
     }
 }
