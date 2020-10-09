@@ -22,6 +22,23 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
+
+<div id="sellermania-admin-tab">
+    <div id="sellermania-module-help" class="panel">
+        <div class="panel-heading">
+            <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='New Sellermania API version' mod='sellermania'}</legend>
+        </div>
+        <div class="margin-form">
+            <h4>{l s='As you may know, starting on 17th october, Sellermania API will be updated.' mod='sellermania'}</h4>
+            <p><strong>{l s='When Sellermania will tell you to do so, click on the button below.' mod='sellermania'}</strong></p>
+            <p><strong>{l s='DO NOT CLICK UNTIL YOU\'RE SURE YOU CAN SWITCH OF VERSION.' mod='sellermania'}</strong></p>
+            <p><a href="#" class="btn btn-default" OnClick="return confirm('{l s='Are you sure you want to switch to the new version?' mod='sellermania'}');">{l s='Swith to the new version ?' mod='sellermania'}</a></p>
+        </div>
+    </div>
+</div>
+
+
+
 <h2 align="center"><img src="{$sellermania_module_path}views/img/sellermania-logo.png" style="max-width:100%" alt="{l s='Sellermania' mod='sellermania'}" /></h2>
 
 {if isset($smarty.get.see) && $smarty.get.see eq 'orders-error'}
@@ -66,3 +83,6 @@
     <link type="text/css" rel="stylesheet" href="{$sellermania_module_path}views/css/displayGetContent.css" />
 
 {/if}
+
+
+<p align="center"><small>Sellermania module v{}</small></p>
