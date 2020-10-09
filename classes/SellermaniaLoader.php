@@ -137,7 +137,55 @@ class SellermaniaLoader
         );
 
 
+        if (Configuration::get('SM_API_VERSION') == 'v3') {
+            return true;
+        }
 
+        $this->module->sellermania_marketplaces = array(
+            'AMAZON.CA',
+            'AMAZON.COM',
+            'AMAZON.DE',
+            'AMAZON.ES',
+            'AMAZON.FR',
+            'AMAZON.IT',
+            'AMAZON.UK',
+            'AMAZON.NL',
+            'ATLAS4MEN.FR',
+            'AUCHAN.FR',
+            'BOULANGER.FR',
+            'CDISCOUNT.COM',
+            'COMPTOIRSANTE.FR',
+            'DARTY.FR',
+            'DELAMAISON.FR',
+            'DOCTIPHARMA.FR',
+            'EBAY.DE',
+            'EBAY.FR',
+            'EBAY.UK',
+            'ELCORTEINGLES.FR',
+            'EPRICE.IT',
+            'FNAC.COM',
+            'GALLERIESLAFAYETTE.FR',
+            'GAME.FR',
+            'GOSPORT.FR',
+            'LEQUIPE.FR',
+            'MACWAY.COM',
+            'MENLOOK.FR',
+            'NATUREETDECOUVERTE.FR',
+            'PRICEMINISTER.FR',
+            'PRIVALIA.FR',
+            'RETIF.FR',
+            'RUEDUCOMMERCE.FR',
+            'THEBEAUTISTE.FR',
+            'OUTIZ.COM',
+            'TRUFFAUT.FR',
+            'MANOMANO.FR',
+            'BACKMARKET.FR',
+            'INTERMARCHE.COM',
+            'CONFORAMA.FR',
+            'LAREDOUTE.FR',
+            'SHOPPINGACTIONS.FR',
+            'UBALDI.FR',
+        );
 
     }
 }
