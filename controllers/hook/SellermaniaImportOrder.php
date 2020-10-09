@@ -248,7 +248,11 @@ class SellermaniaImportOrderController
                     $this->data['OrderInfo']['OptionalFeaturePrice'] += $product['OptionalFeaturePrice']['Amount']['Price'] * $product['QuantityPurchased'];
 
                 // Create order detail (only create order detail for unmatched product)
-                $this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('unit' => $product_tax / $product['QuantityPurchased'], 'total' => $product_tax, 'rate' => $vat_rate);
+                $unit = 0;
+                if ($product['QuantityPurchased'] > 0) {
+                    $unit = $product_tax / $product['QuantityPurchased'];
+                }
+                $this->data['OrderInfo']['Product'][$kp]['ProductVAT'] = array('unit' => $unit, 'total' => $product_tax, 'rate' => $vat_rate);
             }
 
             // Fix Ean
