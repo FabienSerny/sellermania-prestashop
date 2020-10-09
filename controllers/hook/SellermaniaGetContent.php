@@ -257,6 +257,9 @@ class SellermaniaGetContentController
             $this->context->smarty->assign('sm_last_import', date('Y-m-d H:i:s', strtotime(Configuration::get('SM_NEXT_IMPORT').' -15 minutes')));
             $this->context->smarty->assign('sm_next_import', Configuration::get('SM_NEXT_IMPORT'));
         }
+
+        $this->context->smarty->assign('sm_v3_enabled', (Configuration::get('SM_API_VERSION') == 'v3' ? true : false));
+        $this->context->smarty->assign('sm_module_version', $this->module->version);
     }
 
     /**

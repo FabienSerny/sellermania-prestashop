@@ -238,6 +238,13 @@ class SellermaniaInstaller
                 $this->module->registerHook('actionUpdateQuantity');
             }
         }
+
+        if (Tools::getValue('migrate') == 'v3') {
+            Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
+            Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/v3/InventoryAPIS?wsdl');
+            Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/v3/InventoryAPIS?wsdl');
+            Configuration::updateValue('SM_API_VERSION', 'v3');
+        }
     }
 
 
