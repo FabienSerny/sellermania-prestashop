@@ -41,28 +41,11 @@ class SellermaniaTestAPI
         $client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
 
         // Recovering dispatched orders for the last 30 days
-        $result = $client->getOrderByStatus(
+        $client->getOrderByStatus(
             Sellermania\OrderClient::STATUS_TO_BE_CONFIRMED,
-            Sellermania\OrderClient::MKP_PRICEMINISTER_FR,
+            Sellermania\OrderClient::MKP_AMAZON_FR,
             new \DateTime(date('Y-m-d')),
             new \DateTime(date('Y-m-d'))
         );
-
-        // Calling the confirmOrder test
-        /*
-        $order_items = array();
-        $order_items[] = array(
-            'orderId' => '1TEST1TEST1TEST1',
-            'sku' => '1TEST1TEST1TEST1',
-            'orderStatusId' => 2,
-            'trackingNumber' => '',
-            'shippingCarrier' => '',
-        );
-        $client = new Sellermania\OrderConfirmClient();
-        $client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
-        $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
-        $client->setEndpoint(Configuration::get('SM_CONFIRM_ORDER_ENDPOINT'));
-        $result = $client->confirmOrder($order_items);
-        */
     }
 }
