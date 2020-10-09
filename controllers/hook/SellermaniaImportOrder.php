@@ -350,7 +350,7 @@ class SellermaniaImportOrderController
         $this->customer->is_guest = 1;
         $this->customer->active = 1;
         if (Configuration::get('SM_IMPORT_DEFAULT_CUSTOMER_GROUP') > 0) {
-            $this->customer->groupBox = [ (int)Configuration::get('SM_IMPORT_DEFAULT_CUSTOMER_GROUP') ];
+            $this->customer->groupBox = array((int)Configuration::get('SM_IMPORT_DEFAULT_CUSTOMER_GROUP'));
         }
         if (substr(_PS_VERSION_, 0, 3) == '1.4')
         {
