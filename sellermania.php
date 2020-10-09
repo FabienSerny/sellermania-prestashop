@@ -70,10 +70,6 @@ class Sellermania extends Module
     }
 
 
-
-
-
-
     /**
      * Install method
      * @return boolean success

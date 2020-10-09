@@ -58,7 +58,7 @@ class SellermaniaInstaller
         $this->installSellermaniaProduct();
 
         // Gen Sellermania key
-        Configuration::updateValue('SM_VERSION', $this->version);
+        Configuration::updateValue('SM_VERSION', $this->module->version);
         Configuration::updateValue('SM_INSTALL_DATE', date('Y-m-d H:i:s'));
         Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
         Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/OrdersAPISFR_07_03_2014/OrderAPIS?wsdl');
@@ -184,7 +184,7 @@ class SellermaniaInstaller
             $this->installOrderStates();
 
             // Set module version
-            Configuration::updateValue('SM_VERSION', $this->version);
+            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (version_compare($version_registered, '1.1.0', '<')) {
@@ -197,7 +197,7 @@ class SellermaniaInstaller
             }
 
             // Set module version
-            Configuration::updateValue('SM_VERSION', $this->version);
+            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (Configuration::get('SM_EXPORT_ALL') == '') {
@@ -253,7 +253,7 @@ class SellermaniaInstaller
             (int)Language::getIdByIso('en') => 'en',
         );
 
-        foreach ($this->sellermania_order_states as $order_state_key => $order_state_array)
+        foreach ($this->module->sellermania_order_states as $order_state_key => $order_state_array)
         {
             $order_state = new OrderState(Configuration::get($order_state_key));
             if ($order_state->id < 1)
