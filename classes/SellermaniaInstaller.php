@@ -39,6 +39,112 @@ class SellermaniaInstaller
         $this->module = $module;
     }
 
+    /**
+     * Install method
+     * @return boolean success
+     */
+    public function install()
+    {
+        // Execute module install MySQL commands
+        $sql_file = dirname(__FILE__).'/../install/install.sql';
+        if (!$this->loadSQLFile($sql_file)) {
+            return false;
+        }
+
+        // Install Order States
+        $this->installOrderStates();
+
+        // Install Product
+        $this->installSellermaniaProduct();
+
+        // Gen Sellermania key
+        Configuration::updateValue('SM_VERSION', $this->version);
+        Configuration::updateValue('SM_INSTALL_DATE', date('Y-m-d H:i:s'));
+        Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
+        Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/OrdersAPISFR_07_03_2014/OrderAPIS?wsdl');
+        Configuration::updateValue('SM_CONFIRM_ORDER_ENDPOINT', 'http://membres.sellermania.com/wsapi/wsdl/OrderConfirmation');
+        Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/InventoryAPISFR_11_12_2017/InventoryAPIS?wsdl');
+
+        Configuration::updateValue('SM_ENABLE_NATIVE_REFUND_SYSTEM', 'no');
+        Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');
+
+        return true;
+    }
+
+
+
+    /**
+     * Uninstall method
+     * @return boolean success
+     */
+    public function uninstall()
+    {
+        // Execute module install MySQL commands
+        // $sql_file = dirname(__FILE__).'/../install/uninstall.sql';
+        // if (!$this->loadSQLFile($sql_file))
+        //    return false;
+
+        // Delete configuration values
+        Configuration::deleteByName('SM_SLEEPING_UPDATES');
+        Configuration::deleteByName('SM_IMPORT_ORDERS');
+        Configuration::deleteByName('SM_ORDER_EMAIL');
+        Configuration::deleteByName('SM_ORDER_TOKEN');
+        Configuration::deleteByName('SM_ORDER_ENDPOINT');
+        Configuration::deleteByName('SM_CONFIRM_ORDER_ENDPOINT');
+        Configuration::deleteByName('SM_INVENTORY_ENDPOINT');
+        Configuration::deleteByName('SM_NEXT_IMPORT');
+        Configuration::deleteByName('SM_CREDENTIALS_CHECK');
+        Configuration::deleteByName('SM_INSTALL_DATE');
+        Configuration::deleteByName('SELLERMANIA_KEY');
+
+        Configuration::deleteByName('SM_STOCK_SYNC_OPTION');
+        Configuration::deleteByName('SM_STOCK_SYNC_POSITION');
+        Configuration::deleteByName('SM_STOCK_SYNC_NB_CHAR');
+
+        Configuration::deleteByName('SM_STOCK_SYNC_OPTION');
+        Configuration::deleteByName('SM_STOCK_SYNC_OPTION_1');
+        Configuration::deleteByName('SM_STOCK_SYNC_OPTION_2');
+        Configuration::deleteByName('SM_STOCK_SYNC_POSITION');
+        Configuration::deleteByName('SM_STOCK_SYNC_NB_CHAR');
+
+        Configuration::deleteByName('SM_ALERT_MISSING_REF_OPTION');
+        Configuration::deleteByName('SM_ALERT_MISSING_REF_MAIL');
+
+        Configuration::deleteByName('SM_ENABLE_NATIVE_REFUND_SYSTEM');
+        Configuration::deleteByName('SM_ENABLE_EXPORT_COMB_NAME');
+
+        Configuration::deleteByName('SM_EXPORT_STAY_NB_DAYS');
+
+        return true;
+    }
+
+
+
+    /**
+     * Load SQL file
+     * @return boolean success
+     */
+    public function loadSQLFile($sql_file)
+    {
+        // Get install MySQL file content
+        $sql_content = file_get_contents($sql_file);
+
+        // Replace prefix and store MySQL command in array
+        $sql_content = str_replace('PREFIX_', _DB_PREFIX_, $sql_content);
+        $sql_requests = preg_split("/;\s*[\r\n]+/", $sql_content);
+
+        // Execute each MySQL command
+        $result = true;
+        foreach($sql_requests AS $request)
+            if (!empty($request))
+                $result &= Db::getInstance()->execute(trim($request));
+
+        // Return result
+        return $result;
+    }
+
+
+
     public function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
     {
         $prefix = _DB_PREFIX_;
