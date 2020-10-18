@@ -80,7 +80,6 @@ class SellermaniaGetContentController
     {
         try
         {
-            require_once(dirname(__FILE__).'/../../classes/SellermaniaTestAPI.php');
             $test = new SellermaniaTestAPI();
             $test->run();
             Configuration::updateValue('SM_CREDENTIALS_CHECK', 'ok');

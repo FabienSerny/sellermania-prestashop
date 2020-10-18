@@ -32,7 +32,7 @@ if (!defined('_PS_VERSION_')) {
 
 class SellermaniaTestAPI
 {
-    public    function run()
+    public function run()
     {
         // Creating an instance of OrderClient
         $client = new Sellermania\OrderClient();
@@ -40,7 +40,25 @@ class SellermaniaTestAPI
         $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
         $client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
 
-        // Recovering dispatched orders for the last 30 days
+        // Recovering dispatched orders for one day
+        $extraletter = '*';
+        try {
+            $this->test($client);
+        } catch (\Exception $e) {
+            $client->setToken($extraletter.Configuration::get('SM_ORDER_TOKEN'));
+            try {
+                $this->test($client);
+                Configuration::updateValue('SM_ORDER_TOKEN', $extraletter.Configuration::get('SM_ORDER_TOKEN'));
+            } catch (\Exception $e) {
+                throw new \Exception($e->getMessage());
+            }
+        }
+
+        Configuration::updateValue('SM_CREDENTIALS_CHECK', 'ok');
+    }
+
+    public function test($client)
+    {
         $client->getOrderByStatus(
             Sellermania\OrderClient::STATUS_TO_BE_CONFIRMED,
             Sellermania\OrderClient::MKP_AMAZON_FR,

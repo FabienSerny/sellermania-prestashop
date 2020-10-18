@@ -38,6 +38,7 @@ if (!class_exists('PEAR')) {
 // Require installer and loader classes
 require_once(dirname(__FILE__).'/classes/SellermaniaInstaller.php');
 require_once(dirname(__FILE__).'/classes/SellermaniaLoader.php');
+require_once(dirname(__FILE__).'/classes/SellermaniaTestAPI.php');
 
 // Require Db requests class
 $db_requests_class_file = 'SellermaniaProduct15.php';
