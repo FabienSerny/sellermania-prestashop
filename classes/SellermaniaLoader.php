@@ -134,6 +134,18 @@ class SellermaniaLoader
             'UBALDI.FR',
         );
 
+        $this->module->sellermania_marketplaces_migration = array(
+            'AMAZON.UK' => 'AMAZON.GB',
+            'CDISCOUNT.COM' => 'CDISCOUNT.FR',
+            'ELCORTEINGLES.FR' => 'ELCORTEINGLES.ES',
+            'FNAC.COM' => 'FNAC.FR',
+            'GALLERIESLAFAYETTE.FR' => 'GALERIESLAFAYETTE.FR',
+            'GAME.FR' => 'GAME.GB',
+            'INTERMARCHE.COM' => 'INTERMARCHE.FR',
+            'OUTIZ.COM' => 'OUTIZ.FR',
+            'PRICEMINISTER.FR' => 'RAKUTEN.FR',
+            'THEBEAUTISTE.FR' => 'THEBEAUTIST.FR',
+        );
 
         if (Configuration::get('SM_API_VERSION') == 'v3') {
             return true;

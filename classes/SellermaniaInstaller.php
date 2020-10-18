@@ -244,6 +244,13 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/v3/InventoryAPIS?wsdl');
             Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/v3/InventoryAPIS?wsdl');
             Configuration::updateValue('SM_API_VERSION', 'v3');
+            $this->migrateMarketplacesHistory();
+            Configuration::updateValue('SM_VERSION', $this->module->version);
+        }
+
+        if (version_compare($version_registered, '2.6.0.9', '<') && Configuration::get('SM_API_VERSION') == 'v3') {
+            $this->migrateMarketplacesHistory();
+            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
     }
 
@@ -349,4 +356,35 @@ class SellermaniaInstaller
     }
 
 
+    public function migrateMarketplacesHistory()
+    {
+        foreach ($this->module->sellermania_marketplaces_migration as $old_marketplace => $new_marketplace) {
+            $this->update(
+                'sellermania_order',
+                array('marketplace' => $new_marketplace),
+                '`marketplace` = \''.$old_marketplace.'\''
+            );
+        }
+    }
+
+
+    public function update($table, $sql_data, $where)
+    {
+        // If PS 1.6 or greater, we use update instead of autoexecute
+        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
+            Db::getInstance()->update($table, $sql_data, $where);
+        } else {
+            Db::getInstance()->autoExecute(_DB_PREFIX_.$table, $sql_data, 'UPDATE', $where);
+        }
+    }
+
+    public function insert($table, $sql_data)
+    {
+        // If PS 1.6 or greater, we use update instead of autoexecute
+        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
+            Db::getInstance()->insert($table, $sql_data);
+        } else {
+            Db::getInstance()->autoExecute(_DB_PREFIX_.$table, $sql_data, 'INSERT');
+        }
+    }
 }

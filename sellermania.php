@@ -34,6 +34,7 @@ class Sellermania extends Module
     public $sellermania_order_states;
     public $sellermania_conditions_list;
     public $sellermania_marketplaces;
+    public $sellermania_marketplaces_migration;
 
     /**
      * Module Constructor
@@ -43,7 +44,7 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.6.0.2';
+        $this->version = '2.6.1.0';
         $this->need_instance = 0;
 
         parent::__construct();
