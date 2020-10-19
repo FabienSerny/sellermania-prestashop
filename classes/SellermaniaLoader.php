@@ -145,6 +145,9 @@ class SellermaniaLoader
             'OUTIZ.COM' => 'OUTIZ.FR',
             'PRICEMINISTER.FR' => 'RAKUTEN.FR',
             'THEBEAUTISTE.FR' => 'THEBEAUTIST.FR',
+            'EBAY.UK' => 'EBAY.GB',
+            'MACWAY.COM' => 'MACWAY.FR',
+            'GOOGLE.FR' => 'SHOPPINGACTIONS.FR',
         );
 
         if (Configuration::get('SM_API_VERSION') == 'v3') {
