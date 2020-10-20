@@ -63,7 +63,9 @@ class SellermaniaImportOrderController
         $this->data = $data;
         $this->preprocessData();
         $this->checkValidity();
-        $this->createCustomer();
+        if (!$this->customerExists()) {
+            $this->createCustomer();
+        }
         $this->createAddress();
         $this->createCart();
         $this->createOrder();
@@ -330,6 +332,45 @@ class SellermaniaImportOrderController
             throw new \Exception('Firstname is not valid : '.$this->data['User'][0]['LastName']);
         }
     }
+
+
+    /**
+     * Check if customer exists
+     */
+    public function customerExists()
+    {
+        if (Configuration::get('SM_IMPORT_ORDERS_WITH_CLIENT_EMAIL') != 'on') {
+            return false;
+        }
+        if (!isset($this->data['User'][0]['Email']) || !Validate::isEmail($this->data['User'][0]['Email'])) {
+            return false;
+        }
+
+        $customers = Customer::getCustomersByEmail($this->data['User'][0]['Email']);
+        if (isset($customers[0]['id_customer'])) {
+            $this->customer = new Customer((int)$customers[0]['id_customer']);
+            if (Validate::isLoadedObject($this->customer)) {
+
+                // Fix lang for PS 1.4
+                $this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+                if (property_exists($this->customer, 'id_lang'))
+                {
+                    $rp = new ReflectionProperty($this->customer,'id_lang');
+                    if (version_compare(_PS_VERSION_, '1.5') >= 0 && !$rp->isProtected()) {
+                        $this->id_lang = $this->customer->id_lang;
+                    }
+                }
+
+                // Set context
+                $this->context->customer = $this->customer;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * Create customer
