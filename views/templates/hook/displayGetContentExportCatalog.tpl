@@ -88,7 +88,7 @@
 
                 <p>
                     <label class="col-lg-4">{l s='Export extra fields' mod='sellermania'}</label>
-                    <input type="text" name="sm_export_extra_fields" id="sm_export_extra_fields" value="{if $sm_export_extra_fields}{$sm_export_extra_fields}{/if}" />
+                    <textarea name="sm_export_extra_fields" id="sm_export_extra_fields">{if $sm_export_extra_fields}{$sm_export_extra_fields}{/if}</textarea>
                 </p>
                 <p>{l s='Do not use instead you know what are you doing!.' mod='sellermania'}</p>
 
