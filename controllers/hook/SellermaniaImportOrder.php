@@ -697,8 +697,8 @@ class SellermaniaImportOrderController
      */
     public function getProductActive($id_product)
     {
-        // since prestashop 1.6.0, the active field used for products is in the `product_shop` table
-        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
+        // since prestashop 1.5.0, the active field used for products is in the `product_shop` table
+        if (version_compare(_PS_VERSION_, '1.5.0') >= 0) {
             $table = 'product_shop';
         } else {
             $table = 'product';
