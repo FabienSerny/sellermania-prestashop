@@ -638,7 +638,7 @@ class SellermaniaImportOrderController
                             $product['id_product_attribute'] = $pr['id_product_attribute'];
 
                         // If product is disabled, we return the default product
-                        $active = Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$product['id_product']);
+                        $active = $this->getProductActive((int)$product['id_product']);
                         if ($active != 1)
                         {
                             $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
@@ -686,6 +686,25 @@ class SellermaniaImportOrderController
         $product['id_product_attribute'] = 0;
 
         return $product;
+    }
+
+    /**
+     * Return active status for a product given its id.
+     *
+     * @param int $id_product
+     *
+     * @return int
+     */
+    public function getProductActive($id_product)
+    {
+        // since prestashop 1.6.0, the active field used for products is in the `product_shop` table
+        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
+            $table = 'product_shop';
+        } else {
+            $table = 'product';
+        }
+
+        return Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.$table.'` WHERE `id_product` = '.$id_product);
     }
 
 
