@@ -137,7 +137,8 @@ class SellermaniaDebugController
     {
         if (Tools::getValue('id_product') > 0) {
             $product = Db::getInstance()->getRow('SELECT `id_product`, `date_upd` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.Tools::getValue('id_product'));
-            $this->d($product);
+            $product_shop = Db::getInstance()->getRow('SELECT `id_product`, `date_upd` FROM `'._DB_PREFIX_.'product_shop` WHERE `id_product` = '.Tools::getValue('id_product'));
+            $this->d([ 'product' => $product, 'product_shop' => $product_shop ]);
         }
 
         if (Tools::getValue('reference') != '') {
