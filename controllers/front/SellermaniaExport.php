@@ -49,6 +49,11 @@ class SellermaniaExportController
         'meta_title' => 'string', 'meta_description' => 'string', 'meta_keywords' => 'string', 'product_url' => 'string',
         'id_category_default' => 'int', 'condition' => 'string', 'date_add' => 'string', 'date_upd' => 'string',
     );
+    private $stock_fields_to_export = array(
+        'id_product' => 'int', 'id_product_attribute' => 'int', 'id_unique' => 'string',
+        'ean13' => 'string', 'upc' => 'string', 'reference' => 'string',
+        'quantity' => 'int', 'date_add' => 'string', 'date_upd' => 'string',
+    );
 
     /**
      * @var array attribute groups
@@ -156,7 +161,11 @@ class SellermaniaExportController
         {
             $iso_lang = strtolower($language['iso_code']);
             $id_lang = Language::getIdByIso($iso_lang);
-            $this->renderExportHeader($iso_lang, $output);
+            if (Tools::getIsset('onlystock')) {
+                $this->renderExportStockHeader($iso_lang, $output);
+            } else {
+                $this->renderExportHeader($iso_lang, $output);
+            }
 
             $offset = $start;
             $items_per_page = $limit;
@@ -177,12 +186,16 @@ class SellermaniaExportController
                         return false;
                     }
                     $id = $row['id_product'];
-                    $row['location'] = SellermaniaProduct::getLocation($row['id_product'], $row['location']);
-                    $row['tags'] = SellermaniaProduct::getProductTags($row['id_product'], $id_lang);
-                    $row['features'] = SellermaniaProduct::getFeatures($row['id_product'], $id_lang);
                     $row['declinations'] = SellermaniaProduct::getProductDeclinations($row['id_product'], $id_lang);
-                    $row['images'] = SellermaniaProduct::getImages($row['id_product']);
-                    $this->renderExport($row, $iso_lang, $output);
+                    if (Tools::getIsset('onlystock')) {
+                        $this->renderExportStock($row, $iso_lang, $output);
+                    } else {
+                        $row['location'] = SellermaniaProduct::getLocation($row['id_product'], $row['location']);
+                        $row['tags'] = SellermaniaProduct::getProductTags($row['id_product'], $id_lang);
+                        $row['features'] = SellermaniaProduct::getFeatures($row['id_product'], $id_lang);
+                        $row['images'] = SellermaniaProduct::getImages($row['id_product']);
+                        $this->renderExport($row, $iso_lang, $output);
+                    }
                     $nb_rows++;
                 }
 
@@ -230,6 +243,21 @@ class SellermaniaExportController
         $line .= '"Attributes compiled";';
         foreach ($this->features as $id_feature => $name) {
             $line .= '"Feature '.$id_feature.' - '.$name.'";';
+        }
+        $line .= "\n";
+        $this->renderLine($line, $iso_lang, $output);
+    }
+
+    /**
+     * Render export header
+     * @param string $iso_lang
+     * @param string $output (display|file)
+     */
+    public function renderExportStockHeader($iso_lang, $output)
+    {
+        $line = '';
+        foreach ($this->stock_fields_to_export as $field => $field_type) {
+            $line .= '"'.$field.'";';
         }
         $line .= "\n";
         $this->renderLine($line, $iso_lang, $output);
@@ -285,7 +313,8 @@ class SellermaniaExportController
                 }
                 $rowCopy['supplier'] = $this->getSupplierData($rowCopy, 'name');
                 $rowCopy['supplier_reference'] = $this->getSupplierData($rowCopy, 'reference');
-                if ($rowCopy['quantity'] > 0 || $rowCopy['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))) {
+
+                if ($this->isProductExportable($rowCopy)) {
                     $rows[] = $rowCopy;
                 }
             }
@@ -303,7 +332,8 @@ class SellermaniaExportController
             $row['id_product_attribute'] = 0;
             $row['supplier'] = $this->getSupplierData($row, 'name');
             $row['supplier_reference'] = $this->getSupplierData($row, 'reference');
-            if ($row['quantity'] > 0 || $row['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))) {
+
+            if ($this->isProductExportable($row)) {
                 $rows = array($row);
             }
         }
@@ -376,6 +406,89 @@ class SellermaniaExportController
         $row = null;
 
         $this->renderLine($line, $iso_lang, $output);
+    }
+
+    /**
+     * Render export stock
+     * @param array $row
+     * @param string $iso_lang
+     * @param string $output (display|file)
+     */
+    public function renderExportStock($row, $iso_lang, $output)
+    {
+        // If declination duplicate row for each declination
+        if ($row['declinations'] && is_array($row['declinations'])) {
+
+            $rows = array();
+            foreach ($row['declinations'] as $id_product_attribute => $declination) {
+
+                $rowCopy = $row;
+                unset($rowCopy['declinations']);
+                $rowCopy['id_product_attribute'] = $id_product_attribute;
+
+                $rowCopy['quantity'] = $declination['quantity'];
+                $rowCopy['reference'] = (!empty($declination['reference']) ? $declination['reference'] : '');
+                $rowCopy['ean13'] = (!empty($declination['ean13']) ? $declination['ean13'] : '');
+                $rowCopy['upc'] = (!empty($declination['upc']) ? $declination['upc'] : '');
+                if ($rowCopy['active'] != 1) {
+                    $rowCopy['quantity'] = 0;
+                }
+
+                if ($this->isProductExportable($rowCopy)) {
+                    $rows[] = $rowCopy;
+                }
+            }
+        }
+        else
+        {
+            if ($row['active'] != 1) {
+                $row['quantity'] = 0;
+            }
+            $row['id_product_attribute'] = 0;
+
+            if ($this->isProductExportable($row)) {
+                $rows = array($row);
+            }
+        }
+
+        if (empty($rows)) {
+            return false;
+        }
+
+        // Begin rendering
+        $line = '';
+        foreach ($rows as $row) {
+            if ($row['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID') && $row['name'] != '') {
+
+                foreach ($this->stock_fields_to_export as $field => $field_type) {
+
+                    if ($field == 'id_unique') {
+                        $row[$field] = $row['id_product'] . '-' . $row['id_product_attribute'];
+                    } else if (!isset($row[$field])) {
+                        $row[$field] = '';
+                    } else if ($field_type == 'int') {
+                        $row[$field] = (int)$row[$field];
+                    } else if ($field_type == 'float') {
+                        $row[$field] = number_format($row[$field], 2, '.', '');
+                    }
+                    $line .= '"'.str_replace(array("\r\n", "\n", '"'), '', $row[$field]).'";';
+                }
+                $line .= "\n";
+            }
+        }
+
+        // Free memory
+        $row = null;
+
+        $this->renderLine($line, $iso_lang, $output);
+    }
+
+    public function isProductExportable($row)
+    {
+        if ($row['quantity'] > 0 || Configuration::get('SM_EXPORT_STAY_NB_DAYS') == 0 || $row['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))) {
+            return true;
+        }
+        return false;
     }
 
     /**

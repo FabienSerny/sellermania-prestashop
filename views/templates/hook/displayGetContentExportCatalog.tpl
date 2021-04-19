@@ -59,12 +59,20 @@
                 <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_no" value="no" {if $sm_stock_sync_log eq 'no' || $sm_stock_sync_log eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
             </div>
 
-            <p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
+            <p><b>{l s='Full catalog export links' mod='sellermania'} <small>({l s='Send these links to Sellermania' mod='sellermania'})</small></b></p>
             <p>
                 {foreach from=$languages_list item=language}
                     <strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export.php?l={$language.iso_code|strtolower}&k={$sellermania_key} <br>
                 {/foreach}
             </p>
+
+            <p><b>{l s='Stock export links' mod='sellermania'} <small>({l s='Send these links to Sellermania' mod='sellermania'})</small></b></p>
+            <p>
+                {foreach from=$languages_list item=language}
+                    <strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export.php?l={$language.iso_code|strtolower}&k={$sellermania_key}&onlystock <br>
+                {/foreach}
+            </p>
+
             <br>
             <p><a href="#" id="see-advanced-export" class="sellermania-button">{l s='Advanced configuration' mod='sellermania'}</a></p>
             <br clear="left">

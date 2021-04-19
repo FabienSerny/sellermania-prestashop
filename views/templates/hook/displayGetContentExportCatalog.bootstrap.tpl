@@ -84,10 +84,17 @@
                 </div>
             </div>
 
-            <p><b>{l s='Send these links to Sellermania' mod='sellermania'}</b></p>
+            <p><b>{l s='Full catalog export links' mod='sellermania'} <small>({l s='Send these links to Sellermania' mod='sellermania'})</small></b></p>
             <p>
                 {foreach from=$languages_list item=language}
                     <strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export.php?l={$language.iso_code|strtolower}&k={$sellermania_key} <br>
+                {/foreach}
+            </p>
+
+            <p><b>{l s='Stock export links' mod='sellermania'} <small>({l s='Send these links to Sellermania' mod='sellermania'})</small></b></p>
+            <p>
+                {foreach from=$languages_list item=language}
+                    <strong>{$language.iso_code|strtoupper} :</strong> {$module_web_path}export.php?l={$language.iso_code|strtolower}&k={$sellermania_key}&onlystock <br>
                 {/foreach}
             </p>
 

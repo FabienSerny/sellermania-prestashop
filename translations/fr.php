@@ -97,7 +97,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_2d5d
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_9b449ef77949b9f150d87312d3be514e'] = 'Veuillez sélectionner les catégories que vous souhaitez exporter :';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_3795de2269976e30548dbf64e104155e'] = 'Activer le checksum pour les images ? (nécessaire pour La Redoute)';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_06ba06be2d5ff7c647c69f4a28a3f539'] = 'Activer les logs sur les synchronisation de stock (à utiliser uniquement pour des tests) ?';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_8baa5becbb202b0248baf76e41e097e6'] = 'Liens d\'export catalogue complet';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_6ff1e7f0514def87527ed4a9ced5c13b'] = 'Envoyez ces liens à Sellermania';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_20b64d076f9cbdae01b28bbf7c642e5f'] = 'Liens d\'export de stock';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_119dd5a342e981b13bf0024d5c6a6933'] = 'Configuration avancée';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_b984240384dfae4038b9f5d4a8e46238'] = 'Mettre en place une tâche automatisée (tâche cron)';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_aabfdaeee727f05e225952de0bdf4d93'] = 'Chemin du script :';
@@ -123,7 +125,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_9b449ef77949b9
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_2d5d877e9113af851b825485495e0b53'] = 'Souhaitez vous exporter vers Sellermania les produits ayant la visibilité configurée à \"Nulle part\" ?';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_3795de2269976e30548dbf64e104155e'] = 'Activer le checksum des images ?  (nécessaire pour La Redoute) ';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_06ba06be2d5ff7c647c69f4a28a3f539'] = 'Activer les logs sur les synchronisation de stock (à utiliser uniquement pour des tests) ?';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_8baa5becbb202b0248baf76e41e097e6'] = 'Liens d\'export catalogue complet';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_6ff1e7f0514def87527ed4a9ced5c13b'] = 'Envoyez ces liens à Sellermania';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_20b64d076f9cbdae01b28bbf7c642e5f'] = 'Liens d\'export de stock';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_119dd5a342e981b13bf0024d5c6a6933'] = 'Configuration avancée';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_b984240384dfae4038b9f5d4a8e46238'] = 'Mettre en place une tâche automatisée (tâche cron)';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_aabfdaeee727f05e225952de0bdf4d93'] = 'Chemin du script :';
