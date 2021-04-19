@@ -62,6 +62,7 @@ class SellermaniaGetContentController
             'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
             'sm_enable_native_refund_system', 'sm_enable_native_order_interface',
             'sm_enable_export_comb_name', 'sm_export_extra_fields',
+            'sm_export_stay_nb_days',
             'sm_catch_all_mail_address', 'sm_install_date',
             'sm_order_import_past_days', 'sm_order_import_limit',
             'sm_import_orders_with_client_email',

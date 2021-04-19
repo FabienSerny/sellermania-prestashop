@@ -221,7 +221,7 @@ class SellermaniaInstaller
         if (Configuration::get('SM_ORDER_IMPORT_LIMIT') == '' || Configuration::get('SM_ORDER_IMPORT_LIMIT') < 1 || Configuration::get('SM_ORDER_IMPORT_LIMIT') > 2000) {
             Configuration::updateValue('SM_ORDER_IMPORT_LIMIT', 100);
         }
-        if (Configuration::get('SM_EXPORT_STAY_NB_DAYS') == '' || Configuration::get('SM_EXPORT_STAY_NB_DAYS') < 1) {
+        if (Configuration::get('SM_EXPORT_STAY_NB_DAYS') == '') {
             Configuration::updateValue('SM_EXPORT_STAY_NB_DAYS', 7);
         }
 

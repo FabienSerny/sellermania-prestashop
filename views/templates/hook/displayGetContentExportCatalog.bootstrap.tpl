@@ -121,6 +121,14 @@
                     </p>
                 </div>
 
+                <div class="form-group clearfix">
+                    <label class="col-lg-4">{l s='Export disabled product updated in the last X days' mod='sellermania'}<br><small>({l s='If value is set to 0, it will expprt all products' mod='sellermania'})</small></label>
+                    <div class="col-lg-4">
+                        <input type="text" name="sm_export_stay_nb_days" id="sm_export_stay_nb_days" value="{if $sm_export_stay_nb_days}{$sm_export_stay_nb_days}{/if}" />
+                    </div><br clear="left" />
+                    <p>{l s='Beware! Changing this value to 0 or to a value superior to 7 can result in extra charge from Sellermania.' mod='sellermania'}</p>
+                </div>
+
 
                 <div class="form-group clearfix">
                     <label class="col-lg-4">{l s='Export extra fields' mod='sellermania'}</label>

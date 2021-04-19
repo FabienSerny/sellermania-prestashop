@@ -87,7 +87,13 @@
 
 
                 <p>
-                    <label class="col-lg-4">{l s='Export extra fields' mod='sellermania'}</label>
+                    <label>{l s='Export disabled product updated in the last X days' mod='sellermania'}<br><small>({l s='If value is set to 0, it will expprt all products' mod='sellermania'})</small></label>
+                    <input type="text" name="sm_export_stay_nb_days" id="sm_export_stay_nb_days" value="{if $sm_export_stay_nb_days}{$sm_export_stay_nb_days}{/if}" />
+                </p>
+                <p>{l s='Beware! Setting a value superior to 7 can result in extra charge from Sellermania' mod='sellermania'}</p>
+
+                <p>
+                    <label>{l s='Export extra fields' mod='sellermania'}</label>
                     <textarea name="sm_export_extra_fields" id="sm_export_extra_fields">{if $sm_export_extra_fields}{$sm_export_extra_fields}{/if}</textarea>
                 </p>
                 <p>{l s='Do not use instead you know what are you doing!.' mod='sellermania'}</p>

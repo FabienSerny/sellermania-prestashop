@@ -69,6 +69,15 @@ class SellermaniaProduct
         $extra_join = '';
         SellermaniaExportExtraFields::getSQLSelectors($extra_select, $extra_join);
 
+        $whereDisabled = '';
+        $SM_EXPORT_STAY_NB_DAYS = (int)Configuration::get('SM_EXPORT_STAY_NB_DAYS');
+        if ($SM_EXPORT_STAY_NB_DAYS > 0) {
+            $whereDisabled = 'AND (
+                    (p.`active` = 1 AND product_shop.`active` = 1) OR
+                    p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))).'\'
+                )';
+        }
+
         // SQL request
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
                        product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
@@ -90,10 +99,8 @@ class SellermaniaProduct
                 '.$extra_join.'
                 WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
                 '.(Configuration::get('SM_EXPORT_INVISIBLE') != 'yes' ? 'AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-                AND (
-                    (p.`active` = 1 AND product_shop.`active` = 1) OR
-                    p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))).'\'
-                ) '.$where.'
+                '.$whereDisabled.'
+                '.$where.'
                 GROUP BY product_shop.id_product
                 ORDER BY product_shop.id_product '.$limitSQL;
 

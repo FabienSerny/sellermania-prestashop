@@ -108,6 +108,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_7c23
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_f41630be486288cc9b3e25007b26cbf2'] = 'Activer le nom des déclinaisons avec attributs dans l\'export';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_3e6b31380c60798cbe8a48c759d35b5e'] = 'Nativement, ce module concatènera les noms des attributs avec le nom du produit dans le cas de déclinaisons.';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_4a3827aac4ea4ce09923b321c2e59b32'] = 'Vous pouvez désactiver cette fonctionnalité pour les marchands ne créant qu\'une déclinaison par produit.';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_346c9d0f410427ff4e6920d88261dd7f'] = 'Exporter les produits désactivés depuis X jours';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_f2bcbba5c7026133d7a23d80f9c4093d'] = 'si cette valeur est à 0, tous les produits seront exportés';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_06108983ea35771db1b88402b1acd13e'] = 'Attention ! Mettre cette valeur à 0 ou supérieur à 7 peut entrainer des coûts supplémentaires d\'abonnement de la part de Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_dca8d2139142812550d099a31abf6074'] = 'Exporter des champs complémentaires';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_df71e7ee8a773e29843286a638c70f4a'] = 'Ne pas utiliser à moins d\'être sûr de ce que vous faîtes !';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog.bootstrap_ad3d06d03d94223fa652babc913de686'] = 'Valider';
@@ -129,6 +132,9 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_cef6871cec9155
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_750d5520b95ffb9c56927a66d258b8aa'] = 'Fichier non généré pour le moment';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_7c231695492ff85c2b0df3fc9148f253'] = 'Attention, le répertoire suivant doit être posséder les droits en écriture';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_f41630be486288cc9b3e25007b26cbf2'] = 'Activer le nom des déclinaisons avec attributs dans l\'export';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_346c9d0f410427ff4e6920d88261dd7f'] = 'Exporter les produits désactivés depuis X jours';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_f2bcbba5c7026133d7a23d80f9c4093d'] = 'si cette valeur est à 0, tous les produits seront exportés';
+$_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_6e1d3e526f1250313417e286235d94fc'] = 'Attention ! Mettre cette valeur à 0 ou supérieur à 7 peut entrainer des coûts supplémentaires d\'abonnement de la part de Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_dca8d2139142812550d099a31abf6074'] = 'Exporter des champs complémentaires';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_91fbe31f86d884a9690f11325884fe94'] = 'Ne pas utiliser à moins d\'être sûr de ce que vous faîtes !';
 $_MODULE['<{sellermania}prestashop>displaygetcontentexportcatalog_ad3d06d03d94223fa652babc913de686'] = 'Valider';

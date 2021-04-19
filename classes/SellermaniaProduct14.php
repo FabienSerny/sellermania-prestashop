@@ -60,6 +60,15 @@ class SellermaniaProduct
             $where = ' AND p.`id_product` IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.implode(',', $categories).'))';
         }
 
+        $whereDisabled = '';
+        $SM_EXPORT_STAY_NB_DAYS = (int)Configuration::get('SM_EXPORT_STAY_NB_DAYS');
+        if ($SM_EXPORT_STAY_NB_DAYS > 0) {
+            $whereDisabled = 'AND (
+                p.`active` = 1 OR
+                p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))).'\'
+            )';
+        }
+
         $extra_select = '';
         $extra_join = '';
         SellermaniaExportExtraFields::getSQLSelectors($extra_select, $extra_join);
@@ -81,10 +90,9 @@ class SellermaniaProduct
         LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')
         LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
         '.$extra_join.'
-        WHERE (
-            p.`active` = 1 OR
-            p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))).'\'
-        ) '.$where.'
+        WHERE 1
+        '.$whereDisabled.'
+        '.$where.'
         ORDER BY p.`id_product`';
 
         // Return query
