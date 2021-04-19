@@ -182,6 +182,11 @@
                     {/foreach}
                 </p><br clear="left" />
 
+                <p>
+                    <label>{l s='Default shipping service for order importation' mod='sellermania'}</label>
+                    <input type="text" value="{$sm_import_default_shipping_service}" name="sm_import_default_shipping_service" />
+                </p><br clear="left" />
+
                 <p><label>{l s='Sellermania order state configuration' mod='sellermania'}</label></p><br clear="left" />
                 <p>
                     <label><b><u>{l s='Sellermania order state' mod='sellermania'}</u></b></label>

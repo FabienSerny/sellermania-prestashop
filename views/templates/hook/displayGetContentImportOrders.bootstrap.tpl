@@ -301,6 +301,13 @@
                         </div>
 
                         <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Default shipping service for order importation' mod='sellermania'}</label>
+                            <div class="col-lg-4">
+                                <input type="text" value="{$sm_import_default_shipping_service}" name="sm_import_default_shipping_service" />
+                            </div>
+                        </div>
+
+                        <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Sellermania order state configuration' mod='sellermania'}</label>
                             <div class="col-lg-8">
 

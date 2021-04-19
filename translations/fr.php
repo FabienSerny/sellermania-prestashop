@@ -191,6 +191,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_48f6f
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_fcd3db00b3e4f09c6e40402303dcb02f'] = 'Groupe client, transporteur et statuts par défaut';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_faa72f7e7031aded57fb84a75d7ffce1'] = 'Groupe client par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_1cf7b8c52d9ddaced84bc254a42b7527'] = 'Service de livraison par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_5d615930fa68541667c433e51c1cd320'] = 'Configuration des statuts Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_a812bae6c47f77d3ff1b5f24f0dfd938'] = 'Statuts des commandes Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders.bootstrap_b0466314318bf23f47ac3db92dacd922'] = 'Statuts des commandes PrestaShop';
@@ -258,6 +259,7 @@ $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_48f6f43ddadbcdf
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_fcd3db00b3e4f09c6e40402303dcb02f'] = 'Groupe client, transporteur et statuts par défaut';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_faa72f7e7031aded57fb84a75d7ffce1'] = 'Groupe client par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_a51f8ce0e2a80ae1eedfc70c10fac5e1'] = 'Transporteur par défaut pour l\'import des commandes';
+$_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_1cf7b8c52d9ddaced84bc254a42b7527'] = 'Service de livraison par défaut pour l\'import des commandes';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_5d615930fa68541667c433e51c1cd320'] = 'Configuration des statuts Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_a812bae6c47f77d3ff1b5f24f0dfd938'] = 'Statuts des commandes Sellermania';
 $_MODULE['<{sellermania}prestashop>displaygetcontentimportorders_b0466314318bf23f47ac3db92dacd922'] = 'Statuts des commandes PrestaShop';

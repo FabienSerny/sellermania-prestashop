@@ -63,6 +63,7 @@ class SellermaniaOrderConfirmation
             $order['OrderInfo']['Product'] = array($order['OrderInfo']['Product']);
         }
 
+        $shipping_service = Configuration::get('SM_IMPORT_DEFAULT_SHIPPING_SERVICE');
         foreach ($order['OrderInfo']['Product'] as $kp => $product) {
             if ($order['OrderInfo']['Product'][$kp]['Status'] == $current_sm_status) {
                 $oitc = array(
@@ -71,6 +72,7 @@ class SellermaniaOrderConfirmation
                     'orderStatusId' => $new_sm_status,
                     'trackingNumber' => $tracking_number,
                     'shippingCarrier' => $shipping_carrier,
+                    'shippingService' => $shipping_service,
                 );
                 if ($order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                     $oitc['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
