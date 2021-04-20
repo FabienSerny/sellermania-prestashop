@@ -24,13 +24,13 @@
 
 $(document).ready(function() {
 
-
     function displaySellermaniaCredentials()
     {
-        if ($('#sm_import_orders_yes').attr('checked') == 'checked' || $('#sm_import_orders_yes').attr('checked') == true)
+        if (smCheckIfOptionIsSelected('#sm_import_orders_yes')) {
             $('#sm_import_orders_credentials').show();
-        else
+        } else {
             $('#sm_import_orders_credentials').hide();
+        }
         return true;
     }
 
@@ -40,7 +40,7 @@ $(document).ready(function() {
 
     function displaySellermaniaSyncOption()
     {
-        if ($('#sm_stock_sync_option_yes').attr('checked') == 'checked' || $('#sm_stock_sync_option_yes').attr('checked') == true)
+        if (smCheckIfOptionIsSelected('#sm_stock_sync_option_yes'))
             $('#sm_stock_sync_option_configuration').show();
         else
             $('#sm_stock_sync_option_configuration').hide();
@@ -54,7 +54,7 @@ $(document).ready(function() {
 
     function displaySellermaniaImportConfiguration()
     {
-        if ($('#sm_import_method_cron').attr('checked') == 'checked' || $('#sm_import_method_cron').attr('checked') == true)
+        if (smCheckIfOptionIsSelected('#sm_import_method_cron'))
             $('#sm_import_method_cron_configuration').show();
         else
             $('#sm_import_method_cron_configuration').hide();
@@ -70,7 +70,7 @@ $(document).ready(function() {
 
     function displaySellermaniaAlertOption()
     {
-        if ($('#sm_alert_missing_ref_option_yes').attr('checked') == 'checked' || $('#sm_alert_missing_ref_option_yes').attr('checked') == true)
+        if (smCheckIfOptionIsSelected('#sm_alert_missing_ref_option_yes'))
             $('#sm_alert_missing_ref_option_configuration').show();
         else
             $('#sm_alert_missing_ref_option_configuration').hide();
@@ -84,7 +84,7 @@ $(document).ready(function() {
 
     function displaySellermaniaExportOptions()
     {
-        if ($('#sm_export_all_yes').attr('checked') == 'checked' || $('#sm_export_all_yes').attr('checked') == true) {
+        if (smCheckIfOptionIsSelected('#sm_export_all_yes')) {
             $('#sm_export_all_configuration').hide();
         } else {
             $('#sm_export_all_configuration').show();
@@ -134,4 +134,12 @@ $(document).ready(function() {
             }
         }
     });
+
+    function smCheckIfOptionIsSelected(elem_id) {
+        if ($(elem_id).attr('checked') == 'checked' || $(elem_id).attr('checked') == true || $(elem_id).prop('checked')) {
+            return true;
+        }
+        return false;
+    }
+
 });
