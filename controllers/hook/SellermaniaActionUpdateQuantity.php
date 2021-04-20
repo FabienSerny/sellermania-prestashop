@@ -57,21 +57,46 @@ class SellermaniaActionUpdateQuantityController
         if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || Configuration::get('SM_DEFAULT_PRODUCT_ID') < 1)
             return '';
 
+        // If we are in a order creation context, we abort (a request will be done in the hookValidateOrder)
+        if (isset($this->params['cart']) && Validate::isLoadedObject($this->params['cart'])) {
+            return '';
+        }
+
         // Init
         $id_product = $this->params['id_product'];
         $id_product_attribute = $this->params['id_product_attribute'];
-        $new_quantity = $this->params['quantity'];
-        $product = new Product($id_product, false, $this->context->language->id);
-        $current_quantity = (int)$product->getQuantity($id_product, $id_product_attribute);
 
-        $sku_value = $product->reference;
-        $difference = $new_quantity - $current_quantity;
+        // Check wether it's a combination or a main product
+        if ($id_product_attribute < 1) {
+
+            // If product has combinations, no need to send this stock update to Sellermania
+            $has_combination = Db::getInstance()->getValue('
+            SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute`
+            WHERE `id_product` = '.(int)$id_product);
+            if ($has_combination > 0) {
+                return '';
+            }
+
+            // If not we retrieve reference and stock
+            $sku_value = Db::getInstance()->getValue('
+            SELECT `reference` FROM `'._DB_PREFIX_.'product`
+            WHERE `id_product` = '.(int)$id_product);
+            $new_quantity = StockAvailable::getQuantityAvailableByProduct($id_product);
+
+        } else {
+
+            // We retrieve reference and stock
+            $sku_value = Db::getInstance()->getValue('
+            SELECT `reference` FROM `'._DB_PREFIX_.'product_attribute`
+            WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
+            $new_quantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
+        }
 
         // We synchronize the stock
-        $skus_quantities = array($sku_value => $difference);
+        $skus_quantities = array($sku_value => $new_quantity);
         $skus = array($sku_value);
         $savo = new SellermaniaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
-        $savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
+        $savo->syncStock('INVENTORY-QTY-HOOK', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
 
         // Update product date upd for compliancy with some modules
         if (Configuration::get('SM_UPDATE_PRODUCT_DATE_UPD') == 'yes') {

@@ -280,6 +280,10 @@ class SellermaniaDisplayBackOfficeHeaderController
      */
     public function handleProductQuantityUpdate()
     {
+        if (version_compare(_PS_VERSION_, '1.5') >= 0) {
+            return true;
+        }
+
         // We retrieve GET and POST values
         $id_product = (int)Tools::getValue('id_product');
         $id_product_attribute = (int)Tools::getValue('id_product_attribute');
@@ -338,7 +342,7 @@ class SellermaniaDisplayBackOfficeHeaderController
         $skus_quantities = array($sku_value => $difference);
         $skus = array($sku_value);
         $savo = new SellermaniaActionValidateOrderController($this->module, $this->dir_path, $this->web_path);
-        $savo->syncStock('INVENTORY', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
+        $savo->syncStock('INVENTORY-HEADER', $id_product.'-'.$id_product_attribute, $skus, $skus_quantities);
     }
 
 

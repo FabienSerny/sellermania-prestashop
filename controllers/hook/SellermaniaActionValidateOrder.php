@@ -72,7 +72,8 @@ class SellermaniaActionValidateOrderController
         foreach ($products as $product)
         {
             $skus[] = $product['product_reference'];
-            $skus_quantities[$product['product_reference']] = - ($product['product_quantity']);
+            $current_stock = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id']);
+            $skus_quantities[$product['product_reference']] = $current_stock;
         }
 
         // We synchronize the stock
@@ -143,38 +144,13 @@ class SellermaniaActionValidateOrderController
             // We retrieved the sleeping updates and merge them with the new updates
             list($skus, $skus_quantities) = $this->getSleepingUpdates($new_skus, $new_skus_quantities);
 
-            // Creating an instance of InventoryClient
-            $client = new Sellermania\InventoryClient();
-            $client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
-            $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
-            $client->setEndpoint(Configuration::get('SM_INVENTORY_ENDPOINT'));
-            $getResult = $client->getSkuQuantity($skus);
-
-            // If webservice failed, we saved the update
-            if ($getResult['SellermaniaWs']['Header']['Status'] != 'SUCCESS')
-            {
-                $this->addSleepingUpdates($skus, $skus_quantities);
-                return false;
-            }
-
-
-            // If no sku returned, we get out of here!
-            if (!isset($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku']))
-                return false;
-
-            // Fix data (when only one product, array is not the same)
-            if (!isset($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'][0]))
-                $getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'] = array($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku']);
-
             // Build Xml
             $xml = '';
-            foreach ($getResult['SellermaniaWs']['Results']['GetSkuQuantityResponse']['Sku'] as $sku_line)
-                if ($sku_line['Status'] == 'SUCCESS' && isset($skus_quantities[$sku_line['Id']]))
-                {
-                    $quantity = (int)$sku_line['Quantity'] + (int)$skus_quantities[$sku_line['Id']];
+            foreach ($skus as $sku) {
+                    $quantity = (int)$skus_quantities[$sku];
                     if ($quantity < 0)
                         $quantity = 0;
-                    $xml .= '<UpdateInventory><Sku>'.$sku_line['Id'].'</Sku><Quantity>'.$quantity.'</Quantity></UpdateInventory>';
+                    $xml .= '<UpdateInventory><Sku>'.$sku.'</Sku><Quantity>'.(int)$quantity.'</Quantity></UpdateInventory>';
                 }
 
             // Update inventory
@@ -182,6 +158,12 @@ class SellermaniaActionValidateOrderController
             {
                 // Sleep to handle Sellermania webservice limitation
                 sleep(2);
+
+                // Creating an instance of InventoryClient
+                $client = new Sellermania\InventoryClient();
+                $client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
+                $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
+                $client->setEndpoint(Configuration::get('SM_INVENTORY_ENDPOINT'));
 
                 // Build XML
                 $xml = '<?xml version="1.0" encoding="UTF-8"?><SellermaniaWs>'.$xml.'</SellermaniaWs>';
