@@ -80,7 +80,7 @@
                                 <input type="text" name="sm_confirm_order_endpoint" value="{$sm_confirm_order_endpoint}" />
                             </div>
                         </div>
-                        <div class="form-group clearfix">
+                        <div class="form-group clearfix" style="display:none">
                             <label class="col-lg-4">{l s='Inventory endpoint' mod='sellermania'}</label>
                             <div class="col-lg-8">
                                 <input type="text" name="sm_inventory_endpoint" value="{$sm_inventory_endpoint}" />

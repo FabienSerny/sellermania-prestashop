@@ -201,4 +201,23 @@ class SellermaniaLoader
         );
 
     }
+
+    public function initContext()
+    {
+        $this->context = Context::getContext();
+        if (!Validate::isLoadedObject($this->context->currency)) {
+            $this->context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        }
+
+        if (version_compare(_PS_VERSION_, '1.7.1') >= 0) {
+            $this->context = Context::getContext();
+            $shop = $this->context->shop;
+            if (!Validate::isLoadedObject($shop)) {
+                $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+            }
+            Shop::setContext($shop::CONTEXT_SHOP, $shop->id);
+            $this->context->shop = $shop;
+            $this->context->cookie->id_shop = $shop->id;
+        }
+    }
 }

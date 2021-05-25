@@ -133,8 +133,10 @@ class SellermaniaActionValidateOrderController
 
     public function syncStock($type, $id, $new_skus, $new_skus_quantities)
     {
-        if (Configuration::get('SM_INVENTORY_ENDPOINT') == '')
+        if (Configuration::get('SM_INVENTORY_ENDPOINT') == '') {
             return false;
+        }
+        return false;
 
         try
         {

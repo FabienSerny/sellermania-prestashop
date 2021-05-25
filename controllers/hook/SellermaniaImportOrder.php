@@ -539,6 +539,18 @@ class SellermaniaImportOrderController
         if (version_compare(_PS_VERSION_, '1.5') < 0)
             $amount_paid = (float)(Tools::ps_round((float)($this->cart->getOrderTotal(true, Cart::BOTH)), 2));
 
+        // Fix for PS 1.7 to avoid error "Shop context types other than "single shop" are not supported"
+        if (version_compare(_PS_VERSION_, '1.7.1') >= 0) {
+            $this->context = Context::getContext();
+            $shop = $this->context->shop;
+            if (!Validate::isLoadedObject($shop)) {
+                $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+            }
+            Shop::setContext($shop::CONTEXT_SHOP, $shop->id);
+            $this->context->shop = $shop;
+            $this->context->cookie->id_shop = $shop->id;
+        }
+
         // Create order
         $payment_method = $this->data['OrderInfo']['MarketPlace'];
         $payment_module = new SellermaniaPaymentModule();
