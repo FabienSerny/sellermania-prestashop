@@ -45,18 +45,20 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.6.2';
+        $this->version = '2.6.3';
         $this->need_instance = 0;
 
         parent::__construct();
 
         // If PS 1.4, we use backward compatibility
-        if (version_compare(_PS_VERSION_, '1.5') < 0)
+        if (version_compare(_PS_VERSION_, '1.5') < 0) {
             require(dirname(__FILE__).'/backward/backward.php');
+        }
 
         // If PS 1.6 or greater, we enable bootstrap
-        if (version_compare(_PS_VERSION_, '1.6.0') >= 0)
+        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
             $this->bootstrap = true;
+        }
 
         $this->displayName = $this->l('Sellermania');
         $this->description = $this->l('Connect your PrestaShop with Sellermania webservices');

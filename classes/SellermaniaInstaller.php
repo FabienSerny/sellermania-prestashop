@@ -255,6 +255,11 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_INVENTORY_ENDPOINT', '');
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
+
+        if (version_compare($version_registered, '2.6.3', '<')) {
+            Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
+            Configuration::updateValue('SM_VERSION', $this->module->version);
+        }
     }
 
 
