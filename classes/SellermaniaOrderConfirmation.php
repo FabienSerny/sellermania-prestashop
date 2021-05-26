@@ -64,6 +64,15 @@ class SellermaniaOrderConfirmation
         }
 
         $shipping_service = Configuration::get('SM_IMPORT_DEFAULT_SHIPPING_SERVICE');
+
+        $marketplace_name = str_replace('.', '_', $order['OrderInfo']['MarketPlace']);
+        if (Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY') != ''){
+            $shipping_carrier = Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY');
+        }
+        if (Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE') != ''){
+            $shipping_service = Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE');
+        }
+
         foreach ($order['OrderInfo']['Product'] as $kp => $product) {
             if ($order['OrderInfo']['Product'][$kp]['Status'] == $current_sm_status) {
                 $oitc = array(
