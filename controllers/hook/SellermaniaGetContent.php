@@ -71,7 +71,10 @@ class SellermaniaGetContentController
             'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
         );
         foreach ($this->module->sellermania_marketplaces as $marketplace) {
-            $this->params[] = 'SM_MKP_'.str_replace('.', '_', $marketplace);
+            $marketplace_name = str_replace('.', '_', $marketplace);
+            $this->params[] = 'SM_MKP_'.$marketplace_name;
+            $this->params[] = 'SM_MKP_'.$marketplace_name.'_DELIVERY';
+            $this->params[] = 'SM_MKP_'.$marketplace_name.'_SERVICE';
         }
     }
 
@@ -112,7 +115,6 @@ class SellermaniaGetContentController
             }
             $this->context->smarty->assign('sm_confirm_export_options', 1);
         }
-
 
         foreach ($this->params as $p) {
             if (isset($_POST[$p])) {
@@ -190,13 +192,18 @@ class SellermaniaGetContentController
         // Retrieve all marketplaces and value
         $sm_marketplaces = array();
         foreach ($this->module->sellermania_marketplaces as $marketplace) {
+            $marketplace_original_name = $marketplace;
             $marketplace = str_replace('.', '_', $marketplace);
             $sm_marketplaces[$marketplace] = array('key' => 'SM_MKP_'.$marketplace, 'value' => Configuration::get('SM_MKP_'.$marketplace));
             if (empty($sm_marketplaces[$marketplace]['value'])) {
                 $sm_marketplaces[$marketplace]['value'] = 'MANUAL';
             }
+            if (isset($this->module->sellermania_marketplaces_delivery[$marketplace_original_name])) {
+                $sm_marketplaces[$marketplace]['delivery'] = $this->module->sellermania_marketplaces_delivery[$marketplace_original_name];
+            }
+            $sm_marketplaces[$marketplace]['delivery_value'] = Configuration::get('SM_MKP_'.$marketplace.'_DELIVERY');
+            $sm_marketplaces[$marketplace]['service_value'] = Configuration::get('SM_MKP_'.$marketplace.'_SERVICE');
         }
-
 
         // Retrieve customer groups
         $customer_groups = Group::getGroups($this->context->language->id);

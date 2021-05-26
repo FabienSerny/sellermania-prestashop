@@ -34,6 +34,7 @@ class Sellermania extends Module
     public $sellermania_order_states;
     public $sellermania_conditions_list;
     public $sellermania_marketplaces;
+    public $sellermania_marketplaces_delivery;
     public $sellermania_marketplaces_migration;
 
     /**

@@ -140,16 +140,36 @@
 
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Sellermania marketplaces configuration' mod='sellermania'}</label>
-                            <div class="col-lg-8">
+                            <div class="col-lg-8 form-group clearfix">
+                                <label class="col-lg-3">&nbsp;</label>
+                                <div class="col-lg-3">Action</div>
+                                <div class="col-lg-3">Transporteur</div>
+                                <div class="col-lg-3">Service livraison</div>
+                                <br clear="left">
                                 {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
-                                    <label class="col-lg-4">{$sm_marketplace_name|replace:'_':'.'}</label>
-                                    <div class="col-lg-8">
+                                    <label class="col-lg-3">{$sm_marketplace_name|replace:'_':'.'}</label>
+                                    <div class="col-lg-3">
                                         <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
                                             <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import the orders' mod='sellermania'}</option>
                                             <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import the orders' mod='sellermania'}</option>
                                             <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import the orders and auto confirm them' mod='sellermania'}</option>
                                         </select>
-                                    </div><br clear="left">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        {if isset($sm_marketplace.delivery)}
+                                            <select name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" style="width:100%">
+                                                {foreach from=$sm_marketplace.delivery item=sm_marketplace_delivery}
+                                                    <option value="{$sm_marketplace_delivery}" {if $sm_marketplace.delivery_value == $sm_marketplace_delivery}selected{/if}>{$sm_marketplace_delivery}</option>
+                                                {/foreach}
+                                            </select>
+                                        {else}
+                                            <input name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" value="{$sm_marketplace.delivery_value}" style="width:100%;margin-top:3px">
+                                        {/if}
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input name="{$sm_marketplace.key}_SERVICE" id="{$sm_marketplace.key}_SERVICE" value="{$sm_marketplace.service_value}" style="width:100%;margin-top:3px">
+                                    </div>
+                                    <br clear="left">
                                 {/foreach}
                             </div>
                         </div>
