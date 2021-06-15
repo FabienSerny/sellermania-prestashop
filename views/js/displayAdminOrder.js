@@ -31,12 +31,19 @@ $(document).ready(function() {
         var sm_block_product = sellermania_block_products_list[i];
 
         var sku_short = sm_block_product.html().split('<br>');
-		sku_short[1] = sku_short[1].replace('Numéro de référence', 'Ref').replace('Reference number', 'Ref');
-		var remove = sku_short[1].split(' ');
+        if (typeof sku_short[1] !== 'undefined') {
+            sku_short = sku_short[1];
+        } else {
+            sku_short = sku_short[0];
+        }
+        sku_short = sku_short.replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, ' ').trim()
+
+		sku_short = sku_short.replace('Numéro de référence', 'Ref').replace('Reference number', 'Ref');
+		var remove = sku_short.trim().split(' ');
         if (remove[1] == ':')
-            sku_short = sku_short[1].replace(remove[0] + ' ' + remove[1], '').trim();
+            sku_short = sku_short.replace(remove[0] + ' ' + remove[1], '').trim();
         else
-            sku_short = sku_short[1].replace(remove[0], '').trim();
+            sku_short = sku_short.replace(remove[0], '').trim();
 
         if (sku_short != '' && typeof sellermania_products[sku_short] != 'undefined')
         {

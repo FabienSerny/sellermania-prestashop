@@ -22,6 +22,17 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
+{if $ps_version == '17'}
+<div class="col-md-124 left-column">
+    <div id="customerCard" class="customer card">
+        <div class="card-header">
+            <h3 class="card-header-title">
+                Sellermania
+            </h3>
+        </div>
+        <div class="card-body">
+{/if}
+
 <div id="sellermania-template">
 
 
@@ -30,7 +41,7 @@
     {************************************************}
     <div id="sellermania-template-title">
         <h2>{l s='Sellermania order from the marketplace' mod='sellermania'} {$sellermania_order.OrderInfo.MarketPlace}</h2>
-        <a target="_blank" href="{$sellermania_invoice_url}&id_order={$smarty.get.id_order}" class="btn btn-default">{if $ps_version eq 16}<i class="icon-file"></i>{else}<img src="../img/admin/details.gif">{/if} {l s='Display invoice' mod='sellermania'}</a>
+        <a target="_blank" href="{$sellermania_invoice_url}&id_order={$smarty.get.id_order}" class="btn btn-default">{if $ps_version eq 16}<i class="icon-file"></i>{else}<img src="/modules/sellermania/views/img/admin/details.gif">{/if} {l s='Display invoice' mod='sellermania'}</a>
     </div>
 
 
@@ -38,7 +49,7 @@
     {*************** CUSTOMER TEMPLATE *****************}
     {***************************************************}
     <div id="sellermania-template-customer">
-        <legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information' mod='sellermania'}</legend>
+        <legend><img src="/modules/sellermania/views/img/admin/tab-customers.gif" /> {l s='Customer information' mod='sellermania'}</legend>
         <b>{l s='Name:' mod='sellermania'}</b> {$sellermania_order.User[0].OriginalName}<br>
         <b>{l s='E-mail:' mod='sellermania'}</b> <a href="mailto:{$sellermania_order.User[0].Email}">{$sellermania_order.User[0].Email}</a><br>
         {if isset($sellermania_order.User[0].ShippingPhone) && !empty($sellermania_order.User[0].ShippingPhone)}<b>{l s='Shipping phone:' mod='sellermania'}</b> {$sellermania_order.User[0].ShippingPhone}<br>{/if}
@@ -95,7 +106,7 @@
     {********************************************************}
     <div id="sellermania-template-order-summary">
         <fieldset>
-            <legend><img src="../img/admin/details.gif"> {l s='Order summary' mod='sellermania'}</legend>
+            <legend><img src="/modules/sellermania/views/img/admin/details.gif"> {l s='Order summary' mod='sellermania'}</legend>
             <table width="100%;" cellspacing="0" cellpadding="0" class="table">
                 <tbody>
                     <tr>
@@ -244,6 +255,10 @@
 <div id="map-delivery-canvas" style="display:none"></div>
 <div id="map-invoice-canvas" style="display:none"></div>
 
+{if $ps_version == '17'}
+        </div></div></div>
+{/if}
+
 {*****************************************}
 {*************** JS DATA *****************}
 {*****************************************}
@@ -305,8 +320,6 @@
 
 
 </script>
-{if $ps_version == '17'}
-    {assign var="ps_version" value="16"}
-{/if}
+
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>
