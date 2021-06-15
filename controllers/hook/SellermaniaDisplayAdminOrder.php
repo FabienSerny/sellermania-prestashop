@@ -70,8 +70,9 @@ class SellermaniaDisplayAdminOrderController
     public function saveOrderStatus($order_id, $sellermania_order)
     {
         // Check if form has been submitted
-        if (Tools::getValue('sellermania_line_max') == '')
+        if (Tools::getValue('sellermania_line_max') == '') {
             return false;
+        }
 
         // Preprocess data
         $order_items = array();
