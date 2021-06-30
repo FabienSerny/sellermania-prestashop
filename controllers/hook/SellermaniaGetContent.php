@@ -59,6 +59,7 @@ class SellermaniaGetContentController
             'sm_stock_sync_nb_char', 'sm_stock_sync_position',
             'sm_import_method', 'sm_import_default_customer_group',
             'sm_import_default_carrier', 'sm_import_default_shipping_service',
+            'sm_import_default_country_code',
             'sm_alert_missing_ref_option', 'sm_alert_missing_ref_mail',
             'sm_enable_native_refund_system', 'sm_enable_native_order_interface',
             'sm_enable_export_comb_name', 'sm_export_extra_fields',

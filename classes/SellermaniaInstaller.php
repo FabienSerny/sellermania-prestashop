@@ -260,6 +260,11 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
+
+        if (Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE') == '') {
+            $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
+            Configuration::updateValue('SM_IMPORT_DEFAULT_COUNTRY_CODE', $default_country->iso_code);
+        }
     }
 
 
