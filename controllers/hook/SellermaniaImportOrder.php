@@ -991,7 +991,7 @@ class SellermaniaImportOrderController
             'tax_name' => ((float)($product['VatRate'] / 100)).'%',
             'product_ean13' => pSQL($product['Ean']),
             'product_reference' => pSQL($product['Sku']),
-
+            'product_supplier_reference' => '',
             'id_order_invoice' => $id_order_invoice,
             'id_warehouse' => 0,
             'id_shop' => Context::getContext()->shop->id,
