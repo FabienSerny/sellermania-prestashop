@@ -1037,8 +1037,7 @@ class SellermaniaImportOrderController
             SELECT `id_order_detail`
             FROM `'._DB_PREFIX_.'order_detail`
             WHERE `id_order` = '.(int)$id_order.'
-            AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
-            AND `product_name` = \'Sellermania product\'');
+            AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID'));
 
         if ($id_order_detail > 0)
         {
