@@ -500,8 +500,9 @@ class SellermaniaImportOrderController
             $quantity = (int)$product['QuantityPurchased'];
             $id_product = (int)$product['id_product'];
             $id_product_attribute = (int)$product['id_product_attribute'];
-            if (!$this->cart->updateQty($quantity, $id_product, $id_product_attribute))
+            if (!$this->cart->updateQty($quantity, $id_product, $id_product_attribute)) {
                 $this->cart->updateQty($quantity, Configuration::get('SM_DEFAULT_PRODUCT_ID'), 0);
+            }
         }
 
         // Cart update
@@ -546,9 +547,12 @@ class SellermaniaImportOrderController
             if (!Validate::isLoadedObject($shop)) {
                 $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             }
-            Shop::setContext($shop::CONTEXT_SHOP, $shop->id);
+            Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
             $this->context->shop = $shop;
             $this->context->cookie->id_shop = $shop->id;
+
+            $context = (new PrestaShop\PrestaShop\Adapter\LegacyContext())->getContext();
+            Shop::setContext(Shop::CONTEXT_SHOP, $context->shop->id);
         }
 
         // Create order
