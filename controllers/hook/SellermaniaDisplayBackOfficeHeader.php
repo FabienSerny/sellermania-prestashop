@@ -218,6 +218,9 @@ class SellermaniaDisplayBackOfficeHeaderController
                                 return true;
                             }
                         }
+                    } else {
+                        // Verbose mode
+                        $this->speak('Ignore order #'.$order['OrderInfo']['OrderId'].' from '.$order['OrderInfo']['MarketPlace'].' due to module configuration');
                     }
             }
         }
