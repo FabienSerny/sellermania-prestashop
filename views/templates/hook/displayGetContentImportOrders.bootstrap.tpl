@@ -328,9 +328,16 @@
                         </div>
 
                         <div class="form-group clearfix">
-                            <label class="col-lg-4">{l s='Default country code for VAT' mod='sellermania'}</label>
+                            <label class="col-lg-4">{l s='Default country code for VAT (import origin)' mod='sellermania'}</label>
                             <div class="col-lg-4">
                                 <input type="text" value="{$sm_import_default_country_code}" name="sm_import_default_country_code" />
+                            </div>
+                        </div>
+
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Default country code for VAT (shipment origin)' mod='sellermania'}</label>
+                            <div class="col-lg-4">
+                                <input type="text" value="{$sm_shipment_default_country_code}" name="sm_shipment_default_country_code" />
                             </div>
                         </div>
 

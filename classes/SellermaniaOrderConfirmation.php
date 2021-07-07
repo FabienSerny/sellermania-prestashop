@@ -82,7 +82,8 @@ class SellermaniaOrderConfirmation
                     'trackingNumber' => $tracking_number,
                     'shippingCarrier' => $shipping_carrier,
                     'shippingService' => $shipping_service,
-                    'shipmentOrigin' => Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE'),
+                    'shipmentOrigin' => Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE'),
+                    'importOrigin' => Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE'),
                 );
                 if ($order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                     $oitc['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);

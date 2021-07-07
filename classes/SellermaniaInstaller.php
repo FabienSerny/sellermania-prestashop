@@ -261,9 +261,10 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
-        if (Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE') == '') {
+        if (Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE') == '' || Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE') == '') {
             $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
             Configuration::updateValue('SM_IMPORT_DEFAULT_COUNTRY_CODE', $default_country->iso_code);
+            Configuration::updateValue('SM_SHIPMENT_DEFAULT_COUNTRY_CODE', $default_country->iso_code);
         }
     }
 
