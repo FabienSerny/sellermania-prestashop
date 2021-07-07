@@ -85,12 +85,24 @@ class SellermaniaDisplayAdminOrderController
                     if ($product['Sku'] == Tools::getValue('sku_status_'.$i) &&
                         $sellermania_order['OrderInfo']['Product'][$kp]['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
                     {
+                        $shipping_service = Configuration::get('SM_IMPORT_DEFAULT_SHIPPING_SERVICE');
+                        $marketplace_name = str_replace('.', '_', $sellermania_order['OrderInfo']['MarketPlace']);
+                        if (Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY') != ''){
+                            $shipping_carrier = Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY');
+                        }
+                        if (Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE') != ''){
+                            $shipping_service = Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE');
+                        }
+
                         $oi = array(
                             'orderId' => pSQL($order_id),
                             'sku' => pSQL(Tools::getValue('sku_status_'.$i)),
                             'orderStatusId' => Tools::getValue('status_'.$i),
                             'trackingNumber' => '',
-                            'shippingCarrier' => '',
+                            'shippingCarrier' => $shipping_carrier,
+                            'shippingService' => $shipping_service,
+                            'shipmentOrigin' => Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE'),
+                            'importOrigin' => Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE'),
                         );
                         if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                             $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
