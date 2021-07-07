@@ -66,7 +66,13 @@ $(document).ready(function() {
                 html_order_line += '<input type="radio" id="status_cancel_' + i + '" name="status_' + i + '" value="4" class="status_order_line" data-toggle="' + sellermania_products[sku_short].sku + '" /> ' + cancel_label + ' ';
                 nb_buttons++;
             }
-            sm_block_product.append(html_order_line);
+
+            let attr_href = sm_block_product.parent().attr('href');
+            if (typeof attr_href !== 'undefined' && attr_href !== false) {
+                sm_block_product.parent().after(html_order_line);
+            } else {
+                sm_block_product.append(html_order_line);
+            }
         }
     }
 
