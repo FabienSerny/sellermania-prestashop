@@ -182,9 +182,6 @@ class SellermaniaInstaller
 
             // Update order states
             $this->installOrderStates();
-
-            // Set module version
-            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (version_compare($version_registered, '1.1.0', '<')) {
@@ -195,9 +192,6 @@ class SellermaniaInstaller
             } else {
                 $this->module->registerHook('newOrder');
             }
-
-            // Set module version
-            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (Configuration::get('SM_EXPORT_ALL') == '') {
@@ -243,28 +237,28 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
             Configuration::updateValue('SM_API_VERSION', 'v3');
             $this->migrateMarketplacesHistory();
-            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (version_compare($version_registered, '2.6.0.9', '<') && Configuration::get('SM_API_VERSION') == 'v3') {
             $this->migrateMarketplacesHistory();
-            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (version_compare($version_registered, '2.6.2', '<')) {
             Configuration::updateValue('SM_INVENTORY_ENDPOINT', '');
-            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (version_compare($version_registered, '2.6.3', '<')) {
             Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
-            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
 
         if (Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE') == '' || Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE') == '') {
             $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
             Configuration::updateValue('SM_IMPORT_DEFAULT_COUNTRY_CODE', $default_country->iso_code);
             Configuration::updateValue('SM_SHIPMENT_DEFAULT_COUNTRY_CODE', $default_country->iso_code);
+        }
+
+        if (Configuration::get('SM_VERSION') != $this->module->version) {
+            Configuration::updateValue('SM_VERSION', $this->module->version);
         }
     }
 

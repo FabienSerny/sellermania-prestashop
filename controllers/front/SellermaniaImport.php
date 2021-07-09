@@ -84,6 +84,10 @@ class SellermaniaImportController
             set_time_limit(600);
             ini_set('memory_limit', '256M');
 
+            // Update next import (only for display on BO)
+            $next_import = date("Y-m-d H:i:s", strtotime('+15 minutes'));
+            Configuration::updateValue('SM_NEXT_IMPORT', $next_import);
+
             // Import orders
             $controller = new SellermaniaDisplayBackOfficeHeaderController($this->module, $this->dir_path, $this->web_path);
             $controller->verbose = true;
