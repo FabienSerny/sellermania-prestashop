@@ -37,6 +37,7 @@ require_once(dirname(__FILE__).'/../front/SellermaniaExport.php');
 class SellermaniaGetContentController
 {
     public $params;
+    public $params_default_value;
 
     /**
      * Controller constructor
@@ -71,12 +72,19 @@ class SellermaniaGetContentController
             'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
             'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
         );
+
         foreach ($this->module->sellermania_marketplaces as $marketplace) {
             $marketplace_name = str_replace('.', '_', $marketplace);
             $this->params[] = 'SM_MKP_'.$marketplace_name;
             $this->params[] = 'SM_MKP_'.$marketplace_name.'_DELIVERY';
             $this->params[] = 'SM_MKP_'.$marketplace_name.'_SERVICE';
         }
+
+        $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
+        $this->params_default_value = [
+            'sm_import_default_country_code' => $default_country->iso_code,
+            'sm_shipment_default_country_code' => $default_country->iso_code,
+        ];
     }
 
     /**
@@ -120,6 +128,12 @@ class SellermaniaGetContentController
         foreach ($this->params as $p) {
             if (isset($_POST[$p])) {
                 Configuration::updateValue(strtoupper($p), trim($_POST[$p]));
+            }
+        }
+
+        foreach ($this->params_default_value as $param => $default_value) {
+            if (Configuration::get(strtoupper($param)) == '') {
+                Configuration::updateValue(strtoupper($param), trim($default_value));
             }
         }
 
