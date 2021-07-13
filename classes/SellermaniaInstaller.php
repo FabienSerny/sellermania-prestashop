@@ -257,6 +257,10 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_SHIPMENT_DEFAULT_COUNTRY_CODE', $default_country->iso_code);
         }
 
+        if (version_compare($version_registered, '2.6.9', '<')) {
+            $this->updateConfigurationFieldSize( 64);
+        }
+
         if (Configuration::get('SM_VERSION') != $this->module->version) {
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
@@ -393,6 +397,33 @@ class SellermaniaInstaller
             Db::getInstance()->insert($table, $sql_data);
         } else {
             Db::getInstance()->autoExecute(_DB_PREFIX_.$table, $sql_data, 'INSERT');
+        }
+    }
+
+    public function updateConfigurationFieldSize($wanted_size)
+    {
+        // Check fields
+        $test = Db::getInstance()->executeS('SHOW FULL COLUMNS FROM `'._DB_PREFIX_.'configuration`');
+        foreach ($test as $field) {
+
+            // For field name
+            if ($field['Field'] == 'name') {
+
+                // Retrieve size
+                $field_size = (int)str_replace('varchar(', '', $field['Type']);
+                if ($field_size > 0 && $field_size < $wanted_size) {
+
+                    // Alter table
+                    Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'configuration` MODIFY `name` VARCHAR('.(int)$wanted_size.')');
+
+                    // Alter Configuration class (dirty fix but it's only for PS 1.5, an override would have been heavy for this)
+                    $configuration_class_path_file = __DIR__.'/../../../classes/Configuration.php';
+                    $configuration_class_search_replace = "'type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => ";
+                    $content = file_get_contents(__DIR__.'/../../../classes/Configuration.php');
+                    $content = str_replace($configuration_class_search_replace.$field_size, $configuration_class_search_replace.$wanted_size, $content);
+                    file_put_contents($configuration_class_path_file, $content);
+                }
+            }
         }
     }
 }
