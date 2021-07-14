@@ -261,6 +261,16 @@ class SellermaniaInstaller
             $this->updateConfigurationFieldSize( 64);
         }
 
+        if (version_compare($version_registered, '2.6.10', '<')) {
+            $product = new Product((int)Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+            $product->quantity = 999999;
+            $product->update();
+            if (version_compare(_PS_VERSION_, '1.5') >= 0) {
+                StockAvailable::setProductOutOfStock((int)$product->id, 1);
+                StockAvailable::updateQuantity((int)$product->id, 0, 999999);
+            }
+        }
+
         if (Configuration::get('SM_VERSION') != $this->module->version) {
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
@@ -346,7 +356,7 @@ class SellermaniaInstaller
         $product->id_supplier = 0;
         $product->id_manufacturer = 0;
         $product->id_category_default = 0;
-        $product->quantity = 0;
+        $product->quantity = 999999;
         $product->minimal_quantity = 1;
         $product->price = 1;
         $product->wholesale_price = 0;
@@ -358,8 +368,10 @@ class SellermaniaInstaller
         $product->active = 1;
         $product->add();
 
-        if (version_compare(_PS_VERSION_, '1.5') >= 0)
+        if (version_compare(_PS_VERSION_, '1.5') >= 0) {
             StockAvailable::setProductOutOfStock((int)$product->id, 1);
+            StockAvailable::updateQuantity((int)$product->id, 0, 999999);
+        }
 
         // Saving product ID
         Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id);
