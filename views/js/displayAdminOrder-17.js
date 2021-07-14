@@ -53,6 +53,16 @@ $(document).ready(function() {
     var sellermania_panel_total = $('.panel-vouchers').next();
     var sellermania_toolbar = $('.icon-calendar-empty').parent().parent().parent();
 
+
+    // Disable pagination for products
+    if ($('#orderProductsTablePaginationNumberSelector').length) {
+        $('#orderProductsTablePaginationNumberSelector').val('100');
+        $('#orderProductsTablePaginationNumberSelector').trigger('change');
+        $('.cellProduct').removeClass('d-none').removeClass('d-print-table-row');
+        $('.order-product-pagination').html('');
+    }
+
+
     // Get products list block identifier
     var sellermania_order_line = 1;
     sellermania_block_products_list = new Array();
