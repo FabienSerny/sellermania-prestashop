@@ -114,18 +114,21 @@ $(document).ready(function() {
         // Fill product details
         var line_max = 0;
         var sellermania_status_defined = 0;
-        for (i = 1; sellermania_block_products_list[i]; i++)
+        for (let i = 1; sellermania_block_products_list[i]; i++)
         {
             // Status
             var order_line_status = 'Not defined';
-            if ($('#status_confirm_' + i).attr('checked'))
+            if ($('#status_confirm_' + i).attr('checked') || $('#status_confirm_' + i).is(':checked')) {
                 order_line_status = 'Confirmed';
-            if ($('#status_cancel_' + i).attr('checked'))
+            }
+            if ($('#status_cancel_' + i).attr('checked') || $('#status_cancel_' + i).is(':checked')) {
                 order_line_status = 'Cancelled';
+            }
 
             // Count not defined Status
-            if (order_line_status != 'Not defined')
+            if (order_line_status != 'Not defined') {
                 sellermania_status_defined++;
+            }
 
             // Save the line max
             line_max = i;
