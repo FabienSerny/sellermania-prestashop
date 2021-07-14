@@ -79,16 +79,35 @@
                 <hr />
 
                 <p><label>{l s='Sellermania marketplaces configuration' mod='sellermania'}</label></p><br clear="left" />
-                <p>
+                <table>
+                    <tr><td>Marketplace</td><td>Action</td><td>Transporteur</td><td>Service livraison</td></tr>
                     {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
-                        <label>{$sm_marketplace_name|replace:'_':'.'} :</label>
-                        <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:50%">
-                            <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import the orders' mod='sellermania'}</option>
-                            <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import the orders' mod='sellermania'}</option>
-                            <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import the orders and auto confirm them' mod='sellermania'}</option>
-                        </select><br>
+                        <tr>
+                            <td>{$sm_marketplace_name|replace:'_':'.'} :</td>
+                            <td>
+                                <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}">
+                                    <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import the orders' mod='sellermania'}</option>
+                                    <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import the orders' mod='sellermania'}</option>
+                                    <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import the orders and auto confirm them' mod='sellermania'}</option>
+                                </select>
+                            </td>
+                            <td>
+                                {if isset($sm_marketplace.delivery)}
+                                    <select name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" style="width:100%">
+                                        {foreach from=$sm_marketplace.delivery item=sm_marketplace_delivery}
+                                            <option value="{$sm_marketplace_delivery}" {if $sm_marketplace.delivery_value == $sm_marketplace_delivery}selected{/if}>{$sm_marketplace_delivery}</option>
+                                        {/foreach}
+                                    </select>
+                                {else}
+                                    <input name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" value="{$sm_marketplace.delivery_value}" style="width:100%;margin-top:3px">
+                                {/if}
+                            </td>
+                            <td>
+                                <input name="{$sm_marketplace.key}_SERVICE" id="{$sm_marketplace.key}_SERVICE" value="{$sm_marketplace.service_value}" style="width:100%;margin-top:3px">
+                            </td>
+                        </tr>
                     {/foreach}
-                </p>
+                </table>
 
                 <br>
                 <h2>3. {l s='Options' mod='sellermania'}</h2>
@@ -186,6 +205,18 @@
                     <label>{l s='Default shipping service for order importation' mod='sellermania'}</label>
                     <input type="text" value="{$sm_import_default_shipping_service}" name="sm_import_default_shipping_service" />
                 </p><br clear="left" />
+
+                <p>
+                    <label>{l s='Default country code for VAT (import origin)' mod='sellermania'}</label>
+                    <input type="text" value="{$sm_import_default_country_code}" name="sm_import_default_country_code" />
+                </p><br clear="left" />
+
+                <p>
+                    <label>{l s='Default country code for VAT (shipment origin)' mod='sellermania'}</label>
+                    <input type="text" value="{$sm_shipment_default_country_code}" name="sm_shipment_default_country_code" />
+                </p><br clear="left" />
+
+
 
                 <p><label>{l s='Sellermania order state configuration' mod='sellermania'}</label></p><br clear="left" />
                 <p>
