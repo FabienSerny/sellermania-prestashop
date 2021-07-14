@@ -262,12 +262,13 @@ class SellermaniaInstaller
         }
 
         if (version_compare($version_registered, '2.6.10', '<')) {
+            Configuration::updateValue('SM_VERSION', $this->module->version); // Add update version here to avoid infinite loop with hook ActionUpdateQuantity
             $product = new Product((int)Configuration::get('SM_DEFAULT_PRODUCT_ID'));
             $product->quantity = 999999;
             $product->update();
             if (version_compare(_PS_VERSION_, '1.5') >= 0) {
                 StockAvailable::setProductOutOfStock((int)$product->id, 1);
-                StockAvailable::updateQuantity((int)$product->id, 0, 999999);
+                StockAvailable::setQuantity((int)$product->id, 0, 999999);
             }
         }
 
