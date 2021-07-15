@@ -101,11 +101,19 @@ class SellermaniaDisplayAdminOrderController
                             'trackingNumber' => '',
                             'shippingCarrier' => $shipping_carrier,
                             'shippingService' => $shipping_service,
-                            'shipmentOrigin' => Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE'),
-                            'importOrigin' => Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE'),
+                            'shipmentOrigin' => strtoupper(Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE')),
+                            'importOrigin' => strtoupper(Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE')),
                         );
                         if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                             $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
+                        }
+                        if ($order['OrderInfo']['MarketPlace'] == 'RAKUTEN.FR') {
+                            if ($oi['shipmentOrigin'] == 'FR') {
+                                $oi['shipmentOrigin'] = 'FX';
+                            }
+                            if ($oi['importOrigin'] == 'FR') {
+                                $oi['importOrigin'] = 'FX';
+                            }
                         }
                         $order_items[] = $oi;
 
