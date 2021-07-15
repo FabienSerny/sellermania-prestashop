@@ -417,6 +417,8 @@ class SellermaniaDisplayAdminOrderController
         if ($this->ps_version == '14')
             $this->context->smarty->ps_language = new Language($this->context->cookie->id_lang);
 
+        $this->context->smarty->assign('id_order', $order->id);
+
         $this->context->smarty->assign('ps_version', $this->ps_version);
         $this->context->smarty->assign('sellermania_order', $sellermania_order);
         $this->context->smarty->assign('sellermania_currency', $sellermania_currency);
