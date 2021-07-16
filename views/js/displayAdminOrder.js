@@ -138,7 +138,7 @@ $(document).ready(function() {
         if (sellermania_status_defined > 0)
         {
             // Display submit
-            sellermania_block_product_general_legend.html('<input type="button" id="sellermania_register_status" value="Register status" class="button btn btn-default" />');
+            sellermania_block_product_general_legend.html('<input type="button" id="sellermania_register_status" value="Apply" class="button btn btn-default" />');
 
             // Generate form and submit it
             $('#sellermania_register_status').click(function() {
@@ -146,7 +146,7 @@ $(document).ready(function() {
                 // Generate form
                 var html_form = '<input type="hidden" name="sellermania_line_max" value="' + line_max + '" />';
                 $('.status_order_line').each(function() {
-                    if ($(this).attr('checked'))
+                    if ($(this).attr('checked') || $(this).is(':checked'))
                     {
                         html_form += '<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).attr('value') + '" />';
                         html_form += '<input type="hidden" name="sku_' + $(this).attr('name') + '" value="' + $(this).attr('data-toggle') + '" />';
