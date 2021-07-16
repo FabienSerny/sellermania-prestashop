@@ -107,7 +107,7 @@ class SellermaniaDisplayAdminOrderController
                         if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                             $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
                         }
-                        if ($order['OrderInfo']['MarketPlace'] == 'RAKUTEN.FR') {
+                        if ($sellermania_order['OrderInfo']['MarketPlace'] == 'RAKUTEN.FR') {
                             if ($oi['shipmentOrigin'] == 'FR') {
                                 $oi['shipmentOrigin'] = 'FX';
                             }
