@@ -22,26 +22,6 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-{if !$sm_v3_enabled}
-
-<div id="sellermania-admin-tab">
-    <div id="sellermania-module-help" class="panel">
-        <fieldset>
-            <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='New Sellermania API version' mod='sellermania'}</legend>
-            <div class="margin-form" style="padding-left:15px">
-                <h3>{l s='As you may know, starting on 17th october, Sellermania API will be updated.' mod='sellermania'}</h3>
-                <p><strong>{l s='When Sellermania will tell you to do so, click on the button below.' mod='sellermania'}</strong></p>
-                <p><strong>{l s='DO NOT CLICK UNTIL YOU\'RE SURE YOU CAN SWITCH OF VERSION.' mod='sellermania'}</strong></p>
-                <p><a href="{$module_url}&migrate=v3" class="btn btn-default" OnClick="return confirm('{l s='Are you sure you want to switch to the new version?' mod='sellermania'}');">{l s='Swith to the new version ?' mod='sellermania'}</a></p>
-            </div>
-        </fieldset>
-    </div>
-</div>
-
-{/if}
-
-
-
 <h2>{l s='Sellermania' mod='sellermania'}</h2>
 
 {if isset($smarty.get.see) && $smarty.get.see eq 'orders-error'}

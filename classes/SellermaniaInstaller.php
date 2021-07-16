@@ -233,8 +233,7 @@ class SellermaniaInstaller
             }
         }
 
-        if (Tools::getValue('migrate') == 'v3') {
-            Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
+        if (Configuration::get('SM_API_VERSION') != 'v3') {
             Configuration::updateValue('SM_API_VERSION', 'v3');
             $this->migrateMarketplacesHistory();
         }
@@ -257,7 +256,7 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_SHIPMENT_DEFAULT_COUNTRY_CODE', $default_country->iso_code);
         }
 
-        if (version_compare($version_registered, '2.6.9', '<')) {
+        if (version_compare($version_registered, '2.6.9', '<') && version_compare(_PS_VERSION_, '1.6') < 0) {
             $this->updateConfigurationFieldSize( 64);
         }
 
