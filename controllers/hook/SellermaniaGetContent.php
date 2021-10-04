@@ -85,6 +85,7 @@ class SellermaniaGetContentController
         $this->params_default_value = [
             'sm_import_default_country_code' => $default_country->iso_code,
             'sm_shipment_default_country_code' => $default_country->iso_code,
+            'sm_product_match' => 'automatic',
         ];
     }
 
