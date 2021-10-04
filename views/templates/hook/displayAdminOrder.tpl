@@ -256,7 +256,7 @@
 <div id="map-invoice-canvas" style="display:none"></div>
 
 {if $ps_version == '17'}
-        </div></div></div>
+        </div></div></div><br>
 {/if}
 
 {*****************************************}

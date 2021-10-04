@@ -271,6 +271,10 @@ class SellermaniaInstaller
             }
         }
 
+        if (version_compare($version_registered, '2.7.0', '<')) {
+            Configuration::updateValue('SM_PRODUCT_MATCH', 'automatic');
+        }
+
         if (Configuration::get('SM_VERSION') != $this->module->version) {
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
@@ -296,7 +300,7 @@ class SellermaniaInstaller
             {
                 $order_state = new OrderState();
                 $order_state->send_email = false;
-                $order_state->module_name = $this->name;
+                $order_state->module_name = $this->module->name;
                 $order_state->invoice = $order_state_array['invoice'];
                 $order_state->color = $order_state_array['color'];
                 $order_state->logable = $order_state_array['logable'];

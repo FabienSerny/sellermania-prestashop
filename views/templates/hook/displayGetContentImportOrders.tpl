@@ -147,6 +147,17 @@
                 </p>
 
                 <p>
+                    <label>{l s='Product match' mod='sellermania'}</label>
+                    <select name="sm_product_match">
+                        <option value="automatic">Automatic</option>
+                        <option value="by_reference_only">By reference only</option>
+                        <option value="by_id_product_only">By PrestaShop IDs only</option>
+                        <option value="by_upc_only">By UPC only</option>
+                        <option value="by_ean13_only">By EAN13 only</option>
+                    </select>
+                </p>
+
+                <p>
                     <label>{l s='Alert me by e-mail when a reference is not found' mod='sellermania'}</label>
                     <input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_yes" value="yes" {if $sm_alert_missing_ref_option eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
                     <input type="radio" name="sm_alert_missing_ref_option" id="sm_alert_missing_ref_option_no" value="no" {if $sm_alert_missing_ref_option eq 'no' || $sm_alert_missing_ref_option eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}

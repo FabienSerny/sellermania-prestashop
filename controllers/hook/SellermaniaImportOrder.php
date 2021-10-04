@@ -618,11 +618,26 @@ class SellermaniaImportOrderController
      */
     public function getProductIdentifier(&$product)
     {
-        $fields = array('reference' => 'Sku', 'upc' => 'Sku', 'ean13' => 'Ean');
+        $fields_configuration = array(
+            'by_reference_only' => array('reference' => 'Sku'),
+            'by_id_product_only' => array(),
+            'by_upc_only' => array('upc' => 'Sku'),
+            'by_ean13_only' => array('ean13' => 'Ean'),
+            'automatic' => array('reference' => 'Sku', 'upc' => 'Sku', 'ean13' => 'Ean'),
+        );
+        $fields = array();
         $tables = array('product_attribute', 'product');
+
+        // Check fields depends on configuration
+        if (isset($fields_configuration[Configuration::get('SM_PRODUCT_MATCH')])) {
+            $fields = $fields_configuration[Configuration::get('SM_PRODUCT_MATCH')];
+        } else {
+            $fields = $fields_configuration['automatic'];
+        }
 
         // Check fields sku and ean13 on table product_attribute and product
         // If a match is found, we return it
+        if (!empty($fields))
         foreach ($fields as $field_ps => $fields_sm)
             foreach ($tables as $table)
                 if (isset($product[$fields_sm]) && strlen($product[$fields_sm]) > 2)
@@ -665,12 +680,19 @@ class SellermaniaImportOrderController
                     }
                 }
 
+
+        if (in_array(Configuration::get('SM_PRODUCT_MATCH'), array('automatic', 'by_id_product_only'))) {
         // Check if Sku is id_unique
         $ps_ids = preg_split("/[\s,;#_\-\/|]+/", $product['Sku']);
-        if (count($ps_ids) == 2) {
+        if (count($ps_ids) == 2 || Configuration::get('SM_PRODUCT_MATCH') == 'by_id_product_only') {
 
-            $idp = (int)$ps_ids[0];
-            $idpa = (int)$ps_ids[1];
+            if (count($ps_ids) == 2) {
+                $idp = (int)$ps_ids[0];
+                $idpa = (int)$ps_ids[1];
+            } else {
+                $idp = (int)$product['Sku'];
+                $idpa = (int)0;
+            }
 
             // Search for product attribute
             $row = Db::getInstance()->getRow('
@@ -696,6 +718,8 @@ class SellermaniaImportOrderController
                 return $product;
             }
         }
+        }
+
 
         // If product unmatch, we return the default Sellermania product, method createOrderDetail will fix this
         $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');

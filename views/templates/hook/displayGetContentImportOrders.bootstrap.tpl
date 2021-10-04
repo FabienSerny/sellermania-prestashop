@@ -232,7 +232,18 @@
                             </div>
                         </div>
 
-
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='Product match' mod='sellermania'}</label>
+                            <div class="col-lg-8">
+                                <select name="sm_product_match">
+                                    <option value="automatic" {if $sm_product_match == 'automatic'}selected{/if}>Automatic</option>
+                                    <option value="by_reference_only" {if $sm_product_match == 'by_reference_only'}selected{/if}>By reference only</option>
+                                    <option value="by_id_product_only" {if $sm_product_match == 'by_id_product_only'}selected{/if}>By PrestaShop IDs only</option>
+                                    <option value="by_upc_only" {if $sm_product_match == 'by_upc_only'}selected{/if}>By UPC only</option>
+                                    <option value="by_ean13_only" {if $sm_product_match == 'by_ean13_only'}selected{/if}>By EAN13 only</option>
+                                </select>
+                            </div>
+                        </div>
 
 
                         <div class="form-group clearfix">

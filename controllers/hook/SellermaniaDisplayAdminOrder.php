@@ -50,6 +50,9 @@ class SellermaniaDisplayAdminOrderController
         $this->dir_path = $dir_path;
         $this->context = Context::getContext();
         $this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
+        if (version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
+            $this->ps_version = '16';
+        }
 
         $this->status_list = array(
             6 => $this->module->l('To be confirmed', 'sellermaniadisplayadminorder'),
