@@ -90,12 +90,14 @@ class SellermaniaDisplayBackOfficeHeaderController
             return false;
         }
 
-
         // Creating an instance of OrderClient
         $client = new Sellermania\OrderClient();
         $client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
         $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
         $client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
+        $client->setCustomerSystemName('PrestaShop');
+        $client->setCustomerSystemVersion(defined('_PS_VERSION_') ? _PS_VERSION_ : Configuration::get('PS_VERSION_DB'));
+        $client->setCustomerModuleVersion($this->module->version);
 
         // Set dates limit
         $count_order = 0;

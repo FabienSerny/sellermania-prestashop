@@ -119,6 +119,12 @@ class OrderClient extends GenericClient
             'invoiceavailable' => $invoiceAvailable,
         ];
 
+        if ($this->getCustomerSystemName() != '') {
+            $params['customer-system-name'] = $this->getCustomerSystemName();
+            $params['customer-system-version'] = $this->getCustomerSystemVersion();
+            $params['customer-module-version'] = $this->getCustomerModuleVersion();
+        }
+
         if ($this->isValidInvoiceavailableValue($invoiceAvailable)) {
             $params['invoiceavailable'] = $invoiceAvailable;
         }

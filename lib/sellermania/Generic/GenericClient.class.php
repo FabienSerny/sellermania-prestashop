@@ -21,9 +21,15 @@ abstract class GenericClient
 {
 
    const SEPARATOR = "||";
+
    protected $endpoint;
    protected $email;
    protected $token;
+
+   protected $customer_system_name;
+   protected $customer_system_version;
+   protected $customer_module_version;
+
    private $client;
 
    /**
@@ -93,6 +99,86 @@ abstract class GenericClient
    {
       return $this->email;
    }
+
+
+    /**
+     * Set Customer System Name
+     *
+     * @access public
+     * @param string $customer_system_name
+     * @return \Sellermania\OrderClient
+     * @throws \Sellermania\Exception
+     */
+    public function setCustomerSystemName($customer_system_name)
+    {
+        if (!is_string($customer_system_name))
+        {
+            throw new Exception(sprintf("Customer system name should be a string, variable of %s type given", gettype($customer_system_name)));
+        }
+        $this->customer_system_name = $customer_system_name;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerSystemName()
+    {
+        return $this->customer_system_name;
+    }
+
+
+    /**
+     * Set Customer System Version
+     *
+     * @access public
+     * @param string $customer_system_version
+     * @return \Sellermania\OrderClient
+     * @throws \Sellermania\Exception
+     */
+    public function setCustomerSystemVersion($customer_system_version)
+    {
+        if (!is_string($customer_system_version))
+        {
+            throw new Exception(sprintf("Customer system version should be a string, variable of %s type given", gettype($customer_system_version)));
+        }
+        $this->customer_system_version = $customer_system_version;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerSystemVersion()
+    {
+        return $this->customer_system_version;
+    }
+
+    /**
+     * Set Customer Module Version
+     *
+     * @access public
+     * @param string $customer_system_version
+     * @return \Sellermania\OrderClient
+     * @throws \Sellermania\Exception
+     */
+    public function setCustomerModuleVersion($customer_module_version)
+    {
+        if (!is_string($customer_module_version))
+        {
+            throw new Exception(sprintf("Customer module version should be a string, variable of %s type given", gettype($customer_module_version)));
+        }
+        $this->customer_module_version = $customer_module_version;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerModuleVersion()
+    {
+        return $this->customer_module_version;
+    }
 
    
     /**
