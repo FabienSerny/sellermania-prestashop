@@ -637,87 +637,86 @@ class SellermaniaImportOrderController
 
         // Check fields sku and ean13 on table product_attribute and product
         // If a match is found, we return it
-        if (!empty($fields))
-        foreach ($fields as $field_ps => $fields_sm)
-            foreach ($tables as $table)
-                if (isset($product[$fields_sm]) && strlen($product[$fields_sm]) > 2)
-                {
-                    // Check product attribute
-                    $pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table.'` WHERE `'.$field_ps.'` = \''.pSQL($product[$fields_sm]).'\'');
+        if (!empty($fields)) {
+            foreach ($fields as $field_ps => $fields_sm) {
+                foreach ($tables as $table) {
+                    if (isset($product[$fields_sm]) && strlen($product[$fields_sm]) > 2) {
+                        // Check product attribute
+                        $pr = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $field_ps . '` = \'' . pSQL($product[$fields_sm]) . '\'');
 
-                    // Check with chain option
-                    if (!isset($pr['id_product']) || $pr['id_product'] < 1)
-                        if (Configuration::get('SM_STOCK_SYNC_OPTION_2') == 'yes' && (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR') > 0)
-                        {
-                            // Search product by matching first or last digit
-                            $search_filter = substr($product[$fields_sm], 0, (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR')).'%';
-                            if (Configuration::get('SM_STOCK_SYNC_POSITION') == 'last')
-                                $search_filter = '%'.substr($product[$fields_sm], - (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
-                            $pr = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table.'` WHERE `'.$field_ps.'` LIKE \''.pSQL($search_filter).'\'');
+                        // Check with chain option
+                        if (!isset($pr['id_product']) || $pr['id_product'] < 1)
+                            if (Configuration::get('SM_STOCK_SYNC_OPTION_2') == 'yes' && (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR') > 0) {
+                                // Search product by matching first or last digit
+                                $search_filter = substr($product[$fields_sm], 0, (int)Configuration::get('SM_STOCK_SYNC_NB_CHAR')) . '%';
+                                if (Configuration::get('SM_STOCK_SYNC_POSITION') == 'last')
+                                    $search_filter = '%' . substr($product[$fields_sm], -(int)Configuration::get('SM_STOCK_SYNC_NB_CHAR'));
+                                $pr = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $field_ps . '` LIKE \'' . pSQL($search_filter) . '\'');
 
-                            // Alter Sku if matched
-                            if (isset($pr['id_product']) && $pr['id_product'] > 0 && $fields_sm != 'Sku')
-                                $product[$fields_sm] = $pr[$field_ps];
-                        }
+                                // Alter Sku if matched
+                                if (isset($pr['id_product']) && $pr['id_product'] > 0 && $fields_sm != 'Sku')
+                                    $product[$fields_sm] = $pr[$field_ps];
+                            }
 
-                    // If product is matched
-                    if (isset($pr['id_product']) && $pr['id_product'] > 0)
-                    {
-                        $product['id_product'] = $pr['id_product'];
-                        $product['id_product_attribute'] = 0;
-                        if (isset($pr['id_product_attribute']))
-                            $product['id_product_attribute'] = $pr['id_product_attribute'];
-
-                        // If product is disabled, we return the default product
-                        $active = $this->getProductActive((int)$product['id_product']);
-                        if ($active != 1)
-                        {
-                            $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
+                        // If product is matched
+                        if (isset($pr['id_product']) && $pr['id_product'] > 0) {
+                            $product['id_product'] = $pr['id_product'];
                             $product['id_product_attribute'] = 0;
-                        }
+                            if (isset($pr['id_product_attribute']))
+                                $product['id_product_attribute'] = $pr['id_product_attribute'];
 
-                        return $product;
+                            // If product is disabled, we return the default product
+                            $active = $this->getProductActive((int)$product['id_product']);
+                            if ($active != 1) {
+                                $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
+                                $product['id_product_attribute'] = 0;
+                            }
+
+                            return $product;
+                        }
                     }
                 }
+            }
+        }
 
 
         if (in_array(Configuration::get('SM_PRODUCT_MATCH'), array('automatic', 'by_id_product_only'))) {
-        // Check if Sku is id_unique
-        $ps_ids = preg_split("/[\s,;#_\-\/|]+/", $product['Sku']);
-        if (count($ps_ids) == 2 || Configuration::get('SM_PRODUCT_MATCH') == 'by_id_product_only') {
+            // Check if Sku is id_unique
+            $ps_ids = preg_split("/[\s,;#_\-\/|]+/", $product['Sku']);
+            if (count($ps_ids) == 2 || Configuration::get('SM_PRODUCT_MATCH') == 'by_id_product_only') {
+    
+                if (count($ps_ids) == 2) {
+                    $idp = (int)$ps_ids[0];
+                    $idpa = (int)$ps_ids[1];
+                } else {
+                    $idp = (int)$product['Sku'];
+                    $idpa = (int)0;
+                }
 
-            if (count($ps_ids) == 2) {
-                $idp = (int)$ps_ids[0];
-                $idpa = (int)$ps_ids[1];
-            } else {
-                $idp = (int)$product['Sku'];
-                $idpa = (int)0;
-            }
-
-            // Search for product attribute
-            $row = Db::getInstance()->getRow('
-            SELECT `id_product`, `id_product_attribute`, `reference`, `ean13`
-            FROM `'._DB_PREFIX_.'product_attribute`
-            WHERE `id_product` = '.(int)$idp.'
-            AND `id_product_attribute` = '.(int)$idpa);
-
-            // If not found, search for product
-            if ($row['id_product_attribute'] < 1) {
+                // Search for product attribute
                 $row = Db::getInstance()->getRow('
-                SELECT `id_product`, `reference`, `ean13`
-                FROM `'._DB_PREFIX_.'product`
-                WHERE `id_product` = '.(int)$idp);
-            }
+                SELECT `id_product`, `id_product_attribute`, `reference`, `ean13`
+                FROM `'._DB_PREFIX_.'product_attribute`
+                WHERE `id_product` = '.(int)$idp.'
+                AND `id_product_attribute` = '.(int)$idpa);
 
-            // If found we set ids and SKU and reference
-            if ($row['id_product'] > 0) {
-                $product['id_product'] = (int)$idp;
-                $product['id_product_attribute'] = (int)$idpa;
-                $product['Sku'] = $row['reference'];
-                $product['ean'] = $row['ean13'];
-                return $product;
+                // If not found, search for product
+                if ($row['id_product_attribute'] < 1) {
+                    $row = Db::getInstance()->getRow('
+                    SELECT `id_product`, `reference`, `ean13`
+                    FROM `'._DB_PREFIX_.'product`
+                    WHERE `id_product` = '.(int)$idp);
+                }
+
+                // If found we set ids and SKU and reference
+                if ($row['id_product'] > 0) {
+                    $product['id_product'] = (int)$idp;
+                    $product['id_product_attribute'] = (int)$idpa;
+                    $product['Sku'] = $row['reference'];
+                    $product['ean'] = $row['ean13'];
+                    return $product;
+                }
             }
-        }
         }
 
 
