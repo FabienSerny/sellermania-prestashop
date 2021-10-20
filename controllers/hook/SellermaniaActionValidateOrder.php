@@ -72,8 +72,12 @@ class SellermaniaActionValidateOrderController
         foreach ($products as $product)
         {
             $skus[] = $product['product_reference'];
-            $current_stock = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id']);
-            $skus_quantities[$product['product_reference']] = $current_stock;
+            if (version_compare(_PS_VERSION_, '1.5.0') >= 0) {
+                $current_stock = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id']);
+                $skus_quantities[$product['product_reference']] = $current_stock;
+            } else {
+                $skus_quantities[$product['product_reference']] = - ($product['product_quantity']);
+            }
         }
 
         // We synchronize the stock
