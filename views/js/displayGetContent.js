@@ -136,7 +136,7 @@ $(document).ready(function() {
     });
 
     function smCheckIfOptionIsSelected(elem_id) {
-        if ($(elem_id).attr('checked') == 'checked' || $(elem_id).attr('checked') == true || $(elem_id).prop('checked')) {
+        if ($(elem_id).attr('checked') == 'checked' || $(elem_id).attr('checked') == true) {
             return true;
         }
         return false;
