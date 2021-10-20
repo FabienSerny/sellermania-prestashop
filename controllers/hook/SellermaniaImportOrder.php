@@ -712,7 +712,9 @@ class SellermaniaImportOrderController
                 if ($row['id_product'] > 0) {
                     $product['id_product'] = (int)$idp;
                     $product['id_product_attribute'] = (int)$idpa;
-                    $product['Sku'] = $row['reference'];
+                    if (empty($product['Sku'])) {
+                        $product['Sku'] = $row['reference'];
+                    }
                     $product['ean'] = $row['ean13'];
                     return $product;
                 }
@@ -1051,6 +1053,7 @@ class SellermaniaImportOrderController
         FROM `'._DB_PREFIX_.'order_detail`
         WHERE `id_order` = '.(int)$id_order.'
         AND (
+            (`product_id` = \''.pSQL($product['id_product']).'\' AND `product_attribute_id` = \''.pSQL($product['id_product_attribute']).'\') OR
             `product_reference` = \''.pSQL($product['Sku']).'\' OR
             (`product_ean13` = \''.pSQL($product['Ean']).'\' AND `product_ean13` != \'\')
         )');
