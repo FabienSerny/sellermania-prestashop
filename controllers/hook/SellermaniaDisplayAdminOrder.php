@@ -50,7 +50,7 @@ class SellermaniaDisplayAdminOrderController
         $this->dir_path = $dir_path;
         $this->context = Context::getContext();
         $this->ps_version = str_replace('.', '', substr(_PS_VERSION_, 0, 3));
-        if (version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
+        if ($this->ps_version == '17' && version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
             $this->ps_version = '16';
         }
 
@@ -417,8 +417,9 @@ class SellermaniaDisplayAdminOrderController
         $sellermania_currency = new Currency($order->id_currency);
 
         // Compliancy date format with PS 1.4
-        if ($this->ps_version == '14')
+        if ($this->ps_version == '14') {
             $this->context->smarty->ps_language = new Language($this->context->cookie->id_lang);
+        }
 
         $this->context->smarty->assign('id_order', $order->id);
 
