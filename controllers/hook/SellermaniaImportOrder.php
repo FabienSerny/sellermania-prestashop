@@ -935,9 +935,11 @@ class SellermaniaImportOrderController
     public function fixOrder15($fix_details = true)
     {
         // Fix order detail
-        if ($fix_details)
-            foreach ($this->data['OrderInfo']['Product'] as $kp => $product)
+        if ($fix_details) {
+            foreach ($this->data['OrderInfo']['Product'] as $kp => $product) {
                 $this->fixOrderDetail15($this->order->id, $product);
+            }
+        }
 
         // Calcul shipping without tax
         $total_shipping_tax_incl = (float)$this->data['OrderInfo']['Transport']['Amount']['Price'];
@@ -1053,7 +1055,6 @@ class SellermaniaImportOrderController
         FROM `'._DB_PREFIX_.'order_detail`
         WHERE `id_order` = '.(int)$id_order.'
         AND (
-            (`product_id` = \''.pSQL($product['id_product']).'\' AND `product_attribute_id` = \''.pSQL($product['id_product_attribute']).'\') OR
             `product_reference` = \''.pSQL($product['Sku']).'\' OR
             (`product_ean13` = \''.pSQL($product['Ean']).'\' AND `product_ean13` != \'\')
         )');
