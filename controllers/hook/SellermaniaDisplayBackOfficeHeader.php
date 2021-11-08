@@ -165,6 +165,15 @@ class SellermaniaDisplayBackOfficeHeaderController
                                     $this->module->logger('order-error', $log);
                                 }
                             }
+
+                            // Register order that needs to be autoconfirm
+                            $this->order_items_to_confirm = SellermaniaOrderConfirmation::registerAutoConfirmProducts($this->order_items_to_confirm, $order);
+
+                            // Do not push it too hard
+                            if ($count_order > (int)Configuration::get('SM_ORDER_IMPORT_LIMIT')) {
+                                SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
+                                return true;
+                            }
                         }
                         else
                         {
