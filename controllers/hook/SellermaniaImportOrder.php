@@ -708,6 +708,14 @@ class SellermaniaImportOrderController
                     WHERE `id_product` = '.(int)$idp);
                 }
 
+                // Check if product name is empty (to handle a bug on PS 1.7)
+                $product_name = Db::getInstance()->getValue('
+                SELECT `name` FROM `'._DB_PREFIX_.'product_lang`
+                WHERE `id_product` = '.(int)$idp.' AND `name` != \'\'');
+                if (empty($product_name)) {
+                    $row['id_product'] = 0;
+                }
+
                 // If found we set ids and SKU and reference
                 if ($row['id_product'] > 0) {
                     $product['id_product'] = (int)$idp;
