@@ -215,7 +215,6 @@ class SellermaniaLoader
             if (!Validate::isLoadedObject($shop)) {
                 $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             }
-            Shop::setContext($shop::CONTEXT_SHOP, $shop->id);
             $this->context->shop = $shop;
             $this->context->cookie->id_shop = $shop->id;
         }
