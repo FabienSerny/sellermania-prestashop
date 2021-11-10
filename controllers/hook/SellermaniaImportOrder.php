@@ -1175,9 +1175,9 @@ class SellermaniaImportOrderController
     private function createOrderDetail($sellermaniaProduct)
     {
         // Calcul price without tax
-        $product_price_with_tax = $product['Amount']['Price'];
-        $vat_rate = 1 + ($product['VatRate'] / 10000);
-        $product_price_without_tax = $product_price_with_tax / $vat_rate;
+        $product_price_with_tax = $sellermaniaProduct['Amount']['Price'];
+        $vat_rate = 1 + ($sellermaniaProduct['VatRate'] / 10000);
+        $product_price_without_tax = round($product_price_with_tax / $vat_rate, 6);
 
         $orderDetail = new OrderDetail();
         $orderDetail->id_order = $this->order->id;
