@@ -1063,19 +1063,23 @@ class SellermaniaImportOrderController
 
         // We check if the product has a match
         // If yes, we update it, if not, we continue
-        $conditionSearchById = '';
         if (Configuration::get('SM_PRODUCT_MATCH') == 'by_id_product_only') {
-            $conditionSearchById = ' (`product_id` = \''.pSQL($product['id_product']).'\' AND `product_attribute_id` = \''.pSQL($product['id_product_attribute']).'\') OR ';
+            $conditionSearch = ' (
+                `product_id` != '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').' AND
+                `product_id` = \''.pSQL($product['id_product']).'\' AND `product_attribute_id` = \''.pSQL($product['id_product_attribute']).'\'
+            ) OR (
+                `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').' AND
+                `product_reference` = \''.pSQL($product['Sku']).'\'
+            )';
+        } else {
+            $conditionSearch = '  `product_reference` = \''.pSQL($product['Sku']).'\' OR
+            (`product_ean13` = \''.pSQL($product['Ean']).'\' AND `product_ean13` != \'\')';
         }
         $id_order_detail = (int)Db::getInstance()->getValue('
         SELECT `id_order_detail`
         FROM `'._DB_PREFIX_.'order_detail`
         WHERE `id_order` = '.(int)$id_order.'
-        AND (
-            '.$conditionSearchById.'
-            `product_reference` = \''.pSQL($product['Sku']).'\' OR
-            (`product_ean13` = \''.pSQL($product['Ean']).'\' AND `product_ean13` != \'\')
-        )');
+        AND ('.$conditionSearch.')');
 
         // We check if a default Sellermania product is in Order Detail
         // If yes, we update it, if not, we create a new Order Detail
