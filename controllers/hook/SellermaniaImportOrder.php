@@ -770,6 +770,12 @@ class SellermaniaImportOrderController
         $this->customer->lastname = $this->data['User'][0]['LastName'];
         $this->customer->update();
 
+        // Handle case for one client which PrestaShop create orders without delivery address
+        if (empty($this->order->id_address_delivery)) {
+            $this->order->id_address_delivery = $this->cart->id_address_delivery;
+            $this->order->update();
+        }
+
         // If two differents addresses and only one registered, we create the other address
         if ($this->order->id_address_delivery == $this->order->id_address_invoice
             && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1'])
