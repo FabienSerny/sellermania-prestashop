@@ -193,6 +193,8 @@ class SellermaniaDisplayAdminOrderController
                                 'orderStatusId' => \Sellermania\OrderConfirmClient::STATUS_DISPATCHED,
                                 'trackingNumber' => pSQL($order['tracking_number']),
                                 'shippingCarrier' => pSQL($order['shipping_name']),
+                                'shipmentOrigin' => strtoupper(Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE')),
+                                'importOrigin' => strtoupper(Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE'))
                             );
                             if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                                 $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
