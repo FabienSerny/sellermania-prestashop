@@ -216,6 +216,20 @@ class SellermaniaOrder extends ObjectModel
     }
 
     /**
+     * update order carrier by default carrier for order importation
+     *
+     * @param [type] $id_order
+     * @param [type] $id_carrier
+     */
+    public static function updateOrderCarrierByOrderId($id_order, $id_carrier)
+    {
+        return Db::getInstance()->ExecuteS('
+        UPDATE `'._DB_PREFIX_.'order_carrier` SET `id_carrier` = '.(int)$id_carrier.' 
+        WHERE `id_order` = '.(int)$id_order);
+    }
+
+
+    /**
      * Get Nb Sellermania orders in error
      * @return int
      */
