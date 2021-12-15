@@ -61,9 +61,6 @@ class SellermaniaImportController
         if (!defined('_PS_ADMIN_DIR_'))
             define('_PS_ADMIN_DIR_', getcwd());
 
-        if (empty($this->context->shop->id))
-            $this->context->shop->setContext(4);
-
         // Check if Sellermania key exists
         if (Configuration::get('SELLERMANIA_KEY') == '') {
             die('ERROR1');

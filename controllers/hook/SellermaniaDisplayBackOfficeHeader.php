@@ -76,6 +76,19 @@ class SellermaniaDisplayBackOfficeHeaderController
         // Define that we are in the Import Orders Context
         define('SELLERMANIA_IMPORT_ORDERS_CONTEXT', 1);
 
+        // Init shop depending of the configuration
+        $id_shop = Configuration::get('SM_IMPORT_ORDERS_SHOP');
+        if (empty($id_shop) || $id_shop == 'all') {
+            if (empty($this->context->shop->id)) {
+                $this->context->shop->setContext(4);
+            }
+        } else {
+            $this->context = Context::getContext();
+            $shop = new Shop($id_shop);
+            $this->context->shop = $shop;
+            $this->context->cookie->id_shop = $shop->id;
+        }
+
         // Check connection before going further
         try
         {

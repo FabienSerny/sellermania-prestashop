@@ -68,7 +68,7 @@ class SellermaniaGetContentController
             'sm_export_stay_nb_days',
             'sm_catch_all_mail_address', 'sm_install_date',
             'sm_order_import_past_days', 'sm_order_import_limit',
-            'sm_import_orders_with_client_email',
+            'sm_import_orders_with_client_email', 'sm_import_orders_shop',
             'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
             'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
             'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
@@ -86,6 +86,7 @@ class SellermaniaGetContentController
             'sm_import_default_country_code' => $default_country->iso_code,
             'sm_shipment_default_country_code' => $default_country->iso_code,
             'sm_product_match' => 'automatic',
+            'sm_import_orders_shop' => 'all',
         ];
     }
 
@@ -228,6 +229,12 @@ class SellermaniaGetContentController
         // Retrieve carriers (last parameter "5" means "All carriers")
         $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 5);
 
+        // Retrieve shops
+        $shops = [];
+        if (version_compare(_PS_VERSION_, '1.5') >= 0) {
+            $shops = Shop::getShops();
+        }
+
         // Assign to Smarty
         if (version_compare(PHP_VERSION, '5.3.0') < 0)
         {
@@ -257,6 +264,7 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('customer_groups', $customer_groups);
 
         $this->context->smarty->assign('carriers', $carriers);
+        $this->context->smarty->assign('shops', $shops);
 
         $this->context->smarty->assign('category_tree', $this->renderCategoriesTree());
         $this->context->smarty->assign('sm_default_product', new Product(Configuration::get('SM_DEFAULT_PRODUCT_ID')));
