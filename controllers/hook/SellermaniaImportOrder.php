@@ -283,7 +283,7 @@ class SellermaniaImportOrderController
 
             // If reference is not found
             $alert_email = Configuration::get('SM_ALERT_MISSING_REF_MAIL');
-            if ($this->data['OrderInfo']['Product'][$kp]['id_product'] == Configuration::get('SM_DEFAULT_PRODUCT_ID') &&
+            if ($this->data['OrderInfo']['Product'][$kp]['id_product'] == $this->module->getDefaultProductID() &&
                 Configuration::get('SM_ALERT_MISSING_REF_OPTION') == 'yes' &&
                 !empty($alert_email) && Validate::isEmail($alert_email))
             {
@@ -501,7 +501,7 @@ class SellermaniaImportOrderController
             $id_product = (int)$product['id_product'];
             $id_product_attribute = (int)$product['id_product_attribute'];
             if (!$this->cart->updateQty($quantity, $id_product, $id_product_attribute)) {
-                $this->cart->updateQty($quantity, Configuration::get('SM_DEFAULT_PRODUCT_ID'), 0);
+                $this->cart->updateQty($quantity, $this->module->getDefaultProductID(), 0);
             }
         }
 
@@ -668,7 +668,7 @@ class SellermaniaImportOrderController
                             // If product is disabled, we return the default product
                             $active = $this->getProductActive((int)$product['id_product']);
                             if ($active != 1) {
-                                $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
+                                $product['id_product'] = $this->module->getDefaultProductID();
                                 $product['id_product_attribute'] = 0;
                             }
 
@@ -731,7 +731,7 @@ class SellermaniaImportOrderController
 
 
         // If product unmatch, we return the default Sellermania product, method createOrderDetail will fix this
-        $product['id_product'] = Configuration::get('SM_DEFAULT_PRODUCT_ID');
+        $product['id_product'] = $this->module->getDefaultProductID();
         $product['id_product_attribute'] = 0;
 
         return $product;
@@ -922,12 +922,12 @@ class SellermaniaImportOrderController
         // We check if a default Sellermania product is in Order Detail
         // If yes, we update it, if not, we create a new Order Detail
         if ($id_order_detail < 1) {
-            $default_product = new Product(Configuration::get('SM_DEFAULT_PRODUCT_ID'), false, Configuration::get('PS_LANG_DEFAULT'));
+            $default_product = new Product($this->module->getDefaultProductID(), false, Configuration::get('PS_LANG_DEFAULT'));
             $id_order_detail = (int)Db::getInstance()->getValue('
             SELECT `id_order_detail`
             FROM `'._DB_PREFIX_.'order_detail`
             WHERE `id_order` = '.(int)$id_order.'
-            AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
+            AND `product_id` = '.(int)$this->module->getDefaultProductID().'
             AND `product_name` = \''.pSQL($default_product->name).'\'');
         }
 
@@ -1007,7 +1007,7 @@ class SellermaniaImportOrderController
         $this->update('order_invoice', $update, $where);
 
         // Update Sellermania default product quantity
-        $this->update('stock_available', array('quantity' => 0), '`id_product` = '.Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+        $this->update('stock_available', array('quantity' => 0), '`id_product` = '.(int)$this->module->getDefaultProductID());
     }
 
 
@@ -1071,10 +1071,10 @@ class SellermaniaImportOrderController
         // If yes, we update it, if not, we continue
         if (Configuration::get('SM_PRODUCT_MATCH') == 'by_id_product_only') {
             $conditionSearch = ' (
-                `product_id` != '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').' AND
+                `product_id` != '.(int)$this->module->getDefaultProductID().' AND
                 `product_id` = \''.pSQL($product['id_product']).'\' AND `product_attribute_id` = \''.pSQL($product['id_product_attribute']).'\'
             ) OR (
-                `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').' AND
+                `product_id` = '.(int)$this->module->getDefaultProductID().' AND
                 `product_reference` = \''.pSQL($product['Sku']).'\'
             )';
         } else {
@@ -1090,12 +1090,12 @@ class SellermaniaImportOrderController
         // We check if a default Sellermania product is in Order Detail
         // If yes, we update it, if not, we create a new Order Detail
         if ($id_order_detail < 1) {
-            $default_product = new Product(Configuration::get('SM_DEFAULT_PRODUCT_ID'), false, Configuration::get('PS_LANG_DEFAULT'));
+            $default_product = new Product($this->module->getDefaultProductID(), false, Configuration::get('PS_LANG_DEFAULT'));
             $id_order_detail = (int)Db::getInstance()->getValue('
             SELECT `id_order_detail`
             FROM `'._DB_PREFIX_.'order_detail`
             WHERE `id_order` = '.(int)$id_order.'
-            AND `product_id` = '.(int)Configuration::get('SM_DEFAULT_PRODUCT_ID').'
+            AND `product_id` = '.(int)$this->module->getDefaultProductID().'
             AND `product_name` = \''.pSQL($default_product->name).'\'');
         }
 
@@ -1228,7 +1228,7 @@ class SellermaniaImportOrderController
      */
     private function handleProductStock(OrderDetail $orderDetail, $quantity)
     {
-        if ($orderDetail->product_id == Configuration::get('SM_DEFAULT_PRODUCT_ID')) {
+        if ($orderDetail->product_id == $this->module->getDefaultProductID()) {
             return;
         }
 

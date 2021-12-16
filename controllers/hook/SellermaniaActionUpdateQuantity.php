@@ -54,7 +54,7 @@ class SellermaniaActionUpdateQuantityController
     public function run()
     {
         // Check if credentials are ok
-        if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || Configuration::get('SM_DEFAULT_PRODUCT_ID') < 1)
+        if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || $this->module->getDefaultProductID() < 1)
             return '';
 
         // If we are in a order creation context, we abort (a request will be done in the hookValidateOrder)

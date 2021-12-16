@@ -113,6 +113,21 @@ class Sellermania extends Module
     }
 
 
+    /**
+     * Get Sellermania default product ID
+     * @return integer $default_product_id
+     */
+    public function getDefaultProductID()
+    {
+        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 1) {
+            $id_shop = Configuration::get('SM_IMPORT_ORDERS_SHOP');
+            if (empty($id_shop)) {
+                $id_shop = Configuration::get('PS_SHOP_DEFAULT');
+            }
+            return Configuration::get('SM_DEFAULT_PRODUCT_ID', null, null, $id_shop);
+        }
+        return Configuration::get('SM_DEFAULT_PRODUCT_ID');
+    }
 
 
 

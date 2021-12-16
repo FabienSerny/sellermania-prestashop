@@ -86,7 +86,7 @@ class SellermaniaGetContentController
             'sm_import_default_country_code' => $default_country->iso_code,
             'sm_shipment_default_country_code' => $default_country->iso_code,
             'sm_product_match' => 'automatic',
-            'sm_import_orders_shop' => 'all',
+            'sm_import_orders_shop' => 0,
         ];
     }
 
@@ -179,7 +179,7 @@ class SellermaniaGetContentController
             $sellermania_key = Configuration::get('SELLERMANIA_KEY');
         }
 
-        $smec = new SellermaniaExportController();
+        $smec = new SellermaniaExportController($this->module);
         $module_url = 'index.php?controller='.Tools::getValue('controller').'&tab='.Tools::getValue('tab').'&token='.Tools::getValue('token');
         $module_url .= '&configure='.Tools::getValue('configure').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'';
 
@@ -267,8 +267,8 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('shops', $shops);
 
         $this->context->smarty->assign('category_tree', $this->renderCategoriesTree());
-        $this->context->smarty->assign('sm_default_product', new Product(Configuration::get('SM_DEFAULT_PRODUCT_ID')));
-        $this->context->smarty->assign('sm_default_product_id', Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+        $this->context->smarty->assign('sm_default_product', new Product($this->module->getDefaultProductID()));
+        $this->context->smarty->assign('sm_default_product_id', $this->module->getDefaultProductID());
 
         foreach ($this->params as $param) {
             $this->context->smarty->assign(strtolower($param), Configuration::get(strtoupper($param)));

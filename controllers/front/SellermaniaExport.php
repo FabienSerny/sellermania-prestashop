@@ -68,8 +68,11 @@ class SellermaniaExportController
     /**
      * Controller constructor
      */
-    public function __construct()
+    public function __construct($module, $dir_path = null, $web_path = null)
     {
+        $this->module = $module;
+        $this->web_path = $web_path;
+        $this->dir_path = $dir_path;
         $this->context = Context::getContext();
 
         $id_lang = Configuration::get('PS_LANG_DEFAULT');
@@ -353,7 +356,7 @@ class SellermaniaExportController
         // Begin rendering
         $line = '';
         foreach ($rows as $row) {
-            if ($row['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID') && $row['name'] != '') {
+            if ($row['id_product'] != $this->module->getDefaultProductID() && $row['name'] != '') {
 
                 foreach ($this->fields_to_export as $field => $field_type) {
 
@@ -458,7 +461,7 @@ class SellermaniaExportController
         // Begin rendering
         $line = '';
         foreach ($rows as $row) {
-            if ($row['id_product'] != Configuration::get('SM_DEFAULT_PRODUCT_ID') && $row['name'] != '') {
+            if ($row['id_product'] != $this->module->getDefaultProductID() && $row['name'] != '') {
 
                 foreach ($this->stock_fields_to_export as $field => $field_type) {
 

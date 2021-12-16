@@ -249,7 +249,7 @@
                             <label class="col-lg-4">{l s='Orders imported on shop (do not change if you\'re not sure)' mod='sellermania'}</label>
                             <div class="col-lg-8">
                                 <select name="sm_import_orders_shop">
-                                    <option value="all">{l s='All' mod='sellermania'}</option>
+                                    <option value="0">{l s='All' mod='sellermania'}</option>
                                     {foreach from=$shops item=shop}
                                         <option value="{$shop.id_shop}" {if $sm_import_orders_shop eq $shop.id_shop}selected{/if}> {$shop.name}</option>
                                     {/foreach}

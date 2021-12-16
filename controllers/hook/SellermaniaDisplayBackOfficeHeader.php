@@ -78,16 +78,17 @@ class SellermaniaDisplayBackOfficeHeaderController
 
         // Init shop depending of the configuration
         $id_shop = Configuration::get('SM_IMPORT_ORDERS_SHOP');
-        if (empty($id_shop) || $id_shop == 'all') {
-            if (empty($this->context->shop->id)) {
-                $this->context->shop->setContext(4);
-            }
+        if (empty($id_shop) && empty($this->context->shop->id)) {
+            $this->context->shop->setContext(4);
         } else {
             $this->context = Context::getContext();
             $shop = new Shop($id_shop);
             $this->context->shop = $shop;
             $this->context->cookie->id_shop = $shop->id;
         }
+
+        // Will automatically recreate product if it was erased
+        $this->module->installer->installSellermaniaProduct();
 
         // Check connection before going further
         try
@@ -473,7 +474,7 @@ class SellermaniaDisplayBackOfficeHeaderController
     public function run()
     {
         // Check if credentials are ok
-        if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || Configuration::get('SM_DEFAULT_PRODUCT_ID') < 1)
+        if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || $this->module->getDefaultProductID() < 1)
             return '';
 
         // Handle order actions

@@ -262,7 +262,7 @@ class SellermaniaInstaller
 
         if (version_compare($version_registered, '2.6.10', '<')) {
             Configuration::updateValue('SM_VERSION', $this->module->version); // Add update version here to avoid infinite loop with hook ActionUpdateQuantity
-            $product = new Product((int)Configuration::get('SM_DEFAULT_PRODUCT_ID'));
+            $product = new Product((int)$this->module->getDefaultProductID());
             $product->quantity = 999999;
             $product->update();
             if (version_compare(_PS_VERSION_, '1.5') >= 0) {
@@ -344,11 +344,13 @@ class SellermaniaInstaller
      */
     public function installSellermaniaProduct()
     {
-        if (Configuration::get('SM_DEFAULT_PRODUCT_ID') > 0)
-        {
-            $product = new Product((int)Configuration::get('SM_DEFAULT_PRODUCT_ID'));
-            if ($product->id > 0)
+        // Check if sellermania product exists
+        $sellermania_default_product_id = $this->module->getDefaultProductID();
+        if ($sellermania_default_product_id > 0) {
+            $product = new Product($sellermania_default_product_id);
+            if ($product->id > 0) {
                 return true;
+            }
         }
 
         $label = 'Sellermania product';
@@ -378,7 +380,11 @@ class SellermaniaInstaller
         }
 
         // Saving product ID
-        Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id);
+        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 1) {
+            Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id, null, null, $id_shop);
+        } else {
+            Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id);
+        }
 
         return true;
     }
