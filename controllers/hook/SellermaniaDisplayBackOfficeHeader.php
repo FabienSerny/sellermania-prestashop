@@ -78,13 +78,16 @@ class SellermaniaDisplayBackOfficeHeaderController
 
         // Init shop depending of the configuration
         $id_shop = Configuration::get('SM_IMPORT_ORDERS_SHOP');
-        if (empty($id_shop) && empty($this->context->shop->id)) {
-            $this->context->shop->setContext(4);
-        } else {
-            $this->context = Context::getContext();
-            $shop = new Shop($id_shop);
-            $this->context->shop = $shop;
-            $this->context->cookie->id_shop = $shop->id;
+        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 1) {
+            if (empty($id_shop) && empty($this->context->shop->id)) {
+                $this->context->shop->setContext(4);
+            } else {
+                $this->context = Context::getContext();
+                $shop = new Shop($id_shop);
+                Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
+                $this->context->shop = $shop;
+                $this->context->cookie->id_shop = $shop->id;
+            }
         }
 
         // Will automatically recreate product if it was erased

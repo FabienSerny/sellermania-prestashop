@@ -501,7 +501,9 @@ class SellermaniaImportOrderController
             $id_product = (int)$product['id_product'];
             $id_product_attribute = (int)$product['id_product_attribute'];
             if (!$this->cart->updateQty($quantity, $id_product, $id_product_attribute)) {
-                $this->cart->updateQty($quantity, $this->module->getDefaultProductID(), 0);
+                if (!$this->cart->updateQty($quantity, $this->module->getDefaultProductID(), 0)) {
+                    die("Could not add default product, something is wrong\n");
+                }
             }
         }
 
@@ -545,7 +547,10 @@ class SellermaniaImportOrderController
             $this->context = Context::getContext();
             $shop = $this->context->shop;
             if (!Validate::isLoadedObject($shop)) {
-                $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+                $shop = new Shop((int)Configuration::get('SM_IMPORT_ORDERS_SHOP'));
+                if (!Validate::isLoadedObject($shop)) {
+                    $shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+                }
             }
             Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
             $this->context->shop = $shop;

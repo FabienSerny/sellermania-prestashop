@@ -347,7 +347,11 @@ class SellermaniaInstaller
         // Check if sellermania product exists
         $sellermania_default_product_id = $this->module->getDefaultProductID();
         if ($sellermania_default_product_id > 0) {
-            $product = new Product($sellermania_default_product_id);
+            if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 1) {
+                $product = new Product($sellermania_default_product_id, false, Configuration::get('PS_LANG_DEFAULT'), Context::getContext()->shop->id);
+            } else {
+                $product = new Product($sellermania_default_product_id);
+            }
             if ($product->id > 0) {
                 return true;
             }
@@ -381,7 +385,7 @@ class SellermaniaInstaller
 
         // Saving product ID
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 1) {
-            Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id, null, null, $id_shop);
+            Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id, null, null, Context::getContext()->shop->id);
         } else {
             Configuration::updateValue('SM_DEFAULT_PRODUCT_ID', (int)$product->id);
         }
