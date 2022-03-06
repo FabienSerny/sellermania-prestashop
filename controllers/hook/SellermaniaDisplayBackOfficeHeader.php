@@ -259,6 +259,9 @@ class SellermaniaDisplayBackOfficeHeaderController
             $this->module->logger('webservice-error', $log);
         }
         SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
+
+        $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+        $sdao->handleShippedOrders($result['SellermaniaWs']['GetOrderResponse']['Order']);
     }
 
 
