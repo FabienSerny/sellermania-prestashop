@@ -313,11 +313,19 @@ class SellermaniaDisplayAdminOrderController
      */
     public static function isStatusToShip($sellermania_order)
     {
+        // Fix data (when only one product, array is not the same)
+        if (!isset($sellermania_order['OrderInfo']['Product'][0])) {
+            $sellermania_order['OrderInfo']['Product'] = array($sellermania_order['OrderInfo']['Product']);
+        }
+
         // Check if there is a flag to dispatch
         $status_to_ship = 0;
-        foreach ($sellermania_order['OrderInfo']['Product'] as $product)
-            if (isset($product['Status']) && $product['Status'] == 1)
+        foreach ($sellermania_order['OrderInfo']['Product'] as $product) {
+            if (isset($product['Status']) && $product['Status'] == 1) {
                 $status_to_ship = 1;
+            }
+        }
+
         foreach ($sellermania_order['OrderInfo']['Product'] as $product)
             if (isset($product['Status']) && $product['Status'] != 1 && $product['Status'] != 4 && $product['ItemName'] != 'Frais de gestion')
                 $status_to_ship = 0;
