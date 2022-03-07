@@ -128,7 +128,7 @@ class SellermaniaImportOrderController
         // Refill data
         $this->data['User'][$index]['FirstName'] = substr($firstname, 0, 32);
         $this->data['User'][$index]['LastName'] = substr($lastname, 0, 32);
-        $this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = '0100000000';
+        $this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = '0000000000';
         if (!empty($shipping_phone) && Validate::isPhoneNumber($shipping_phone))
             $this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = $shipping_phone;
         $this->data['OrderInfo']['Amount']['Currency'] = $currency_iso_code;
