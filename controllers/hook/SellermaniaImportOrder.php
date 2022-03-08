@@ -503,7 +503,10 @@ class SellermaniaImportOrderController
             if (!$this->cart->updateQty($quantity, $id_product, $id_product_attribute)) {
                 $this->cart->updateQty($quantity, Configuration::get('SM_DEFAULT_PRODUCT_ID'), 0);
             }
-        }
+        }        
+        //Added to update order carrier based on sellermania configuration       
+        $delivery_option = array($this->cart->id_address_delivery => $this->cart->id_carrier.",");
+        $this->cart->setDeliveryOption($delivery_option);        
 
         // Cart update
         $this->cart->update();
@@ -777,9 +780,15 @@ class SellermaniaImportOrderController
         }
 
         // If two differents addresses and only one registered, we create the other address
-        if ($this->order->id_address_delivery == $this->order->id_address_invoice
-            && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1'])
-            && $this->data['User'][0]['Address']['Street1'] != $this->data['User'][1]['Address']['Street1']
+        // Checking street1 and street2 are different 
+        if (($this->order->id_address_delivery == $this->order->id_address_invoice)                
+            && 
+            (
+               (isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1'])
+                && $this->data['User'][0]['Address']['Street1'] != $this->data['User'][1]['Address']['Street1']) 
+                || (isset($this->data['User'][1]['Address']['Street2']) && !empty($this->data['User'][1]['Address']['Street2'])
+                && $this->data['User'][0]['Address']['Street2'] != $this->data['User'][1]['Address']['Street2'])
+            )
         ) {
             $id_address_invoice = $this->createAddress('Billing', $this->data['User'][1]);
             $this->order->id_address_invoice = $id_address_invoice;
@@ -801,7 +810,8 @@ class SellermaniaImportOrderController
 
         // If different, update billing address
         if ($this->order->id_address_delivery != $this->order->id_address_invoice
-            && isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1'])
+            && ((isset($this->data['User'][1]['Address']['Street1']) && !empty($this->data['User'][1]['Address']['Street1']))
+                || (isset($this->data['User'][1]['Address']['Street2']) && !empty($this->data['User'][1]['Address']['Street2'])))
         ) {
             $this->address = new Address($this->order->id_address_invoice);
             $this->address->company = $this->data['User'][1]['Company'];
