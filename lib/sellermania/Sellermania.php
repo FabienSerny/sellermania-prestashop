@@ -12,6 +12,9 @@ namespace Sellermania;
 require_once(__DIR__ . '/Vendors/Mail/mimeDecode.php');
 require_once(__DIR__ . '/Vendors/Mail/mimePart.php');
 
+// Sellermania models
+require_once(__DIR__ . '/Model/Marketplace.php');
+
 // Sellermania MTOM and WS-Security customized SOAP client
 require_once(__DIR__ . '/Generic/Exception.class.php');
 require_once(__DIR__ . '/Generic/MTOMSoapClient.class.php');
