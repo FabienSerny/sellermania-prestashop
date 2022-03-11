@@ -65,7 +65,7 @@
                 <p id="sm_import_method_cron_configuration">
                     <label>{l s='Cron script to call' mod='sellermania'}</label>
                     <u>{l s='Via command line (classic cron)' mod='sellermania'} :</u> php -f {$script_path}/import.php<br>
-                    <u>{l s='Via url (webcron)' mod='sellermania'} :</u> <a href="http://{$smarty.server.SERVER_NAME}/modules/sellermania/import.php?k={$sellermania_key}" target="_blank">http://{$smarty.server.SERVER_NAME}/modules/sellermania/import.php?k={$sellermania_key}</a>
+                    <u>{l s='Via url (webcron)' mod='sellermania'} :</u> <a href="{$module_web_path}import.php?k={$sellermania_key}" target="_blank">{$module_web_path}import.php?k={$sellermania_key}</a>
                 </p>
                 <p>
                     <b><u>{l s='Note:' mod='sellermania'}</u></b><br>
