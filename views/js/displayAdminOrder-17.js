@@ -24,6 +24,7 @@
 
 var sellermania_status_update_result = '';
 var sellermania_error_result = '';
+var sellermania_shipping_status_update_result = '';
 var sellermania_block_product_general_legend = $('#orderProductsPanel .discount-action');
 var sellermania_block_products_list = new Array();
 
@@ -37,6 +38,12 @@ $(document).ready(function() {
     var sellermania_order_summary = $('#sellermania-template-order-summary').html();
     sellermania_status_update_result = $('#sellermania-template-status-update').html();
     sellermania_error_result = $('#sellermania-template-error').html();
+
+    sellermania_shipping_status_update_result = $('#sellermania_template_shipping_status_update').html();
+    
+    if(sellermania_shipping_status_update_result){
+        $("#ajax_confirmation").after(sellermania_shipping_status_update_result);
+    }
 
     // Get block identifiers
     var sellermania_block_order_state = $('#id_order_state');
