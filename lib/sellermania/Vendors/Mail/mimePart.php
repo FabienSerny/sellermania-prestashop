@@ -162,7 +162,7 @@ class Mail_mimePart
     *
     * @access public
     */
-    function __construct($body = '', $params = array())
+    function Mail_mimePart($body = '', $params = array())
     {
         if (!empty($params['eol'])) {
             $this->_eol = $params['eol'];
