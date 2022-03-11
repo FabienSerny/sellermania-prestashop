@@ -41,7 +41,7 @@
     {************************************************}
     <div id="sellermania-template-title">
         <h2>{l s='Sellermania order from the marketplace' mod='sellermania'} {$sellermania_order.OrderInfo.MarketPlace}</h2>
-        <a target="_blank" href="{$sellermania_invoice_url}&id_order={if isset($id_order)}{$id_order}{else}{$smarty.get.id_order}{/if}" class="btn btn-default">{if $ps_version eq 16}<i class="icon-file"></i>{else}<img src="/modules/sellermania/views/img/admin/details.gif">{/if} {l s='Display invoice' mod='sellermania'}</a>
+        <a target="_blank" href="{$sellermania_invoice_url}&id_order={if isset($id_order)}{$id_order}{else}{$smarty.get.id_order}{/if}" class="btn btn-default">{if $ps_version eq 16}<i class="icon-file"></i>{else}<img src="{$sellermania_module_path}views/img/admin/details.gif">{/if} {l s='Display invoice' mod='sellermania'}</a>
     </div>
 
 
@@ -49,7 +49,7 @@
     {*************** CUSTOMER TEMPLATE *****************}
     {***************************************************}
     <div id="sellermania-template-customer">
-        <legend><img src="/modules/sellermania/views/img/admin/tab-customers.gif" /> {l s='Customer information' mod='sellermania'}</legend>
+        <legend><img src="{$sellermania_module_path}views/img/admin/tab-customers.gif" /> {l s='Customer information' mod='sellermania'}</legend>
         <b>{l s='Name:' mod='sellermania'}</b> {$sellermania_order.User[0].OriginalName}<br>
         <b>{l s='E-mail:' mod='sellermania'}</b> <a href="mailto:{$sellermania_order.User[0].Email}">{$sellermania_order.User[0].Email}</a><br>
         {if isset($sellermania_order.User[0].ShippingPhone) && !empty($sellermania_order.User[0].ShippingPhone)}<b>{l s='Shipping phone:' mod='sellermania'}</b> {$sellermania_order.User[0].ShippingPhone}<br>{/if}
@@ -106,7 +106,7 @@
     {********************************************************}
     <div id="sellermania-template-order-summary">
         <fieldset>
-            <legend><img src="/modules/sellermania/views/img/admin/details.gif"> {l s='Order summary' mod='sellermania'}</legend>
+            <legend><img src="{$sellermania_module_path}views/img/admin/details.gif"> {l s='Order summary' mod='sellermania'}</legend>
             <table width="100%;" cellspacing="0" cellpadding="0" class="table">
                 <tbody>
                     <tr>
@@ -194,8 +194,8 @@
                 <input type="hidden" name="sellermania_tracking_registration" value="yes" />
                 <p align="center"><input type="submit" value="{l s='Validate' mod='sellermania'}" class="button btn btn-default" /></p>
             {/if}
+            <div id="sellermania_template_shipping_status_update" style="display:none;">
             {if is_array($sellermania_shipping_status_update)}
-                    <br clear="left" /><br />
 
                     {foreach from=$sellermania_shipping_status_update.OrderItemConfirmationStatus item=result}
                         <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}" style="float:left">
@@ -204,6 +204,7 @@
                         </div>
                     {/foreach}
             {/if}
+            </div>
             </form>
         </fieldset>
 
@@ -288,6 +289,7 @@
     var confirm_label = '{l s='Confirm' mod='sellermania'}';
     var cancel_label = '{l s='Cancel' mod='sellermania'}';
     var unknown_label = '{l s='Unknown' mod='sellermania'}';
+    var linktoshipping_label = '{l s='To Ship Click here' mod='sellermania'}';
 
     {if isset($smarty.get.edit_status)}
         var sellermania_order_edit_status = true;
