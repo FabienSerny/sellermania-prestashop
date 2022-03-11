@@ -28,8 +28,7 @@ class InventoryClient extends GenericClient
      */
     public function checkConnexion()
     {
-        $return = $this->operation('CheckConnexion');
-        return $return;
+        return $this->operation('CheckConnexion');
     }
 
     /**
@@ -48,18 +47,16 @@ class InventoryClient extends GenericClient
     {
         foreach ($skus as $key => $sku) {
             if (!is_scalar($sku)) {
-                throw new Exception(sprintf("Sku at index %d is invalid, each sku should be strings, %s given.", $key,
-                    gettype($sku)));
+                throw new Exception(sprintf('Sku at index %d is invalid, each sku should be strings, %s given.', $key, gettype($sku)));
             }
-            $skus[$key] = "{$sku}";
+            $skus[$key] = $sku;
         }
 
         $params = array(
             'Sku' => $skus,
         );
 
-        $return = $this->operation('GetSkuQuantity', $params);
-        return $return;
+        return $this->operation('GetSkuQuantity', $params);
     }
 
     /**
@@ -84,10 +81,9 @@ class InventoryClient extends GenericClient
             throw new Exception(sprintf("Sku should be a valid string, %s given.", gettype($sku)));
         }
 
-        $params = array('Sku' => "{$sku}");
+        $params = array('Sku' => $sku);
 
-        $return = $this->operation('GetInventory', $params);
-        return $return;
+        return $this->operation('GetInventory', $params);
     }
 
     /**
@@ -124,6 +120,22 @@ class InventoryClient extends GenericClient
     public function updatePrice($file)
     {
         return $this->processUpdate($file, 'UpdatePrice');
+    }
+
+    /**
+     * @param string $marketplace
+     * @return array
+     * @throws \Sellermania\Exception
+     */
+    public function pushInventory($marketplace)
+    {
+        if (!Marketplace::isValid($marketplace, true)) {
+            throw new Exception(sprintf('Invalid marketplace given: %s. See available constants for details.', $marketplace));
+        }
+
+        return $this->operation('PushInventory', [
+            'marketplace' => $marketplace,
+        ]);
     }
 
     /**
