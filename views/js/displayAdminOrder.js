@@ -59,7 +59,14 @@ $(document).ready(function() {
                 html_order_line += '<u>' + condition_label + '</u> <b>' + sellermania_products[sku_short].item_condition + '</b><br>';
             else
                 html_order_line += '<u>' + condition_label + '</u> <b>' + unknown_label + '</b><br>';
-            html_order_line += '<u>' + status_label + '</u> <b>' + sellermania_products[sku_short].status + '</b><br>';
+            
+            var item_status = sellermania_products[sku_short].status;
+            if(sellermania_products[sku_short].status_id == 1){
+                item_status += '<span><a href="javascript:void(0);" class="linktoscroll">&nbsp;('+linktoshipping_label+')</span>';
+            }
+            
+            html_order_line += '<u>' + status_label + '</u> <b>' + item_status + '</b><br>';
+            
             if (sellermania_products[sku_short].status_id == 6)
             {
                 html_order_line += '<input type="radio" id="status_confirm_' + i + '" name="status_' + i + '" value="9" class="status_order_line" data-toggle="' + sellermania_products[sku_short].sku + '" /> ' + confirm_label + ' ';
@@ -76,6 +83,17 @@ $(document).ready(function() {
         }
     }
 
+    $('.linktoscroll').on('click', function() {
+        var target = $('#shipping_name');
+        target = target.length ? target : $('[name=' + this.hash.substr(1) +']');
+        if (target.length) {
+            $('html,body').animate({
+                scrollTop: target.offset().top
+            }, 1000);
+            return false;
+        }
+    });
+   
     // Add button check all
     if (nb_buttons > 0)
     {
