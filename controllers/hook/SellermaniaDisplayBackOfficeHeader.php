@@ -145,7 +145,7 @@ class SellermaniaDisplayBackOfficeHeaderController
 
                 // Verbose mode
                 $this->speak(count($result['SellermaniaWs']['GetOrderResponse']['Order']).' orders retrieved');
-
+                
                 // Import order
                 foreach ($result['SellermaniaWs']['GetOrderResponse']['Order'] as $order)
                     if (isset($order['OrderInfo']['OrderId']) &&
@@ -153,9 +153,10 @@ class SellermaniaDisplayBackOfficeHeaderController
                     {
                         // Verbose mode
                         $this->speak('Import order #'.$order['OrderInfo']['OrderId'].' from '.$order['OrderInfo']['MarketPlace']);
-
+                        
                         // Check if order exists
                         $id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+                        
                         if ($id_sellermania_order > 0)
                         {
                             // Verbose mode
@@ -173,6 +174,9 @@ class SellermaniaDisplayBackOfficeHeaderController
 
                                     $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
                                     $sdao->refreshOrderStatus($smo->id_order, $order);
+                                    
+                                    // update order carrier by default carrier for order importation
+                                    $this->updateOrderCarrier((int)$smo->id_order);
                                 }
                                 catch (\Exception $e)
                                 {
@@ -215,6 +219,9 @@ class SellermaniaDisplayBackOfficeHeaderController
                                 // Refresh order status immediately
                                 $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
                                 $sdao->refreshOrderStatus($import_order->order->id, $order);
+
+                                // update order carrier by default carrier for order importation
+                                $this->updateOrderCarrier((int)$import_order->order->id);
                             }
                             catch (\Exception $e)
                             {
@@ -266,6 +273,14 @@ class SellermaniaDisplayBackOfficeHeaderController
         
     }
 
+    /**
+     * update order carrier by default carrier for order importation
+     */
+    public function updateOrderCarrier($id_order) 
+    {
+        $id_carrier = (int)Configuration::get('SM_IMPORT_DEFAULT_CARRIER');
+        SellermaniaOrder::updateOrderCarrierByOrderId($id_order, $id_carrier);
+    }
 
     /**
      * Check if it's the time to import orders
