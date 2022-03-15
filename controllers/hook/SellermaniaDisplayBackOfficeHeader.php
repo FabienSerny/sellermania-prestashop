@@ -250,6 +250,10 @@ class SellermaniaDisplayBackOfficeHeaderController
                         // Verbose mode
                         $this->speak('Ignore order #'.$order['OrderInfo']['OrderId'].' from '.$order['OrderInfo']['MarketPlace'].' due to module configuration');
                     }
+                SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
+
+                $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+                $sdao->handleShippedOrders($result['SellermaniaWs']['GetOrderResponse']['Order']);
             }
         }
         catch (\Exception $e)
@@ -258,10 +262,7 @@ class SellermaniaDisplayBackOfficeHeaderController
             $this->speak('EXCEPTION: '.$log);
             $this->module->logger('webservice-error', $log);
         }
-        SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
-
-        $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
-        $sdao->handleShippedOrders($result['SellermaniaWs']['GetOrderResponse']['Order']);
+        
     }
 
 
