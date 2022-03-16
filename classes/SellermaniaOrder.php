@@ -223,7 +223,7 @@ class SellermaniaOrder extends ObjectModel
      */
     public static function updateOrderCarrierByOrderId($id_order, $id_carrier)
     {
-        return Db::getInstance()->ExecuteS('
+        return Db::getInstance()->execute('
         UPDATE `'._DB_PREFIX_.'order_carrier` SET `id_carrier` = '.(int)$id_carrier.' 
         WHERE `id_order` = '.(int)$id_order);
     }
