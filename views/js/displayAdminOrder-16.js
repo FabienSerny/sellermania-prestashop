@@ -37,12 +37,17 @@ $(document).ready(function() {
     // Retrieve data
     var sellermania_title = $('#sellermania-template-title').html();
     var sellermania_customer = $('#sellermania-template-customer').html();
-    var sellermania_order_summary = $('#sellermania-template-order-summary').html();
+    var sellermania_order_summary = $('#sellermania-template-order-summary').html();    
     sellermania_status_update_result = $('#sellermania-template-status-update').html();
     sellermania_error_result = $('#sellermania-template-error').html();
     sellermania_shipping_status_update_result = $('#sellermania_template_shipping_status_update').html();
 
-    if(sellermania_shipping_status_update_result){
+    // If status has changed
+    if (sellermania_status_update_result !== 'undefined'){       
+        $("#ajax_confirmation").after(sellermania_status_update_result);}
+    if (sellermania_error_result !== 'undefined'){        
+        $("#ajax_confirmation").after(sellermania_error_result);}
+    if(sellermania_shipping_status_update_result!== 'undefined'){
         $("#ajax_confirmation").after(sellermania_shipping_status_update_result);
     }
 
@@ -120,7 +125,7 @@ $(document).ready(function() {
 
     // Replace right column
     if (!sellermania_enable_native_order_interface) {
-        sellermania_right_column.html(sellermania_order_summary);
+        sellermania_right_column.first().html(sellermania_order_summary);
         sellermania_block_shipping.html(sellermania_customer);
     } else {
         sellermania_right_column.first().after(sellermania_order_summary);
