@@ -107,7 +107,7 @@
     <div id="sellermania-template-order-summary">
         <fieldset>
             <legend><img src="{$sellermania_module_path}views/img/admin/details.gif"> {l s='Order summary' mod='sellermania'}</legend>
-            <table width="100%;" cellspacing="0" cellpadding="0" class="table">
+            <table width="100%;" cellspacing="0" cellpadding="0" class="table sellermania-template-order-summary-table">
                 <tbody>
                     <tr>
                         <td>{l s='Total products:' mod='sellermania'}</td>
@@ -198,7 +198,7 @@
             {if is_array($sellermania_shipping_status_update)}
 
                     {foreach from=$sellermania_shipping_status_update.OrderItemConfirmationStatus item=result}
-                        <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}" style="float:left">
+                        <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}">
                             {l s='Order line status update for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
                             {if isset($result.Message)}<br><i>{$result.Message}</i>{/if}
                         </div>
@@ -221,10 +221,9 @@
     {*************** RESULT STATUS UPDATE TEMPLATE *****************}
     {***************************************************************}
     {if is_array($sellermania_status_update)}
-    <div id="sellermania-template-status-update">
-        <br clear="left" /><br />
+    <div id="sellermania-template-status-update" style="display:none;">        
         {foreach from=$sellermania_status_update.OrderItemConfirmationStatus item=result}
-            <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}" style="float:left">
+            <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}">
                 {l s='Order line status update for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
                 {if isset($result.Message)}<br><i>{$result.Message}</i>{/if}
             </div>
@@ -233,9 +232,8 @@
     {/if}
 
     {if isset($sellermania_error)}
-    <div id="sellermania-template-error">
-        <br clear="left" /><br />
-        <div class="error alert alert-danger" style="float:left">
+    <div id="sellermania-template-error" style="display:none;">        
+        <div class="error alert alert-danger">
             {$sellermania_error}
         </div>
     </div>
