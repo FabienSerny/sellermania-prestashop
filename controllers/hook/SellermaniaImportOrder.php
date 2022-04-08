@@ -91,25 +91,34 @@ class SellermaniaImportOrderController
         $this->data['User'][$index]['Name'] = trim($this->data['User'][$index]['Name']);
         if (strlen($this->data['User'][$index]['Name']) < 2)
             $this->data['User'][$index]['Name'] = 'Not provided';
+        
         if (strpos($this->data['User'][$index]['Name'], '/'))
         {
             $name = explode('/', $this->data['User'][$index]['Name']);
             $name[1] = trim($name[1]);
             if (!empty($name[1]))
                 $this->data['User'][$index]['Name'] = $name[1];
+        }       
+               
+        // Retrieve nametitle, firstname and lastname
+        $name_titles = array('m'=>1,'mr'=>1,'monsieur'=>1,'mme'=>2,'mlle'=>2,'madame'=>2,'mademoiselle'=>2); 
+        $names = explode(' ', trim($this->data['User'][$index]['Name']));        
+        $gender = 0;
+        $gendertitle = strtolower($names[0]);
+        if(array_key_exists($gendertitle,$name_titles)){
+            
+            $gender = $name_titles[$gendertitle];            
+            $firstname = $names[1];
+            $strtoreplace = array($firstname.' ',$names[0]);
+        }else{
+            
+            $firstname = $names[0];
+            $strtoreplace = $firstname.' ';
         }
-
-        // Retrieve firstname and lastname
-        $names = explode(' ', trim($this->data['User'][$index]['Name']));
-        $firstname = $names[0];
-        if (isset($names[1]) && !empty($names[1]) && count($names) == 2)
-            $lastname = $names[1];
-        else
-        {
-            $lastname = $this->data['User'][$index]['Name'];
-            $lastname = str_replace($firstname.' ', '', $lastname);
-        }
-
+        
+        $lastname = $this->data['User'][$index]['Name'];
+        $lastname = str_replace($strtoreplace, '', $lastname);
+                
         // Retrieve shipping phone
         $shipping_phone = '';
         if (isset($this->data['User'][$index]['Address']['ShippingPhone']) && !empty($this->data['User'][$index]['Address']['ShippingPhone']))
@@ -126,6 +135,7 @@ class SellermaniaImportOrderController
             $currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
 
         // Refill data
+        $this->data['User'][$index]['Gender'] = $gender;
         $this->data['User'][$index]['FirstName'] = substr($firstname, 0, 32);
         $this->data['User'][$index]['LastName'] = substr($lastname, 0, 32);
         $this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = '0000000000';
@@ -379,7 +389,7 @@ class SellermaniaImportOrderController
     {
         // Create customer as guest
         $this->customer = new Customer();
-        $this->customer->id_gender = 9;
+        $this->customer->id_gender = $this->data['User'][0]['Gender'];
         $this->customer->firstname = $this->data['User'][0]['FirstName'];
         $this->customer->lastname = $this->data['User'][0]['LastName'];
         if (Configuration::get('SM_IMPORT_ORDERS_WITH_CLIENT_EMAIL') == 'on' && isset($this->data['User'][0]['Email']) && Validate::isEmail($this->data['User'][0]['Email'])) {
@@ -423,7 +433,15 @@ class SellermaniaImportOrderController
         // If data is not set, we set it with shipping address
         if (empty($data))
             $data = $this->data['User'][0];
-
+        
+        $phone = $data['Address']['ShippingPhonePrestaShop'];
+        $phone_mobile = $data['Address']['ShippingPhonePrestaShop'];
+        
+        //If phone is not exists, use shipping phone number for billing
+        if ($type == 'Billing' && $phone == '0000000000') {
+            $phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];
+            $phone_mobile = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];            
+        }
         // Create address
         $this->address = new Address();
         $this->address->alias = 'Sellermania '.$type;
@@ -435,8 +453,8 @@ class SellermaniaImportOrderController
         $this->address->postcode = $data['Address']['ZipCode'];
         $this->address->city = $data['Address']['City'];
         $this->address->id_country = Country::getByIso($data['Address']['Country']);
-        $this->address->phone = $data['Address']['ShippingPhonePrestaShop'];
-        $this->address->phone_mobile = $data['Address']['ShippingPhonePrestaShop'];
+        $this->address->phone = $phone;
+        $this->address->phone_mobile = $phone_mobile;
         $this->address->id_customer = $this->customer->id;
         if ($type == 'Shipping' && isset($this->data['OrderInfo']['DeliveryInstructions'])) {
             $this->address->other = $this->data['OrderInfo']['DeliveryInstructions'];
@@ -827,7 +845,12 @@ class SellermaniaImportOrderController
             $this->address->postcode = $this->data['User'][1]['Address']['ZipCode'];
             $this->address->city = $this->data['User'][1]['Address']['City'];
             $this->address->id_country = Country::getByIso($this->data['User'][1]['Address']['Country']);
-            $this->address->phone = $this->data['User'][1]['Address']['ShippingPhonePrestaShop'];
+            $phone = $this->data['User'][1]['Address']['ShippingPhonePrestaShop'];
+            //If phone number not exists, use shipping phone number for billing
+            if($phone == '0000000000'){
+                $phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];   
+            }
+            $this->address->phone = $phone;
             $this->address->update();
         }
     }
