@@ -141,20 +141,34 @@ class SellermaniaDisplayAdminOrderController
             if (self::isStatusToShip($order) == 1 && empty($order['OrderInfo']['Transport']['TrackingNumber'])) {
 
                 $id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
-                $smo = new SellermaniaOrder((int)$id_sellermania_order);
-                $o = new OrderCore($smo->id_order);
-                $id_order_carrier = $o->getIdOrderCarrier();
-                $oc = new OrderCarrier($id_order_carrier);
-                $c = new Carrier($oc->id_carrier, Context::getContext()->language->id);
+                if ($id_sellermania_order > 0) {
+                    $smo = new SellermaniaOrder((int)$id_sellermania_order);
+                    $o = new Order($smo->id_order);
+                    $id_order_carrier = $o->getIdOrderCarrier();
+                    $oc = new OrderCarrier($id_order_carrier);
+                    $c = new Carrier($oc->id_carrier, Context::getContext()->language->id);
 
-                if (!empty($oc->tracking_number)) {
-                    $orders_to_ship[] = array(
-                        'id_order' => (int)$o->id,
-                        'tracking_number' => $oc->tracking_number,
-                        'shipping_name' => $c->name,
-                    );
+                    if (!empty($oc->tracking_number)) {
+                        $orders_to_ship[] = array(
+                            'id_order' => (int)$o->id,
+                            'tracking_number' => $oc->tracking_number,
+                            'shipping_name' => $c->name,
+                        );
+                    }
                 }
 
+            } else if (!empty($order['OrderInfo']['Transport']['TrackingNumber'])
+                && Validate::isTrackingNumber($order['OrderInfo']['Transport']['TrackingNumber'])) {
+
+                $id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+                if ($id_sellermania_order > 0) {
+                    $smo = new SellermaniaOrder((int)$id_sellermania_order);
+                    $o = new Order($smo->id_order);
+                    $id_order_carrier = $o->getIdOrderCarrier();
+                    $oc = new OrderCarrier($id_order_carrier);
+                    $oc->tracking_number = $order['OrderInfo']['Transport']['TrackingNumber'];
+                    $oc->update();
+                }
             }
         }
 
