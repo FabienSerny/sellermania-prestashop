@@ -166,8 +166,10 @@ class SellermaniaDisplayAdminOrderController
                     $o = new Order($smo->id_order);
                     $id_order_carrier = $o->getIdOrderCarrier();
                     $oc = new OrderCarrier($id_order_carrier);
-                    $oc->tracking_number = $order['OrderInfo']['Transport']['TrackingNumber'];
-                    $oc->update();
+                    if (empty($oc->tracking_number)) {
+                        $oc->tracking_number = $order['OrderInfo']['Transport']['TrackingNumber'];
+                        $oc->update();
+                    }
                 }
             }
         }
