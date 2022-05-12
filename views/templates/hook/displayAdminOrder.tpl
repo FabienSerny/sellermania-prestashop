@@ -178,6 +178,17 @@
                     <td>{l s='Shipping type:' mod='sellermania'}</td>
                     <td>{if empty($sellermania_order.OrderInfo.Transport.ShippingType)}-{else}{$sellermania_order.OrderInfo.Transport.ShippingType}{/if}</td>
                 </tr>
+                {if isset($order_carrier->tracking_number) && !empty($order_carrier->tracking_number)
+                    && (!isset($sellermania_order.OrderInfo.Transport.TrackingNumber) || empty($sellermania_order.OrderInfo.Transport.TrackingNumber))}
+                <tr>
+                    <td>{l s='Tracking number PrestaShop:' mod='sellermania'}</td>
+                    <td>{$order_carrier->tracking_number}</td>
+                </tr>
+                    <tr>
+                        <td>{l s='Tracking number Sellermania:' mod='sellermania'}</td>
+                        <td><img src="/img/admin/ajax-loader.gif" /> {l s='Synchronisation will be made during next orders importation' mod='sellermania'}</td>
+                    </tr>
+                {else}
                 <tr>
                     <td>{l s='Tracking number:' mod='sellermania'}</td>
                     <td>
@@ -188,6 +199,7 @@
                         {/if}
                     </td>
                 </tr>
+                {/if}
                 </tbody>
             </table>
             {if $sellermania_status_to_ship eq 1}
