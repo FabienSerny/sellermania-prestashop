@@ -235,6 +235,20 @@ class SellermaniaGetContentController
             $shops = Shop::getShops();
         }
 
+        // Calcul number of tracking number to synchronize
+        $sm_tracking_numbers_to_synchronize = [];
+        if (version_compare(_PS_VERSION_, '1.5') >= 0) {
+            $sm_tracking_numbers_to_synchronize = SellermaniaOrder::getTrackingNumbersToSynchronize();
+            if (Tools::getIsset('synchronizeTrackingNumbers')) {
+                $orders_to_synchronize = [];
+                foreach ($sm_tracking_numbers_to_synchronize as $stnts) {
+                    $orders_to_synchronize[] = json_decode($stnts['info'], true);
+                }
+                $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+                $sdao->handleShippedOrders($orders_to_synchronize);
+            }
+        }
+
         // Assign to Smarty
         if (version_compare(PHP_VERSION, '5.3.0') < 0)
         {
@@ -277,6 +291,8 @@ class SellermaniaGetContentController
         $this->context->smarty->assign('sm_order_states', $this->module->sellermania_order_states);
         $this->context->smarty->assign('ps_order_states', OrderState::getOrderStates($this->context->language->id));
         $this->context->smarty->assign('sm_marketplaces', $sm_marketplaces);
+
+        $this->context->smarty->assign('sm_tracking_numbers_to_synchronize', $sm_tracking_numbers_to_synchronize);
 
         $this->context->smarty->assign('order_token_tab', Tools::getAdminTokenLite('AdminOrders'));
 

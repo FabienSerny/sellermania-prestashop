@@ -384,6 +384,14 @@
                             </div>
                         </div>
 
+                        <h2>5. {l s='Tracking number synchronisation' mod='sellermania'}</h2>
+                        <hr />
+                        <div class="form-group clearfix">
+                            <label class="col-lg-4">{l s='There are currently' mod='sellermania'} {$sm_tracking_numbers_to_synchronize|@count} {l s='tracking number(s) to synchronize' mod='sellermania'}</label>
+                            <div class="col-lg-4">
+                                <a href="{$module_url}&synchronizeTrackingNumbers" class="btn btn-default pull-right">{l s='Synchronize with Sellermania' mod='sellermania'}</a>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

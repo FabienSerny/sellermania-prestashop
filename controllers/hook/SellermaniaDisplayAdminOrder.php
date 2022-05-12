@@ -256,8 +256,9 @@ class SellermaniaDisplayAdminOrderController
             }
         }
 
-        if (empty($order_items))
+        if (empty($order_items)) {
             return false;
+        }
 
         try
         {
@@ -269,8 +270,9 @@ class SellermaniaDisplayAdminOrderController
             $result = $client->confirmOrder($order_items);
 
             // Fix data (when only one result, array is not the same)
-            if (!isset($result['OrderItemConfirmationStatus'][0]))
+            if (!isset($result['OrderItemConfirmationStatus'][0])) {
                 $result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
+            }
 
             // Return results
             return $result;

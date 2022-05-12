@@ -282,6 +282,25 @@ class SellermaniaOrder extends ObjectModel
         WHERE `id_order` = 0');
     }
 
+    /**
+     * Get tracking numbers to synchronize
+     */
+    public static function getTrackingNumbersToSynchronize()
+    {
+        return Db::getInstance()->executeS('
+            SELECT o.`id_order`, oc.`tracking_number`, so.id_sellermania_order, so.`info`
+            FROM `'._DB_PREFIX_.'orders` o
+            LEFT JOIN `'._DB_PREFIX_.'order_carrier` oc ON (oc.id_order = o.id_order)
+            LEFT JOIN `'._DB_PREFIX_.'sellermania_order` so ON (so.id_order = o.id_order)
+            WHERE oc.`tracking_number` != \'\'
+            AND (
+                o.`current_state` != '.(int)Configuration::get('PS_OS_SM_DISPATCHED').' OR (
+                    o.`current_state` = '.(int)Configuration::get('PS_OS_SM_DISPATCHED').' AND so.`info` NOT LIKE \'%TrackingNumber%\'
+                )
+            )
+        ');
+    }
+
     /*** Retrocompatibility 1.4 ***/
 
     protected     $fieldsRequired = array('marketplace', 'ref_order', 'id_order');
