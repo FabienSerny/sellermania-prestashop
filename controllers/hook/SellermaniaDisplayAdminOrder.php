@@ -141,20 +141,36 @@ class SellermaniaDisplayAdminOrderController
             if (self::isStatusToShip($order) == 1 && empty($order['OrderInfo']['Transport']['TrackingNumber'])) {
 
                 $id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
-                $smo = new SellermaniaOrder((int)$id_sellermania_order);
-                $o = new OrderCore($smo->id_order);
-                $id_order_carrier = $o->getIdOrderCarrier();
-                $oc = new OrderCarrier($id_order_carrier);
-                $c = new Carrier($oc->id_carrier, Context::getContext()->language->id);
+                if ($id_sellermania_order > 0) {
+                    $smo = new SellermaniaOrder((int)$id_sellermania_order);
+                    $o = new Order($smo->id_order);
+                    $id_order_carrier = $o->getIdOrderCarrier();
+                    $oc = new OrderCarrier($id_order_carrier);
+                    $c = new Carrier($oc->id_carrier, Context::getContext()->language->id);
 
-                if (!empty($oc->tracking_number)) {
-                    $orders_to_ship[] = array(
-                        'id_order' => (int)$o->id,
-                        'tracking_number' => $oc->tracking_number,
-                        'shipping_name' => $c->name,
-                    );
+                    if (!empty($oc->tracking_number)) {
+                        $orders_to_ship[] = array(
+                            'id_order' => (int)$o->id,
+                            'tracking_number' => $oc->tracking_number,
+                            'shipping_name' => $c->name,
+                        );
+                    }
                 }
 
+            } else if (!empty($order['OrderInfo']['Transport']['TrackingNumber'])
+                && Validate::isTrackingNumber($order['OrderInfo']['Transport']['TrackingNumber'])) {
+
+                $id_sellermania_order = SellermaniaOrder::getSellermaniaOrderId($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+                if ($id_sellermania_order > 0) {
+                    $smo = new SellermaniaOrder((int)$id_sellermania_order);
+                    $o = new Order($smo->id_order);
+                    $id_order_carrier = $o->getIdOrderCarrier();
+                    $oc = new OrderCarrier($id_order_carrier);
+                    if (empty($oc->tracking_number)) {
+                        $oc->tracking_number = $order['OrderInfo']['Transport']['TrackingNumber'];
+                        $oc->update();
+                    }
+                }
             }
         }
 
@@ -240,8 +256,9 @@ class SellermaniaDisplayAdminOrderController
             }
         }
 
-        if (empty($order_items))
+        if (empty($order_items)) {
             return false;
+        }
 
         try
         {
@@ -253,8 +270,9 @@ class SellermaniaDisplayAdminOrderController
             $result = $client->confirmOrder($order_items);
 
             // Fix data (when only one result, array is not the same)
-            if (!isset($result['OrderItemConfirmationStatus'][0]))
+            if (!isset($result['OrderItemConfirmationStatus'][0])) {
                 $result['OrderItemConfirmationStatus'] = array($result['OrderItemConfirmationStatus']);
+            }
 
             // Return results
             return $result;
@@ -428,8 +446,9 @@ class SellermaniaDisplayAdminOrderController
         $data = Db::getInstance()->getRow('SELECT `ref_order`, `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
         $ref_order = $data['ref_order'];
         $sellermania_order = $data['info'];
-        if (empty($sellermania_order))
+        if (empty($sellermania_order)) {
             return '';
+        }
 
         // Decode order data
         $sellermania_order = json_decode($sellermania_order, true);
@@ -447,8 +466,9 @@ class SellermaniaDisplayAdminOrderController
 
         // Refresh order from Sellermania webservices
         $return = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
-        if ($return !== false)
+        if ($return !== false) {
             $sellermania_order = $return;
+        }
 
         // Refresh flag to dispatch
         $status_to_ship = self::isStatusToShip($sellermania_order);
@@ -456,8 +476,12 @@ class SellermaniaDisplayAdminOrderController
         // Refresh order status
         $this->refreshOrderStatus(Tools::getValue('id_order'), $sellermania_order);
 
-        // Get order currency
+        // Get order, order carrier and order currency
         $order = new Order((int)Tools::getValue('id_order'));
+        $order_carrier = null;
+        if ($this->ps_version != '14') {
+            $order_carrier = new OrderCarrier($order->getIdOrderCarrier());
+        }
         $sellermania_currency = new Currency($order->id_currency);
 
         // Compliancy date format with PS 1.4
@@ -466,6 +490,8 @@ class SellermaniaDisplayAdminOrderController
         }
 
         $this->context->smarty->assign('id_order', $order->id);
+        $this->context->smarty->assign('order', $order);
+        $this->context->smarty->assign('order_carrier', $order_carrier);
 
         $this->context->smarty->assign('ps_version', $this->ps_version);
         $this->context->smarty->assign('sellermania_order', $sellermania_order);
