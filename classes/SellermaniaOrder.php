@@ -86,6 +86,7 @@ class SellermaniaOrder extends ObjectModel
             'date_payment' =>                array('type' => 3, 'validate' => 'isDate'),
             'date_accepted' =>                array('type' => 3, 'validate' => 'isDate'),
             'date_add' =>                     array('type' => 5, 'validate' => 'isDate', 'copy_post' => false),
+            'order_imei' =>                 array('type' => 3),
         ),
     );
     /*    Can't use constant if we want to be compliant with PS 1.4
@@ -324,6 +325,7 @@ class SellermaniaOrder extends ObjectModel
         $fields['info'] = pSQL($this->info);
         $fields['error'] = pSQL($this->error);
         $fields['id_order'] = (int)$this->id_order;
+        $fields['order_imei'] = pSQL($this->order_imei);
         $fields['id_employee_accepted'] = (int)$this->id_employee_accepted;
         $fields['date_payment'] = pSQL($this->date_payment);
         $fields['date_accepted'] = pSQL($this->date_accepted);

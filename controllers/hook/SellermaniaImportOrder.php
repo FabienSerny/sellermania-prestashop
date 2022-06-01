@@ -612,6 +612,7 @@ class SellermaniaImportOrderController
         $sellermania_order->info = json_encode($this->data);
         $sellermania_order->error = $error;
         $sellermania_order->id_order = $this->order->id;
+        $sellermania_order->order_imei = '';
         $sellermania_order->id_employee_accepted = 0;
         $sellermania_order->date_payment = substr($this->data['Paiement']['Date'], 0, 19);
         $sellermania_order->date_add = date('Y-m-d H:i:s');

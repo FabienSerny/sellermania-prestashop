@@ -107,7 +107,7 @@
     <div id="sellermania-template-order-summary">
         <fieldset>
             <legend><img src="{$sellermania_module_path}views/img/admin/details.gif"> {l s='Order summary' mod='sellermania'}</legend>
-            <table width="100%;" cellspacing="0" cellpadding="0" class="table sellermania-template-order-summary-table">
+            <table width="100%;" cellspacing="0" cellpadding="0" class="table">
                 <tbody>
                     <tr>
                         <td>{l s='Total products:' mod='sellermania'}</td>
@@ -199,6 +199,30 @@
                         {/if}
                     </td>
                 </tr>
+                {assign var="mkps" value="."|explode:$sellermania_order.OrderInfo.MarketPlace}
+                {if count($sellermania_order.OrderInfo.Product) gt 0 && in_array($mkps[0],$imei_mkps)}
+                    <tr>
+                        <td><b>{l s='IMEI number:' mod='sellermania'}</b></td>
+                        <td></td>
+                    </tr>
+
+                    {foreach from=$sellermania_order.OrderInfo.Product|@array_reverse item=product}
+                        <tr>
+                            <td>{l s='SKU:' mod='sellermania'}{$product.Sku}</td>
+                            <td>
+                                {if $product.QuantityPurchased eq 1}
+                                    {if $sellermania_status_to_ship eq 1}
+                                        <input type="text" value="{$sellermania_imei[{$product.Sku}]}" name="order_imei[{$product.Sku}]" id="order_imei_{$product.Sku}" />
+                                    {else}
+                                        <input type="text" disabled value="{$sellermania_imei[{$product.Sku}]}" name="order_imei[{$product.Sku}]" id="order_imei_{$product.Sku}" />
+                {/if}
+                                {else}
+                                    {l s='The IMEI number cannot be entered for order lines with a quantity greater than 1.' mod='sellermania'}
+                                {/if}
+                            </td>
+                        </tr>
+                    {/foreach}
+                {/if}
                 {/if}
                 </tbody>
             </table>
@@ -233,7 +257,8 @@
     {*************** RESULT STATUS UPDATE TEMPLATE *****************}
     {***************************************************************}
     {if is_array($sellermania_status_update)}
-    <div id="sellermania-template-status-update" style="display:none;">        
+    <div id="sellermania-template-status-update">
+        <br clear="left" />
         {foreach from=$sellermania_status_update.OrderItemConfirmationStatus item=result}
             <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}">
                 {l s='Order line status update for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
@@ -242,14 +267,16 @@
         {/foreach}
     </div>
     {/if}
-
+    <div style="display:none;">
     {if isset($sellermania_error)}
-    <div id="sellermania-template-error" style="display:none;">        
+    <div id="sellermania-template-error">
+        <br clear="left" />
         <div class="error alert alert-danger">
             {$sellermania_error}
         </div>
     </div>
     {/if}
+    </div>
 
 </div>
 
