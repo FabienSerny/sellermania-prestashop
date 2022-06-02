@@ -1,4 +1,4 @@
-README
+README test
 ======
 
 ![FroggyCommerce](http://www.froggy-commerce.com/docs/common/img/logo.png "Froggy Commerce")
