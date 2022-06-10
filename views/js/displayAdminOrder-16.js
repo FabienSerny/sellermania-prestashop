@@ -126,7 +126,7 @@ $(document).ready(function() {
     // Replace right column
     if (!sellermania_enable_native_order_interface) {
         sellermania_right_column.first().html(sellermania_order_summary);
-        sellermania_block_shipping.html(sellermania_customer);
+        sellermania_block_shipping.after(sellermania_customer);
     } else {
         sellermania_right_column.first().after(sellermania_order_summary);
     }
@@ -134,7 +134,7 @@ $(document).ready(function() {
     // Hide order actions
     if (!sellermania_enable_native_order_interface) {
         sellermania_block_order_actions.hide();
-        sellermania_block_shipping_title.hide();
+        //sellermania_block_shipping_title.hide();
         sellermania_block_payment.hide();
         sellermania_block_documents.hide();
         sellermania_add_voucher.hide();
