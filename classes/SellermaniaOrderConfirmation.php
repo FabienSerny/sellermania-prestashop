@@ -88,14 +88,7 @@ class SellermaniaOrderConfirmation
                 if ($order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                     $oitc['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
                 }
-                if ($order['OrderInfo']['MarketPlace'] == 'RAKUTEN.FR') {
-                    if ($oitc['shipmentOrigin'] == 'FR') {
-                        $oitc['shipmentOrigin'] = 'FX';
-                    }
-                    if ($oitc['importOrigin'] == 'FR') {
-                        $oitc['importOrigin'] = 'FX';
-                    }
-                }
+               
                 $order_items_to_confirm[] = $oitc;
             }
         }
