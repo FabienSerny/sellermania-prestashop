@@ -196,7 +196,7 @@ class SellermaniaDisplayAdminOrderController
                 'id_order' => (int)Tools::getValue('id_order'),
                 'tracking_number' => Tools::getValue('tracking_number'),
                 'shipping_name' => Tools::getValue('shipping_name'),
-                'order_imei'=>Tools::getValue('order_imei')
+                'order_imei' => Tools::getValue('order_imei'),
             ),
         );
 
@@ -243,7 +243,7 @@ class SellermaniaDisplayAdminOrderController
                             if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                                 $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
                             }
-                            if(isset($order['order_imei'][$product['Sku']]) && $order['order_imei'][$product['Sku']] != ''){
+                            if (isset($order['order_imei'][$product['Sku']]) && $order['order_imei'][$product['Sku']] != '') {
                                 $oi['imei'] = pSQL($order['order_imei'][$product['Sku']]);                                
                             }
                             $order_items[] = $oi;
@@ -275,8 +275,8 @@ class SellermaniaDisplayAdminOrderController
             return $result;
         }
         catch (\Exception $e)
-        {   echo strip_tags($e->getMessage())."\n";
-            //Context::getContext()->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
+        {
+            Context::getContext()->smarty->assign('sellermania_error', strip_tags($e->getMessage()));
             return false;
         }
     }
@@ -431,13 +431,14 @@ class SellermaniaDisplayAdminOrderController
         $history->changeIdOrderState((int)$new_order_state, $order->id);
         $history->add();
     }
-    public function saveImeiNumber($shipping_status_result){
-        //Update order_imei
-        $imei_number = Tools::getValue('order_imei');
-        //var_dump($shipping_status_result);
-        if(isset($shipping_status_result['OrderItemConfirmationStatus']) && !empty($shipping_status_result['OrderItemConfirmationStatus'])){
 
-            foreach($shipping_status_result['OrderItemConfirmationStatus'] as $result){
+    public function saveImeiNumber($shipping_status_result)
+    {
+        // Update order_imei
+        $imei_number = Tools::getValue('order_imei');
+        if (isset($shipping_status_result['OrderItemConfirmationStatus']) && !empty($shipping_status_result['OrderItemConfirmationStatus'])) {
+
+            foreach($shipping_status_result['OrderItemConfirmationStatus'] as $result) {
                 $status = $result['Status'];
                 $sku = $result['sku'];
                 if($status == 'ERROR'){
@@ -445,38 +446,39 @@ class SellermaniaDisplayAdminOrderController
                 }
             }
 
-            if(isset($imei_number) && !empty($imei_number)){
+            if (isset($imei_number) && !empty($imei_number)) {
                 $id_sellermania_order = Db::getInstance()->getValue('SELECT `id_sellermania_order` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
                 $smo = new SellermaniaOrder($id_sellermania_order);                   
                 $smo->order_imei = json_encode($imei_number);
                 $smo->date_accepted = NULL;
                 $smo->update();
-                
             }
         }
-            return $imei_number;
+        return $imei_number;
     }
-    public function IMEIValidation($n) {
+
+    public function IMEIValidation($n)
+    {
         $str = '';
         foreach (str_split(strrev((string) $n)) as $i => $d) {
             $str .= $i %2 !== 0 ? $d * 2 : $d;
         }
         return array_sum(str_split($str)) % 10 === 0;
     }
-    public function IsValidIMEI($imei_number){
-        $is_valid = 1;
-        if(isset($imei_number) && !empty($imei_number)){
-            
-            foreach($imei_number as $key=>$imei){
-                if($imei != '' &&( !$this->IMEIValidation($imei) || strlen($imei) != 15)){ 
-                    $is_valid = 0;
+
+    public function IsValidIMEI($imei_number)
+    {
+        if (isset($imei_number) && !empty($imei_number)) {
+            foreach ($imei_number as $key => $imei) {
+                if ($imei != '' &&( !$this->IMEIValidation($imei) || strlen($imei) != 15)) {
                     $this->context->smarty->assign('sellermania_error', strip_tags('SKU:'.$key.' : '.$imei.' is Invalid IMEI Number'));
                     return false;
                 }
             }
         }
-        return $is_valid;
+        return true;
     }
+
     /**
      * Run method
      * @return string $html
@@ -499,15 +501,16 @@ class SellermaniaDisplayAdminOrderController
             $sellermania_order['OrderInfo']['OrderId'] = $ref_order;
         }
 
-        $mkps = explode('.',$sellermania_order['OrderInfo']['MarketPlace']);
-        $imei_mkps = Configuration::get('SM_IMEI_MKPS');
-        if((!in_array($mkps[0],json_decode($imei_mkps))) || $this->IsValidIMEI(Tools::getValue('order_imei'))){
         // Save order line status
         $result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId'], $sellermania_order);
 
         // Check if there is a flag to dispatch
         $result_shipping_status_update = $this->saveShippingStatus($sellermania_order);
 
+
+        $mkps = explode('.',$sellermania_order['OrderInfo']['MarketPlace']);
+        $imei_mkps = Configuration::get('SM_IMEI_MKPS');
+        if ((!in_array($mkps[0],json_decode($imei_mkps))) || $this->IsValidIMEI(Tools::getValue('order_imei'))) {
             //Save IMEI Number
             $imei_number = $this->saveImeiNumber($result_shipping_status_update);
             if(empty($imei_number)){
