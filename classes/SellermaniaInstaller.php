@@ -169,6 +169,7 @@ class SellermaniaInstaller
     {
         $version_registered = Configuration::get('SM_VERSION');
 
+        $this->upgradeSellermaniaOrderTable();
         if ($version_registered == '' || version_compare($version_registered, '1.0.0', '<')) {
             if ((int)Configuration::get('PS_OS_SM_SEND') > 0) {
                 // Change configuration name
@@ -193,7 +194,9 @@ class SellermaniaInstaller
                 $this->module->registerHook('newOrder');
             }
         }
-
+        if (Configuration::get('SM_IMEI_MKPS') == '') {
+            Configuration::updateValue('SM_IMEI_MKPS', json_encode(array('BACKMARKET')));
+        }
         if (Configuration::get('SM_EXPORT_ALL') == '') {
             Configuration::updateValue('SM_EXPORT_ALL', 'yes');
         }
@@ -279,8 +282,18 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
     }
+    /**
+    * Alter table: Adding new field(order_imei) in sellermania_order table
+    */
+    public function upgradeSellermaniaOrderTable(){
+        $columnExists = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'sellermania_order`  LIKE \'order_imei\'');
 
-
+        if (empty($columnExists)) {
+            $sql = 'ALTER TABLE `' . _DB_PREFIX_ . 'sellermania_order`
+                    ADD order_imei text NOT NULL AFTER amount_total;';
+            Db::getInstance()->execute($sql);
+        }
+    }
 
     /**
      * Install Sellermania Order States

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_sellermania_order` (
   `customer_name` varchar(256) NOT NULL,
   `ref_order` varchar(128) NOT NULL,
   `amount_total` varchar(16) NOT NULL,
+  `order_imei` text NOT NULL,
   `info` text NOT NULL,
   `error` text NOT NULL,
   `id_order` int(11) NOT NULL,

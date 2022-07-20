@@ -37,11 +37,15 @@ $(document).ready(function() {
     var sellermania_customer = $('#sellermania-template-customer').html();
     var sellermania_order_summary = $('#sellermania-template-order-summary').html();
     sellermania_status_update_result = $('#sellermania-template-status-update').html();
-    sellermania_error_result = $('#sellermania-template-error').html();
-
+    sellermania_error_result = $('#sellermania-template-error').html();    
     sellermania_shipping_status_update_result = $('#sellermania_template_shipping_status_update').html();
     
-    if(sellermania_shipping_status_update_result){
+    // If status has changed
+    if (sellermania_status_update_result !== 'undefined'){       
+        $("#ajax_confirmation").after(sellermania_status_update_result);}
+    if (sellermania_error_result !== 'undefined'){        
+        $("#ajax_confirmation").after(sellermania_error_result);}
+    if(sellermania_shipping_status_update_result!== 'undefined'){
         $("#ajax_confirmation").after(sellermania_shipping_status_update_result);
     }
 
