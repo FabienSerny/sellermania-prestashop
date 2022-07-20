@@ -192,8 +192,8 @@
                 <tr>
                     <td>{l s='Tracking number:' mod='sellermania'}</td>
                     <td>
-                        {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber) && $sellermania_status_to_ship eq 1}
-                            <input type="text" name="tracking_number" id="tracking_number" />
+                        {if $sellermania_status_to_ship eq 1}
+                            <input type="text" name="tracking_number" id="tracking_number" value="{if isset($order_carrier->tracking_number) && !empty($order_carrier->tracking_number)}{$order_carrier->tracking_number}{elseif !empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}{$sellermania_order.OrderInfo.Transport.TrackingNumber}{/if}" />
                         {else}
                             {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}-{else}{$sellermania_order.OrderInfo.Transport.TrackingNumber}{/if}
                         {/if}
