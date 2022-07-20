@@ -110,14 +110,7 @@ class SellermaniaDisplayAdminOrderController
                         if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
                             $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
                         }
-                        if ($sellermania_order['OrderInfo']['MarketPlace'] == 'RAKUTEN.FR') {
-                            if ($oi['shipmentOrigin'] == 'FR') {
-                                $oi['shipmentOrigin'] = 'FX';
-                            }
-                            if ($oi['importOrigin'] == 'FR') {
-                                $oi['importOrigin'] = 'FX';
-                            }
-                        }
+                        
                         $order_items[] = $oi;
 
                         $sellermania_order['OrderInfo']['Product'][$kp]['Status'] = Tools::getValue('status_'.$i);
