@@ -245,7 +245,8 @@ class SellermaniaGetContentController
                     $orders_to_synchronize[] = json_decode($stnts['info'], true);
                 }
                 $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
-                $sdao->handleShippedOrders($orders_to_synchronize);
+                $orders_to_ship = $sdao->handleShippedOrders($orders_to_synchronize);
+                $sdao->registerShippingData($orders_to_ship);
             }
         }
 

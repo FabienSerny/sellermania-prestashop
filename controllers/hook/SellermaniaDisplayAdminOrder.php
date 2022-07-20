@@ -167,12 +167,7 @@ class SellermaniaDisplayAdminOrderController
             }
         }
 
-        if (empty($orders_to_ship)) {
-            return false;
-        }
-
-        // Register shipping data
-        return self::registerShippingData($orders_to_ship);
+        return $orders_to_ship;
     }
 
     /**
