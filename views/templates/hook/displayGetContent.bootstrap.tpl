@@ -22,6 +22,7 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
+<div class="sellermaniaWrapper panel">
 <h2 align="center"><img src="{$sellermania_module_path}views/img/sellermania-logo.png" style="max-width:100%" alt="{l s='Sellermania' mod='sellermania'}" /></h2>
 
 {if isset($smarty.get.see) && $smarty.get.see eq 'orders-error'}
@@ -30,18 +31,20 @@
 
     <div id="sellermania-admin-tab">
 
-        <ul id="sellermania-admin-tab-ul">
-            <li><a href="#sellermania-module-help"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Help' mod='sellermania'} </a></li>
-            <li><a href="#sellermania-module-export"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Export catalog' mod='sellermania'} </a></li>
-            <li><a href="#sellermania-module-import"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Import orders' mod='sellermania'} </a></li>
-            <li><a href="#sellermania-module-search"> <img src="{$sellermania_module_path}logo.gif" alt="" title=""> {l s='Search orders' mod='sellermania'} </a></li>
+        <div class="tabwrapper">
+            <ul id="form-nav" class="nav nav-tabs js-nav-tabs">
+                <li class="nav-item"><a class="nav-link" href="#sellermania-module-help"> <span class="sellermania-icon"></span> {l s='Help' mod='sellermania'} </a></li>
+                <li class="nav-item"><a class="nav-link" href="#sellermania-module-export"> <span class="sellermania-icon"></span> {l s='Export catalog' mod='sellermania'} </a></li>
+                <li class="nav-item"><a class="nav-link" href="#sellermania-module-import"> <span class="sellermania-icon"></span> {l s='Import orders' mod='sellermania'} </a></li>
+                <li class="nav-item"><a class="nav-link" href="#sellermania-module-search"> <span class="sellermania-icon"></span> {l s='Search orders' mod='sellermania'} </a></li>
         </ul>
+        </div>
         <br clear="left"><br>
 
         <div id="sellermania-module-help" class="panel">
-            <div class="panel-heading">
-                <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Help' mod='sellermania'}</legend>
-            </div>
+            <h3 class="card-header">
+                <span class="sellermania-icon"></span>{l s='Help' mod='sellermania'}
+            </h3>
             <div class="margin-form">
                 <h4>{l s='You do not know how to configure the module? You don\'t know how it works?' mod='sellermania'}</h4>
                 <p><strong>{l s='Please look at the documentation by clicking on the button below.' mod='sellermania'}</strong></p>
@@ -61,11 +64,9 @@
             {include file="$templates_dir/displayGetContentSearchOrders.bootstrap.tpl"}
         </div>
     </div>
-
     <script type="text/javascript" src="{$sellermania_module_path}views/js/displayGetContent.js"></script>
+{/if}
     <link type="text/css" rel="stylesheet" href="{$sellermania_module_path}views/css/displayGetContent.css" />
 
-{/if}
-
-
 <p align="center"><small>Sellermania module v{$sm_module_version}</small></p>
+</div>

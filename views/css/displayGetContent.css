@@ -36,25 +36,39 @@
     display:none;
     padding-top:5px;
 }
-
-#sellermania-admin-tab-ul li {
-    float:left;
-    width:250px;
+#sellermania-admin-tab ul li {
+   
+    width:200px;
     margin-right:10px;
-    padding:10px;
     list-style: none;
-    border: 1px solid #e6e6e6;
+    display: inline-block;
     cursor:pointer;
-    text-align: center;
+    float: none;
 }
-
-#sellermania-admin-tab-ul li a {
+#sellermania-admin-tab ul li a {
     font-size: 14px;
     line-height: inherit;
     color: #333333;
     text-transform: uppercase;
+    margin-right:0;
+    border: 1px solid #e6e6e6;
+    border-radius:4px;
+}
+#sellermania-admin-tab ul li a:hover{
+    border: 1px solid #10ACDD;
+    background-color: #DFF4FA;
 }
 
 .hidden {
     display:none;
 }
+#sellermania-admin-tab ul.nav-tabs .active{border: 1px solid #10ACDD;background-color: #DFF4FA;font-weight:600;}
+#sellermania-admin-tab .nav-tabs>li>a{border-radius:4px!important}
+.tabwrapper{text-align: center;}
+.sellermaniaWrapper .table th {border-top: 0!important;}
+.sellermania_search_order th {border-bottom: 1px solid #ddd!important;padding:10px!important}
+.sellermania_search_order td {padding:7px!important}
+.sellermania_search_order{border-top: 1px solid #ddd!important;border-left: 1px solid #ddd!important;border-right: 1px solid #ddd!important;}
+.sellermaniaWrapper #import_details_error{font-size:12px;}
+.sellermania-icon{background-image: url("../../logo.gif");background-repeat: no-repeat, repeat;padding:0px 10px 0 10px;background-position: center;}
+.icon-text,.sellermania_search_order .material-icons{font-size:12px!important}
