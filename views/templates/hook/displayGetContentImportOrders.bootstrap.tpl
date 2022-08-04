@@ -143,22 +143,22 @@
                             <div class="col-lg-8 form-group clearfix">
                                 <table class="table">     
                                     <tr>
-                                        <th width="25%"></th>
-                                        <th width="25%"><label>Action</label></th>
-                                        <th width="25%"><label>Transporteur</label></th>
-                                        <th width="25%"><label>Service livraison</label></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"><label>Action</label></th>
+                                        <th scope="col"><label>Transporteur</label></th>
+                                        <th scope="col"><label>Service livraison</label></th>
                                     </tr>
                                 {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
                                         <tr>
-                                            <td width="25%"><label>{$sm_marketplace_name|replace:'_':'.'}</label></td>
-                                            <td width="25%">
+                                            <td><label>{$sm_marketplace_name|replace:'_':'.'}</label></td>
+                                            <td>
                                         <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
                                             <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import the orders' mod='sellermania'}</option>
                                             <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import the orders' mod='sellermania'}</option>
                                             <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import the orders and auto confirm them' mod='sellermania'}</option>
                                         </select>
                                             </td>
-                                            <td width="25%">
+                                            <td>
                                         {if isset($sm_marketplace.delivery)}
                                             <select name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" style="width:100%">
                                                 {foreach from=$sm_marketplace.delivery item=sm_marketplace_delivery}
@@ -169,7 +169,7 @@
                                                     <input type="text" name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" value="{$sm_marketplace.delivery_value}" style="width:100%;margin-top:3px">
                                         {/if}
                                             </td>
-                                            <td width="25%">
+                                            <td>
                                                 <input type="text" name="{$sm_marketplace.key}_SERVICE" id="{$sm_marketplace.key}_SERVICE" value="{$sm_marketplace.service_value}" style="width:100%;margin-top:3px">
                                             </td>
                                         </tr>
