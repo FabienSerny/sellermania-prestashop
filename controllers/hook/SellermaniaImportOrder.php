@@ -728,7 +728,7 @@ class SellermaniaImportOrderController
                 AND `id_product_attribute` = '.(int)$idpa);
 
                 // If not found, search for product
-                if ($row['id_product_attribute'] < 1) {
+                if (isset($row['id_product_attribute']) && ($row['id_product_attribute'] < 1)) {
                     $row = Db::getInstance()->getRow('
                     SELECT `id_product`, `reference`, `ean13`
                     FROM `'._DB_PREFIX_.'product`

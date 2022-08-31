@@ -199,6 +199,7 @@
                         {/if}
                     </td>
                 </tr>
+                {/if}
                 {assign var="mkps" value="."|explode:$sellermania_order.OrderInfo.MarketPlace}
                 {if count($sellermania_order.OrderInfo.Product) gt 0 && in_array($mkps[0],$imei_mkps)}
                     <tr>
@@ -222,7 +223,6 @@
                             </td>
                         </tr>
                     {/foreach}
-                {/if}
                 {/if}
                 </tbody>
             </table>

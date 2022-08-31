@@ -22,10 +22,9 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-
-<div class="panel-heading">
-    <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Search orders' mod='sellermania'}</legend>
-</div>
+<h3 class="card-header">
+    <span class="sellermania-icon"></span>{l s='Search orders' mod='sellermania'}
+</h3>
 <div class="margin-form">
     <form action="" method="post">
         <fieldset>
@@ -45,11 +44,20 @@
                     <p>{l s='No orders was found with an order reference containing' mod='sellermania'} <b>{$smarty.post.marketplace_order_reference}</b></p>
                 {else}
                     <p><b>{$sm_orders_found|@count}</b> {l s='was/were found with an order reference containing' mod='sellermania'} <b>{$smarty.post.marketplace_order_reference}</b></p>
-                    <ul>
+                    <br/>
+                    <table class="table sellermania_search_order">
+                        <tr><th scope="col">ID</th><th scope="col">Marketplace</th><th scope="col">Order Reference</th><th scope="col">Name</th><th scope="col">Actions</th></tr>                    
+                    
                     {foreach from=$sm_orders_found item=sm_order}
-                        <li><b>{$sm_order.marketplace} - {$sm_order.ref_order}:</b> {$sm_order.customer_name} (<a target="_blank" href="index.php?controller=AdminOrders&id_order={$sm_order.id_order}&vieworder&token={$order_token_tab}">{l s='PrestaShop order' mod='sellermania'} <b>#{$sm_order.id_order}</b></a>)</li>
+                            <tr>
+                                <td scope="row"><b>#{$sm_order.id_order}</b></td>
+                                <td>{$sm_order.marketplace}</td>
+                                <td>{$sm_order.ref_order}</td>
+                                <td>{$sm_order.customer_name}</td>
+                                <td><a target="_blank" href="index.php?controller=AdminOrders&id_order={$sm_order.id_order}&vieworder&token={$order_token_tab}"><i class="material-icons">zoom_in</i><span class="icon-text"></span>View</a></td>
+                            </tr>
                     {/foreach}
-                    </ul>
+                    </table>
                 {/if}
             {/if}
         </fieldset>

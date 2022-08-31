@@ -84,8 +84,8 @@ $(document).ready(function() {
     }
 
     $('.linktoscroll').on('click', function() {
-        var target = $('.sellermania-template-order-summary-table');
-        target = target.length ? target : $('[class=' + this.hash.substr(1) +']');
+        var target = $('#shipping_name');
+        target = target.length ? target : $('[name=' + this.hash.substr(1) +']');
         if (target.length) {
             $('html,body').animate({
                 scrollTop: target.offset().top

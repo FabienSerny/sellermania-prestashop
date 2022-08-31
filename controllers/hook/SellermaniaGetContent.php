@@ -33,6 +33,7 @@ if (!defined('_PS_VERSION_')) {
 if (!class_exists('FroggyHelperTreeCategories'))
     require_once(dirname(__FILE__).'/../../classes/FroggyHelperTreeCategories.php');
 require_once(dirname(__FILE__).'/../front/SellermaniaExport.php');
+require_once(dirname(__FILE__).'/SellermaniaDisplayAdminOrder.php');
 
 class SellermaniaGetContentController
 {

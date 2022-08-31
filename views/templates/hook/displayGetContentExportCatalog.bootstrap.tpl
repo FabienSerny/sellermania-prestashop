@@ -22,10 +22,9 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-
-<div class="panel-heading">
-    <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Export catalog' mod='sellermania'}</legend>
-</div>
+<h3 class="card-header">
+    <span class="sellermania-icon"></span>{l s='Export catalog' mod='sellermania'}
+</h3>
 <div class="margin-form">
     <form action="" method="post">
         <fieldset>
@@ -152,6 +151,7 @@
             <div class="panel-footer">
                 <input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
             </div>
+            <br/>
             {if isset($sm_confirm_export_options)}<div class="alert alert-success"><p class="conf"><strong>{l s='Configuration has been saved' mod='sellermania'}</strong></p></div>{/if}
         </fieldset>
     </form>

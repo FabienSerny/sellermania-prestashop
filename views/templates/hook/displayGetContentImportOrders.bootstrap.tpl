@@ -22,9 +22,9 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-<div class="panel-heading">
-    <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />&nbsp;{l s='Import orders' mod='sellermania'}</legend>
-</div>
+<h3 class="card-header">
+    <span class="sellermania-icon"></span>{l s='Import orders' mod='sellermania'}
+</h3>
 <div class="margin-form">
     <form action="" method="post">
         <fieldset>
@@ -141,21 +141,24 @@
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Sellermania marketplaces configuration' mod='sellermania'}</label>
                             <div class="col-lg-8 form-group clearfix">
-                                <label class="col-lg-3">&nbsp;</label>
-                                <div class="col-lg-3">Action</div>
-                                <div class="col-lg-3">Transporteur</div>
-                                <div class="col-lg-3">Service livraison</div>
-                                <br clear="left">
+                                <table class="table">     
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col"><label>Action</label></th>
+                                        <th scope="col"><label>Transporteur</label></th>
+                                        <th scope="col"><label>Service livraison</label></th>
+                                    </tr>
                                 {foreach from=$sm_marketplaces key=sm_marketplace_name item=sm_marketplace}
-                                    <label class="col-lg-3">{$sm_marketplace_name|replace:'_':'.'}</label>
-                                    <div class="col-lg-3">
+                                        <tr>
+                                            <td><label>{$sm_marketplace_name|replace:'_':'.'}</label></td>
+                                            <td>
                                         <select name="{$sm_marketplace.key}" id="{$sm_marketplace.key}" style="width:100%">
                                             <option value="NO" {if $sm_marketplace.value eq 'NO'}selected{/if}>{l s='Do not import the orders' mod='sellermania'}</option>
                                             <option value="MANUAL" {if $sm_marketplace.value eq 'MANUAL'}selected{/if}>{l s='Import the orders' mod='sellermania'}</option>
                                             <option value="AUTO" {if $sm_marketplace.value eq 'AUTO'}selected{/if}>{l s='Import the orders and auto confirm them' mod='sellermania'}</option>
                                         </select>
-                                    </div>
-                                    <div class="col-lg-3">
+                                            </td>
+                                            <td>
                                         {if isset($sm_marketplace.delivery)}
                                             <select name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" style="width:100%">
                                                 {foreach from=$sm_marketplace.delivery item=sm_marketplace_delivery}
@@ -163,14 +166,15 @@
                                                 {/foreach}
                                             </select>
                                         {else}
-                                            <input name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" value="{$sm_marketplace.delivery_value}" style="width:100%;margin-top:3px">
+                                                    <input type="text" name="{$sm_marketplace.key}_DELIVERY" id="{$sm_marketplace.key}_DELIVERY" value="{$sm_marketplace.delivery_value}" style="width:100%;margin-top:3px">
                                         {/if}
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <input name="{$sm_marketplace.key}_SERVICE" id="{$sm_marketplace.key}_SERVICE" value="{$sm_marketplace.service_value}" style="width:100%;margin-top:3px">
-                                    </div>
-                                    <br clear="left">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="{$sm_marketplace.key}_SERVICE" id="{$sm_marketplace.key}_SERVICE" value="{$sm_marketplace.service_value}" style="width:100%;margin-top:3px">
+                                            </td>
+                                        </tr>
                                 {/foreach}
+                                </table>
                             </div>
                         </div>
 
@@ -366,21 +370,25 @@
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='Sellermania order state configuration' mod='sellermania'}</label>
                             <div class="col-lg-8">
-
-                                <div class="col-lg-4"><b><u>{l s='Sellermania order state' mod='sellermania'}</u></b></div>
-                                <div class="col-lg-8"><b><u>{l s='PrestaShop order state' mod='sellermania'}</u></b></div>
-                                <br clear="left"><br>
+                                <table class="table">
+                                    <th><u>{l s='Sellermania order state' mod='sellermania'}</u></th>
+                                    <th></th>
+                                    <th><u>{l s='PrestaShop order state' mod='sellermania'}</u></th>
 
                                 {foreach from=$sm_order_states key=sm_order_state_key item=sm_order_state}
-                                    <label class="col-lg-4">{$sm_order_state.label[$documentation_iso_code]}</label>
-                                    <div class="col-lg-8">
+                                        <tr>
+                                            <td><label>{$sm_order_state.label[$documentation_iso_code]}</label></td>
+                                            <td>=</td>
+                                            <td>
                                         <select name="{$sm_order_state_key}" id="{$sm_order_state_key}" style="width:100%">
                                         {foreach from=$ps_order_states item=ps_order_state}
                                             <option value="{$ps_order_state.id_order_state}" {if $ps_order_state.id_order_state eq $sm_order_state.ps_conf_value}selected{/if}>{$ps_order_state.name}</option>
                                         {/foreach}
                                         </select>
-                                    </div><br clear="left">
+                                            </td>
+                                        </tr>
                                 {/foreach}
+                                </table>
                             </div>
                         </div>
 
@@ -389,7 +397,7 @@
                         <div class="form-group clearfix">
                             <label class="col-lg-4">{l s='There are currently' mod='sellermania'} {$sm_tracking_numbers_to_synchronize|@count} {l s='tracking number(s) to synchronize' mod='sellermania'}</label>
                             <div class="col-lg-4">
-                                <a href="{$module_url}&synchronizeTrackingNumbers" class="btn btn-default pull-right">{l s='Synchronize with Sellermania' mod='sellermania'}</a>
+                                <a href="{$module_url}&synchronizeTrackingNumbers" id="syncTrackingno" class="btn btn-default pull-right">{l s='Synchronize with Sellermania' mod='sellermania'}</a>
                             </div>
                         </div>
 
@@ -398,21 +406,23 @@
                 <div class="panel-footer">
                     <input type="submit" name="import_orders" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
                 </div>
+                <br/>
                 {if isset($sm_error_credentials)}<div class="alert alert-danger"><p class="error"><strong>{$sm_error_credentials|strip_tags}</strong></p></div>{/if}
-                {if isset($sm_confirm_credentials)}<div class="alert alert-success"><p class="conf"><strong>{l s='Configuration is valid' mod='sellermania'}</strong></p></div>{/if}
+                {if $smarty.post && isset($sm_confirm_credentials)}<div class="alert alert-success"><p class="conf"><strong>{l s='Configuration is valid' mod='sellermania'}</strong></p></div>{/if}
 
+                
+                {if $nb_orders_in_error gt 0}
+                    <br>
+                    <h4><b>{l s='Importation errors:' mod='sellermania'}</b></h4>
+                    <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p>
+                {/if}
                 {if $sm_next_import ne ''}
                     <br>
                     <div class="margin-form">
                         <p>{l s='The last order importation was done:' mod='sellermania'} <b>{$sm_last_import}</b></p>
                     </div>
                 {/if}
-                {if $nb_orders_in_error gt 0}
-                    <br>
-                    <h4>{l s='Importation errors:' mod='sellermania'}</h4>
-                    <p><b>{$nb_orders_in_error}</b> {l s='orders could not be imported' mod='sellermania'} - <a href="{$module_url}&see=orders-error">{l s='See details' mod='sellermania'}</a></p>
                 {/if}
-            {/if}
         </fieldset>
     </form>
 </div>
