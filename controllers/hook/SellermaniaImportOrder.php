@@ -324,7 +324,7 @@ class SellermaniaImportOrderController
         }
 
         // Fix payment date
-        if (!isset($this->data['Paiement']['Date'])) {
+        if (!isset($this->data['Paiement']['Date']) || empty($this->data['Paiement']['Date'])) {
             $this->data['Paiement'] = array();
             $this->data['Paiement']['Date'] = date('Y-m-d H:i:s');
         }
@@ -850,7 +850,7 @@ class SellermaniaImportOrderController
             $this->address->id_country = Country::getByIso($this->data['User'][1]['Address']['Country']);
             $phone = $this->data['User'][1]['Address']['ShippingPhonePrestaShop'];
             //If phone number not exists, use shipping phone number for billing
-            if($phone == '0000000000'){
+            if ($phone == '0000000000'){
                 $phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];   
             }
             $this->address->phone = $phone;
