@@ -22,41 +22,102 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-
-<form action="" method="post">
-    <fieldset>
-        <legend><img src="{$sellermania_module_path}logo.gif" alt="" title="" />{l s='Export catalog' mod='sellermania'}</legend>
-        <div class="margin-form" style="padding-left:15px">
-
-            <p><b>{l s='Do you want to export all your catalog to Sellermania?' mod='sellermania'}</b></p><br>
-            <div class="margin-form" style="padding-left:15px">
-                <input type="radio" name="sm_export_all" id="sm_export_all_yes" value="yes" {if $sm_export_all eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
-                <input type="radio" name="sm_export_all" id="sm_export_all_no" value="no" {if $sm_export_all eq 'no' || $sm_export_all eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
-            </div>
-            <div id="sm_export_all_configuration">
-                <p>{l s='Please select the categories you want to export:' mod='sellermania'}</p>
-                {$category_tree}
-                <br><br>
-            </div>
-
-            <p><b>{l s='Do you want to export products that have "Visibility" set to "Nowhere" to Sellermania?' mod='sellermania'}</b></p><br>
-            <div class="margin-form" style="padding-left:15px">
-                <input type="radio" name="sm_export_invisible" id="sm_export_invisible_yes" value="yes" {if $sm_export_invisible eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
-                <input type="radio" name="sm_export_invisible" id="sm_export_invisible_no" value="no" {if $sm_export_invisible eq 'no' || $sm_export_invisible eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
-            </div>
-
-
-
-            <p><b>{l s='Enable checksum on image files (needed for La Redoute)?' mod='sellermania'}</b></p><br>
-            <div class="margin-form" style="padding-left:15px">
-                <input type="radio" name="sm_images_checksum" id="sm_images_checksum_yes" value="yes" {if $sm_images_checksum eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
-                <input type="radio" name="sm_images_checksum" id="sm_images_checksum_no" value="no" {if $sm_images_checksum eq 'no' || $sm_images_checksum eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+<h3 class="card-header">
+    <span class="sm-icon sm-export-icon"></span>{l s='Export catalog' mod='sellermania'}
+</h3>
+<div class="margin-form">
+    <form action="" method="post">
+        <fieldset>
+            <div class="row mt-3">
+                <div class="col-lg-4">
+                    <label>{l s='Products to include in the catalog feed' mod='sellermania'}</label>
+                </div>
+                <div class="col-lg-8">
+                    <div class="">
+                        <input type="radio" id="sm_product_to_include_in_feed_all" name="sm_product_to_include_in_feed" value="all"{if $sm_product_to_include_in_feed eq "all"} checked{/if}>
+                        <label for="sm_product_to_include_in_feed_all">{l s='Include all products in stock + out of stock' mod='sellermania'}</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" id="sm_product_to_include_in_feed_without_oos" name="sm_product_to_include_in_feed" value="without_oos"{if $sm_product_to_include_in_feed eq "without_oos"} checked{/if}>
+                        <label for="sm_product_to_include_in_feed_without_oos">{l s='Include all products in stock + products that have been out of stock in the last X days' mod='sellermania'}</label>
+                        <input type="text" id="sm_last_days_to_include_in_feed" name="sm_last_days_to_include_in_feed" style="display: inline-block; width: 100px;"{if $sm_last_days_to_include_in_feed neq "" and $sm_product_to_include_in_feed eq "without_oos"} value="{$sm_last_days_to_include_in_feed}"{/if}>
+                    </div>
+                </div>
             </div>
 
-            <p><b>{l s='Enable log on stock synchronization (use for debug purpose only)?' mod='sellermania'}</b></p><br>
-            <div class="margin-form" style="padding-left:15px">
-                <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_yes" value="yes" {if $sm_stock_sync_log eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
-                <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_no" value="no" {if $sm_stock_sync_log eq 'no' || $sm_stock_sync_log eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>{l s='Do you want to export all your catalog to Sellermania?' mod='sellermania'}</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="radio" name="sm_export_all" id="sm_export_all_yes" value="yes" {if $sm_export_all eq 'yes'}checked="checked"{/if} />
+                            <label for="sm_export_all_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                            <input type="radio" name="sm_export_all" id="sm_export_all_no" value="no" {if $sm_export_all eq 'no' || $sm_export_all eq ''}checked="checked"{/if} />
+                            <label for="sm_export_all_no">{l s='No' mod='sellermania'}</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="clearfix">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>{l s='Do you want to export products that have "Visibility" set to "Nowhere" to Sellermania?' mod='sellermania'}</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="radio" name="sm_export_invisible" id="sm_export_invisible_yes" value="yes" {if $sm_export_invisible eq 'yes'}checked="checked"{/if} />
+                            <label for="sm_export_invisible_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                            <input type="radio" name="sm_export_invisible" id="sm_export_invisible_no" value="no" {if $sm_export_invisible eq 'no' || $sm_export_invisible eq ''}checked="checked"{/if} />
+                            <label for="sm_export_invisible_no">{l s='No' mod='sellermania'}</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="sm_export_all_configuration" class="clearfix">
+                    <div class="form-group clearfix">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label>{l s='Please select the categories you want to export:' mod='sellermania'}</label>
+                            </div>
+                            <div class="col-lg-8">{$category_tree}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>{l s='Enable checksum on image files (needed for La Redoute)?' mod='sellermania'}</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="radio" name="sm_images_checksum" id="sm_images_checksum_yes" value="yes" {if $sm_images_checksum eq 'yes'}checked="checked"{/if} />
+                            <label for="sm_images_checksum_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                            <input type="radio" name="sm_images_checksum" id="sm_images_checksum_no" value="no" {if $sm_images_checksum eq 'no' || $sm_images_checksum eq ''}checked="checked"{/if} />
+                            <label for="sm_images_checksum_no">{l s='No' mod='sellermania'}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>{l s='Enable log on stock synchronization (use for debug purpose only)?' mod='sellermania'}</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_yes" value="yes" {if $sm_stock_sync_log eq 'yes'}checked="checked"{/if} />
+                            <label for="sm_stock_sync_log_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                            <input type="radio" name="sm_stock_sync_log" id="sm_stock_sync_log_no" value="no" {if $sm_stock_sync_log eq 'no' || $sm_stock_sync_log eq ''}checked="checked"{/if} />
+                            <label for="sm_stock_sync_log_no">{l s='No' mod='sellermania'}</label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <p><b>{l s='Full catalog export links' mod='sellermania'} <small>({l s='Send these links to Sellermania' mod='sellermania'})</small></b></p>
@@ -74,8 +135,8 @@
             </p>
 
             <br>
-            <p><a href="#" id="see-advanced-export" class="sellermania-button">{l s='Advanced configuration' mod='sellermania'}</a></p>
-            <br clear="left">
+            <p><a href="#" id="see-advanced-export" class="btn btn-default">{l s='Advanced configuration' mod='sellermania'}</a></p>
+
             <div id="advanced-export">
                 <p><b>{l s='Set a cron task' mod='sellermania'}</b></p>
                 <p>{l s='Script path:' mod='sellermania'} {$script_path}/export.php</p>
@@ -85,33 +146,71 @@
                         <strong>{$iso_code|strtoupper} :</strong> {if isset($file.generated)}{$file.file} ({l s='Generated on' mod='sellermania'} {$file.generated}){else}{l s='Not generated yet' mod='sellermania'}{/if}  <br>
                     {/foreach}
                 </p>
-                {if $export_directory_writable ne 1}<p class="error"><strong>{l s='Beware, the following directory is not writable:' mod='sellermania'} {$script_path}/export/</strong></p>{/if}
+                {if $export_directory_writable ne 1}
+                    <div class="alert alert-danger"><p class="error"><strong>{l s='Beware, the following directory is not writable:' mod='sellermania'} {$script_path}/export/</strong></p></div>
+                {/if}
 
-                <p>
-                    <label>{l s='Enable export combination name' mod='sellermania'}</label>
-                    <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_yes" value="yes" {if $sm_enable_export_comb_name eq 'yes'}checked="checked"{/if} /> {l s='Yes' mod='sellermania'}
-                    <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_no" value="no" {if $sm_enable_export_comb_name eq 'no' || $sm_enable_export_comb_name eq ''}checked="checked"{/if} /> {l s='No' mod='sellermania'}
-                </p><br clear="left" />
+                <div class="form-group clearfix">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>{l s='Enable export combination name' mod='sellermania'}</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_yes" value="yes" {if $sm_enable_export_comb_name eq 'yes'}checked="checked"{/if} />
+                            <label for="sm_enable_export_comb_name_yes">{l s='Yes' mod='sellermania'}</label>&nbsp;&nbsp;
+                            <input type="radio" name="sm_enable_export_comb_name" id="sm_enable_export_comb_name_no" value="no" {if $sm_enable_export_comb_name eq 'no' || $sm_enable_export_comb_name eq ''}checked="checked"{/if} />
+                            <label for="sm_enable_export_comb_name_no">{l s='No' mod='sellermania'}</label>
+                        </div>
+                    </div>
+                    <br style="clear: left">
+                    <p>
+                        {l s='Natively this module will concatenate the attribute names with the product name in case of combination.' mod='sellermania'}<br>
+                        {l s='You can disable this feature for merchants who create only one combination per product.' mod='sellermania'}
+                    </p>
+                </div>
+
+                {*<div class="form-group clearfix">
+                    <label class="col-lg-4">{l s='Export disabled product updated in the last X days' mod='sellermania'}<br><small>({l s='If value is set to 0, it will expprt all products' mod='sellermania'})</small></label>
+                    <div class="col-lg-4">
+                        <input type="text" name="sm_export_stay_nb_days" id="sm_export_stay_nb_days" value="{if $sm_export_stay_nb_days}{$sm_export_stay_nb_days}{/if}" />
+                    </div>
+                    <br style="clear: left">
+                    <p>{l s='Beware! Changing this value to 0 or to a value superior to 7 can result in extra charge from Sellermania.' mod='sellermania'}</p>
+                </div>*}
 
 
-                <p>
-                    <label>{l s='Export disabled product updated in the last X days' mod='sellermania'}<br><small>({l s='If value is set to 0, it will expprt all products' mod='sellermania'})</small></label>
-                    <input type="text" name="sm_export_stay_nb_days" id="sm_export_stay_nb_days" value="{if $sm_export_stay_nb_days}{$sm_export_stay_nb_days}{/if}" />
-                </p>
-                <p>{l s='Beware! Setting a value superior to 7 can result in extra charge from Sellermania' mod='sellermania'}</p>
-
-                <p>
-                    <label>{l s='Export extra fields' mod='sellermania'}</label>
-                    <textarea name="sm_export_extra_fields" id="sm_export_extra_fields">{if $sm_export_extra_fields}{$sm_export_extra_fields}{/if}</textarea>
-                </p>
-                <p>{l s='Do not use instead you know what are you doing!.' mod='sellermania'}</p>
-
+                <div class="form-group clearfix">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>{l s='Export extra fields' mod='sellermania'}</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <textarea name="sm_export_extra_fields" id="sm_export_extra_fields">{if $sm_export_extra_fields}{$sm_export_extra_fields}{/if}</textarea>
+                        </div>
+                    </div>
+                    <br style="clear: left">
+                    <p>{l s='Do not use unless you know what are you doing!' mod='sellermania'}</p>
+                </div>
 
             </div>
 
-            <br><p><input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="button" /></p>
-            {if isset($sm_confirm_export_options)}<br><p class="conf"><strong>{l s='Configuration has been saved' mod='sellermania'}</strong></p>{/if}
 
-        </div>
-    </fieldset>
-</form>
+
+            <div class="panel-footer clearfix">
+                <input type="submit" name="export_configuration" value="{l s='Validate' mod='sellermania'}" class="btn btn-default pull-right" />
+            </div>
+            <br/>
+            {if isset($sm_confirm_export_options)}<div class="alert alert-success"><p class="conf"><strong>{l s='Configuration has been saved' mod='sellermania'}</strong></p></div>{/if}
+        </fieldset>
+        {if $field_errors_export_catalog|@count > 0}
+            <div class="alert alert-danger">
+                Some errors were detected in your configuration
+                <ul>
+                    {foreach from=$field_errors_export_catalog item=error}
+                        <li>{$error["error_message"]}</li>
+                    {/foreach}
+                </ul>
+            </div>
+        {/if}
+    </form>
+</div>

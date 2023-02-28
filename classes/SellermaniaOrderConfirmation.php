@@ -29,6 +29,7 @@
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+require_once(_PS_MODULE_DIR_.'sellermania'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'SellermaniaHelper.php');
 
 class SellermaniaOrderConfirmation
 {
@@ -65,12 +66,10 @@ class SellermaniaOrderConfirmation
 
         $shipping_service = Configuration::get('SM_IMPORT_DEFAULT_SHIPPING_SERVICE');
 
-        $marketplace_name = str_replace('.', '_', $order['OrderInfo']['MarketPlace']);
-        if (Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY') != ''){
-            $shipping_carrier = Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY');
-        }
-        if (Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE') != ''){
-            $shipping_service = Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE');
+        if ($shipping_carrier != '') {
+            $smhelper = new SellermaniaHelper();
+            $shipping_carrier = $smhelper->getMPCarrierFromPSCarrierByMP($order['OrderInfo']['MarketPlace'], $shipping_carrier);
+            $shipping_service = $smhelper->getShippingServiceForMarketplace($order['OrderInfo']['MarketPlace'], $shipping_carrier);
         }
 
         foreach ($order['OrderInfo']['Product'] as $kp => $product) {
@@ -85,17 +84,17 @@ class SellermaniaOrderConfirmation
                     'shipmentOrigin' => strtoupper(Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE')),
                     'importOrigin' => strtoupper(Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE')),
                 );
-                if ($order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
-                    $oitc['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+//                if ($order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
+//                    $oitc['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($order['OrderInfo']['MarketPlace'], $order['OrderInfo']['OrderId']);
+//                }
+                $order_mkp = explode('.',$order['OrderInfo']['MarketPlace']);
+                    if(!empty($order_mkp)){
+                        $mkp = $order_mkp[0];
+                        if (in_array($mkp,json_decode(Configuration::get('SM_MKPS_MERCHANTID')))) {
+                            $oitc['merchantOrderId'] = $order['OrderInfo']['OrderId'];
+                        }
                 }
-                if ($order['OrderInfo']['MarketPlace'] == 'RAKUTEN.FR') {
-                    if ($oitc['shipmentOrigin'] == 'FR') {
-                        $oitc['shipmentOrigin'] = 'FX';
-                    }
-                    if ($oitc['importOrigin'] == 'FR') {
-                        $oitc['importOrigin'] = 'FX';
-                    }
-                }
+               
                 $order_items_to_confirm[] = $oitc;
             }
         }
@@ -132,7 +131,6 @@ class SellermaniaOrderConfirmation
                 }
                 $result['OrderItemConfirmationStatus'][$k]['id_order_prestashop'] = $id_order_prestashop;
             }
-
             // Return results
             return $result;
         }

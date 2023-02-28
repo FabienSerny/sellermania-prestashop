@@ -68,6 +68,9 @@ class SellermaniaImportController
         if (Tools::getValue('k') == '' && $argument_key == '') {
             die('ERROR2');
         }
+        // Check if credentials are ok
+        if (Configuration::get('SM_CREDENTIALS_CHECK') != 'ok' || Configuration::get('SM_IMPORT_ORDERS') != 'yes' || $this->module->getDefaultProductID() < 1)
+            die('Please check your Module Configuration');
 
         // Check if key is good
         if (Tools::getValue('k') == Configuration::get('SELLERMANIA_KEY') || $argument_key == Configuration::get('SELLERMANIA_KEY')) {

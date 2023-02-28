@@ -78,6 +78,11 @@ class SellermaniaImportOrderController
      */
     public function preprocessUserData($index)
     {
+        //Added to convert address empty string to array
+        if (isset($this->data['User'][$index]) && $this->data['User'][$index] == '') {
+            $this->data['User'][$index] = (array)$this->data['User'][$index];
+        }
+        
         // Forbidden characters
         $forbidden_characters = array('_', '/', '(', ')', '*', ';', ':', '=', ',', '!', '?', '.', '+', '*', '$', '%', '&', '#', '@');
 
@@ -88,28 +93,45 @@ class SellermaniaImportOrderController
         $this->data['User'][$index]['OriginalName'] = $this->data['User'][$index]['Name'];
         $this->data['User'][$index]['Name'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Name']);
         $this->data['User'][$index]['Name'] = preg_replace('/[0-9]+/', '', $this->data['User'][$index]['Name']);
-        $this->data['User'][$index]['Name'] = trim($this->data['User'][$index]['Name']);
+        $this->data['User'][$index]['Name'] = preg_replace('/\s+/', ' ', trim($this->data['User'][$index]['Name']));
         if (strlen($this->data['User'][$index]['Name']) < 2)
             $this->data['User'][$index]['Name'] = 'Not provided';
-        if (strpos($this->data['User'][$index]['Name'], '/'))
-        {
-            $name = explode('/', $this->data['User'][$index]['Name']);
-            $name[1] = trim($name[1]);
-            if (!empty($name[1]))
-                $this->data['User'][$index]['Name'] = $name[1];
+        
+        // Retrieve nametitle, firstname and lastname
+        $name_titles = array('m'=>1,'mr'=>1,'monsieur'=>1,'m.'=>1,'mme'=>2,'mlle'=>2,'madame'=>2,'mademoiselle'=>2);
+        $namesAll = explode(' ', trim($this->data['User'][$index]['Name']));
+        $names = [];
+        foreach ($namesAll as $name) {
+            if ($name != "") {
+                $names[] = $name;
+            }
         }
-
-        // Retrieve firstname and lastname
-        $names = explode(' ', trim($this->data['User'][$index]['Name']));
-        $firstname = $names[0];
-        if (isset($names[1]) && !empty($names[1]) && count($names) == 2)
-            $lastname = $names[1];
-        else
-        {
-            $lastname = $this->data['User'][$index]['Name'];
-            $lastname = str_replace($firstname.' ', '', $lastname);
+        $gender = 0;
+        $gendertitle = strtolower($names[0]);
+        if(array_key_exists($gendertitle,$name_titles)){
+            
+            $gender = $name_titles[$gendertitle];            
+            $firstname = $names[1];
+            $strtoreplace = array($firstname.' ',$names[0]);
+        }else{
+            
+            $firstname = $names[0];
+            $strtoreplace = $firstname.' ';
         }
+        
+        $lastname = $this->data['User'][$index]['Name'];
+        $lastname = str_replace($strtoreplace, '', $lastname);
 
+        /*if ($this->data['OrderInfo']['OrderId'] == "422023149") {
+            echo "<pre>"; var_dump($names); echo "</pre>";
+            die;
+        }*/
+                
+        //Added to convert address empty string to array
+        if (isset($this->data['User'][$index]['Address']) && $this->data['User'][$index]['Address'] == '') {
+            $this->data['User'][$index]['Address'] = (array)$this->data['User'][$index]['Address'];
+        }
+        
         // Retrieve shipping phone
         $shipping_phone = '';
         if (isset($this->data['User'][$index]['Address']['ShippingPhone']) && !empty($this->data['User'][$index]['Address']['ShippingPhone']))
@@ -122,10 +144,15 @@ class SellermaniaImportOrderController
 
         // Retrieve currency
         $currency_iso_code = 'EUR';
+        //Added to convert Amount empty string to array
+        if (isset($this->data['OrderInfo']['Amount']) && $this->data['OrderInfo']['Amount'] == '') {
+            $this->data['OrderInfo']['Amount'] = (array)$this->data['OrderInfo']['Amount'];
+        }
         if (isset($this->data['OrderInfo']['Amount']['Currency']) && Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']) > 0)
             $currency_iso_code = $this->data['OrderInfo']['Amount']['Currency'];
 
         // Refill data
+        $this->data['User'][$index]['Gender'] = $gender;
         $this->data['User'][$index]['FirstName'] = substr($firstname, 0, 32);
         $this->data['User'][$index]['LastName'] = substr($lastname, 0, 32);
         $this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = '0000000000';
@@ -224,6 +251,17 @@ class SellermaniaImportOrderController
             // If it's not a cancelled product
             if ($product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_CUSTOMER && $product['Status'] != \Sellermania\OrderConfirmClient::STATUS_CANCELLED_SELLER)
             {
+                 // Fix Amount
+                if (isset($this->data['OrderInfo']['Product'][$kp]['Amount']) && $this->data['OrderInfo']['Product'][$kp]['Amount'] == '') {
+                    $this->data['OrderInfo']['Product'][$kp]['Amount'] = array();
+                    $product['Amount'] = array();
+                }            
+                
+                if (!isset($this->data['OrderInfo']['Product'][$kp]['Amount']['Price'])) {                    
+                    $this->data['OrderInfo']['Product'][$kp]['Amount']['Price'] = 0;
+                    $product['Amount']['Price'] = 0;
+                }
+                               
                 // Calcul total product without tax
                 $product_price = $product['Amount']['Price'];
                 $vat_rate = 1;
@@ -246,8 +284,13 @@ class SellermaniaImportOrderController
                     $this->data['OrderInfo']['RefundedAmount'] += $product['RefundedAmount']['Amount']['Price'];
 
                 // Calcul total optional feature price
-                if (isset($product['OptionalFeaturePrice']['Amount']['Price']))
+                if (isset($product['OptionalFeaturePrice']['Amount']['Price'])) {
+                    if ($this->data['OrderInfo']['MarketPlace'] == 'CDISCOUNT.FR') {
+                        $this->data['OrderInfo']['OptionalFeaturePrice'] += $product['OptionalFeaturePrice']['Amount']['Price'];
+                    } else {
                     $this->data['OrderInfo']['OptionalFeaturePrice'] += $product['OptionalFeaturePrice']['Amount']['Price'] * $product['QuantityPurchased'];
+                    }                    
+                }
 
                 // Create order detail (only create order detail for unmatched product)
                 $unit = 0;
@@ -312,10 +355,19 @@ class SellermaniaImportOrderController
             else
                 $existing_ref[$sku.'-'.$ean] = $kp;
         }
-
+        // Fix Transport TotalAmount
+        if (isset($this->data['OrderInfo']['TotalAmount']) && $this->data['OrderInfo']['TotalAmount'] == '') {
+            $this->data['OrderInfo']['TotalAmount'] = (array)$this->data['OrderInfo']['TotalAmount'];
+        }
+        // Fix Transport date
+        if (isset($this->data['OrderInfo']['Transport']) && $this->data['OrderInfo']['Transport'] == '') {
+            $this->data['OrderInfo']['Transport'] = (array)$this->data['OrderInfo']['Transport'];
+        }
         // Fix payment date
-        if (!isset($this->data['Paiement']['Date']))
+        if (!isset($this->data['Paiement']['Date']) || empty($this->data['Paiement']['Date'])) {
+            $this->data['Paiement'] = array();
             $this->data['Paiement']['Date'] = date('Y-m-d H:i:s');
+        }
         $this->data['Paiement']['Date'] = substr($this->data['Paiement']['Date'], 0, 19);
         $this->data['OrderInfo']['Date'] = substr($this->data['OrderInfo']['Date'], 0, 19);
     }
@@ -379,9 +431,9 @@ class SellermaniaImportOrderController
     {
         // Create customer as guest
         $this->customer = new Customer();
-        $this->customer->id_gender = 9;
-        $this->customer->firstname = $this->data['User'][0]['FirstName'];
-        $this->customer->lastname = $this->data['User'][0]['LastName'];
+        $this->customer->id_gender = $this->data['User'][0]['Gender'];
+        $this->customer->firstname = ($this->data['User'][0]['FirstName'] != "" ? $this->data['User'][0]['FirstName'] : "not provided");
+        $this->customer->lastname = ($this->data['User'][0]['LastName'] != "" ? $this->data['User'][0]['LastName'] : "not provided");
         if (Configuration::get('SM_IMPORT_ORDERS_WITH_CLIENT_EMAIL') == 'on' && isset($this->data['User'][0]['Email']) && Validate::isEmail($this->data['User'][0]['Email'])) {
             $this->customer->email = $this->data['User'][0]['Email'];
         } else {
@@ -423,6 +475,16 @@ class SellermaniaImportOrderController
         // If data is not set, we set it with shipping address
         if (empty($data))
             $data = $this->data['User'][0];
+        
+        $phone = $data['Address']['ShippingPhonePrestaShop'];
+        $phone_mobile = $data['Address']['ShippingPhonePrestaShop'];
+        
+        //If phone is not exists, use shipping phone number for billing
+        if ($type == 'Billing' && $phone == '0000000000') {
+            $phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];
+            $phone_mobile = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];            
+        }
+        //echo "<pre>"; var_dump($data); die;
 
         // Create address
         $this->address = new Address();
@@ -435,8 +497,8 @@ class SellermaniaImportOrderController
         $this->address->postcode = $data['Address']['ZipCode'];
         $this->address->city = $data['Address']['City'];
         $this->address->id_country = Country::getByIso($data['Address']['Country']);
-        $this->address->phone = $data['Address']['ShippingPhonePrestaShop'];
-        $this->address->phone_mobile = $data['Address']['ShippingPhonePrestaShop'];
+        $this->address->phone = $phone;
+        $this->address->phone_mobile = $phone_mobile;
         $this->address->id_customer = $this->customer->id;
         if ($type == 'Shipping' && isset($this->data['OrderInfo']['DeliveryInstructions'])) {
             $this->address->other = $this->data['OrderInfo']['DeliveryInstructions'];
@@ -469,10 +531,10 @@ class SellermaniaImportOrderController
     public function createCart()
     {
         // Retrieve a carrier
-        $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `id_carrier` = '.(int)Configuration::get('SM_IMPORT_DEFAULT_CARRIER').' AND `active` = 1 AND `deleted` = 0');
-        if ($id_carrier < 1) {
-            $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `active` = 1 AND `deleted` = 0');
+        if (!isset($this->data['OrderInfo']['Transport']['Name'])) {
+            $this->data['OrderInfo']['Transport']['Name'] = '';
         }
+        $id_carrier = $this->getPSCarrierFromSMCarrierByMP($this->data['OrderInfo']['MarketPlace'],$this->data['OrderInfo']['Transport']['Name']);
 
         // Load currency in context
         $this->context->currency = new Currency(Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']));
@@ -538,11 +600,7 @@ class SellermaniaImportOrderController
         $this->context->customer->email = 'NOSEND-SM';
         $this->context->customer->clearCache();
 
-        // Retrieve amount paid
-        $amount_paid = (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
-
-        // Fix for PS 1.4 to avoid PS_OS_ERROR status, amount paid will be fixed after order creation anyway
-        if (version_compare(_PS_VERSION_, '1.5') < 0)
+        // Fix PS_OS_ERROR status, amount paid will be fixed after order creation anyway        
             $amount_paid = (float)(Tools::ps_round((float)($this->cart->getOrderTotal(true, Cart::BOTH)), 2));
 
         // Fix for PS 1.7 to avoid error "Shop context types other than "single shop" are not supported"
@@ -567,9 +625,87 @@ class SellermaniaImportOrderController
         $payment_method = $this->data['OrderInfo']['MarketPlace'];
         $payment_module = new SellermaniaPaymentModule();
         $payment_module->name = $this->module->name;
-        $payment_module->validateOrder((int)$this->cart->id, Configuration::get('PS_OS_SM_AWAITING'), $amount_paid, $payment_method, NULL, array(), (int)$this->cart->id_currency, false, $this->customer->secure_key);
+        $ps_os_sm_awaiting = json_decode(Configuration::get('PS_OS_SM_AWAITING'));
+        $payment_module->validateOrder((int)$this->cart->id, (int)$ps_os_sm_awaiting[0], $amount_paid, $payment_method, NULL, array(), (int)$this->cart->id_currency, false, $this->customer->secure_key);
         $id_order = $payment_module->currentOrder;
         $this->order = new Order((int)$id_order);
+
+        // updates for advanced stock management
+        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+            $products = $this->order->getProducts();
+            foreach ($products as $product) {
+                if (version_compare(_PS_VERSION_, '1.6') >= 0 && version_compare(_PS_VERSION_, '1.7') < 0) {
+                    $warehouses_product = Warehouse::getProductWarehouseList($product['product_id']);
+                    $warehouse_id = null;
+                    $warehouse = null;
+                    $removed_products = 0;
+
+                    if (!empty($warehouses_product)) {
+                        foreach ($warehouses_product  as $wp) {
+                            $real_product_quantity = Product::getRealQuantity($product['product_id'], 0, $wp['id_warehouse']);
+                            if ($real_product_quantity >= $product['product_quantity']) {
+                                $warehouse_id = $wp['id_warehouse'];
+                                $warehouse = new Warehouse($wp['id_warehouse']);
+                                break;
+                            }
+                        }
+                    }
+
+                    // remove stock
+                    if ($warehouse_id) {
+                        $stock_manager = StockManagerFactory::getManager();
+                        $removed_products = $stock_manager->removeProduct(
+                            $product['product_id'],
+                            $product['product_attribute_id'],
+                            $warehouse,
+                            $product['product_quantity'],
+                            "-1",
+                            null,
+                            $this->order->id,
+                            0,
+                            null,
+                            null
+                        );
+
+                        $sql = "SELECT `id_stock` FROM `"._DB_PREFIX_."stock` 
+                        WHERE `id_product` = ".$product['product_id']." 
+                        AND `id_warehouse` = ".$warehouse_id;
+                        ;
+                        $id_stock = Db::getInstance()->execute($sql);
+
+                        $sql = "INSERT INTO `"._DB_PREFIX_."stock_mvt` VALUES(
+                        NULL,
+                        ".$id_stock.",
+                        ".$this->order->id.",
+                        NULL,
+                        2,
+                        ".(int)$this->context->employee->id.",
+                        'Sellermania module',
+                        'Sellermania module',
+                        ".$product['product_quantity'].",
+                        '".date("Y-m-d H:i:s")."',
+                        -1,
+                        ".$product['price'].",
+                        ".$product['price'].",
+                        ".$product['price'].",
+                        0
+                    )";
+                        Db::getInstance()->execute($sql);
+                    }
+
+                    if (count($removed_products) > 0) {
+                        StockAvailable::synchronize($product['product_id']);
+                    }
+                }
+
+                // if the available quantities depends on the physical stock
+                if (StockAvailable::dependsOnStock($product['product_id'])) {
+                    // synchronizes
+                    StockAvailable::synchronize($product['product_id'], $this->order->id_shop);
+                    StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $this->order->id_shop);
+                }
+            }
+        }
 
         // Restore customer e-mail
         $this->update('customer', array('email' => pSQL($customer_email)), '`id_customer` = '.(int)$this->customer->id);
@@ -577,14 +713,14 @@ class SellermaniaImportOrderController
         $this->context->customer->clearCache();
 
         // If last order status is not PS_OS_SM_AWAITING, we update it
-        if ($this->order->getCurrentState() != Configuration::get('PS_OS_SM_AWAITING'))
+        if ($this->order->getCurrentState() != (int)$ps_os_sm_awaiting[0])
         {
             // Create new OrderHistory
             $history = new OrderHistory();
             $history->id_order = $this->order->id;
             $history->id_employee = (int)$this->context->employee->id;
-            $history->id_order_state = (int)Configuration::get('PS_OS_SM_AWAITING');
-            $history->changeIdOrderState((int)Configuration::get('PS_OS_SM_AWAITING'), $this->order->id);
+            $history->id_order_state = (int)$ps_os_sm_awaiting[0];
+            $history->changeIdOrderState((int)$ps_os_sm_awaiting[0], $this->order->id);
             $history->add();
         }
 
@@ -602,7 +738,10 @@ class SellermaniaImportOrderController
     public function saveSellermaniaOrder($error = '')
     {
         $id_currency = Currency::getIdByIsoCode($this->data['OrderInfo']['Amount']['Currency']);
+        $amount_total = 0;
+        if (isset($this->data['OrderInfo']['TotalAmount']['Amount']['Price'])){
         $amount_total = $this->data['OrderInfo']['TotalAmount']['Amount']['Price'];
+        }
 
         $sellermania_order = new SellermaniaOrder();
         $sellermania_order->marketplace = trim($this->data['OrderInfo']['MarketPlace']);
@@ -612,6 +751,7 @@ class SellermaniaImportOrderController
         $sellermania_order->info = json_encode($this->data);
         $sellermania_order->error = $error;
         $sellermania_order->id_order = $this->order->id;
+        $sellermania_order->order_imei = '';
         $sellermania_order->id_employee_accepted = 0;
         $sellermania_order->date_payment = substr($this->data['Paiement']['Date'], 0, 19);
         $sellermania_order->date_add = date('Y-m-d H:i:s');
@@ -709,7 +849,7 @@ class SellermaniaImportOrderController
                 AND `id_product_attribute` = '.(int)$idpa);
 
                 // If not found, search for product
-                if ($row['id_product_attribute'] < 1) {
+                if (is_array($row) && isset($row['id_product_attribute']) && ($row['id_product_attribute'] < 1)) {
                     $row = Db::getInstance()->getRow('
                     SELECT `id_product`, `reference`, `ean13`
                     FROM `'._DB_PREFIX_.'product`
@@ -827,7 +967,12 @@ class SellermaniaImportOrderController
             $this->address->postcode = $this->data['User'][1]['Address']['ZipCode'];
             $this->address->city = $this->data['User'][1]['Address']['City'];
             $this->address->id_country = Country::getByIso($this->data['User'][1]['Address']['Country']);
-            $this->address->phone = $this->data['User'][1]['Address']['ShippingPhonePrestaShop'];
+            $phone = $this->data['User'][1]['Address']['ShippingPhonePrestaShop'];
+            //If phone number not exists, use shipping phone number for billing
+            if ($phone == '0000000000'){
+                $phone = $this->data['User'][0]['Address']['ShippingPhonePrestaShop'];   
+            }
+            $this->address->phone = $phone;
             $this->address->update();
         }
     }
@@ -974,6 +1119,9 @@ class SellermaniaImportOrderController
                 $this->fixOrderDetail15($this->order->id, $product);
             }
         }
+        if (!isset($this->data['OrderInfo']['Transport']['Amount']['Price'])) {
+            $this->data['OrderInfo']['Transport']['Amount']['Price'] = 0;
+        }
 
         // Calcul shipping without tax
         $total_shipping_tax_incl = (float)$this->data['OrderInfo']['Transport']['Amount']['Price'];
@@ -981,48 +1129,50 @@ class SellermaniaImportOrderController
         if (isset($this->order->carrier_tax_rate) && !is_null($this->order->carrier_tax_rate) && (float)$this->order->carrier_tax_rate > 0) {
             $total_shipping_tax_excl = round(100 * $total_shipping_tax_excl / ((100 + (float)$this->order->carrier_tax_rate)), 6);
         }
+        if (!empty($this->data['OrderInfo']['TotalAmount'])) 
+        {
+            // Fix on order
+            $update = array(
+                'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
+                'total_paid_tax_incl' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
+                'total_paid_tax_excl' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'] + (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+                'total_paid_real' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
+                'total_products' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'],
+                'total_products_wt' => (float)$this->data['OrderInfo']['TotalProductsWithVAT'],
+                'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+                'total_shipping_tax_incl' => (float)$total_shipping_tax_incl,
+                'total_shipping_tax_excl' => (float)$total_shipping_tax_excl,
+                'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
+            );
+            $this->update('orders', $update, '`id_order` = '.(int)$this->order->id);
 
-        // Fix on order
-        $update = array(
-            'total_paid' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
-            'total_paid_tax_incl' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
-            'total_paid_tax_excl' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'] + (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'total_paid_real' => (float)$this->data['OrderInfo']['TotalAmount']['Amount']['Price'],
-            'total_products' => (float)$this->data['OrderInfo']['TotalProductsWithoutVAT'],
-            'total_products_wt' => (float)$this->data['OrderInfo']['TotalProductsWithVAT'],
-            'total_shipping' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'total_shipping_tax_incl' => (float)$total_shipping_tax_incl,
-            'total_shipping_tax_excl' => (float)$total_shipping_tax_excl,
-            'date_add' => pSQL(substr($this->data['OrderInfo']['Date'], 0, 19)),
-        );
-        $this->update('orders', $update, '`id_order` = '.(int)$this->order->id);
+            // Fix payment
+            $updateTab = array(
+                'amount' => $update['total_paid_real'],
+                'payment_method' => $this->data['OrderInfo']['MarketPlace'],
+            );
+            $where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
+            $this->update('order_payment', $updateTab, $where);
 
-        // Fix payment
-        $updateTab = array(
-            'amount' => $update['total_paid_real'],
-            'payment_method' => $this->data['OrderInfo']['MarketPlace'],
-        );
-        $where = '`order_reference` = \''.pSQL($this->order->reference).'\'';
-        $this->update('order_payment', $updateTab, $where);
+            // Fix carrier
+            $carrier_update = array(
+                'shipping_cost_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+                'shipping_cost_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
+            );
+            $where = '`id_order` = \''.pSQL($this->order->id).'\'';
+            $this->update('order_carrier', $carrier_update, $where);
 
-        // Fix carrier
-        $carrier_update = array(
-            'shipping_cost_tax_incl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-            'shipping_cost_tax_excl' => (float)$this->data['OrderInfo']['Transport']['Amount']['Price'],
-        );
-        $where = '`id_order` = \''.pSQL($this->order->id).'\'';
-        $this->update('order_carrier', $carrier_update, $where);
+            // Fix invoice
+            unset($update['total_paid']);
+            unset($update['total_paid_real']);
+            unset($update['total_shipping']);
+            unset($update['date_add']);
+            $where = '`id_order` = '.(int)$this->order->id;
+            $this->update('order_invoice', $update, $where);
 
-        // Fix invoice
-        unset($update['total_paid']);
-        unset($update['total_paid_real']);
-        unset($update['total_shipping']);
-        unset($update['date_add']);
-        $where = '`id_order` = '.(int)$this->order->id;
-        $this->update('order_invoice', $update, $where);
-
-        // Update Sellermania default product quantity
-        $this->update('stock_available', array('quantity' => 0), '`id_product` = '.(int)$this->module->getDefaultProductID());
+            // Update Sellermania default product quantity
+            $this->update('stock_available', array('quantity' => 0), '`id_product` = '.(int)$this->module->getDefaultProductID());
+        }
     }
 
 
@@ -1275,6 +1425,28 @@ class SellermaniaImportOrderController
         } else {
             Db::getInstance()->autoExecute(_DB_PREFIX_.$table, $sql_data, 'INSERT');
         }
+    }
+    
+    public function getPSCarrierFromSMCarrierByMP($marketplace_code, $sm_mkp_carrier = '')
+    {
+        $marketplace_code = str_replace('.', '_', $marketplace_code);
+        $mkp_carrier = json_decode(Configuration::get('SM_MKP_DELIVERY_'.$marketplace_code),true);
+      
+       // $ps_carrier = 0;
+        if (!empty($mkp_carrier) && $sm_mkp_carrier != '') {
+            foreach ($mkp_carrier as $k => $v) {
+                $v = (array) $v;
+                $ps_carrier = array_search($sm_mkp_carrier, $v);
+                if($ps_carrier > 0){
+                    return (int)$ps_carrier;
+}
+            }
+        }
+        $ps_carrier = (int)Configuration::get('SM_IMPORT_DEFAULT_CARRIER');
+        if ((int)$ps_carrier < 1) {
+            $ps_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `active` = 1 AND `deleted` = 0');
+        }
+        return (int)$ps_carrier;
     }
 }
 

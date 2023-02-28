@@ -26,7 +26,8 @@ $(document).ready(function() {
 
     function displaySellermaniaCredentials()
     {
-        if (smCheckIfOptionIsSelected('#sm_import_orders_yes')) {
+        let val = $('input[name=sm_import_orders]:checked').val();
+        if ("yes" === val) {
             $('#sm_import_orders_credentials').show();
         } else {
             $('#sm_import_orders_credentials').hide();
@@ -34,16 +35,20 @@ $(document).ready(function() {
         return true;
     }
 
-    $('#sm_import_orders_yes').click(function() { return displaySellermaniaCredentials(); });
-    $('#sm_import_orders_no').click(function() { return displaySellermaniaCredentials(); });
-    displaySellermaniaCredentials();
+    //displaySellermaniaCredentials();
+
+    $('input[name=sm_import_orders]').change(function () {
+        displaySellermaniaCredentials();
+    });
+
 
     function displaySellermaniaSyncOption()
     {
-        if (smCheckIfOptionIsSelected('#sm_stock_sync_option_yes'))
+        if ($('#sm_stock_sync_option_yes').is(':checked')) {
             $('#sm_stock_sync_option_configuration').show();
-        else
+        } else if ($('#sm_stock_sync_option_no').is(':checked')) {
             $('#sm_stock_sync_option_configuration').hide();
+        }
         return true;
     }
 
@@ -60,12 +65,16 @@ $(document).ready(function() {
             $('#sm_import_method_cron_configuration').hide();
         return true;
     }
-
-    $('#sm_import_method_cron').click(function() { return displaySellermaniaImportConfiguration(); });
-    $('#sm_import_method_automatic').click(function() { return displaySellermaniaImportConfiguration(); });
     displaySellermaniaImportConfiguration();
 
-
+    $('input[name=sm_import_method]').change(function () {
+        let value = this.value;
+        if ("cron" === value) {
+            $('#sm_import_method_cron_configuration').show();
+        } else {
+            $('#sm_import_method_cron_configuration').hide();
+        }
+    })
 
 
     function displaySellermaniaAlertOption()
@@ -81,10 +90,17 @@ $(document).ready(function() {
     $('#sm_alert_missing_ref_option_no').click(function() { return displaySellermaniaAlertOption(); });
     displaySellermaniaAlertOption();
 
+    $('input[type=radio][name=sm_product_to_include_in_feed]').change(function () {
+        if ("all" === this.value) {
+            $('#sm_last_days_to_include_in_feed').val("")
+        } else if ("without_oos" === this.value) {
+            $('#sm_last_days_to_include_in_feed').val("7")
+        }
+    })
 
     function displaySellermaniaExportOptions()
     {
-        if (smCheckIfOptionIsSelected('#sm_export_all_yes')) {
+        if ($('#sm_export_all_yes').is(":checked")) {
             $('#sm_export_all_configuration').hide();
         } else {
             $('#sm_export_all_configuration').show();
@@ -92,8 +108,12 @@ $(document).ready(function() {
         return true;
     }
 
-    $('#sm_export_all_yes').click(function() { return displaySellermaniaExportOptions(); });
-    $('#sm_export_all_no').click(function() { return displaySellermaniaExportOptions(); });
+    $('#sm_export_all_yes').click(function() {
+        return displaySellermaniaExportOptions();
+    });
+    $('#sm_export_all_no').click(function() {
+        return displaySellermaniaExportOptions();
+    });
     displaySellermaniaExportOptions();
 
 
@@ -106,16 +126,20 @@ $(document).ready(function() {
     });
 
 
-    function switchSellermaniaTab(id) {
-        $('#sellermania-module-help').addClass('hidden');
-        $('#sellermania-module-export').addClass('hidden');
-        $('#sellermania-module-import').addClass('hidden');
-        $('#sellermania-module-search').addClass('hidden');
+    function switchSellermaniaTab(id, scrolltop = 0) {
+        $('.panel', '#sellermania-admin-tab').addClass('hidden');
         $(id).removeClass('hidden');
+        if (scrolltop) {
+            scrolltop -= 126;
+        }
+        $(window).scrollTop(scrolltop);
     }
 
-    $('#sellermania-admin-tab ul li a').click(function() {
-        switchSellermaniaTab($(this).attr('href'));
+    $('.nav-link', '#sellermania-admin-tab').click(function(e) {
+        e.preventDefault();
+        let id = $(this).attr('href');
+        window.location.hash = id;
+        switchSellermaniaTab(id, $(window).scrollTop());
     });
     if (window.location.href.indexOf('#sellermania-module-export') >= 0) {
         switchSellermaniaTab('#sellermania-module-export');
@@ -134,7 +158,10 @@ $(document).ready(function() {
             }
         }
     });
-
+    $('#syncTrackingno').bind('click', false);
+    if ($('#sm_import_ac_orders_after_adding_tracking_number').is(':checked')) {
+        $('#syncTrackingno').unbind('click');
+    }
     function smCheckIfOptionIsSelected(elem_id) {
         if ($(elem_id).attr('checked') == 'checked' || $(elem_id).attr('checked') == true) {
             return true;
@@ -142,4 +169,10 @@ $(document).ready(function() {
         return false;
     }
 
+    $('.config-section-body-trigger').click(function (e) {
+        e.preventDefault();
+        let $parent = $(this).parent().parent();
+        $('.config-section-body', $parent).toggle();
+        $(this).toggleClass('activated');
+    });
 });

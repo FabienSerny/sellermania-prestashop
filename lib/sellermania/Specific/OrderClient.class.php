@@ -28,10 +28,13 @@ class OrderClient extends GenericClient
     const STATUS_TO_BE_COLLECT_BY_LAPOSTE = 17;
     const STATUS_CANCELLED_BY_FULFILLER = 18;
     const STATUS_AZ_PENDING_ORDER = 19;
+    const STATUS_DELIVERED = 20;
+    const STATUS_READY_TO_SHIP = 21;
 
     const MKP_ABEBOOKS = 'ABEBOOKS';
     const MKP_ALLTRICKS = 'ALLTRICKS';
     const MKP_AMAZON = 'AMAZON';
+    const MKP_AMAZONVENDOR = 'AMAZONVENDOR';
     const MKP_ANIMALIS = 'ANIMALIS';
     const MKP_ARAMISAUTO = 'ARAMISAUTO';
     const MKP_ATLAS4MEN = 'ATLAS4MEN';
@@ -42,9 +45,11 @@ class OrderClient extends GenericClient
     const MKP_BRICOPRIVE = 'BRICOPRIVE';
     const MKP_BULEVIP = 'BULEVIP';
     const MKP_BUT = 'BUT';
+    const MKP_CARREFOUR = 'CARREFOUR';
     const MKP_CDISCOUNT = 'CDISCOUNT';
     const MKP_COMPTOIRSANTE = 'COMPTOIRSANTE';
     const MKP_CONFORAMA = 'CONFORAMA';
+    const MKP_CONRAD = 'CONRAD';
     const MKP_DARTY = 'DARTY';
     const MKP_DELAMAISON = 'DELAMAISON';
     const MKP_DOCTIPHARMA = 'DOCTIPHARMA';
@@ -55,6 +60,7 @@ class OrderClient extends GenericClient
     const MKP_GALERIESLAFAYETTE = 'GALERIESLAFAYETTE';
     const MKP_GAME = 'GAME';
     const MKP_GOSPORT = 'GOSPORT';
+    const MKP_GREENWEEZ = 'GREENWEEZ';
     const MKP_INTERMARCHE = 'INTERMARCHE';
     const MKP_LAPOSTE = 'LAPOSTE';
     const MKP_LAREDOUTE = 'LAREDOUTE';
@@ -62,6 +68,7 @@ class OrderClient extends GenericClient
     const MKP_LECLERC = 'LECLERC';
     const MKP_LEQUIPE = 'LEQUIPE';
     const MKP_LEROYMERLIN = 'LEROYMERLIN';
+    const MKP_LYRECO = 'LYRECO';
     const MKP_MACWAY = 'MACWAY';
     const MKP_MAISONSDUMONDE = 'MAISONSDUMONDE';
     const MKP_MANOMANO = 'MANOMANO';
@@ -70,9 +77,12 @@ class OrderClient extends GenericClient
     const MKP_METRO = 'METRO';
     const MKP_NATUREETDECOUVERTE = 'NATUREETDECOUVERTE';
     const MKP_OUTIZ = 'OUTIZ';
+    const MKP_PCCOMPONENTES = 'PCCOMPONENTES';
     const MKP_PIXMANIA = 'PIXMANIA';
     const MKP_PRIVALIA = 'PRIVALIA';
+    const MKP_QUELBONPLAN = 'QUELBONPLAN';
     const MKP_RAKUTEN = 'RAKUTEN';
+    const MKP_REFURBED = 'REFURBED';
     const MKP_RETIF = 'RETIF';
     const MKP_RUEDUCOMMERCE = 'RUEDUCOMMERCE';
     const MKP_SHOPPINGACTIONS = 'SHOPPINGACTIONS';
@@ -84,10 +94,14 @@ class OrderClient extends GenericClient
     const MKP_VANDENBORRE = 'VANDENBORRE';
     const MKP_VIDAXL = 'VIDAXL';
     const MKP_WORTEN = 'WORTEN';
+    const MKP_ZALANDO = 'ZALANDO';
 
     // MARKETPLACES ALLOWED
     const MKP_ABEBOOKS_FR = 'ABEBOOKS.FR';
     const MKP_ALLTRICKS_FR = 'ALLTRICKS.FR';
+    const MKP_AMAZONVENDOR_FR = 'AMAZONVENDOR.FR';
+    const MKP_AMAZON_AU = 'AMAZON.AU';
+    const MKP_AMAZON_BE = 'AMAZON.BE';
     const MKP_AMAZON_CA = 'AMAZON.CA';
     const MKP_AMAZON_DE = 'AMAZON.DE';
     const MKP_AMAZON_ES = 'AMAZON.ES';
@@ -95,26 +109,44 @@ class OrderClient extends GenericClient
     const MKP_AMAZON_GB = 'AMAZON.GB';
     const MKP_AMAZON_IN = 'AMAZON.IN';
     const MKP_AMAZON_IT = 'AMAZON.IT';
+    const MKP_AMAZON_JP = 'AMAZON.JP';
     const MKP_AMAZON_MX = 'AMAZON.MX';
     const MKP_AMAZON_NL = 'AMAZON.NL';
     const MKP_AMAZON_PL = 'AMAZON.PL';
     const MKP_AMAZON_SA = 'AMAZON.SA';
     const MKP_AMAZON_SE = 'AMAZON.SE';
+    const MKP_AMAZON_SG = 'AMAZON.SG';
     const MKP_AMAZON_TR = 'AMAZON.TR';
     const MKP_AMAZON_US = 'AMAZON.US';
     const MKP_ANIMALIS_FR = 'ANIMALIS.FR';
     const MKP_ARAMISAUTO_FR = 'ARAMISAUTO.FR';
     const MKP_ATLAS4MEN_FR = 'ATLAS4MEN.FR';
     const MKP_AUCHAN_FR = 'AUCHAN.FR';
+    const MKP_BACKMARKET_AT = 'BACKMARKET.AT';
+    const MKP_BACKMARKET_BE = 'BACKMARKET.BE';
+    const MKP_BACKMARKET_DE = 'BACKMARKET.DE';
+    const MKP_BACKMARKET_ES = 'BACKMARKET.ES';
+    const MKP_BACKMARKET_FI = 'BACKMARKET.FI';
     const MKP_BACKMARKET_FR = 'BACKMARKET.FR';
+    const MKP_BACKMARKET_GB = 'BACKMARKET.GB';
+    const MKP_BACKMARKET_GR = 'BACKMARKET.GR';
+    const MKP_BACKMARKET_IE = 'BACKMARKET.IE';
+    const MKP_BACKMARKET_IT = 'BACKMARKET.IT';
+    const MKP_BACKMARKET_NL = 'BACKMARKET.NL';
+    const MKP_BACKMARKET_PT = 'BACKMARKET.PT';
+    const MKP_BACKMARKET_SE = 'BACKMARKET.SE';
+    const MKP_BACKMARKET_SK = 'BACKMARKET.SK';
+    const MKP_BACKMARKET_US = 'BACKMARKET.US';
     const MKP_BHV_FR = 'BHV.FR';
     const MKP_BOULANGER_FR = 'BOULANGER.FR';
     const MKP_BRICOPRIVE_FR = 'BRICOPRIVE.FR';
     const MKP_BULEVIP_ES = 'BULEVIP.ES';
     const MKP_BUT_FR = 'BUT.FR';
+    const MKP_CARREFOUR_FR = 'CARREFOUR.FR';
     const MKP_CDISCOUNT_FR = 'CDISCOUNT.FR';
     const MKP_COMPTOIRSANTE_FR = 'COMPTOIRSANTE.FR';
     const MKP_CONFORAMA_FR = 'CONFORAMA.FR';
+    const MKP_CONRAD_FR = 'CONRAD.FR';
     const MKP_DARTY_FR = 'DARTY.FR';
     const MKP_DELAMAISON_FR = 'DELAMAISON.FR';
     const MKP_DOCTIPHARMA_FR = 'DOCTIPHARMA.FR';
@@ -147,10 +179,12 @@ class OrderClient extends GenericClient
     const MKP_GALERIESLAFAYETTE_FR = 'GALERIESLAFAYETTE.FR';
     const MKP_GAME_GB = 'GAME.GB';
     const MKP_GOSPORT_FR = 'GOSPORT.FR';
+    const MKP_GREENWEEZ_FR = 'GREENWEEZ.FR';
     const MKP_INTERMARCHE_FR = 'INTERMARCHE.FR';
     const MKP_LAREDOUTE_FR = 'LAREDOUTE.FR';
     const MKP_LECLERC_FR = 'LECLERC.FR';
     const MKP_LEQUIPE_FR = 'LEQUIPE.FR';
+    const MKP_LYRECO_FR = 'LYRECO.FR';
     const MKP_MACWAY_FR = 'MACWAY.FR';
     const MKP_MAISONSDUMONDE_FR = 'MAISONSDUMONDE.FR';
     const MKP_MANOMANO_FR = 'MANOMANO.FR';
@@ -159,9 +193,24 @@ class OrderClient extends GenericClient
     const MKP_METRO_FR = 'METRO.FR';
     const MKP_NATUREETDECOUVERTE_FR = 'NATUREETDECOUVERTE.FR';
     const MKP_OUTIZ_FR = 'OUTIZ.FR';
+    const MKP_PCCOMPONENTES_ES = 'PCCOMPONENTES.ES';
     const MKP_PIXMANIA_FR = 'PIXMANIA.FR';
     const MKP_PRIVALIA_FR = 'PRIVALIA.FR';
+    const MKP_QUELBONPLAN_FR = 'QUELBONPLAN.FR';
     const MKP_RAKUTEN_FR = 'RAKUTEN.FR';
+    const MKP_REFURBED_AT = 'REFURBED.AT';
+    const MKP_REFURBED_DE = 'REFURBED.DE';
+    const MKP_REFURBED_DK = 'REFURBED.DK';
+    const MKP_REFURBED_ES = 'REFURBED.ES';
+    const MKP_REFURBED_FR = 'REFURBED.FR';
+    const MKP_REFURBED_GB = 'REFURBED.GB';
+    const MKP_REFURBED_IE = 'REFURBED.IE';
+    const MKP_REFURBED_IT = 'REFURBED.IT';
+    const MKP_REFURBED_NL = 'REFURBED.NL';
+    const MKP_REFURBED_PL = 'REFURBED.PL';
+    const MKP_REFURBED_SE = 'REFURBED.SE';
+    const MKP_REFURBED_SI = 'REFURBED.SI';
+    const MKP_REFURBED_SK = 'REFURBED.SK';
     const MKP_RETIF_FR = 'RETIF.FR';
     const MKP_RUEDUCOMMERCE_FR = 'RUEDUCOMMERCE.FR';
     const MKP_SHOPPINGACTIONS_FR = 'SHOPPINGACTIONS.FR';
@@ -181,6 +230,31 @@ class OrderClient extends GenericClient
     const MKP_VANDENBORRE_BE = 'VANDENBORRE.BE';
     const MKP_VIDAXL_NL = 'VIDAXL.NL';
     const MKP_WORTEN_PT = 'WORTEN.PT';
+    const MKP_ZALANDO_AT = "ZALANDO.AT";
+    const MKP_ZALANDO_BE = "ZALANDO.BE";
+    const MKP_ZALANDO_CH = "ZALANDO.CH";
+    const MKP_ZALANDO_CZ = "ZALANDO.CZ";
+    const MKP_ZALANDO_DE = "ZALANDO.DE";
+    const MKP_ZALANDO_DK = "ZALANDO.DK";
+    const MKP_ZALANDO_EE = "ZALANDO.EE";
+    const MKP_ZALANDO_ES = "ZALANDO.ES";
+    const MKP_ZALANDO_FI = "ZALANDO.FI";
+    const MKP_ZALANDO_FR = "ZALANDO.FR";
+    const MKP_ZALANDO_GB = "ZALANDO.GB";
+    const MKP_ZALANDO_HR = "ZALANDO.HR";
+    const MKP_ZALANDO_HU = "ZALANDO.HU";
+    const MKP_ZALANDO_IE = "ZALANDO.IE";
+    const MKP_ZALANDO_IT = "ZALANDO.IT";
+    const MKP_ZALANDO_LT = "ZALANDO.LT";
+    const MKP_ZALANDO_LV = "ZALANDO.LV";
+    const MKP_ZALANDO_NL = "ZALANDO.NL";
+    const MKP_ZALANDO_NO = "ZALANDO.NO";
+    const MKP_ZALANDO_PL = "ZALANDO.PL";
+    const MKP_ZALANDO_PT = "ZALANDO.PT";
+    const MKP_ZALANDO_RO = "ZALANDO.RO";
+    const MKP_ZALANDO_SE = "ZALANDO.SE";
+    const MKP_ZALANDO_SI = "ZALANDO.SI";
+    const MKP_ZALANDO_SK = "ZALANDO.SK";
 
     /**
      * This method let you get your orders between 2 dates. Dates are given as
@@ -301,6 +375,17 @@ class OrderClient extends GenericClient
     }
 
     /**
+     * This service return all the marketplaces available for your account,
+     * and indicates for each of them whether you are connected or not
+     *
+     * @return array
+     */
+    public function getActiveMarketplacesList()
+    {
+        return $this->operation('GetActiveMarketplacesList');
+    }
+
+    /**
      * "invoiceavailable" is an optional parameter.
      * If set it should be restricted to [O,1] values only.
      *  - 1 matches orders that can be invoiced
@@ -356,6 +441,8 @@ class OrderClient extends GenericClient
                 self::STATUS_TO_BE_COLLECT_BY_LAPOSTE,
                 self::STATUS_CANCELLED_BY_FULFILLER,
                 self::STATUS_AZ_PENDING_ORDER,
+                self::STATUS_DELIVERED,
+                self::STATUS_READY_TO_SHIP
             ]);
     }
 }

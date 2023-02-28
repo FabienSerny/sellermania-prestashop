@@ -33,6 +33,12 @@ if (!defined('_PS_VERSION_')) {
 if (!class_exists('FroggyHelperTreeCategories'))
     require_once(dirname(__FILE__).'/../../classes/FroggyHelperTreeCategories.php');
 require_once(dirname(__FILE__).'/../front/SellermaniaExport.php');
+require_once(dirname(__FILE__).'/SellermaniaDisplayAdminOrder.php');
+
+require_once(_PS_MODULE_DIR_.'sellermania'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'SellermaniaHelper.php');
+require_once(_PS_MODULE_DIR_.'sellermania'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'SellermaniaValidator.php');
+require_once(_PS_MODULE_DIR_.'sellermania'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'SellermaniaTranslator.php');
+require_once(_PS_MODULE_DIR_.'sellermania'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'SellermaniaMarketplacesSynchronizer.php');
 
 class SellermaniaGetContentController
 {
@@ -72,13 +78,21 @@ class SellermaniaGetContentController
             'PS_OS_SM_ERR_CONF', 'PS_OS_SM_ERR_CANCEL_CUS', 'PS_OS_SM_ERR_CANCEL_SEL',
             'PS_OS_SM_AWAITING', 'PS_OS_SM_CONFIRMED', 'PS_OS_SM_TO_DISPATCH',
             'PS_OS_SM_DISPATCHED', 'PS_OS_SM_CANCEL_CUS', 'PS_OS_SM_CANCEL_SEL',
+            'sm_out_of_stock_nb_days',
+            'sm_product_to_include_in_feed', 'sm_last_days_to_include_in_feed',
+            'sm_import_ac_orders_after_adding_tracking_number',
+            'sm_import_orders_without_address','sm_optional_sellermania_look',
         );
 
-        foreach ($this->module->sellermania_marketplaces as $marketplace) {
-            $marketplace_name = str_replace('.', '_', $marketplace);
-            $this->params[] = 'SM_MKP_'.$marketplace_name;
-            $this->params[] = 'SM_MKP_'.$marketplace_name.'_DELIVERY';
-            $this->params[] = 'SM_MKP_'.$marketplace_name.'_SERVICE';
+        if (is_array($this->module->sellermania_marketplaces)) {
+            foreach ($this->module->sellermania_marketplaces as $marketplace) {
+                $marketplace_code = $marketplace["code"];
+                $marketplace_name = str_replace('.', '_', $marketplace_code);
+                $this->params[] = 'SM_MKP_'.$marketplace_name;
+                $this->params[] = 'SM_MKP_'.$marketplace_name.'_DELIVERY';
+                $this->params[] = 'SM_MKP_'.$marketplace_name.'_SERVICE';
+                $this->params[] = 'SM_MKP_'.$marketplace_name.'_PS_MAP';
+            }
         }
 
         $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
@@ -101,22 +115,103 @@ class SellermaniaGetContentController
             $test->run();
             Configuration::updateValue('SM_CREDENTIALS_CHECK', 'ok');
             $this->context->smarty->assign('sm_confirm_credentials', 'ok');
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Configuration::updateValue('SM_CREDENTIALS_CHECK', 'ko');
-            $this->context->smarty->assign('sm_error_credentials', $e->getMessage());
+            $translator = new SellermaniaTranslator();
+            SellermaniaFieldError::createFieldError(null, $translator->l("A problem was detected with your API connection. Please check your credentials"), "import-orders");
+            //$this->context->smarty->assign('sm_error_credentials', $e->getMessage());
         }
     }
 
 
     /**
      * Save configuration
+     * @throws Exception
      */
     public function saveConfiguration()
     {
-        if (Tools::isSubmit('export_configuration'))
-        {
+        if (Tools::isSubmit('import_orders')) {
+            $email = Configuration::get("SM_ORDER_EMAIL");
+            $token = Configuration::get("SM_ORDER_TOKEN");
+            $endpoint = Configuration::get("SM_ORDER_ENDPOINT");
+
+            $new_email = Tools::getValue('sm_order_email');
+            $new_token = Tools::getValue('sm_order_token');
+            $new_endpoint = Tools::getValue('sm_order_endpoint');
+
+            if ($email !== $new_email || $token !== $new_token || $endpoint !== $new_endpoint) {
+                $result = SellermaniaMarketplacesSynchronizer::sync(true, $new_email, $new_token, $new_endpoint);
+                $this->module->sellermania_marketplaces = $result["marketplaces"];
+            }
+        }
+
+        if (Tools::isSubmit('import_orders') || Tools::isSubmit('wizard_button') || Tools::isSubmit('export_configuration')) {
+            $is_good = SellermaniaValidator::validateConfiguration($_POST);
+            $this->context->smarty->assign("sm_config_is_good", $is_good);
+            $this->saveConfigurationData($_POST);
+        }
+
+        if (Tools::isSubmit('relaunch_wizard')) {
+            Configuration::updateValue('SM_WIZARD_LAUNCHED', 0);
+            return;
+        }
+
+        if (Tools::isSubmit('wizard_button')) {
+            // carriers mapping initialization
+            $carriers = [];
+            $search_carriers = 'SM_MKP_DELIVERY_';
+
+            // order status mapping initialization
+            $status = [];
+            $loaded_status = $this->module->sellermania_order_states;
+            foreach ($loaded_status as $ls) {
+                $status[$ls["sm_status"]] = [];
+            }
+            $search_status = 'SM_PS_ORDER_MAP_';
+
+            foreach ($_POST as $k => $p) {
+                if (false !== strpos($k, $search_status)) {
+                    if (isset($status[$p])) {
+                        $status[$p][] = str_replace($search_status, '', $k);
+                    }
+                } elseif (false !== strpos($k, $search_carriers)) {
+                    $carriers_mapping = str_replace($search_carriers, '', $k);
+                    $carriers_mapping = explode('_', $carriers_mapping);
+                    $count = count($carriers_mapping);
+                    if (3 === $count) {
+                        $marketplace_code = $carriers_mapping[0].'_'.$carriers_mapping[1];
+                        $ps_carrier_id = $carriers_mapping[2];
+                    } elseif (2 === $count) {
+                        $marketplace_code = $carriers_mapping[0];
+                        $ps_carrier_id = $carriers_mapping[1];
+                    } else {
+                        throw new Exception("Error fields detected");
+                    }
+                    if ("" != $p) {
+                        if (!isset($carriers[$marketplace_code])) {
+                            $carriers[$marketplace_code] = [];
+                        }
+                        $carriers[$marketplace_code][] = [$ps_carrier_id => $p];
+                    }
+                }
+            }
+
+            // saving configuration
+            foreach ($this->module->sellermania_order_states as $k => $ls) {
+                Configuration::updateValue($k, json_encode($status[$ls["sm_status"]]));
+            }
+            foreach ($carriers as $k => $carrier) {
+                Configuration::updateValue("SM_MKP_DELIVERY_".$k, json_encode($carrier));
+            }
+            $custom_error_order_state = SellermaniaHelper::createOrderStatus("Marketplace - Technical error", '#e74c3c', $this->module->name, (int)$this->context->language->id, ['logable' => true, 'invoice' => false, 'shipped' => true, 'paid' => false]);
+            Configuration::updateValue("PS_OS_SM_ERR_CONF", json_encode([$custom_error_order_state]));
+            Configuration::updateValue("PS_OS_SM_ERR_CANCEL_CUS", json_encode([$custom_error_order_state]));
+            Configuration::updateValue("PS_OS_SM_ERR_CANCEL_SEL", json_encode([$custom_error_order_state]));
+
+            Configuration::updateValue('SM_WIZARD_LAUNCHED', 1);
+        }
+
+        if (Tools::isSubmit('export_configuration')) {
             Configuration::updateValue('SM_EXPORT_CATEGORIES', '');
             if (isset($_POST['categories_to_export']) && count($_POST['categories_to_export']) > 0) {
                 $categories = $_POST['categories_to_export'];
@@ -202,32 +297,51 @@ class SellermaniaGetContentController
                 $files_list[$iso_lang]['generated'] = date("d/m/Y H:i:s", filectime($real_path_file));
         }
 
-        // Retrieve Sellermania Order States
-        foreach ($this->module->sellermania_order_states as $conf_key => $value) {
-            $this->module->sellermania_order_states[$conf_key]['ps_conf_value'] = Configuration::get($conf_key);
-        }
+        // Retrieve carriers (last parameter "5" means "All carriers")
+        $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 5);
 
-        // Retrieve all marketplaces and value
+        // Retrieve Sellermania Order States
+        /*foreach ($this->module->sellermania_order_states as $conf_key => $value) {
+            $this->module->sellermania_order_states[$conf_key]['ps_conf_value'] = Configuration::get($conf_key);
+        }*/
+
+        // Retrieve all marketplaces and values
         $sm_marketplaces = array();
-        foreach ($this->module->sellermania_marketplaces as $marketplace) {
-            $marketplace_original_name = $marketplace;
-            $marketplace = str_replace('.', '_', $marketplace);
-            $sm_marketplaces[$marketplace] = array('key' => 'SM_MKP_'.$marketplace, 'value' => Configuration::get('SM_MKP_'.$marketplace));
-            if (empty($sm_marketplaces[$marketplace]['value'])) {
-                $sm_marketplaces[$marketplace]['value'] = 'MANUAL';
+        if(is_array($this->module->sellermania_marketplaces)) {
+            foreach ($this->module->sellermania_marketplaces as $marketplace) {
+                $marketplace_original_name = $marketplace['code'];
+                $marketplace = str_replace('.', '_', $marketplace);
+                $sm_marketplaces[$marketplace['code']] = array('key' => 'SM_MKP_'.$marketplace['code'], 'value' => Configuration::get('SM_MKP_'.$marketplace['code']));
+                if (empty($sm_marketplaces[$marketplace['code']]['value'])) {
+                    $sm_marketplaces[$marketplace['code']]['value'] = 'MANUAL';
+                }
+                if (isset($this->module->sellermania_marketplaces_delivery[$marketplace_original_name])) {
+                    $sm_marketplaces[$marketplace['code']]['delivery'] = $this->module->sellermania_marketplaces_delivery[$marketplace_original_name];
+                }
+
+                $sm_mkp_delivery = json_decode(Configuration::get('SM_MKP_DELIVERY_'.$marketplace['code']));
+                $delivery_value = [];
+                if(!empty($sm_mkp_delivery)) {
+                    foreach ($sm_mkp_delivery as $v) {
+                        $v = (array) $v;
+                        foreach ($v as $pscid => $mpc) {
+                            $delivery_value[$pscid] = $mpc;
+                        }
+                    }
+                }
+                $sm_marketplaces[$marketplace['code']]['delivery_value'] = $delivery_value;
+                //$sm_marketplaces[$marketplace['code']]['service_value'] = Configuration::get('SM_MKP_'.$marketplace['code'].'_SERVICE');
+                $shipping_service_values = [];
+                foreach ($carriers as $ps_carrier) {
+                    $shipping_service_values[$ps_carrier['id_carrier']] = SellermaniaHelper::getShippingServiceForMarketplace($marketplace['code'], $ps_carrier['id_carrier']);
+                }
+                $sm_marketplaces[$marketplace['code']]['shipping_service_value'] = $shipping_service_values;
+                $sm_marketplaces[$marketplace['code']]['service_value'] = Configuration::get('SM_MKP_'.$marketplace['code'].'_SERVICE');
             }
-            if (isset($this->module->sellermania_marketplaces_delivery[$marketplace_original_name])) {
-                $sm_marketplaces[$marketplace]['delivery'] = $this->module->sellermania_marketplaces_delivery[$marketplace_original_name];
-            }
-            $sm_marketplaces[$marketplace]['delivery_value'] = Configuration::get('SM_MKP_'.$marketplace.'_DELIVERY');
-            $sm_marketplaces[$marketplace]['service_value'] = Configuration::get('SM_MKP_'.$marketplace.'_SERVICE');
         }
 
         // Retrieve customer groups
         $customer_groups = Group::getGroups($this->context->language->id);
-
-        // Retrieve carriers (last parameter "5" means "All carriers")
-        $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 5);
 
         // Retrieve shops
         $shops = [];
@@ -239,13 +353,22 @@ class SellermaniaGetContentController
         $sm_tracking_numbers_to_synchronize = [];
         if (version_compare(_PS_VERSION_, '1.5') >= 0) {
             $sm_tracking_numbers_to_synchronize = SellermaniaOrder::getTrackingNumbersToSynchronize();
-            if (Tools::getIsset('synchronizeTrackingNumbers')) {
-                $orders_to_synchronize = [];
-                foreach ($sm_tracking_numbers_to_synchronize as $stnts) {
-                    $orders_to_synchronize[] = json_decode($stnts['info'], true);
+
+            $orders_to_synchronize = [];
+            foreach ($sm_tracking_numbers_to_synchronize as $stnts) {
+                $info = json_decode($stnts['info'], true);
+                if (!empty($info) && (!isset($info['OrderInfo']['Transport']['TrackingNumber']) || empty($info['OrderInfo']['Transport']['TrackingNumber'])))
+                {
+                    $orders_to_synchronize[] = $info;
                 }
+            }
+            if (Tools::getIsset('synchronizeTrackingNumbers')) {
                 $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
-                $sdao->handleShippedOrders($orders_to_synchronize);
+                $orders_to_ship = $sdao->handleShippedOrders($orders_to_synchronize);
+
+                if (!empty($orders_to_ship) && ((Tools::getIsset('ac_confirm')) || Configuration::get('SM_IMPORT_AC_ORDERS_AFTER_ADDING_TRACKING_NUMBER') == 'on')) {
+                    $sdao->registerShippingData($orders_to_ship);
+                }
             }
         }
 
@@ -288,11 +411,12 @@ class SellermaniaGetContentController
             $this->context->smarty->assign(strtolower($param), Configuration::get(strtoupper($param)));
         }
 
+        $states = OrderState::getOrderStates($this->context->language->id);
         $this->context->smarty->assign('sm_order_states', $this->module->sellermania_order_states);
         $this->context->smarty->assign('ps_order_states', OrderState::getOrderStates($this->context->language->id));
         $this->context->smarty->assign('sm_marketplaces', $sm_marketplaces);
 
-        $this->context->smarty->assign('sm_tracking_numbers_to_synchronize', $sm_tracking_numbers_to_synchronize);
+        $this->context->smarty->assign('sm_tracking_numbers_to_synchronize', $orders_to_synchronize);
 
         $this->context->smarty->assign('order_token_tab', Tools::getAdminTokenLite('AdminOrders'));
 
@@ -308,6 +432,27 @@ class SellermaniaGetContentController
         }
 
         $this->context->smarty->assign('sm_module_version', $this->module->version);
+
+        $this->context->smarty->assign('sm_out_of_stock_nb_days', null);
+
+        $this->context->smarty->assign('sm_product_to_include_in_feed', Configuration::get('SM_PRODUCT_TO_INCLUDE_IN_FEED'));
+        $this->context->smarty->assign('sm_last_days_to_include_in_feed', Configuration::get('SM_LAST_DAYS_TO_INCLUDE_IN_FEED'));
+
+        $this->context->smarty->assign('sm_status_mapping', $this->module->loader->mapOrderStates());
+        $this->context->smarty->assign('sm_wizard_launched', Configuration::get('SM_WIZARD_LAUNCHED'));
+
+        $this->context->smarty->assign("sm_mp_list", SellermaniaMarketplace::getAvailableSellermaniaMarketplaces());
+        $this->context->smarty->assign("sm_mp_icon_link", $this->module->sm_mp_icon_link);
+
+        $this->context->smarty->assign("field_errors_import_orders", SellermaniaFieldError::getAllActiveFieldErrors("import-orders"));
+        $this->context->smarty->assign("field_errors_export_catalog", SellermaniaFieldError::getAllActiveFieldErrors("export-catalog"));
+
+        $this->context->smarty->assign("module_web_path", Tools::getHttpHost(true).$this->context->shop->physical_uri.'modules/'.$this->module->name.'/');
+        $this->context->smarty->assign("lang_iso", $this->context->language->iso_code);
+
+        $this->context->smarty->assign('sm_secret_key', Configuration::get('SM_SECRET_KEY'));
+
+        $this->context->smarty->assign("sm_credentials_check", Configuration::get("SM_CREDENTIALS_CHECK"));
     }
 
     /**
@@ -346,5 +491,78 @@ class SellermaniaGetContentController
         $this->assignData();
         return $this->module->compliantDisplay('displayGetContent'.(isset($this->module->bootstrap) ? '.bootstrap' : '').'.tpl');
     }
+
+    private function saveConfigurationData ($data)
+    {
+        // carriers mapping initialization
+        $carriers = [];
+        $search_carriers = 'SM_MKP_DELIVERY_';
+
+        // order status mapping initialization
+        $status = [];
+        $loaded_status = $this->module->sellermania_order_states;
+        foreach ($loaded_status as $ls) {
+            $status[$ls["sm_status"]] = [];
+        }
+        $search_status = 'SM_PS_ORDER_MAP_';
+
+        // shipping service
+        $shipping_services = [];
+        $search_shipping_services = 'SM_MKP_SHIPPING_SERVICE_';
+
+        foreach ($data as $k => $p) {
+            if (false !== strpos($k, $search_status)) {
+                if (isset($status[$p])) {
+                    $status[$p][] = str_replace($search_status, '', $k);
+                }
+            } elseif (false !== strpos($k, $search_carriers)) {
+                $carriers_mapping = str_replace($search_carriers, '', $k);
+                $carriers_mapping = explode('_', $carriers_mapping);
+                $count = count($carriers_mapping);
+                if (3 === $count) {
+                    $marketplace_code = $carriers_mapping[0].'_'.$carriers_mapping[1];
+                    $ps_carrier_id = $carriers_mapping[2];
+                } elseif (2 === $count) {
+                    $marketplace_code = $carriers_mapping[0];
+                    $ps_carrier_id = $carriers_mapping[1];
+                } else {
+                    throw new Exception("Error fields detected");
+                }
+                //if ("" != $p) {
+                if (!isset($carriers[$marketplace_code])) {
+                    $carriers[$marketplace_code] = [];
+                }
+                $carriers[$marketplace_code][] = [$ps_carrier_id => $p];
+                //}
+            } elseif (false !== strpos($k, $search_shipping_services)) {
+                if ($p) {
+                    $shipping_service = str_replace($search_shipping_services, '', $k);
+                    $carriers_mapping = explode('_', $shipping_service);
+                    $count = count($carriers_mapping);
+                    if (3 === $count) {
+                        $marketplace_code = $carriers_mapping[0].'_'.$carriers_mapping[1];
+                        $ps_carrier_id = $carriers_mapping[2];
+                        $shipping_services[$marketplace_code][] = [$ps_carrier_id => $p];
+                    } else {
+                        throw new Exception("Error fields detected");
+                    }
+                }
+
+            }
+        }
+
+        // saving configuration
+        foreach ($this->module->sellermania_order_states as $k => $ls) {
+            Configuration::updateValue($k, json_encode($status[$ls["sm_status"]]));
+        }
+        foreach ($carriers as $k => $carrier) {
+            Configuration::updateValue("SM_MKP_DELIVERY_".$k, json_encode($carrier));
+        }
+        foreach ($shipping_services as $k => $shipping_service) {
+            Configuration::updateValue("SM_MKP_SHIPPING_SERVICE_".$k, json_encode($shipping_service));
+        }
+    }
 }
+
+
 

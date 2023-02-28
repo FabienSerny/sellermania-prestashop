@@ -29,10 +29,24 @@
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+require_once(dirname(__FILE__).'/SellermaniaMarketplace.php');
 
 class SellermaniaInstaller
 {
     private $module;
+
+    private $tabs = [
+        "config" => [
+            "name" => ["fr" => "Configuration", "en" => "Settings"],
+            "class" => "AdminSellermaniaSettings",
+            "icon" => "settings",
+        ],
+        "diagnostics" => [
+            "name" => ["fr" => "Diagnostique", "en" => "Diagnostic"],
+            "class" => "AdminSellermaniaDiagnostics",
+            "icon" => "star_border",
+        ],
+    ];
 
     public function __construct($module)
     {
@@ -51,8 +65,12 @@ class SellermaniaInstaller
             return false;
         }
 
+        if (!$this->isTabsInstalled()) {
+            $this->installTabs();
+        }
+
         // Install Order States
-        $this->installOrderStates();
+        // $this->installOrderStates();
 
         // Install Product
         $this->installSellermaniaProduct();
@@ -61,14 +79,32 @@ class SellermaniaInstaller
         Configuration::updateValue('SM_VERSION', $this->module->version);
         Configuration::updateValue('SM_INSTALL_DATE', date('Y-m-d H:i:s'));
         Configuration::updateValue('SELLERMANIA_KEY', md5(rand()._COOKIE_KEY_.date('YmdHis')));
-        Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
-        Configuration::updateValue('SM_CONFIRM_ORDER_ENDPOINT', 'http://membres.sellermania.com/wsapi/wsdl/OrderConfirmation');
-        Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'http://api.sellermania.com/v3/InventoryAPIS?wsdl');
+        Configuration::updateValue('SM_ORDER_ENDPOINT', 'https://api.sellermania.com/v3/OrdersAPIS?wsdl');
+        Configuration::updateValue('SM_CONFIRM_ORDER_ENDPOINT', 'https://membres.sellermania.com/wsapi/wsdl/OrderConfirmation');
+        Configuration::updateValue('SM_INVENTORY_ENDPOINT', 'https://api.sellermania.com/v3/InventoryAPIS?wsdl');
 
         Configuration::updateValue('SM_ENABLE_NATIVE_REFUND_SYSTEM', 'no');
         Configuration::updateValue('SM_ENABLE_EXPORT_COMB_NAME', 'yes');
 
+        Configuration::updateValue('SM_IMPORT_ORDERS', "yes");
+        Configuration::updateValue('SM_SCHEMA_LOADED', 1);
+        Configuration::updateValue('SM_WIZARD_LAUNCHED', 0);
+        Configuration::updateValue('SM_SECRET_KEY', $this->generateSecretKey());
+
         return true;
+    }
+
+    private function generateSecretKey ()
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+
+        for ($i = 0; $i < 50; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+
+        return $randomString;
     }
 
 
@@ -80,41 +116,72 @@ class SellermaniaInstaller
     public function uninstall()
     {
         // Execute module install MySQL commands
-        // $sql_file = dirname(__FILE__).'/../install/uninstall.sql';
-        // if (!$this->loadSQLFile($sql_file))
-        //    return false;
+         $sql_file = dirname(__FILE__).'/../install/uninstall.sql';
+         if (!$this->loadSQLFile($sql_file))
+            return false;
 
+        //Delete default sellermania product to avoid duplicates
+         $default_product_id = $this->module->getDefaultProductID();
+         if ($default_product_id > 0) {
+            $product = new Product($default_product_id);
+            $product->delete();
+         }
+       
         // Delete configuration values
-        Configuration::deleteByName('SM_SLEEPING_UPDATES');
-        Configuration::deleteByName('SM_IMPORT_ORDERS');
-        Configuration::deleteByName('SM_ORDER_EMAIL');
-        Configuration::deleteByName('SM_ORDER_TOKEN');
-        Configuration::deleteByName('SM_ORDER_ENDPOINT');
-        Configuration::deleteByName('SM_CONFIRM_ORDER_ENDPOINT');
-        Configuration::deleteByName('SM_INVENTORY_ENDPOINT');
-        Configuration::deleteByName('SM_NEXT_IMPORT');
-        Configuration::deleteByName('SM_CREDENTIALS_CHECK');
-        Configuration::deleteByName('SM_INSTALL_DATE');
         Configuration::deleteByName('SELLERMANIA_KEY');
+        $this->uninstallTabs();
 
-        Configuration::deleteByName('SM_STOCK_SYNC_OPTION');
-        Configuration::deleteByName('SM_STOCK_SYNC_POSITION');
-        Configuration::deleteByName('SM_STOCK_SYNC_NB_CHAR');
+        return true;
+    }
 
-        Configuration::deleteByName('SM_STOCK_SYNC_OPTION');
-        Configuration::deleteByName('SM_STOCK_SYNC_OPTION_1');
-        Configuration::deleteByName('SM_STOCK_SYNC_OPTION_2');
-        Configuration::deleteByName('SM_STOCK_SYNC_POSITION');
-        Configuration::deleteByName('SM_STOCK_SYNC_NB_CHAR');
+    public function installTabs()
+    {
+        $languages = Language::getLanguages(false);
 
-        Configuration::deleteByName('SM_ALERT_MISSING_REF_OPTION');
-        Configuration::deleteByName('SM_ALERT_MISSING_REF_MAIL');
+        // parent tab
+        $parent_tab = new Tab();
+        foreach ($languages as $language) {
+            $parent_tab->name[$language['id_lang']] = $this->module->l('Sellermania');
+        }
+        $parent_tab->class_name = 'Sellermania';
+        $parent_tab->id_parent = 0; // Home tab
+        $parent_tab->module = $this->module->name;
+        $parent_tab->add();
 
-        Configuration::deleteByName('SM_ENABLE_NATIVE_REFUND_SYSTEM');
-        Configuration::deleteByName('SM_ENABLE_EXPORT_COMB_NAME');
+        foreach ($this->tabs as $s_tab) {
+            $tab = new Tab();
+            // Need a foreach for the language
+            foreach ($languages as $language) {
+                if (isset($s_tab["name"][$language['iso_code']])) {
+                    $tab->name[$language['id_lang']] = $s_tab["name"][$language['iso_code']];
+                }
+             }
+            $tab->class_name = $s_tab["class"];
+            $tab->id_parent = $parent_tab->id;
+            $tab->module = $this->module->name;
+            $tab->icon = $s_tab["icon"];
+            $tab->add();
+        }
+    }
 
-        Configuration::deleteByName('SM_EXPORT_STAY_NB_DAYS');
-
+    public function uninstallTabs()
+    {
+        try {
+            $sql = 'SELECT `id_tab`, `class_name` FROM `' . _DB_PREFIX_ . 'tab` WHERE `module` = \'sellermania\'';
+            $tabs = Db::getInstance()->executeS($sql);
+        } catch (PrestaShopDatabaseException $e) {
+            $tabs = array();
+        }
+        foreach ($tabs as $value) {
+            try {
+                $tab = new Tab((int) $value['id_tab']);
+                if ($tab->id != 0) {
+                    $tab->delete();
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+        }
         return true;
     }
 
@@ -168,20 +235,8 @@ class SellermaniaInstaller
     public function upgrade()
     {
         $version_registered = Configuration::get('SM_VERSION');
-
-        if ($version_registered == '' || version_compare($version_registered, '1.0.0', '<')) {
-            if ((int)Configuration::get('PS_OS_SM_SEND') > 0) {
-                // Change configuration name
-                Configuration::updateValue('PS_OS_SM_TO_DISPATCH', Configuration::get('PS_OS_SM_SEND'));
-                Configuration::updateValue('PS_OS_SM_DISPATCHED', Configuration::get('PS_OS_SM_SENT'));
-
-                // Delete old ones
-                Configuration::deleteByName('PS_OS_SM_SEND');
-                Configuration::deleteByName('PS_OS_SM_SENT');
-            }
-
-            // Update order states
-            $this->installOrderStates();
+        if (!$version_registered) {
+            $version_registered = $this->module->version;
         }
 
         if (version_compare($version_registered, '1.1.0', '<')) {
@@ -193,7 +248,18 @@ class SellermaniaInstaller
                 $this->module->registerHook('newOrder');
             }
         }
-
+        if (Configuration::get('SM_IMEI_MKPS') == '') {
+            Configuration::updateValue('SM_IMEI_MKPS', json_encode(array('BACKMARKET','QUELBONPLAN','REFURBED')));
+        }
+        if (Configuration::get('SM_TRACKING_URL_MKPS') == '') {
+            Configuration::updateValue('SM_TRACKING_URL_MKPS', json_encode(array('RAKUTEN','REFURBED')));
+        }
+        if (Configuration::get('SM_LOGISTIC_WEIGHT_MKPS') == '') {
+            Configuration::updateValue('SM_LOGISTIC_WEIGHT_MKPS', json_encode(array('AMAZONVENDOR')));
+        }
+        if (Configuration::get('SM_MKPS_MERCHANTID') == '') {
+            Configuration::updateValue('SM_MKPS_MERCHANTID', json_encode(array('SHOPPINGACTIONS','AMAZONVENDOR','ZALANDO')));
+        }
         if (Configuration::get('SM_EXPORT_ALL') == '') {
             Configuration::updateValue('SM_EXPORT_ALL', 'yes');
         }
@@ -216,9 +282,22 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_ORDER_IMPORT_LIMIT', 100);
         }
         if (Configuration::get('SM_EXPORT_STAY_NB_DAYS') == '') {
-            Configuration::updateValue('SM_EXPORT_STAY_NB_DAYS', 7);
+           // Configuration::updateValue('SM_EXPORT_STAY_NB_DAYS', 7);
         }
-
+        
+        if (Configuration::get('SM_EXPORT_STAY_NB_DAYS') != '' ) {
+            if (Configuration::get('SM_EXPORT_STAY_NB_DAYS') > 0) {
+                Configuration::updateValue('SM_LAST_DAYS_TO_INCLUDE_IN_FEED', Configuration::get('SM_EXPORT_STAY_NB_DAYS'));
+                Configuration::updateValue('SM_PRODUCT_TO_INCLUDE_IN_FEED', 'without_oos');
+                Configuration::updateValue('SM_EXPORT_STAY_NB_DAYS', '');
+            } else {
+                Configuration::updateValue('SM_PRODUCT_TO_INCLUDE_IN_FEED', 'all');
+            }
+        }
+        if (Configuration::get('SM_PRODUCT_TO_INCLUDE_IN_FEED') == '') {
+            Configuration::updateValue('SM_PRODUCT_TO_INCLUDE_IN_FEED', 'all');
+        }
+        
         if (version_compare($version_registered, '2.1.6', '<')) {
             if (version_compare(_PS_VERSION_, '1.5') >= 0) {
                 $this->module->registerHook('actionOrderStatusUpdate');
@@ -230,6 +309,18 @@ class SellermaniaInstaller
         if (version_compare(_PS_VERSION_, '1.6') >= 0) {
             if (!$this->isModuleRegisteredOnHook($this->module, 'actionUpdateQuantity', Context::getContext()->shop->id)) {
                 $this->module->registerHook('actionUpdateQuantity');
+            }
+            if (!$this->isModuleRegisteredOnHook($this->module, 'actionAdminOrdersListingFieldsModifier', Context::getContext()->shop->id)) {
+                $this->module->registerHook('actionAdminOrdersListingFieldsModifier');
+            }
+        }
+
+        if (version_compare(_PS_VERSION_, '1.7') >= 0) {
+            if (!$this->isModuleRegisteredOnHook($this->module, 'ActionOrderGridQueryBuilderModifier', Context::getContext()->shop->id)) {
+                $this->module->registerHook('ActionOrderGridQueryBuilderModifier');
+            }
+            if (!$this->isModuleRegisteredOnHook($this->module, 'ActionOrderGridDefinitionModifier', Context::getContext()->shop->id)) {
+                $this->module->registerHook('ActionOrderGridDefinitionModifier');
             }
         }
 
@@ -247,7 +338,7 @@ class SellermaniaInstaller
         }
 
         if (version_compare($version_registered, '2.6.3', '<')) {
-            Configuration::updateValue('SM_ORDER_ENDPOINT', 'http://api.sellermania.com/v3/OrdersAPIS?wsdl');
+            Configuration::updateValue('SM_ORDER_ENDPOINT', 'https://api.sellermania.com/v3/OrdersAPIS?wsdl');
         }
 
         if (Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE') == '' || Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE') == '') {
@@ -275,11 +366,63 @@ class SellermaniaInstaller
             Configuration::updateValue('SM_PRODUCT_MATCH', 'automatic');
         }
 
+        if (version_compare($version_registered, '2.9.0', '<')) {
+            if (!Db::getInstance()->execute('SELECT order_imei from '._DB_PREFIX_.'sellermania_order')) {
+                $sql = 'ALTER TABLE `'._DB_PREFIX_.'sellermania_order` ADD order_imei text NOT NULL AFTER amount_total';
+                Db::getInstance()->execute($sql);
+            }
+        }
+
+        if (version_compare($version_registered, '3.0.0', '<')) {
+            Configuration::updateValue('SM_WIZARD_LAUNCHED', 0);
+            Configuration::updateValue('SM_SECRET_KEY', $this->generateSecretKey());
+            $sql = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."sellermania_marketplace` (
+                `id_sellermania_marketplace` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `code` varchar(255) NOT NULL,
+                `enabled` int(11) NOT NULL,
+                `available` int(11) NOT NULL,
+                PRIMARY KEY (`id_sellermania_marketplace`)
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+            Db::getInstance()->execute($sql);
+
+            $sql = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."sellermania_field_error` (
+                `id_sellermania_field_error` int(11) NOT NULL AUTO_INCREMENT,
+                `field_name` varchar(255) DEFAULT NULL,
+                `error_message` text,
+                `section` varchar(255) DEFAULT NULL,
+                `is_active` tinyint(4) NOT NULL,
+                `date_add` datetime NOT NULL,
+                PRIMARY KEY (`id_sellermania_field_error`)
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+            Db::getInstance()->execute($sql);
+        }
+
         if (Configuration::get('SM_VERSION') != $this->module->version) {
             Configuration::updateValue('SM_VERSION', $this->module->version);
         }
+
+
+        if (!$this->isTabsInstalled()) {
+            $this->installTabs();
+        }
     }
 
+    private function isTabsInstalled ()
+    {
+        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'tab` WHERE `module` = \'sellermania\'';
+        $tabs = Db::getInstance()->executeS($sql);
+        if (empty($tabs)) {
+            return false;
+        } else {
+            $parent_not_installed = false;
+            foreach ($tabs as $tab) {
+                if (isset($tab['id_parent']) && $tab['id_parent'] != 0) {
+                    $parent_not_installed = true;
+                }
+            }
+            return $parent_not_installed;
+        }
+    }
 
 
     /**
@@ -319,8 +462,8 @@ class SellermaniaInstaller
                 if ($order_state->add())
                 {
                     Configuration::updateValue($order_state_key, $order_state->id);
-                    copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/os/'.$order_state->id.'.gif');
-                    copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/tmp/order_state_mini_'.$order_state->id.'.gif');
+                    copy(dirname(__FILE__).'/../logo.gif', dirname(__FILE__).'/../../../img/os/'.$order_state->id.'.gif');
+                    copy(dirname(__FILE__).'/../logo.gif', dirname(__FILE__).'/../../../img/tmp/order_state_mini_'.$order_state->id.'.gif');
                 }
             }
             else
@@ -346,13 +489,18 @@ class SellermaniaInstaller
     {
         // Check if sellermania product exists
         $sellermania_default_product_id = $this->module->getDefaultProductID();
+        $id_shop = Context::getContext()->shop->id;
+        if(empty(Context::getContext()->shop->id)){
+            $id_shop = 0;
+        }
+       
         if ($sellermania_default_product_id > 0) {
             if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 1) {
-                $product = new Product($sellermania_default_product_id, false, Configuration::get('PS_LANG_DEFAULT'), Context::getContext()->shop->id);
+                $product = new Product($sellermania_default_product_id, false, Configuration::get('PS_LANG_DEFAULT'), $id_shop);
             } else {
                 $product = new Product($sellermania_default_product_id);
             }
-            if ($product->id > 0) {
+            if ($product->id > 0 && ($product->id_shop_default == $id_shop)) {
                 return true;
             }
         }
@@ -396,12 +544,14 @@ class SellermaniaInstaller
 
     public function migrateMarketplacesHistory()
     {
-        foreach ($this->module->sellermania_marketplaces_migration as $old_marketplace => $new_marketplace) {
-            $this->update(
-                'sellermania_order',
-                array('marketplace' => $new_marketplace),
-                '`marketplace` = \''.$old_marketplace.'\''
-            );
+        if (is_array($this->module->sellermania_marketplaces_migration)) {
+            foreach ($this->module->sellermania_marketplaces_migration as $old_marketplace => $new_marketplace) {
+                $this->update(
+                    'sellermania_order',
+                    array('marketplace' => $new_marketplace),
+                    '`marketplace` = \''.$old_marketplace.'\''
+                );
+            }
         }
     }
 

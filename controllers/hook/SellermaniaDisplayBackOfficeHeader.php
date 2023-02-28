@@ -37,6 +37,7 @@ require_once(dirname(__FILE__).'/SellermaniaDisplayAdminOrder.php');
 
 // Load ValidateOrder Controller
 require_once(dirname(__FILE__).'/SellermaniaActionValidateOrder.php');
+require_once(_PS_MODULE_DIR_.'sellermania'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'SellermaniaMarketplacesSynchronizer.php');
 
 
 class SellermaniaDisplayBackOfficeHeaderController
@@ -64,7 +65,12 @@ class SellermaniaDisplayBackOfficeHeaderController
     public function speak($string)
     {
         if ($this->verbose) {
-            echo $string."\n";
+            if (isset($_GET['k']) && $_GET['k'] != null) {
+                $delimiter = "<br>";
+            } else {
+                $delimiter = "\n";
+            }
+            echo $string.$delimiter;
         }
     }
 
@@ -106,6 +112,9 @@ class SellermaniaDisplayBackOfficeHeaderController
             $this->module->logger('webservice-error', $log);
             return false;
         }
+
+        // Sync marketplaces during orders importation
+        SellermaniaMarketplacesSynchronizer::sync();
 
         // Creating an instance of OrderClient
         $client = new Sellermania\OrderClient();
@@ -176,7 +185,7 @@ class SellermaniaDisplayBackOfficeHeaderController
                                     $sdao->refreshOrderStatus($smo->id_order, $order);
                                     
                                     // update order carrier by default carrier for order importation
-                                    $this->updateOrderCarrier((int)$smo->id_order);
+                                   // $this->updateOrderCarrier((int)$smo->id_order);
                                 }
                                 catch (\Exception $e)
                                 {
@@ -190,6 +199,10 @@ class SellermaniaDisplayBackOfficeHeaderController
 
                             // Register order that needs to be autoconfirm
                             $this->order_items_to_confirm = SellermaniaOrderConfirmation::registerAutoConfirmProducts($this->order_items_to_confirm, $order);
+                            if (Configuration::get('SM_MKP_'.str_replace('.', '_', $order['OrderInfo']['MarketPlace'])) == 'AUTO') {
+                                $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
+                                $sdao->refreshOrderStatus($smo->id_order, $order);
+                            }
 
                             // Do not push it too hard
                             if ($count_order > (int)Configuration::get('SM_ORDER_IMPORT_LIMIT')) {
@@ -199,6 +212,15 @@ class SellermaniaDisplayBackOfficeHeaderController
                         }
                         else
                         {
+                            
+                            if (Configuration::get('SM_IMPORT_ORDERS_WITHOUT_ADDRESS') == 'off') {                    
+                                if (empty($order['User'][0]['Address']['Street1']) && empty($order['User'][0]['Address']['Street2']) 
+                                    && empty($order['User'][1]['Address']['Street1']) && empty($order['User'][1]['Address']['Street2'])) 
+                                {
+                                    $this->speak('Order creation skipped - Shipping & Billing addresses are empty');
+                                    continue;
+                                }
+                            }
                             // Verbose mode
                             $this->speak('Order does not exist, we create it');
 
@@ -211,17 +233,22 @@ class SellermaniaDisplayBackOfficeHeaderController
                             // If does not exist, we import the order
                             try
                             {
+                                //To get the output data which was cleaned after the invoice PDF generation
+                                $output_data = ob_get_clean();
                                 // Import order as PrestaShop order
+                                /*if (isset($order['User'][1]['Name']) && strpos($order['User'][1]['Name'], '.') != false) {
+                                    $order['User'][1]['Name'] = str_replace('.', '', $order['User'][1]['Name']);
+                                }*/
                                 $import_order = new SellermaniaImportOrderController($this->module, $this->dir_path, $this->web_path);
                                 $import_order->run($order);
                                 $count_order++;
-
+                                $this->speak($output_data);
                                 // Refresh order status immediately
                                 $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
                                 $sdao->refreshOrderStatus($import_order->order->id, $order);
 
                                 // update order carrier by default carrier for order importation
-                                $this->updateOrderCarrier((int)$import_order->order->id);
+                                //$this->updateOrderCarrier((int)$import_order->order->id);
                             }
                             catch (\Exception $e)
                             {
@@ -261,7 +288,11 @@ class SellermaniaDisplayBackOfficeHeaderController
                 SellermaniaOrderConfirmation::updateOrderItems($this->order_items_to_confirm);
 
                 $sdao = new SellermaniaDisplayAdminOrderController($this->module, $this->dir_path, $this->web_path);
-                $sdao->handleShippedOrders($result['SellermaniaWs']['GetOrderResponse']['Order']);
+                $orders_to_ship = $sdao->handleShippedOrders($result['SellermaniaWs']['GetOrderResponse']['Order']);
+              
+//                if (!empty($orders_to_ship) && (Configuration::get('SM_IMPORT_AC_ORDERS_AFTER_ADDING_TRACKING_NUMBER') == 'on')) {                    
+//                    $sdao->registerShippingData($orders_to_ship);
+//                }
             }
         }
         catch (\Exception $e)

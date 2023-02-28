@@ -37,6 +37,44 @@ class Sellermania extends Module
     public $sellermania_marketplaces_delivery;
     public $sellermania_marketplaces_migration;
 
+    public $sm_mp_icon_link;
+
+    const HOOKS = [
+        "1.7" => [
+            "ActionOrderGridQueryBuilderModifier",
+            "ActionOrderGridDefinitionModifier",
+            "displayAdminOrder",
+            "displayBackOfficeHeader",
+            "actionValidateOrder",
+            "actionOrderStatusUpdate"
+        ],
+        "1.6" => [
+            "actionAdminOrdersListingFieldsModifier",
+            "displayAdminOrder",
+            "displayBackOfficeHeader",
+            "actionValidateOrder",
+            "actionOrderStatusUpdate"
+        ],
+        "1.5" => [
+            "displayAdminOrder",
+            "displayBackOfficeHeader",
+            "actionValidateOrder",
+            "actionOrderStatusUpdate"
+        ],
+        "default" => [
+            "adminOrder",
+            "backOfficeHeader",
+            "newOrder",
+            "updateOrderStatus"
+        ]
+    ];
+
+    const MINIMAL_SYS_REQUIREMENTS = [
+        "php_version" => "5.6",
+        // "memory_limit" => 256,
+        // "max_execution_time" => 1200
+    ];
+
     /**
      * Module Constructor
      */
@@ -45,8 +83,10 @@ class Sellermania extends Module
         $this->name = 'sellermania';
         $this->tab = 'advertising_marketing';
         $this->author = 'Froggy Commerce';
-        $this->version = '2.8.5';
+        $this->version = '3.0.0';
         $this->need_instance = 0;
+
+        $this->sm_mp_icon_link = "https://membres.sellermania.com/assets/images/logo/marketplaces/";
 
         parent::__construct();
 
@@ -82,14 +122,21 @@ class Sellermania extends Module
     public function install()
     {
         // Register hooks
-        if (version_compare(_PS_VERSION_, '1.5') >= 0)
-        {
+        if (version_compare(_PS_VERSION_, '1.7') >= 0) {
+            if (!parent::install() ||  !$this->registerHook('ActionOrderGridQueryBuilderModifier') ||  !$this->registerHook('ActionOrderGridDefinitionModifier') || !$this->registerHook('displayAdminOrder') ||
+                !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder') || !$this->registerHook('actionOrderStatusUpdate')) {
+                return false;
+            }
+        } elseif (version_compare(_PS_VERSION_, '1.6') >= 0) {
+            if (!parent::install() ||  !$this->registerHook('actionAdminOrdersListingFieldsModifier') || !$this->registerHook('displayAdminOrder') ||
+                !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder') || !$this->registerHook('actionOrderStatusUpdate')) {
+                return false;
+            }
+        } elseif (version_compare(_PS_VERSION_, '1.5') >= 0) {
             if (!parent::install() || !$this->registerHook('displayAdminOrder') ||
                 !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder') || !$this->registerHook('actionOrderStatusUpdate'))
                 return false;
-        }
-        else
-        {
+        } else {
             if (!parent::install() || !$this->registerHook('adminOrder') ||
                 !$this->registerHook('backOfficeHeader') || !$this->registerHook('newOrder') || !$this->registerHook('updateOrderStatus'))
                 return false;
@@ -97,7 +144,6 @@ class Sellermania extends Module
 
         return $this->installer->install();
     }
-
 
     /**
      * Uninstall method
@@ -110,6 +156,11 @@ class Sellermania extends Module
         }
 
         return $this->installer->uninstall();
+    }
+
+    public function isHookRegistered($hook)
+    {
+        return $this->isRegisteredInHook($hook);
     }
 
 
@@ -143,6 +194,7 @@ class Sellermania extends Module
         else
             return $this->display(__FILE__, $template);
     }
+
     public function fcdisplay($file, $template)
     {
         if (isset($this->bootstrap) && $this->bootstrap)
@@ -185,6 +237,8 @@ class Sellermania extends Module
         // Will automatically recreate product if it was erased
         $this->installer->installSellermaniaProduct();
 
+        $this->context->controller->addJS($this->_path.'lib/select2/select2.min.js');
+
         return $this->runController('hook', 'GetContent');
     }
 
@@ -195,6 +249,9 @@ class Sellermania extends Module
      */
     public function hookDisplayBackOfficeHeader($params)
     {
+        if (version_compare(_PS_VERSION_, '1.6') >= 0 && version_compare(_PS_VERSION_, '1.7') < 0) {
+            $this->context->controller->addCss($this->_path.'views/css/ps16-icon.css');
+        }
         if (version_compare(PHP_VERSION, '5.3.0') >= 0)
             return $this->runController('hook', 'DisplayBackOfficeHeader');
         return '';
@@ -207,10 +264,10 @@ class Sellermania extends Module
     /**
      * Display Admin Order
      * @return string $html
-    */
+     */
     public function hookDisplayAdminOrder($params)
     {
-        if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+        if (version_compare(PHP_VERSION, '5.3.0') >= 0 && (Configuration::get('SM_OPTIONAL_SELLERMANIA_LOOK') == 'on'))
             return $this->runController('hook', 'DisplayAdminOrder');
         return '';
     }
@@ -292,6 +349,15 @@ class Sellermania extends Module
     }
 
     /**
+     * Import method
+     * @return string $export
+     */
+    public function syncTrackingNumber()
+    {
+        return $this->runController('front', 'SyncTrackingNumber');
+    }
+    
+    /**
      * Log data
      * @param $string
      */
@@ -311,5 +377,73 @@ class Sellermania extends Module
         if (Tools::getValue('debug') == 'import') {
             echo '<!-- '.date('Y-m-d H:i:s').' '.$string.' -->'."\n";
         }
+    }
+
+    public function hookActionAdminOrdersListingFieldsModifier(array $params)
+    {
+        return $this->runController('hook', 'ActionAdminOrdersListingFieldsModifier', $params);
+    }
+
+
+    /**
+     * Hook allows to add a custom column in orders grid (For PS 1.7)
+     *
+     * @param array $params
+     */
+    public function hookActionOrderGridDefinitionModifier(array $params)
+    {
+        return $this->runController('hook', 'ActionOrderGridDefinitionModifier', $params);
+    }
+
+
+    /**
+     * Hook allows to modify Orders query builder and add custom sql statements.
+     *
+     * @param array $params
+     */
+    public function hookActionOrderGridQueryBuilderModifier(array $params)
+    {
+        return $this->runController('hook', 'ActionOrderGridQueryBuilderModifier', $params);
+    }
+
+
+    public function wz_createCustomStatus()
+    {
+        return $this->runController('wizard', 'CreateCustomStatus');
+    }
+
+    public function wz_testConnectionApi($email, $token, $endpoint)
+    {
+        $params = ["email" => $email, "token" => $token, "endpoint" => $endpoint];
+        return $this->runController('wizard', 'TestConnectionApi', $params);
+    }
+
+    public function wz_getAvailableMarketplaces($email, $token, $endpoint)
+    {
+        $params = ["email" => $email, "token" => $token, "endpoint" => $endpoint];
+        return $this->runController('wizard', 'GetAvailableMarketplaces', $params);
+    }
+
+    public function wz_getShippingCarriersForMarketplaces()
+    {
+        return $this->runController('wizard', 'GetShippingCarriersForMarketplaces');
+    }
+
+    public function getMinimalSystemRequirements ($k)
+    {
+        if (array_key_exists($k, self::MINIMAL_SYS_REQUIREMENTS)) {
+            return self::MINIMAL_SYS_REQUIREMENTS[$k];
+        }
+
+        return false;
+    }
+
+    public function getHooksForVersion ($version)
+    {
+        if (array_key_exists($version, self::HOOKS)) {
+            return self::HOOKS[$version];
+        }
+
+        return false;
     }
 }
