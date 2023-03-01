@@ -23,6 +23,10 @@
 *  @license        http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
 
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 // Include all class needed
 require_once(dirname(__FILE__).'/init.php');
 
@@ -82,14 +86,21 @@ class Sellermania extends Module
     public function install()
     {
         // Register hooks
-        if (version_compare(_PS_VERSION_, '1.5') >= 0)
-        {
+        if (version_compare(_PS_VERSION_, '1.7') >= 0) {
+            if (!parent::install() ||  !$this->registerHook('ActionOrderGridQueryBuilderModifier') ||  !$this->registerHook('ActionOrderGridDefinitionModifier') || !$this->registerHook('displayAdminOrder') ||
+                !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder') || !$this->registerHook('actionOrderStatusUpdate')) {
+                return false;
+            }
+        } elseif (version_compare(_PS_VERSION_, '1.6') >= 0) {
+            if (!parent::install() ||  !$this->registerHook('actionAdminOrdersListingFieldsModifier') || !$this->registerHook('displayAdminOrder') ||
+                !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder') || !$this->registerHook('actionOrderStatusUpdate')) {
+                return false;
+            }
+        } elseif (version_compare(_PS_VERSION_, '1.5') >= 0) {
             if (!parent::install() || !$this->registerHook('displayAdminOrder') ||
                 !$this->registerHook('displayBackOfficeHeader') || !$this->registerHook('actionValidateOrder') || !$this->registerHook('actionOrderStatusUpdate'))
                 return false;
-        }
-        else
-        {
+        } else {
             if (!parent::install() || !$this->registerHook('adminOrder') ||
                 !$this->registerHook('backOfficeHeader') || !$this->registerHook('newOrder') || !$this->registerHook('updateOrderStatus'))
                 return false;
@@ -311,5 +322,145 @@ class Sellermania extends Module
         if (Tools::getValue('debug') == 'import') {
             echo '<!-- '.date('Y-m-d H:i:s').' '.$string.' -->'."\n";
         }
+    }
+
+
+
+
+    /**
+     * Hook allows to add a custom column in orders list (For PS 1.6)
+     *
+     * @param array $params
+     */
+    public function hookActionAdminOrdersListingFieldsModifier(array $params)
+    {
+        // If hook is called in AdminController::processFilter() we have to check existence
+        if (isset($params['select'])) {
+            $params['select'] .= ', sm.`ref_order` AS `sm_id_order`';
+}
+
+        // If hook is called in AdminController::processFilter() we have to check existence
+        if (isset($params['join'])) {
+            $params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'sellermania_order` AS sm ON (a.`id_order` = sm.`id_order`)';
+        }
+
+        $tmp_params = $params['fields'];
+        $params['fields'] = [];
+        $prev_key = '';
+        foreach ($tmp_params as $key => $tmp_param) {
+            if ($prev_key === "reference") {
+                $params['fields'] += [
+                    'sm_id_order' => [
+                        'title' => $this->l('MP Reference'),
+                        'align' => 'text-center',
+                        'class' => 'fixed-width-xs',
+                        'filter_key' => 'sm!ref_order',
+                        'order_key' => 'sm!ref_order',
+                    ],
+                ];
+            }
+
+            $params['fields'] += [
+                $key => $tmp_param
+            ];
+            $prev_key = $key;
+        }
+    }
+
+
+    /**
+     * Hook allows to add a custom column in orders grid (For PS 1.7)
+     *
+     * @param array $params
+     */
+    public function hookActionOrderGridDefinitionModifier(array $params)
+    {
+        /** @var GridDefinitionInterface $definition */
+        $definition = $params['definition'];
+
+        $definition
+            ->getColumns()
+            ->addAfter(
+                'reference',
+                (new DataColumn('sm_id_order'))
+                    ->setName($this->l('MP Reference'))
+                    ->setOptions([
+                        'field' => 'sm_id_order',
+                    ])
+            )
+        ;
+
+        // For search filter
+        $definition->getFilters()
+            ->add(
+                (new Filter('sm_id_order', TextType::class))
+                    ->setAssociatedColumn('sm_id_order')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => 'Marketlpace Order ID',
+                        ],
+                    ])
+            )
+        ;
+    }
+
+
+    /**
+     * Hook allows to modify Orders query builder and add custom sql statements.
+     *
+     * @param array $params
+     */
+    public function hookActionOrderGridQueryBuilderModifier(array $params)
+    {
+        /** @var QueryBuilder $searchQueryBuilder */
+        $searchQueryBuilder = $params['search_query_builder'];
+
+        /** @var CustomerFilters $searchCriteria */
+        $searchCriteria = $params['search_criteria'];
+
+
+        $searchQueryBuilder->addSelect(
+            ' IF(sm.`ref_order` IS NULL, "#####", sm.`ref_order`) AS `sm_id_order`'
+        );
+
+        $searchQueryBuilder->leftJoin(
+            'o',
+            '`' . pSQL(_DB_PREFIX_) . 'sellermania_order`',
+            'sm',
+            'sm.`id_order` = o.`id_order`'
+        );
+
+         /** @var QueryBuilder  $countQueryBuilder */
+        $countQueryBuilder = $params['count_query_builder'];
+
+
+
+        if ('sm_id_order' === $searchCriteria->getOrderBy()) {
+            $searchQueryBuilder->orderBy('sm.`id_order`', $searchCriteria->getOrderWay());
+        }
+
+        foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
+            if ('sm_id_order' === $filterName) {
+                $searchQueryBuilder->andWhere('sm.`ref_order` = :ref_order');
+                $searchQueryBuilder->setParameter('ref_order', $filterValue);
+                if (!$filterValue) {
+                    $searchQueryBuilder->orWhere('sm.`ref_order` IS NULL');
+                }
+
+                $countQueryBuilder->leftJoin(
+                    'o',
+                    '`' . pSQL(_DB_PREFIX_) . 'sellermania_order`',
+                    'sm',
+                    'sm.`id_order` = o.`id_order`'
+                );
+
+                $countQueryBuilder->andWhere('sm.`ref_order` = :ref_order');
+                $countQueryBuilder->setParameter('ref_order', $filterValue);
+            }
+        }
+
+        // var_dump($countQueryBuilder->getSql()); die;
+
     }
 }
