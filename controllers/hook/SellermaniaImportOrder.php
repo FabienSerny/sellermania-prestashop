@@ -364,6 +364,9 @@ class SellermaniaImportOrderController
             $this->data['OrderInfo']['Transport'] = (array)$this->data['OrderInfo']['Transport'];
         }
         // Fix payment date
+        if (!is_array($this->data['Paiement'])) {
+            $this->data['Paiement'] = [];
+        }
         if (!isset($this->data['Paiement']['Date']) || empty($this->data['Paiement']['Date'])) {
             $this->data['Paiement'] = array();
             $this->data['Paiement']['Date'] = date('Y-m-d H:i:s');
