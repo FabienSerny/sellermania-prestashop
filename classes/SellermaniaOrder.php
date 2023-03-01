@@ -67,6 +67,9 @@ class SellermaniaOrder extends ObjectModel
     /** @var string Date Import */
     public $date_add;
 
+    /** @var string IMEI number */
+    public $order_imei;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -75,17 +78,18 @@ class SellermaniaOrder extends ObjectModel
         'primary' => 'id_sellermania_order',
         'multilang' => false,
         'fields' => array(
-            'marketplace' =>                 array('type' => 3, 'required' => true, 'size' => 128),
-            'customer_name' =>                 array('type' => 3, 'required' => true, 'size' => 256),
-            'ref_order' =>                     array('type' => 3, 'required' => true, 'size' => 128),
-            'amount_total' =>                 array('type' => 3, 'required' => true, 'size' => 16),
-            'info' =>                         array('type' => 3, 'required' => true),
-            'error' =>                         array('type' => 3),
-            'id_order' =>                     array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_employee_accepted' =>        array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
-            'date_payment' =>                array('type' => 3, 'validate' => 'isDate'),
-            'date_accepted' =>                array('type' => 3, 'validate' => 'isDate'),
-            'date_add' =>                     array('type' => 5, 'validate' => 'isDate', 'copy_post' => false),
+            'marketplace'          => array('type' => 3, 'required' => true, 'size' => 128),
+            'customer_name'        => array('type' => 3, 'required' => true, 'size' => 256),
+            'ref_order'            => array('type' => 3, 'required' => true, 'size' => 128),
+            'amount_total'         => array('type' => 3, 'required' => true, 'size' => 16),
+            'info'                 => array('type' => 3, 'required' => true),
+            'error'                => array('type' => 3),
+            'id_order'             => array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_employee_accepted' => array('type' => 1, 'validate' => 'isUnsignedId', 'required' => true),
+            'date_payment'         => array('type' => 3, 'validate' => 'isDate'),
+            'date_accepted'        => array('type' => 3, 'validate' => 'isDate'),
+            'date_add'             => array('type' => 5, 'validate' => 'isDate', 'copy_post' => false),
+            'order_imei'           => array('type' => 3),
         ),
     );
     /*    Can't use constant if we want to be compliant with PS 1.4
@@ -123,14 +127,14 @@ class SellermaniaOrder extends ObjectModel
         $sellermania_order->details['OrderInfo']['SubtotalVAT'] = array();
         $sellermania_order->details['OrderInfo']['PackingShippingFee'] = array('PriceWithoutVAT' => 0, 'VATPercent' => 0, 'TotalVAT' => 0);
         foreach ($sellermania_order->details['OrderInfo']['Product'] as $kp => $product) {
-
+            if ($product['ItemName'] != 'Frais de gestion') {
             // Calcul VAT percent
             $product_vat_percent = (string)((float)($product['VatRate'] / 100));
             $shipping_vat_percent = (float)($product['VatRateShipping'] / 100);
             $sellermania_order->details['OrderInfo']['Product'][$kp]['ProductVAT']['VATPercent'] = $product_vat_percent;
 
             // Calcul VAT for shipping
-            if ($product['ShippingFee']['Amount']['Price'] > 0) {
+                if (isset($product['ShippingFee']['Amount']['Price']) && $product['ShippingFee']['Amount']['Price'] > 0) {
                 $shipping_vat_rate = 1 + ($shipping_vat_percent / 100);
                 $sellermania_order->details['OrderInfo']['PackingShippingFee']['PriceWithoutVAT'] += ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate) * $product['QuantityPurchased'];
                 $sellermania_order->details['OrderInfo']['PackingShippingFee']['TotalVAT'] += ($product['ShippingFee']['Amount']['Price'] - ($product['ShippingFee']['Amount']['Price'] / $shipping_vat_rate));
@@ -145,6 +149,7 @@ class SellermaniaOrder extends ObjectModel
                 $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] = 0;
             }
             $sellermania_order->details['OrderInfo']['SubtotalVAT'][$product_vat_percent] += $product['ProductVAT']['unit'] * $product['QuantityPurchased'];
+        }
         }
 
         // Check if shipping is good
@@ -256,9 +261,9 @@ class SellermaniaOrder extends ObjectModel
         $orders = array();
         foreach ($not_imported_orders as $order) {
             $order['info'] = json_decode($order['info'], true);
-            if ($order['info']['OrderInfo']['TotalAmount']['Amount']['Price'] > 0) {
+           // if ($order['info']['OrderInfo']['TotalAmount']['Amount']['Price'] > 0) {
                 $orders[] = $order;
-            }
+           // }
         }
 
         return $orders;
@@ -287,18 +292,35 @@ class SellermaniaOrder extends ObjectModel
      */
     public static function getTrackingNumbersToSynchronize()
     {
-        return Db::getInstance()->executeS('
-            SELECT o.`id_order`, oc.`tracking_number`, so.id_sellermania_order, so.`info`
-            FROM `'._DB_PREFIX_.'orders` o
-            LEFT JOIN `'._DB_PREFIX_.'order_carrier` oc ON (oc.id_order = o.id_order)
-            LEFT JOIN `'._DB_PREFIX_.'sellermania_order` so ON (so.id_order = o.id_order)
-            WHERE oc.`tracking_number` != \'\'
-            AND (
-                o.`current_state` != '.(int)Configuration::get('PS_OS_SM_DISPATCHED').' OR (
-                    o.`current_state` = '.(int)Configuration::get('PS_OS_SM_DISPATCHED').' AND so.`info` NOT LIKE \'%TrackingNumber%\'
+        $ps_os_sm_dispatched = Configuration::get('PS_OS_SM_DISPATCHED');
+        if (self::isJson($ps_os_sm_dispatched)) {
+            if ($ps_os_sm_dispatched) {
+                $dispatched_status = implode( ", " , json_decode($ps_os_sm_dispatched));
+                if ($dispatched_status != null) {
+                    $sql = '
+                SELECT o.`id_order`, oc.`tracking_number`, so.id_sellermania_order, so.`info`,o.`current_state`
+                FROM `'._DB_PREFIX_.'orders` o
+                JOIN `'._DB_PREFIX_.'sellermania_order` so ON (so.id_order = o.id_order)
+                LEFT JOIN `'._DB_PREFIX_.'order_carrier` oc ON (oc.id_order = o.id_order)
+                WHERE oc.`tracking_number` != \'\'
+                AND (
+                    o.`current_state` NOT IN ('.$dispatched_status.') OR (
+                        o.`current_state` IN ('.$dispatched_status.') AND so.`info` NOT LIKE \'%TrackingNumber%\'
+                    )
                 )
-            )
-        ');
+            ';
+
+                    return Db::getInstance()->executeS($sql);
+                }
+            }
+        }
+
+        return [];
+    }
+
+    public static function isJson($str) {
+        $json = json_decode($str);
+        return $json && $str != $json;
     }
 
     /*** Retrocompatibility 1.4 ***/
@@ -324,6 +346,7 @@ class SellermaniaOrder extends ObjectModel
         $fields['info'] = pSQL($this->info);
         $fields['error'] = pSQL($this->error);
         $fields['id_order'] = (int)$this->id_order;
+        $fields['order_imei'] = pSQL($this->order_imei);
         $fields['id_employee_accepted'] = (int)$this->id_employee_accepted;
         $fields['date_payment'] = pSQL($this->date_payment);
         $fields['date_accepted'] = pSQL($this->date_accepted);

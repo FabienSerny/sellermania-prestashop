@@ -91,7 +91,7 @@ $(document).ready(function() {
                 scrollTop: target.offset().top
             }, 1000);
             return false;
-        }
+        }        
     });
    
     // Add button check all
@@ -113,13 +113,6 @@ $(document).ready(function() {
             sellermania_update_line_status();
         });
     }
-
-    // If status has changed
-    if (sellermania_status_update_result !== 'undefined')
-        sellermania_block_product_general_legend.after(sellermania_status_update_result);
-    if (sellermania_error_result !== 'undefined')
-        sellermania_block_product_general_legend.after(sellermania_error_result);
-
 
     // Check status
     $('.status_order_line').click(function() {

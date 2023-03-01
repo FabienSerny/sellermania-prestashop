@@ -29,11 +29,11 @@
 
 {literal}
 <script>
-        $('#category-tree-select-all-{/literal}{$categories_tree_id}{literal}').click(function() {
-    $('.categories-tree-checkbox-{$categories_tree_id}').attr('checked', 'checked');
+$('#category-tree-select-all-{/literal}{$categories_tree_id}{literal}').click(function() {
+    $('.categories-tree-checkbox-{/literal}{$categories_tree_id}{literal}').attr('checked', 'checked');
 });
-        $('#category-tree-unselect-all-{/literal}{$categories_tree_id}{literal}').click(function() {
-    $('.categories-tree-checkbox-{$categories_tree_id}').removeAttr('checked');
+$('#category-tree-unselect-all-{/literal}{$categories_tree_id}{literal}').click(function() {
+    $('.categories-tree-checkbox-{/literal}{$categories_tree_id}{literal}').removeAttr('checked');
 });
 </script>
 

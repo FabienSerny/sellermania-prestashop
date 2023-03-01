@@ -32,6 +32,7 @@ if (!defined('_PS_VERSION_')) {
 
 // Load ImportOrder Controller
 require_once(dirname(__FILE__).'/SellermaniaImportOrder.php');
+require_once(_PS_MODULE_DIR_.'sellermania'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'SellermaniaHelper.php');
 
 class SellermaniaDisplayAdminOrderController
 {
@@ -63,6 +64,11 @@ class SellermaniaDisplayAdminOrderController
             1 => $this->module->l('To dispatch', 'sellermaniadisplayadminorder'),
             5 => $this->module->l('Awaiting dispatch', 'sellermaniadisplayadminorder'),
             2 => $this->module->l('Dispatched', 'sellermaniadisplayadminorder'),
+            20 => $this->module->l('Delivered - AMAZON VENDOR', 'sellermaniadisplayadminorder'),
+            21 => $this->module->l('Ready to ship - QuelBonPlan', 'sellermaniadisplayadminorder'),
+            14 => $this->module->l('Available in store', 'sellermaniadisplayadminorder'),
+            15 => $this->module->l('Picked Up', 'sellermaniadisplayadminorder'),
+            16 => $this->module->l('Non Picked Up', 'sellermaniadisplayadminorder'),
         );
     }
 
@@ -70,13 +76,14 @@ class SellermaniaDisplayAdminOrderController
      * Save status
      * @param string $order_id
      */
-    public function saveOrderStatus($order_id, $sellermania_order)
+    public function saveOrderStatus($order_id, $sellermania_order, $ps_id_order)
     {
         // Check if form has been submitted
         if (Tools::getValue('sellermania_line_max') == '') {
             return false;
         }
-
+        $prestashop_order = new Order($ps_id_order);
+        $ps_id_carrier = $prestashop_order->id_carrier;
         // Preprocess data
         $order_items = array();
         $line_max = Tools::getValue('sellermania_line_max');
@@ -89,12 +96,10 @@ class SellermaniaDisplayAdminOrderController
                         $sellermania_order['OrderInfo']['Product'][$kp]['Status'] == \Sellermania\OrderConfirmClient::STATUS_TO_BE_CONFIRMED)
                     {
                         $shipping_service = Configuration::get('SM_IMPORT_DEFAULT_SHIPPING_SERVICE');
-                        $marketplace_name = str_replace('.', '_', $sellermania_order['OrderInfo']['MarketPlace']);
-                        if (Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY') != ''){
-                            $shipping_carrier = Configuration::get('SM_MKP_'.$marketplace_name.'_DELIVERY');
-                        }
-                        if (Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE') != ''){
-                            $shipping_service = Configuration::get('SM_MKP_'.$marketplace_name.'_SERVICE');
+                        if ($ps_id_carrier != '') {
+                            $smhelper = new SellermaniaHelper();
+                            $shipping_carrier = $smhelper->getMPCarrierFromPSCarrierByMP($sellermania_order['OrderInfo']['MarketPlace'], $ps_id_carrier);
+                            $shipping_service = $smhelper->getShippingServiceForMarketplace($sellermania_order['OrderInfo']['MarketPlace'], $ps_id_carrier);
                         }
 
                         $oi = array(
@@ -107,17 +112,17 @@ class SellermaniaDisplayAdminOrderController
                             'shipmentOrigin' => strtoupper(Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE')),
                             'importOrigin' => strtoupper(Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE')),
                         );
-                        if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
-                            $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
-                        }
-                        if ($sellermania_order['OrderInfo']['MarketPlace'] == 'RAKUTEN.FR') {
-                            if ($oi['shipmentOrigin'] == 'FR') {
-                                $oi['shipmentOrigin'] = 'FX';
+//                        if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
+//                            $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
+//                        }
+                        $order_mkp = explode('.',$sellermania_order['OrderInfo']['MarketPlace']);
+                            if(!empty($order_mkp)){
+                                $mkp = $order_mkp[0];
+                                if (in_array($mkp,json_decode(Configuration::get('SM_MKPS_MERCHANTID')))) {
+                                $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
                             }
-                            if ($oi['importOrigin'] == 'FR') {
-                                $oi['importOrigin'] = 'FX';
-                            }
                         }
+                        
                         $order_items[] = $oi;
 
                         $sellermania_order['OrderInfo']['Product'][$kp]['Status'] = Tools::getValue('status_'.$i);
@@ -174,12 +179,7 @@ class SellermaniaDisplayAdminOrderController
             }
         }
 
-        if (empty($orders_to_ship)) {
-            return false;
-        }
-
-        // Register shipping data
-        return self::registerShippingData($orders_to_ship);
+        return $orders_to_ship;
     }
 
     /**
@@ -197,12 +197,23 @@ class SellermaniaDisplayAdminOrderController
         if ($status_to_ship != 1)
             return false;
 
+        $tracking_url = '';
+        if (Tools::getValue('tracking_url') !== '') {
+            $tracking_url = Tools::getValue('tracking_url');
+        }
+        $logistic_weight = '';
+        if (Tools::getValue('logistic_weight') !== '') {
+            $logistic_weight = Tools::getValue('logistic_weight');
+        }
         // Set orders param
         $orders = array(
             array(
                 'id_order' => (int)Tools::getValue('id_order'),
                 'tracking_number' => Tools::getValue('tracking_number'),
+                'tracking_url' => $tracking_url,
+                'logistic_weight' => $logistic_weight,
                 'shipping_name' => Tools::getValue('shipping_name'),
+                'order_imei' => Tools::getValue('order_imei'),
             ),
         );
 
@@ -246,8 +257,24 @@ class SellermaniaDisplayAdminOrderController
                                 'shipmentOrigin' => strtoupper(Configuration::get('SM_SHIPMENT_DEFAULT_COUNTRY_CODE')),
                                 'importOrigin' => strtoupper(Configuration::get('SM_IMPORT_DEFAULT_COUNTRY_CODE'))
                             );
-                            if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
-                                $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
+//                            if ($sellermania_order['OrderInfo']['MarketPlace'] == 'SHOPPINGACTIONS.FR') {
+//                                $oi['merchantOrderId'] = SellermaniaOrder::getOrderIdBySellermaniaOrderReference($sellermania_order['OrderInfo']['MarketPlace'], $sellermania_order['OrderInfo']['OrderId']);
+//                            }
+                            if ($order['tracking_url'] != '') {
+                                $oi['trackingUrl'] = pSQL($order['tracking_url']);
+                            }
+                            if ($order['logistic_weight'] != '') {
+                                $oi['logisticWeight'] = pSQL($order['logistic_weight']);
+                            }
+                            $order_mkp = explode('.',$sellermania_order['OrderInfo']['MarketPlace']);
+                                if(!empty($order_mkp)){
+                                    $mkp = $order_mkp[0];
+                                    if (in_array($mkp,json_decode(Configuration::get('SM_MKPS_MERCHANTID')))) {
+                                    $oi['merchantOrderId'] = $sellermania_order['OrderInfo']['OrderId'];
+                                }
+                            }
+                            if (isset($order['order_imei'][$product['Sku']]) && $order['order_imei'][$product['Sku']] != '') {
+                                $oi['imei'] = pSQL($order['order_imei'][$product['Sku']]);                                
                             }
                             $order_items[] = $oi;
                         }
@@ -255,7 +282,6 @@ class SellermaniaDisplayAdminOrderController
                 }
             }
         }
-
         if (empty($order_items)) {
             return false;
         }
@@ -364,26 +390,32 @@ class SellermaniaDisplayAdminOrderController
 
         // Check which status the order is
         $new_order_state = false;
+        $new_order_state_list = array();
         foreach ($this->module->sellermania_order_states as $kos => $os)
             if ($new_order_state === false)
             {
-                // If the status is a priority status and one of the product has this status
-                // The order will have this status
-                if ($os['sm_prior'] == 1)
-                {
-                    foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-                        if (isset($product['Status']) && $product['Status'] == $os['sm_status'])
-                            $new_order_state = Configuration::get($kos);
-                }
+                $ps_os_sm_kos = json_decode(Configuration::get($kos), true);
+                if (!empty($ps_os_sm_kos)) {
+                    // If the status is a priority status and one of the product has this status
+                    // The order will have this status
+                    if ($os['sm_prior'] == 1)
+                    {
+                        foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+                            if (isset($product['Status']) && $product['Status'] == $os['sm_status'])
+                                $new_order_state = (int)$ps_os_sm_kos[0];
+                                $new_order_state_list = $ps_os_sm_kos;
+                    }
 
-                // If the status is not a priority status and all products have this status
-                // The order will have this status
-                if ($os['sm_prior'] == 0)
-                {
-                    $new_order_state = Configuration::get($kos);
-                    foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-                        if (isset($product['Status']) && $product['Status'] != $os['sm_status'])
-                            $new_order_state = false;
+                    // If the status is not a priority status and all products have this status
+                    // The order will have this status
+                    if ($os['sm_prior'] == 0)
+                    {
+                        $new_order_state = (int)$ps_os_sm_kos[0];
+                        $new_order_state_list = $ps_os_sm_kos;
+                        foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+                            if (isset($product['Status']) && $product['Status'] != $os['sm_status'])
+                                $new_order_state = false;
+                    }
                 }
             }
 
@@ -391,29 +423,47 @@ class SellermaniaDisplayAdminOrderController
         if ($new_order_state === false)
         {
             // Check if there is at least one line as "Dispatched"
+            $ps_os_sm_dispatched = json_decode(Configuration::get('PS_OS_SM_DISPATCHED'), true);           
             foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
                 if ($product['Status'] == $this->module->sellermania_order_states['PS_OS_SM_DISPATCHED']['sm_status'])
-                    $new_order_state = Configuration::get('PS_OS_SM_DISPATCHED');
+                    $new_order_state = (int)$ps_os_sm_dispatched[0];
+                    $new_order_state_list = $ps_os_sm_dispatched;
 
+            //Check if it is an order cancelled by the buyer(PS_OS_SM_CANCEL_SEL same for seller and buyer)
+            $ps_os_sm_can_sel = json_decode(Configuration::get('PS_OS_SM_CANCEL_SEL'), true);   
+            foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
+                if ($product['Status'] == \Sellermania\OrderConfirmClient::STATUS_CANCELLED_CUSTOMER)
+                    //$new_order_state = (int)$ps_os_sm_can_sel[0];
+                    $new_order_state = Configuration::get('PS_OS_CANCELED');
+                
             // If yes, we check if others states are not different of "CANCEL" or "DISPATCH"
-            if ($new_order_state == Configuration::get('PS_OS_SM_DISPATCHED'))
+            if ($new_order_state == (int)$ps_os_sm_dispatched[0])
                 foreach ($sellermania_order['OrderInfo']['Product'] as $kp => $product)
-                    if ($product['Status'] != $this->module->sellermania_order_states['PS_OS_SM_CANCEL_CUS']['sm_status'] &&
+                    if (/*$product['Status'] != $this->module->sellermania_order_states['PS_OS_SM_CANCEL_CUS']['sm_status'] &&*/
                         $product['Status'] != $this->module->sellermania_order_states['PS_OS_SM_CANCEL_SEL']['sm_status'] &&
                         $product['Status'] != $this->module->sellermania_order_states['PS_OS_SM_DISPATCHED']['sm_status'])
                         $new_order_state = false;
         }
-
+        $ps_os_sm_awaiting = json_decode(Configuration::get('PS_OS_SM_AWAITING'), true);
         // If status is false or equal to first status assigned, we do not change it
-        if ($new_order_state === false || $new_order_state == Configuration::get('PS_OS_SM_AWAITING'))
+        if ($new_order_state === false || $new_order_state == (int)$ps_os_sm_awaiting[0])
             return false;
 
-
         // We check if the status is not already set
-        $id_order_history = Db::getInstance()->getValue('
+        $sql = 'SELECT `id_order_history` FROM `'._DB_PREFIX_.'order_history`
+                WHERE `id_order` = '.(int)$id_order;
+
+        if(!empty($new_order_state_list)){
+            $sql .=  ' AND `id_order_state` IN ('.implode( ", " , $new_order_state_list).')';
+        }else{
+            $sql .=  ' AND `id_order_state` = '.(int)$new_order_state;
+        }
+        
+       /* $id_order_history = Db::getInstance()->getValue('
         SELECT `id_order_history` FROM `'._DB_PREFIX_.'order_history`
         WHERE `id_order` = '.(int)$id_order.'
-        AND `id_order_state` = '.(int)$new_order_state);
+        AND `id_order_state` = '.(int)$new_order_state);*/
+        $id_order_history = Db::getInstance()->getValue($sql);
         if ($id_order_history > 0)
             return false;
 
@@ -435,6 +485,52 @@ class SellermaniaDisplayAdminOrderController
         $history->add();
     }
 
+    public function saveImeiNumber($shipping_status_result)
+    {
+        // Update order_imei
+        $imei_number = Tools::getValue('order_imei');
+        if (isset($shipping_status_result['OrderItemConfirmationStatus']) && !empty($shipping_status_result['OrderItemConfirmationStatus'])) {
+
+            foreach($shipping_status_result['OrderItemConfirmationStatus'] as $result) {
+                $status = $result['Status'];
+                $sku = $result['sku'];
+                if($status == 'ERROR'){
+                    $imei_number[$sku] = '';
+                }
+            }
+
+            if (isset($imei_number) && !empty($imei_number)) {
+                $id_sellermania_order = Db::getInstance()->getValue('SELECT `id_sellermania_order` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
+                $smo = new SellermaniaOrder($id_sellermania_order);                   
+                $smo->order_imei = json_encode($imei_number);
+                $smo->date_accepted = NULL;
+                $smo->update();
+            }
+        }
+        return $imei_number;
+    }
+
+    public function IMEIValidation($n)
+    {
+        $str = '';
+        foreach (str_split(strrev((string) $n)) as $i => $d) {
+            $str .= $i %2 !== 0 ? $d * 2 : $d;
+        }
+        return array_sum(str_split($str)) % 10 === 0;
+    }
+
+    public function IsValidIMEI($imei_number)
+    {
+        if (isset($imei_number) && !empty($imei_number)) {
+            foreach ($imei_number as $key => $imei) {
+                if ($imei != '' &&( !$this->IMEIValidation($imei) || strlen($imei) != 15)) {
+                    $this->context->smarty->assign('sellermania_error', strip_tags('SKU:'.$key.' : '.$imei.' is Invalid IMEI Number'));
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     /**
      * Run method
@@ -443,13 +539,14 @@ class SellermaniaDisplayAdminOrderController
     public function run()
     {
         // Retrieve order data
-        $data = Db::getInstance()->getRow('SELECT `ref_order`, `info` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
+        $data = Db::getInstance()->getRow('SELECT `ref_order`, `order_imei`,`info`,`id_order` FROM `'._DB_PREFIX_.'sellermania_order` WHERE `id_order` = '.(int)Tools::getValue('id_order'));
         $ref_order = $data['ref_order'];
+        $sellermania_order_imei = json_decode($data['order_imei'], true);
         $sellermania_order = $data['info'];
         if (empty($sellermania_order)) {
             return '';
         }
-
+        $ps_id_order = $data['id_order'];
         // Decode order data
         $sellermania_order = json_decode($sellermania_order, true);
 
@@ -459,17 +556,34 @@ class SellermaniaDisplayAdminOrderController
         }
 
         // Save order line status
-        $result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId'], $sellermania_order);
+        $result_status_update = $this->saveOrderStatus($sellermania_order['OrderInfo']['OrderId'], $sellermania_order, $ps_id_order);
+        
+        $error_msg = '';
+        if (Tools::getValue('sellermania_tracking_registration') != '') {
+            if (Configuration::get('SM_IMPORT_AC_ORDERS_AFTER_ADDING_TRACKING_NUMBER') == 'on') {
+                // Check if there is a flag to dispatch
+                $result_shipping_status_update = $this->saveShippingStatus($sellermania_order);
+            } else {
+                $error_msg = 'Please enable "Auto-shipment orders after adding tracking number" option and try again';
+            }
+        }
 
-        // Check if there is a flag to dispatch
-        $result_shipping_status_update = $this->saveShippingStatus($sellermania_order);
+
+        $mkps = explode('.',$sellermania_order['OrderInfo']['MarketPlace']);
+        $imei_mkps = Configuration::get('SM_IMEI_MKPS');
+        if ((!in_array($mkps[0],json_decode($imei_mkps))) || $this->IsValidIMEI(Tools::getValue('order_imei'))) {
+            //Save IMEI Number
+            $imei_number = $this->saveImeiNumber($result_shipping_status_update);
+            if(empty($imei_number)){
+                $imei_number = $sellermania_order_imei;
+            }
+        }
 
         // Refresh order from Sellermania webservices
         $return = $this->refreshOrder($sellermania_order['OrderInfo']['OrderId']);
         if ($return !== false) {
             $sellermania_order = $return;
         }
-
         // Refresh flag to dispatch
         $status_to_ship = self::isStatusToShip($sellermania_order);
 
@@ -495,6 +609,7 @@ class SellermaniaDisplayAdminOrderController
 
         $this->context->smarty->assign('ps_version', $this->ps_version);
         $this->context->smarty->assign('sellermania_order', $sellermania_order);
+        $this->context->smarty->assign('sellermania_imei', $imei_number);
         $this->context->smarty->assign('sellermania_currency', $sellermania_currency);
         $this->context->smarty->assign('sellermania_module_path', $this->web_path);
         $this->context->smarty->assign('sellermania_status_list', $this->status_list);
@@ -505,7 +620,10 @@ class SellermaniaDisplayAdminOrderController
 
         $this->context->smarty->assign('sellermania_enable_native_refund_system', Configuration::get('SM_ENABLE_NATIVE_REFUND_SYSTEM'));
         $this->context->smarty->assign('sellermania_enable_native_order_interface', Configuration::get('SM_ENABLE_NATIVE_ORDER_INTERFACE'));
-
+        $this->context->smarty->assign('imei_mkps', json_decode($imei_mkps));
+        $this->context->smarty->assign('tracking_url_mkps', json_decode(Configuration::get('SM_TRACKING_URL_MKPS')));
+        $this->context->smarty->assign('logistic_weight_mkps', json_decode(Configuration::get('SM_LOGISTIC_WEIGHT_MKPS')));
+        $this->context->smarty->assign('validate_error', $error_msg);
         return $this->module->compliantDisplay('displayAdminOrder.tpl');
     }
 }

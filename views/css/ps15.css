@@ -1,0 +1,80 @@
+.panel label {
+    float: none !important;
+    text-align: left !important;
+    display: inline !important;
+}
+
+.panel fieldset {
+    background-color: transparent !important;
+}
+
+.panel select {
+    background-color: #fff;
+    border: 1px solid #aaa !important;
+    border-radius: 4px;
+    padding: 10px 20px 10px 8px!important;
+    line-height: 39px;
+}
+
+.panel table td {
+    vertical-align: middle !important;
+}
+
+.panel input {
+    max-width: 100%;
+}
+
+.panel input[type="text"], .panel input[type="password"], .panel input[type="file"], .panel textarea {
+    padding: 10px 20px 10px 8px!important;
+    border: 1px solid #aaa !important;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.panel input[type=checkbox], .panel input[type=radio] {
+    margin-top: 0 !important;
+}
+
+.btn-navigate-form-step {
+    background-image: none !important;
+}
+
+.alert-success {
+    color: #155724 !important;
+    background-color: #d4edda !important;
+    border-color: #c3e6cb !important;
+}
+
+.alert-info {
+    color: #31708f !important;
+    background-color: #d9edf7 !important;
+    border-color: #bce8f1 !important;
+}
+
+.os-alert-title {
+    padding-left: 0 !important;
+}
+
+.submit-btn {
+    background-image: none !important;
+}
+
+.btn-navigate-form-step {
+    margin-bottom: 0 !important;
+}
+
+.badge-success {
+    background: #127312 !important;
+}
+
+.badge-warning {
+    background: #ffc107 !important;
+}
+
+.badge-danger {
+    background: #dc3545 !important;
+}
+
+.panel.card {
+    border: 1px solid #dbe6e9 !important;
+}

@@ -32,13 +32,23 @@ if (!defined('_PS_VERSION_')) {
 
 class SellermaniaTestAPI
 {
-    public function run()
+    public function run($email = null, $token = null, $endpoint = null)
     {
+        if (!$email) {
+            $email = Configuration::get('SM_ORDER_EMAIL');
+        }
+        if (!$token) {
+            $token = Configuration::get('SM_ORDER_TOKEN');
+        }
+        if (!$endpoint) {
+            $endpoint = Configuration::get('SM_ORDER_ENDPOINT');
+        }
+
         // Creating an instance of OrderClient
         $client = new Sellermania\OrderClient();
-        $client->setEmail(Configuration::get('SM_ORDER_EMAIL'));
-        $client->setToken(Configuration::get('SM_ORDER_TOKEN'));
-        $client->setEndpoint(Configuration::get('SM_ORDER_ENDPOINT'));
+        $client->setEmail($email);
+        $client->setToken($token);
+        $client->setEndpoint($endpoint);
 
         // Recovering dispatched orders for one day
         $extraletter = '*';

@@ -61,11 +61,11 @@ class SellermaniaProduct
         }
 
         $whereDisabled = '';
-        $SM_EXPORT_STAY_NB_DAYS = (int)Configuration::get('SM_EXPORT_STAY_NB_DAYS');
-        if ($SM_EXPORT_STAY_NB_DAYS > 0) {
+        $SM_LAST_DAYS_TO_INCLUDE_IN_FEED = (int)Configuration::get('SM_LAST_DAYS_TO_INCLUDE_IN_FEED');
+        if ($SM_LAST_DAYS_TO_INCLUDE_IN_FEED > 0) {
             $whereDisabled = 'AND (
                 p.`active` = 1 OR
-                p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))).'\'
+                p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_LAST_DAYS_TO_INCLUDE_IN_FEED').' days'))).'\'
             )';
         }
 

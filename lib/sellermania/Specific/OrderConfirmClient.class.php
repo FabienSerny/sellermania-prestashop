@@ -26,6 +26,8 @@ class OrderConfirmClient extends GenericClient
     const STATUS_TO_BE_COLLECT_BY_LAPOSTE = 17;
     const STATUS_CANCELLED_BY_FULFILLER = 18;
     const STATUS_AZ_PENDING_ORDER = 19;
+    const STATUS_DELIVERED = 20;
+    const STATUS_READY_TO_SHIP = 21;
 
     /**
      * This method takes an array of orders, and confirm them.
@@ -89,6 +91,10 @@ class OrderConfirmClient extends GenericClient
                 self::STATUS_PICKED_UP,
                 self::STATUS_NON_PICKED_UP,
                 self::STATUS_TO_BE_COLLECT_BY_LAPOSTE,
+                self::STATUS_CANCELLED_BY_FULFILLER,
+                self::STATUS_AZ_PENDING_ORDER,
+                self::STATUS_DELIVERED,
+                self::STATUS_READY_TO_SHIP
             ));
     }
 }

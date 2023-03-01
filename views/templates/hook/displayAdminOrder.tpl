@@ -182,35 +182,91 @@
                     && (!isset($sellermania_order.OrderInfo.Transport.TrackingNumber) || empty($sellermania_order.OrderInfo.Transport.TrackingNumber))}
                 <tr>
                     <td>{l s='Tracking number PrestaShop:' mod='sellermania'}</td>
-                    <td>{$order_carrier->tracking_number}</td>
+                    <td>{$order_carrier->tracking_number}<input type="hidden" name="tracking_number" id="tracking_number" value="{$order_carrier->tracking_number}" /></td>
                 </tr>
+                    {if $sellermania_status_to_ship eq 1}
                     <tr>
                         <td>{l s='Tracking number Sellermania:' mod='sellermania'}</td>
-                        <td><img src="/img/admin/ajax-loader.gif" /> {l s='Synchronisation will be made during next orders importation' mod='sellermania'}</td>
+                        <td><img src="/img/admin/ajax-loader.gif" /> {l s='Synchronisation will be made by clicking "Synchronise tracking number" button in module configuration' mod='sellermania'}</td>
                     </tr>
+                    {/if}
                 {else}
                 <tr>
                     <td>{l s='Tracking number:' mod='sellermania'}</td>
                     <td>
-                        {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber) && $sellermania_status_to_ship eq 1}
-                            <input type="text" name="tracking_number" id="tracking_number" />
+                        {if $sellermania_status_to_ship eq 1}
+                            <input type="text" name="tracking_number" id="tracking_number" value="{if isset($order_carrier->tracking_number) && !empty($order_carrier->tracking_number)}{$order_carrier->tracking_number}{elseif !empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}{$sellermania_order.OrderInfo.Transport.TrackingNumber}{/if}" />
                         {else}
                             {if empty($sellermania_order.OrderInfo.Transport.TrackingNumber)}-{else}{$sellermania_order.OrderInfo.Transport.TrackingNumber}{/if}
                         {/if}
                     </td>
                 </tr>
                 {/if}
+                {assign var="mkps" value="."|explode:$sellermania_order.OrderInfo.MarketPlace}
+                
+                {if count($sellermania_order.OrderInfo.Product) gt 0 && in_array($mkps[0],$tracking_url_mkps)}                   
+                    <tr>
+                        <td>{l s='Tracking URL:' mod='sellermania'}</td>
+                        <td>
+                            {if $sellermania_status_to_ship eq 1}
+                                <input class="sm_textbox" type="text" value="{if !empty($sellermania_order.OrderInfo.Transport.TrackingUrl)}{$sellermania_order.OrderInfo.Transport.TrackingUrl}{/if}" name="tracking_url" id="tracking_url" />
+                            {else}
+                                {if empty($sellermania_order.OrderInfo.Transport.TrackingUrl)}-{else}{$sellermania_order.OrderInfo.Transport.TrackingUrl}{/if}
+                            {/if}
+                        </td>
+                    </tr>
+                {/if}
+                {if count($sellermania_order.OrderInfo.Product) gt 0 && in_array($mkps[0],$logistic_weight_mkps)}                   
+                    <tr>
+                        <td>{l s='Logistic weight:' mod='sellermania'}</td>
+                        <td>
+                            {if $sellermania_status_to_ship eq 1}
+                                <input class="sm_textbox" type="text" value="{if !empty($sellermania_order.OrderInfo.LogisticWeight)}{$sellermania_order.OrderInfo.LogisticWeight}{/if}" name="logistic_weight" id="logistic_weight" />
+                            {else}
+                                {if empty($sellermania_order.OrderInfo.LogisticWeight)}-{else}{$sellermania_order.OrderInfo.LogisticWeight}{/if}
+                            {/if}
+                        </td>
+                    </tr>
+                {/if}
+                {if count($sellermania_order.OrderInfo.Product) gt 0 && in_array($mkps[0],$imei_mkps)}
+                    <tr>
+                        <td><b>{l s='IMEI number:' mod='sellermania'}</b></td>
+                        <td></td>
+                    </tr>
+
+                    {foreach from=$sellermania_order.OrderInfo.Product|@array_reverse item=product}
+                        {if $product.ItemName neq 'Frais de gestion' }
+                        <tr>
+                            <td>{l s='SKU:' mod='sellermania'}{$product.Sku}</td>
+                            <td>
+                                {if $product.QuantityPurchased eq 1}
+                                    {if $sellermania_status_to_ship eq 1}
+                                        <input class="sm_textbox" type="text" value="{$sellermania_imei[{$product.Sku}]}" name="order_imei[{$product.Sku}]" id="order_imei_{$product.Sku}" />
+                                    {else}
+                                        <input class="sm_textbox" type="text" disabled value="{$sellermania_imei[{$product.Sku}]}" name="order_imei[{$product.Sku}]" id="order_imei_{$product.Sku}" />
+                                    {/if}
+                                {else}
+                                    {l s='The IMEI number cannot be entered for order lines with a quantity greater than 1.' mod='sellermania'}
+                                {/if}
+                            </td>
+                        </tr>
+                        {/if}
+                    {/foreach}
+                {/if}
                 </tbody>
             </table>
             {if $sellermania_status_to_ship eq 1}
                 <input type="hidden" name="sellermania_tracking_registration" value="yes" />
+                {if $validate_error}
+                    <p><div class="error alert alert-danger">{$validate_error}</div></p>
+                {/if}
                 <p align="center"><input type="submit" value="{l s='Validate' mod='sellermania'}" class="button btn btn-default" /></p>
             {/if}
             <div id="sellermania_template_shipping_status_update" style="display:none;">
             {if is_array($sellermania_shipping_status_update)}
 
                     {foreach from=$sellermania_shipping_status_update.OrderItemConfirmationStatus item=result}
-                        <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}" style="float:left">
+                        <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}">
                             {l s='Order line status update for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
                             {if isset($result.Message)}<br><i>{$result.Message}</i>{/if}
                         </div>
@@ -234,24 +290,25 @@
     {***************************************************************}
     {if is_array($sellermania_status_update)}
     <div id="sellermania-template-status-update">
-        <br clear="left" /><br />
+        <br clear="left" />
         {foreach from=$sellermania_status_update.OrderItemConfirmationStatus item=result}
-            <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}" style="float:left">
+            <div class="{if $result.Status eq 'SUCCESS'}conf alert alert-success{else}error alert alert-danger{/if}">
                 {l s='Order line status update for sku' mod='sellermania'} "{$result.sku}" : {$result.Status}
                 {if isset($result.Message)}<br><i>{$result.Message}</i>{/if}
             </div>
         {/foreach}
     </div>
     {/if}
-
+    <div style="display:none;">
     {if isset($sellermania_error)}
     <div id="sellermania-template-error">
-        <br clear="left" /><br />
-        <div class="error alert alert-danger" style="float:left">
+        <br clear="left" />
+        <div class="error alert alert-danger">
             {$sellermania_error}
         </div>
     </div>
     {/if}
+    </div>
 
 </div>
 
@@ -328,3 +385,32 @@
 
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder-{$ps_version}.js"></script>
 <script type="text/javascript" src="{$sellermania_module_path}views/js/displayAdminOrder.js"></script>
+
+<style>
+    #sellermania-template-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #sellermania-template-title h2 {
+        margin-bottom: 0;
+    }
+    #sellermania-template-order-summary .table {
+        border: 1px solid #bbcdd2;
+    }
+    #sellermania-template-order-summary .table tr:hover {
+        background: #f1f1f1;
+    }
+    #sellermania-template-order-summary .table td:nth-child(1) {
+        font-weight: bold;
+    }
+    #sellermania-template-order-summary .table td:nth-child(2) {
+        text-align: right;
+    }
+    #shipping_name, #tracking_number, [id^=order_imei_] {
+        width: 200px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 7px;
+    }
+</style>

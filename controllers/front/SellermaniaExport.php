@@ -488,9 +488,14 @@ class SellermaniaExportController
 
     public function isProductExportable($row)
     {
-        if ($row['quantity'] > 0 || Configuration::get('SM_EXPORT_STAY_NB_DAYS') == 0 || $row['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_EXPORT_STAY_NB_DAYS').' days'))) {
+        if (
+                $row['quantity'] > 0 
+                || Configuration::get('SM_PRODUCT_TO_INCLUDE_IN_FEED') == 'all' 
+                || (Configuration::get('SM_PRODUCT_TO_INCLUDE_IN_FEED') == 'without_oos') && (Configuration::get('SM_LAST_DAYS_TO_INCLUDE_IN_FEED') > 0 && ($row['date_upd'] > date('Y-m-d', strtotime('-'.(int)Configuration::get('SM_LAST_DAYS_TO_INCLUDE_IN_FEED').' days'))) )
+            ) {
             return true;
         }
+        
         return false;
     }
 
