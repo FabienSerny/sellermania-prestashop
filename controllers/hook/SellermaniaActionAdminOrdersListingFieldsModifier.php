@@ -60,7 +60,7 @@ class SellermaniaActionAdminOrdersListingFieldsModifierController
             $this->params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'sellermania_order` AS sm ON (a.`id_order` = sm.`id_order`)';
         }
 
-        if (array_key_exists("sm_id_order", $this->params['fields'])) {
+        if (!array_key_exists("sm_id_order", $this->params['fields'])) {
             $tmp_params = $this->params['fields'];
             $this->params['fields'] = [];
             $prev_key = '';
