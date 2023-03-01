@@ -42,7 +42,7 @@ class SellermaniaInstaller
             "icon" => "settings",
         ],
         "diagnostics" => [
-            "name" => ["fr" => "Diagnostique", "en" => "Diagnostic"],
+            "name" => ["fr" => "Diagnostic", "en" => "Diagnostic"],
             "class" => "AdminSellermaniaDiagnostics",
             "icon" => "star_border",
         ],
