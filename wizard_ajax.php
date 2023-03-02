@@ -1,6 +1,5 @@
 <?php
 
-// Construct path
 $config_path = dirname(__FILE__).'/../../config/config.inc.php';
 $module_path = dirname(__FILE__).'/sellermania.php';
 
