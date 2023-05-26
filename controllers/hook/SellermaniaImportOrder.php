@@ -153,8 +153,8 @@ class SellermaniaImportOrderController
 
         // Refill data
         $this->data['User'][$index]['Gender'] = $gender;
-        $this->data['User'][$index]['FirstName'] = substr($firstname, 0, 32);
-        $this->data['User'][$index]['LastName'] = substr($lastname, 0, 32);
+        $this->data['User'][$index]['FirstName'] = mb_substr($firstname, 0, 32);
+        $this->data['User'][$index]['LastName'] = mb_substr($lastname, 0, 32);
         $this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = '0000000000';
         if (!empty($shipping_phone) && Validate::isPhoneNumber($shipping_phone))
             $this->data['User'][$index]['Address']['ShippingPhonePrestaShop'] = $shipping_phone;
@@ -209,7 +209,7 @@ class SellermaniaImportOrderController
 
 
         // Fix address
-        $this->data['User'][$index]['Company'] = substr(str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Company']), 0, 32);
+        $this->data['User'][$index]['Company'] = mb_substr(str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Company']), 0, 32);
         $this->data['User'][$index]['Address']['Street1'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Address']['Street1']);
         $this->data['User'][$index]['Address']['Street2'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Address']['Street2']);
         $this->data['User'][$index]['Address']['City'] = str_replace($forbidden_characters, ' ', $this->data['User'][$index]['Address']['City']);
